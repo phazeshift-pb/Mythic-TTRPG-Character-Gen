@@ -1,0 +1,12 @@
+{
+  "perceptive_range": {
+    "base_formula": "perception * 2",
+    "scope_multiplier": "multiplies perceptive range",
+    "penalties": {
+      "double_range": -20,
+      "triple_range": -60,
+      "beyond_triple": "impossible"
+    },
+    "citation": "“Perceptive Range is figured by multiplying the Character's Perception Characteristic by 2.”"
+  }
+}
