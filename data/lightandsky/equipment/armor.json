@@ -1,0 +1,312 @@
+{
+  "plasteel_armor_table": [
+    {
+      "weight_kg": "18.5",
+      "armor": {
+        "head": "20",
+        "arms": "21",
+        "chest": "22",
+        "legs": "21"
+      }
+    },
+    {
+      "weight_kg": "18.3",
+      "armor": {
+        "head": "19",
+        "arms": "22",
+        "chest": "21",
+        "legs": "22"
+      }
+    },
+    {
+      "weight_kg": "18.7",
+      "armor": {
+        "head": "21",
+        "arms": "20",
+        "chest": "23",
+        "legs": "20"
+      }
+    },
+    {
+      "weight_kg": "18.4",
+      "armor": {
+        "head": "20",
+        "arms": "21",
+        "chest": "22",
+        "legs": "20"
+      }
+    },
+    {
+      "weight_kg": "18.8",
+      "armor": {
+        "head": "20",
+        "arms": "20",
+        "chest": "24",
+        "legs": "20"
+      }
+    }
+  ],
+
+  "sapphire_armor_table": [
+    {
+      "weight_kg": "10.2",
+      "armor": {
+        "head": "18",
+        "arms": "19",
+        "chest": "20",
+        "legs": "19"
+      }
+    },
+    {
+      "weight_kg": "10.0",
+      "armor": {
+        "head": "17",
+        "arms": "20",
+        "chest": "19",
+        "legs": "20"
+      }
+    },
+    {
+      "weight_kg": "10.4",
+      "armor": {
+        "head": "19",
+        "arms": "20",
+        "chest": "21",
+        "legs": "18"
+      }
+    },
+    {
+      "weight_kg": "10.4",
+      "armor": {
+        "head": "20",
+        "arms": "19",
+        "chest": "20",
+        "legs": "18"
+      }
+    },
+    {
+      "weight_kg": "10.6",
+      "armor": {
+        "head": "18",
+        "arms": "18",
+        "chest": "22",
+        "legs": "18"
+      }
+    }
+  ],
+
+  "hadronic_armor_table": [
+    {
+      "weight_kg": "5.5",
+      "armor": {
+        "head": "16",
+        "arms": "17",
+        "chest": "18",
+        "legs": "17"
+      }
+    },
+    {
+      "weight_kg": "5.3",
+      "armor": {
+        "head": "17",
+        "arms": "16",
+        "chest": "17",
+        "legs": "18"
+      }
+    },
+    {
+      "weight_kg": "5.7",
+      "armor": {
+        "head": "17",
+        "arms": "16",
+        "chest": "18",
+        "legs": "16"
+      }
+    },
+    {
+      "weight_kg": "5.3",
+      "armor": {
+        "head": "16",
+        "arms": "18",
+        "chest": "16",
+        "legs": "16"
+      }
+    },
+    {
+      "weight_kg": "5.9",
+      "armor": {
+        "head": "16",
+        "arms": "16",
+        "chest": "20",
+        "legs": "16"
+      }
+    }
+  ],
+
+  "armor_subtype": [
+    {
+      "name": "Lightweight Plating"
+    },
+    {
+      "name": "Standard Plating"
+    },
+    {
+      "name": "Dense Plating"
+    }
+  ],
+
+  "armor_variant": [
+    {
+      "name": "Cloth-like"
+    },
+    {
+      "name": "Concealable"
+    },
+    {
+      "name": "Light"
+    },
+    {
+      "name": "Standard"
+    },
+    {
+      "name": "Heavy Armor"
+    },
+    {
+      "name": "Up-Armored"
+    },
+    {
+      "name": "Super Heavy"
+    }
+  ],
+
+  "armor_perks": [
+    { "name": "Player’s Choice" },
+    { "name": "EOD Layering" },
+    { "name": "Flak Layering" },
+    { "name": "Fire Rescue" },
+    { "name": "Vacuum Sealed" },
+    { "name": "Stab Vest" },
+    { "name": "Padded Lining" },
+    { "name": "Ballistics Layering" },
+    { "name": "Force Converter" },
+    { "name": "Reactive Booster" },
+    { "name": "Force Absorption" },
+    { "name": "Laido" },
+    { "name": "Unfaltering Focus" },
+    { "name": "Absolution" },
+    { "name": "Absorption Cells" },
+    { "name": "Grappler’s Focus" },
+    { "name": "Adamantine Brace" },
+    { "name": "Ascendant Protector" },
+    { "name": "Ashes To Ashes" },
+    { "name": "Rifle Dexterity" },
+    { "name": "Shotgun Dexterity" },
+    { "name": "Melee Dexterity" },
+    { "name": "Launcher Dexterity" },
+    { "name": "Fusion Dexterity" },
+    { "name": "Heavy Dexterity" },
+    { "name": "Auto-Reserves" },
+    { "name": "Auto-Targeting" },
+    { "name": "Battle-Hearth" },
+    { "name": "Biotic Enhancement" },
+    { "name": "Bomber" },
+    { "name": "Bring the Heat" },
+    { "name": "Cryo King" },
+    { "name": "Cauterizing Flame" },
+    { "name": "Chaotic Exchanger" },
+    { "name": "Clenched Fist" },
+    { "name": "Hefty" },
+    { "name": "Hard-Hat" },
+    { "name": "Concussive Dampener" },
+    { "name": "Cross Counter" },
+    { "name": "Dire Artillery" },
+    { "name": "Distribution" },
+    { "name": "Double Dodge" },
+    { "name": "Fastball" },
+    { "name": "Font of Light" },
+    { "name": "Primary Ammo Finder" },
+    { "name": "Special Ammo Finder" },
+    { "name": "Heavy Ammo Finder" },
+    { "name": "Heavy Lifting" },
+    { "name": "Impact Induction" },
+    { "name": "Innervation" },
+    { "name": "Primary Arms Reserves" },
+    { "name": "Special Arms Reserves" },
+    { "name": "Heavy Arms Reserves" },
+    { "name": "Light Reactor" },
+    { "name": "Major Resist" },
+    { "name": "Minor Resist" },
+    { "name": "Outreach" },
+    { "name": "Pistoleer" },
+    { "name": "Plasteel Reinforcement" },
+    { "name": "Pump Action" },
+    { "name": "Recuperation" },
+    { "name": "Restitution" },
+    { "name": "Remote Connection" },
+    { "name": "Rifleman" },
+    { "name": "Roughneck" },
+    { "name": "Scatter Projectile Targeting" },
+    { "name": "Snapmare" },
+    { "name": "Serenity" },
+    { "name": "Storm of Lead" },
+    { "name": "The Dance" },
+    { "name": "The Whispers" },
+    { "name": "Tactical Reload" },
+    { "name": "Traction" },
+    { "name": "Unbreakable" },
+    { "name": "Unflinching" }
+  ],
+
+  "exotic_armor_perks": [
+    { "name": "players_choice" },
+    { "name": "bring_the_heat" },
+    { "name": "aeon_energy" },
+    { "name": "alchemical_etchings" },
+    { "name": "and_another_thing" },
+    { "name": "scavenging_synthesis" },
+    { "name": "better_already" },
+    { "name": "beyond_the_veil" },
+    { "name": "blastwave_striders" },
+    { "name": "blessing_of_order" },
+    { "name": "cerebral_uplink" },
+    { "name": "dreaded_visage" },
+    { "name": "dynamo" },
+    { "name": "embers_of_light" },
+    { "name": "feast_of_light" },
+    { "name": "firewalker" },
+    { "name": "fervid_coldsnap" },
+    { "name": "force_multiplier" },
+    { "name": "fury_conductors" },
+    { "name": "grenade_harness" },
+    { "name": "glacial_fortification" },
+    { "name": "glorious_charge" },
+    { "name": "halberdiers_reach" },
+    { "name": "hammer_of_the_gods" },
+    { "name": "hearts_of_ice" },
+    { "name": "helium_spirals" },
+    { "name": "high_priority" },
+    { "name": "hydraulic_boosters" },
+    { "name": "illegally_modded_holster" },
+    { "name": "insulation" },
+    { "name": "jump_jets" },
+    { "name": "kintsugi" },
+    { "name": "light_shift" },
+    { "name": "linear_actuators" },
+    { "name": "move_to_survive" },
+    { "name": "myrmidons_reach" },
+    { "name": "nightmare_fuel" },
+    { "name": "null_factor" },
+    { "name": "parting_gift" },
+    { "name": "percussive_flames" },
+    { "name": "peregrine_strike" },
+    { "name": "rapid_cooldown" },
+    { "name": "reflective_vents" },
+    { "name": "relentless_tracker" },
+    { "name": "resolute" },
+    { "name": "see_me_feel_me" },
+    { "name": "seriously_watch_out" },
+    { "name": "sharp_edges" },
+    { "name": "vengeance" },
+    { "name": "wraithmetal_mail" }
+  ]
+}

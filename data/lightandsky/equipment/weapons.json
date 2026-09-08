@@ -1,0 +1,3891 @@
+{
+  "scout_rifles": [
+    {
+      "rate_of_fire": "Semi-Auto (2)",
+      "damage": "4D10",
+      "bonus_damage": "14",
+      "pierce": "13",
+      "range": "45m-800m",
+      "magazine": "10",
+      "reload": "7",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Scout Rifle"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (2)",
+      "damage": "4D10",
+      "bonus_damage": "13",
+      "pierce": "13",
+      "range": "45m-775m",
+      "magazine": "12",
+      "reload": "7",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Scout Rifle"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (3)",
+      "damage": "3D10",
+      "bonus_damage": "13",
+      "pierce": "12",
+      "range": "40m-750m",
+      "magazine": "14",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Scout Rifle"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (3)",
+      "damage": "3D10",
+      "bonus_damage": "12",
+      "pierce": "12",
+      "range": "40m-725m",
+      "magazine": "16",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Scout Rifle"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (3)",
+      "damage": "3D10",
+      "bonus_damage": "12",
+      "pierce": "11",
+      "range": "35m-700m",
+      "magazine": "18",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Scout Rifle"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (3)",
+      "damage": "3D10",
+      "bonus_damage": "11",
+      "pierce": "11",
+      "range": "35m-675m",
+      "magazine": "20",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Scout Rifle"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (3)",
+      "damage": "3D10",
+      "bonus_damage": "10",
+      "pierce": "10",
+      "range": "30m-650m",
+      "magazine": "22",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Scout Rifle"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (3)",
+      "damage": "3D10",
+      "bonus_damage": "10",
+      "pierce": "10",
+      "range": "30m-625m",
+      "magazine": "24",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Scout Rifle"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (4)",
+      "damage": "2D10",
+      "bonus_damage": "9",
+      "pierce": "9",
+      "range": "25m-600m",
+      "magazine": "26",
+      "reload": "5",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Scout Rifle"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (4)",
+      "damage": "2D10",
+      "bonus_damage": "9",
+      "pierce": "9",
+      "range": "25m-575m",
+      "magazine": "28",
+      "reload": "5",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Scout Rifle"
+    }
+  ],
+  "pulse_rifles": [
+    {
+      "rate_of_fire": "Burst (2)",
+      "damage": "4D10",
+      "bonus_damage": "14",
+      "pierce": "13",
+      "range": "45m-800m",
+      "magazine": "10",
+      "reload": "7",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Pulse Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (2)",
+      "damage": "4D10",
+      "bonus_damage": "13",
+      "pierce": "13",
+      "range": "45m-775m",
+      "magazine": "12",
+      "reload": "7",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Pulse Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (3)",
+      "damage": "3D10",
+      "bonus_damage": "13",
+      "pierce": "12",
+      "range": "40m-750m",
+      "magazine": "14",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Pulse Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (3)",
+      "damage": "3D10",
+      "bonus_damage": "12",
+      "pierce": "12",
+      "range": "40m-725m",
+      "magazine": "16",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Pulse Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (3)",
+      "damage": "3D10",
+      "bonus_damage": "12",
+      "pierce": "11",
+      "range": "35m-700m",
+      "magazine": "18",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Pulse Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (3)",
+      "damage": "3D10",
+      "bonus_damage": "11",
+      "pierce": "11",
+      "range": "35m-675m",
+      "magazine": "20",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Pulse Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (3)",
+      "damage": "3D10",
+      "bonus_damage": "10",
+      "pierce": "10",
+      "range": "30m-650m",
+      "magazine": "22",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Pulse Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (3)",
+      "damage": "3D10",
+      "bonus_damage": "10",
+      "pierce": "10",
+      "range": "30m-625m",
+      "magazine": "24",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Pulse Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (4)",
+      "damage": "2D10",
+      "bonus_damage": "9",
+      "pierce": "9",
+      "range": "25m-600m",
+      "magazine": "26",
+      "reload": "5",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Pulse Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (4)",
+      "damage": "2D10",
+      "bonus_damage": "9",
+      "pierce": "9",
+      "range": "25m-575m",
+      "magazine": "28",
+      "reload": "5",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Pulse Rifle"
+    }
+  ],
+  "auto_rifles": [
+    {
+      "rate_of_fire": "Auto (5)",
+      "damage": "4D10",
+      "bonus_damage": "11",
+      "pierce": "13",
+      "range": "45m-600m",
+      "magazine": "15",
+      "reload": "7",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Auto Rifle"
+    },
+    {
+      "rate_of_fire": "Auto (5)",
+      "damage": "4D10",
+      "bonus_damage": "10",
+      "pierce": "13",
+      "range": "40m-570m",
+      "magazine": "20",
+      "reload": "7",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Auto Rifle"
+    },
+    {
+      "rate_of_fire": "Auto (6)",
+      "damage": "3D10",
+      "bonus_damage": "10",
+      "pierce": "12",
+      "range": "35m-540m",
+      "magazine": "25",
+      "reload": "7",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Auto Rifle"
+    },
+    {
+      "rate_of_fire": "Auto (6)",
+      "damage": "3D10",
+      "bonus_damage": "9",
+      "pierce": "12",
+      "range": "35m-510m",
+      "magazine": "30",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Auto Rifle"
+    },
+    {
+      "rate_of_fire": "Auto (7)",
+      "damage": "3D10",
+      "bonus_damage": "9",
+      "pierce": "11",
+      "range": "30m-480m",
+      "magazine": "35",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Auto Rifle"
+    },
+    {
+      "rate_of_fire": "Auto (7)",
+      "damage": "3D10",
+      "bonus_damage": "8",
+      "pierce": "10",
+      "range": "30m-450m",
+      "magazine": "40",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Auto Rifle"
+    },
+    {
+      "rate_of_fire": "Auto (8)",
+      "damage": "3D10",
+      "bonus_damage": "8",
+      "pierce": "10",
+      "range": "25m-420m",
+      "magazine": "45",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Auto Rifle"
+    },
+    {
+      "rate_of_fire": "Auto (8)",
+      "damage": "3D10",
+      "bonus_damage": "7",
+      "pierce": "10",
+      "range": "25m-390m",
+      "magazine": "50",
+      "reload": "5",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Auto Rifle"
+    },
+    {
+      "rate_of_fire": "Auto (9)",
+      "damage": "3D10",
+      "bonus_damage": "7",
+      "pierce": "9",
+      "range": "20m-360m",
+      "magazine": "55",
+      "reload": "5",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Auto Rifle"
+    },
+    {
+      "rate_of_fire": "Auto (9)",
+      "damage": "3D10",
+      "bonus_damage": "6",
+      "pierce": "8",
+      "range": "20m-330m",
+      "magazine": "60",
+      "reload": "5",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Auto Rifle"
+    }
+  ],
+  "sidearms": [
+    {
+      "rate_of_fire": "Semi-Auto (3)",
+      "damage": "3D10",
+      "bonus_damage": "11",
+      "pierce": "13",
+      "range": "20m-200m",
+      "magazine": "12",
+      "reload": "5",
+      "tags": [
+        "OH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Sidearm"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (3)",
+      "damage": "3D10",
+      "bonus_damage": "10",
+      "pierce": "13",
+      "range": "20m-190m",
+      "magazine": "14",
+      "reload": "5",
+      "tags": [
+        "OH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Sidearm"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (4)",
+      "damage": "2D10",
+      "bonus_damage": "10",
+      "pierce": "12",
+      "range": "15m-180m",
+      "magazine": "16",
+      "reload": "5",
+      "tags": [
+        "OH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Sidearm"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (4)",
+      "damage": "2D10",
+      "bonus_damage": "9",
+      "pierce": "12",
+      "range": "15m-170m",
+      "magazine": "18",
+      "reload": "4",
+      "tags": [
+        "OH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Sidearm"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (5)",
+      "damage": "2D10",
+      "bonus_damage": "9",
+      "pierce": "11",
+      "range": "10m-160m",
+      "magazine": "20",
+      "reload": "4",
+      "tags": [
+        "OH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Sidearm"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (5)",
+      "damage": "2D10",
+      "bonus_damage": "8",
+      "pierce": "10",
+      "range": "10m-150m",
+      "magazine": "22",
+      "reload": "4",
+      "tags": [
+        "OH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Sidearm"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (6)",
+      "damage": "2D10",
+      "bonus_damage": "8",
+      "pierce": "10",
+      "range": "10m-140m",
+      "magazine": "24",
+      "reload": "4",
+      "tags": [
+        "OH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Sidearm"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (6)",
+      "damage": "2D10",
+      "bonus_damage": "7",
+      "pierce": "10",
+      "range": "10m-130m",
+      "magazine": "26",
+      "reload": "3",
+      "tags": [
+        "OH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Sidearm"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (7)",
+      "damage": "2D10",
+      "bonus_damage": "7",
+      "pierce": "9",
+      "range": "10m-120m",
+      "magazine": "28",
+      "reload": "3",
+      "tags": [
+        "OH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Sidearm"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (7)",
+      "damage": "2D10",
+      "bonus_damage": "6",
+      "pierce": "8",
+      "range": "10m-110m",
+      "magazine": "30",
+      "reload": "3",
+      "tags": [
+        "OH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Sidearm"
+    }
+  ],
+  "smgs": [
+    {
+      "rate_of_fire": "Auto (6)",
+      "damage": "3D10",
+      "bonus_damage": "11",
+      "pierce": "4",
+      "range": "35m-150m",
+      "magazine": "24",
+      "reload": "6",
+      "tags": [
+        "OH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "SMG"
+    },
+    {
+      "rate_of_fire": "Auto (6)",
+      "damage": "3D10",
+      "bonus_damage": "10",
+      "pierce": "4",
+      "range": "30m-140m",
+      "magazine": "28",
+      "reload": "6",
+      "tags": [
+        "OH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "SMG"
+    },
+    {
+      "rate_of_fire": "Auto (7)",
+      "damage": "3D10",
+      "bonus_damage": "9",
+      "pierce": "4",
+      "range": "30m-130m",
+      "magazine": "32",
+      "reload": "6",
+      "tags": [
+        "OH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "SMG"
+    },
+    {
+      "rate_of_fire": "Auto (7)",
+      "damage": "3D10",
+      "bonus_damage": "7",
+      "pierce": "4",
+      "range": "25m-120m",
+      "magazine": "36",
+      "reload": "5",
+      "tags": [
+        "OH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "SMG"
+    },
+    {
+      "rate_of_fire": "Auto (8)",
+      "damage": "3D10",
+      "bonus_damage": "6",
+      "pierce": "6",
+      "range": "25m-110m",
+      "magazine": "40",
+      "reload": "5",
+      "tags": [
+        "OH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "SMG"
+    },
+    {
+      "rate_of_fire": "Auto (8)",
+      "damage": "3D10",
+      "bonus_damage": "5",
+      "pierce": "5",
+      "range": "25m-100m",
+      "magazine": "44",
+      "reload": "5",
+      "tags": [
+        "OH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "SMG"
+    },
+    {
+      "rate_of_fire": "Auto (8)",
+      "damage": "3D10",
+      "bonus_damage": "5",
+      "pierce": "5",
+      "range": "20m-95m",
+      "magazine": "48",
+      "reload": "5",
+      "tags": [
+        "OH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "SMG"
+    },
+    {
+      "rate_of_fire": "Auto (9)",
+      "damage": "3D10",
+      "bonus_damage": "4",
+      "pierce": "5",
+      "range": "20m-90m",
+      "magazine": "52",
+      "reload": "5",
+      "tags": [
+        "OH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "SMG"
+    },
+    {
+      "rate_of_fire": "Auto (9)",
+      "damage": "3D10",
+      "bonus_damage": "3",
+      "pierce": "6",
+      "range": "20m-85m",
+      "magazine": "56",
+      "reload": "4",
+      "tags": [
+        "OH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "SMG"
+    },
+    {
+      "rate_of_fire": "Auto (10)",
+      "damage": "2D10",
+      "bonus_damage": "3",
+      "pierce": "9",
+      "range": "15m-80m",
+      "magazine": "60",
+      "reload": "4",
+      "tags": [
+        "OH",
+        "UD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "SMG"
+    }
+  ],
+  "combat_bows": [
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "12",
+      "pierce": "35",
+      "range": "20m-200m",
+      "magazine": "1",
+      "reload": null,
+      "tags": [
+        "TH",
+        "PD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Combat Bow"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "13",
+      "pierce": "33",
+      "range": "20m-200m",
+      "magazine": "1",
+      "reload": null,
+      "tags": [
+        "TH",
+        "PD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Combat Bow"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "13",
+      "pierce": "32",
+      "range": "20m-200m",
+      "magazine": "1",
+      "reload": null,
+      "tags": [
+        "TH",
+        "PD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Combat Bow"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "14",
+      "pierce": "29",
+      "range": "20m-200m",
+      "magazine": "1",
+      "reload": null,
+      "tags": [
+        "TH",
+        "PD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Combat Bow"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "15",
+      "pierce": "27",
+      "range": "20m-200m",
+      "magazine": "1",
+      "reload": null,
+      "tags": [
+        "TH",
+        "PD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Combat Bow"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "15",
+      "pierce": "26",
+      "range": "20m-200m",
+      "magazine": "1",
+      "reload": null,
+      "tags": [
+        "TH",
+        "PD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Combat Bow"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "16",
+      "pierce": "24",
+      "range": "20m-200m",
+      "magazine": "1",
+      "reload": null,
+      "tags": [
+        "TH",
+        "PD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Combat Bow"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "17",
+      "pierce": "24",
+      "range": "20m-200m",
+      "magazine": "1",
+      "reload": null,
+      "tags": [
+        "TH",
+        "PD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Combat Bow"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "17",
+      "pierce": "23",
+      "range": "20m-200m",
+      "magazine": "1",
+      "reload": null,
+      "tags": [
+        "TH",
+        "PD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Combat Bow"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "18",
+      "pierce": "21",
+      "range": "20m-200m",
+      "magazine": "1",
+      "reload": null,
+      "tags": [
+        "TH",
+        "PD"
+      ],
+      "ammo_type": "Primary",
+      "weapon_type": "Combat Bow"
+    }
+  ],
+  "fusion_rifles": [
+    {
+      "rate_of_fire": "Burst (2)",
+      "damage": "4D10",
+      "bonus_damage": "10",
+      "pierce": "12",
+      "range": "45m-600m",
+      "magazine": "24",
+      "reload": "8",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Fusion Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (2)",
+      "damage": "3D10",
+      "bonus_damage": "9",
+      "pierce": "12",
+      "range": "40m-570m",
+      "magazine": "28",
+      "reload": "8",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Fusion Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (2)",
+      "damage": "3D10",
+      "bonus_damage": "8",
+      "pierce": "12",
+      "range": "35m-540m",
+      "magazine": "32",
+      "reload": "8",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Fusion Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (3)",
+      "damage": "3D10",
+      "bonus_damage": "7",
+      "pierce": "11",
+      "range": "35m-510m",
+      "magazine": "36",
+      "reload": "7",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Fusion Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (3)",
+      "damage": "3D10",
+      "bonus_damage": "6",
+      "pierce": "11",
+      "range": "30m-480m",
+      "magazine": "40",
+      "reload": "7",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Fusion Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (3)",
+      "damage": "3D10",
+      "bonus_damage": "5",
+      "pierce": "12",
+      "range": "30m-450m",
+      "magazine": "44",
+      "reload": "7",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Fusion Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (4)",
+      "damage": "3D10",
+      "bonus_damage": "4",
+      "pierce": "12",
+      "range": "25m-420m",
+      "magazine": "48",
+      "reload": "7",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Fusion Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (4)",
+      "damage": "3D10",
+      "bonus_damage": "4",
+      "pierce": "13",
+      "range": "25m-390m",
+      "magazine": "52",
+      "reload": "7",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Fusion Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (4)",
+      "damage": "3D10",
+      "bonus_damage": "3",
+      "pierce": "13",
+      "range": "20m-360m",
+      "magazine": "56",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Fusion Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (5)",
+      "damage": "2D10",
+      "bonus_damage": "3",
+      "pierce": "11",
+      "range": "20m-330m",
+      "magazine": "60",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Fusion Rifle"
+    }
+  ],
+  "shotguns": [
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "5D10",
+      "bonus_damage": "17",
+      "pierce": "12",
+      "range": "25m-110m",
+      "magazine": "3",
+      "reload": "6 or Single",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Shotgun"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "4D10",
+      "bonus_damage": "16",
+      "pierce": "11",
+      "range": "25m-100m",
+      "magazine": "4",
+      "reload": "6 or Single",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Shotgun"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "4D10",
+      "bonus_damage": "16",
+      "pierce": "10",
+      "range": "20m-95m",
+      "magazine": "4",
+      "reload": "6 or Single",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Shotgun"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (2)",
+      "damage": "4D10",
+      "bonus_damage": "15",
+      "pierce": "10",
+      "range": "20m-90m",
+      "magazine": "5",
+      "reload": "6 or Single",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Shotgun"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (2)",
+      "damage": "4D10",
+      "bonus_damage": "12",
+      "pierce": "9",
+      "range": "15m-85m",
+      "magazine": "6",
+      "reload": "6 or Single",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Shotgun"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (2)",
+      "damage": "3D10",
+      "bonus_damage": "11",
+      "pierce": "9",
+      "range": "15m-80m",
+      "magazine": "6",
+      "reload": "6 or Single",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Shotgun"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (3)",
+      "damage": "3D10",
+      "bonus_damage": "9",
+      "pierce": "8",
+      "range": "10m-75m",
+      "magazine": "6",
+      "reload": "6 or Single",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Shotgun"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (2)",
+      "damage": "3D10",
+      "bonus_damage": "9",
+      "pierce": "6",
+      "range": "10m-70m",
+      "magazine": "7",
+      "reload": "6 or Single",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Shotgun"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (3)",
+      "damage": "2D10",
+      "bonus_damage": "8",
+      "pierce": "5",
+      "range": "5m-65m",
+      "magazine": "7",
+      "reload": "6 or Single",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Shotgun"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (3)",
+      "damage": "2D10",
+      "bonus_damage": "8",
+      "pierce": "4",
+      "range": "5m-60m",
+      "magazine": "8",
+      "reload": "6 or Single",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Shotgun"
+    }
+  ],
+  "sniper_rifles": [
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "4D10",
+      "bonus_damage": "19",
+      "pierce": "10",
+      "range": "75m-1200m",
+      "magazine": "4",
+      "reload": "8",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Sniper Rifle"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "4D10",
+      "bonus_damage": "18",
+      "pierce": "12",
+      "range": "75m-1200m",
+      "magazine": "4",
+      "reload": "8",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Sniper Rifle"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (2)",
+      "damage": "3D10",
+      "bonus_damage": "17",
+      "pierce": "10",
+      "range": "60m-1100m",
+      "magazine": "5",
+      "reload": "8",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Sniper Rifle"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (2)",
+      "damage": "3D10",
+      "bonus_damage": "17",
+      "pierce": "9",
+      "range": "60m-1050m",
+      "magazine": "6",
+      "reload": "8",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Sniper Rifle"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (2)",
+      "damage": "3D10",
+      "bonus_damage": "15",
+      "pierce": "9",
+      "range": "55m-1000m",
+      "magazine": "7",
+      "reload": "8",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Sniper Rifle"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (2)",
+      "damage": "3D10",
+      "bonus_damage": "15",
+      "pierce": "9",
+      "range": "55m-950m",
+      "magazine": "8",
+      "reload": "8",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Sniper Rifle"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (2)",
+      "damage": "3D10",
+      "bonus_damage": "14",
+      "pierce": "8",
+      "range": "50m-900m",
+      "magazine": "9",
+      "reload": "8",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Sniper Rifle"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (2)",
+      "damage": "3D10",
+      "bonus_damage": "14",
+      "pierce": "8",
+      "range": "50m-850m",
+      "magazine": "10",
+      "reload": "8",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Sniper Rifle"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (2)",
+      "damage": "3D10",
+      "bonus_damage": "13",
+      "pierce": "8",
+      "range": "45m-800m",
+      "magazine": "11",
+      "reload": "8",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Sniper Rifle"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (2)",
+      "damage": "3D10",
+      "bonus_damage": "13",
+      "pierce": "7",
+      "range": "45m-750m",
+      "magazine": "12",
+      "reload": "8",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Sniper Rifle"
+    }
+  ],
+  "trace_rifles": [
+    {
+      "rate_of_fire": "Sustained (6)",
+      "damage": "4D10",
+      "bonus_damage": "10",
+      "pierce": "12",
+      "range": "45m-600m",
+      "magazine": "24",
+      "reload": "7",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Trace Rifle"
+    },
+    {
+      "rate_of_fire": "Sustained (7)",
+      "damage": "3D10",
+      "bonus_damage": "9",
+      "pierce": "12",
+      "range": "40m-570m",
+      "magazine": "28",
+      "reload": "7",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Trace Rifle"
+    },
+    {
+      "rate_of_fire": "Sustained (7)",
+      "damage": "3D10",
+      "bonus_damage": "8",
+      "pierce": "12",
+      "range": "35m-540m",
+      "magazine": "32",
+      "reload": "7",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Trace Rifle"
+    },
+    {
+      "rate_of_fire": "Sustained (7)",
+      "damage": "3D10",
+      "bonus_damage": "7",
+      "pierce": "11",
+      "range": "35m-510m",
+      "magazine": "36",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Trace Rifle"
+    },
+    {
+      "rate_of_fire": "Sustained (8)",
+      "damage": "3D10",
+      "bonus_damage": "6",
+      "pierce": "11",
+      "range": "30m-480m",
+      "magazine": "40",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Trace Rifle"
+    },
+    {
+      "rate_of_fire": "Sustained (8)",
+      "damage": "3D10",
+      "bonus_damage": "5",
+      "pierce": "12",
+      "range": "30m-450m",
+      "magazine": "44",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Trace Rifle"
+    },
+    {
+      "rate_of_fire": "Sustained (8)",
+      "damage": "3D10",
+      "bonus_damage": "4",
+      "pierce": "12",
+      "range": "25m-420m",
+      "magazine": "48",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Trace Rifle"
+    },
+    {
+      "rate_of_fire": "Sustained (9)",
+      "damage": "3D10",
+      "bonus_damage": "4",
+      "pierce": "13",
+      "range": "25m-390m",
+      "magazine": "52",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Trace Rifle"
+    },
+    {
+      "rate_of_fire": "Sustained (9)",
+      "damage": "3D10",
+      "bonus_damage": "3",
+      "pierce": "13",
+      "range": "20m-360m",
+      "magazine": "56",
+      "reload": "5",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Trace Rifle"
+    },
+    {
+      "rate_of_fire": "Sustained (10)",
+      "damage": "2D10",
+      "bonus_damage": "3",
+      "pierce": "11",
+      "range": "20m-330m",
+      "magazine": "60",
+      "reload": "5",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Trace Rifle"
+    }
+  ],
+  "breech_grenade_launchers": [
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "17",
+      "pierce": "4",
+      "range": "15m-50m",
+      "magazine": "1",
+      "reload": "Single-Load",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Breech Grenade Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "16",
+      "pierce": "6",
+      "range": "15m-50m",
+      "magazine": "1",
+      "reload": "Single-Load",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Breech Grenade Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "15",
+      "pierce": "8",
+      "range": "15m-60m",
+      "magazine": "1",
+      "reload": "Single-Load",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Breech Grenade Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "14",
+      "pierce": "10",
+      "range": "20m-60m",
+      "magazine": "1",
+      "reload": "Single-Load",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Breech Grenade Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "13",
+      "pierce": "12",
+      "range": "20m-70m",
+      "magazine": "1",
+      "reload": "Single-Load",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Breech Grenade Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "12",
+      "pierce": "14",
+      "range": "20m-70m",
+      "magazine": "1",
+      "reload": "Single-Load",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Breech Grenade Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "11",
+      "pierce": "16",
+      "range": "25m-80m",
+      "magazine": "1",
+      "reload": "Single-Load",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Breech Grenade Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "10",
+      "pierce": "18",
+      "range": "25m-80m",
+      "magazine": "1",
+      "reload": "Single-Load",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Breech Grenade Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "9",
+      "pierce": "20",
+      "range": "25m-90m",
+      "magazine": "1",
+      "reload": "Single-Load",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Breech Grenade Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "8",
+      "pierce": "22",
+      "range": "30m-90m",
+      "magazine": "1",
+      "reload": "Single-Load",
+      "tags": [
+        "TH",
+        "UD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Breech Grenade Launcher"
+    }
+  ],
+  "glaives": [
+    {
+      "rate_of_fire": "Melee Attack",
+      "damage": "3D10",
+      "bonus_damage": "+10 + HSM",
+      "pierce": "5 + FSM",
+      "range": "+2 Reach",
+      "magazine": null,
+      "reload": null,
+      "tags": [
+        "TH",
+        "PD",
+        "SD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Glaive"
+    },
+    {
+      "rate_of_fire": "Melee Attack",
+      "damage": "3D10",
+      "bonus_damage": "+9 + HSM",
+      "pierce": "7 + FSM",
+      "range": "+2 Reach",
+      "magazine": null,
+      "reload": null,
+      "tags": [
+        "TH",
+        "PD",
+        "SD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Glaive"
+    },
+    {
+      "rate_of_fire": "Melee Attack",
+      "damage": "3D10",
+      "bonus_damage": "+8 + HSM",
+      "pierce": "9 + FSM",
+      "range": "+2 Reach",
+      "magazine": null,
+      "reload": null,
+      "tags": [
+        "TH",
+        "PD",
+        "SD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Glaive"
+    },
+    {
+      "rate_of_fire": "Melee Attack",
+      "damage": "3D10",
+      "bonus_damage": "+7 + HSM",
+      "pierce": "11 + FSM",
+      "range": "+2 Reach",
+      "magazine": null,
+      "reload": null,
+      "tags": [
+        "TH",
+        "PD",
+        "SD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Glaive"
+    },
+    {
+      "rate_of_fire": "Melee Attack",
+      "damage": "3D10",
+      "bonus_damage": "+6 + HSM",
+      "pierce": "13 + FSM",
+      "range": "+2 Reach",
+      "magazine": null,
+      "reload": null,
+      "tags": [
+        "TH",
+        "PD",
+        "SD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Glaive"
+    },
+    {
+      "rate_of_fire": "Melee Attack",
+      "damage": "3D10",
+      "bonus_damage": "+5 + HSM",
+      "pierce": "15 + FSM",
+      "range": "+2 Reach",
+      "magazine": null,
+      "reload": null,
+      "tags": [
+        "TH",
+        "PD",
+        "SD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Glaive"
+    },
+    {
+      "rate_of_fire": "Melee Attack",
+      "damage": "3D10",
+      "bonus_damage": "+4 + HSM",
+      "pierce": "17 + FSM",
+      "range": "+2 Reach",
+      "magazine": null,
+      "reload": null,
+      "tags": [
+        "TH",
+        "PD",
+        "SD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Glaive"
+    },
+    {
+      "rate_of_fire": "Melee Attack",
+      "damage": "3D10",
+      "bonus_damage": "+3 + HSM",
+      "pierce": "19 + FSM",
+      "range": "+2 Reach",
+      "magazine": null,
+      "reload": null,
+      "tags": [
+        "TH",
+        "PD",
+        "SD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Glaive"
+    },
+    {
+      "rate_of_fire": "Melee Attack",
+      "damage": "3D10",
+      "bonus_damage": "+2 + HSM",
+      "pierce": "21 + FSM",
+      "range": "+2 Reach",
+      "magazine": null,
+      "reload": null,
+      "tags": [
+        "TH",
+        "PD",
+        "SD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Glaive"
+    },
+    {
+      "rate_of_fire": "Melee Attack",
+      "damage": "3D10",
+      "bonus_damage": "+1 + HSM",
+      "pierce": "23 + FSM",
+      "range": "+2 Reach",
+      "magazine": null,
+      "reload": null,
+      "tags": [
+        "TH",
+        "PD",
+        "SD"
+      ],
+      "ammo_type": "Special",
+      "weapon_type": "Glaive"
+    }
+  ],
+  "rocket_launchers": [
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "29",
+      "pierce": "19",
+      "range": "20m-220m",
+      "magazine": "1",
+      "reload": "13",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Rocket Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "28",
+      "pierce": "19",
+      "range": "20m-240m",
+      "magazine": "1",
+      "reload": "12",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Rocket Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "26",
+      "pierce": "18",
+      "range": "25m-260m",
+      "magazine": "1",
+      "reload": "12",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Rocket Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "24",
+      "pierce": "18",
+      "range": "25m-280m",
+      "magazine": "1",
+      "reload": "11",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Rocket Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "23",
+      "pierce": "18",
+      "range": "30m-300m",
+      "magazine": "1",
+      "reload": "11",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Rocket Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "21",
+      "pierce": "17",
+      "range": "30m-320m",
+      "magazine": "1",
+      "reload": "11",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Rocket Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "19",
+      "pierce": "17",
+      "range": "35m-340m",
+      "magazine": "1",
+      "reload": "11",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Rocket Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "18",
+      "pierce": "17",
+      "range": "35m-360m",
+      "magazine": "1",
+      "reload": "10",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Rocket Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "16",
+      "pierce": "17",
+      "range": "40m-380m",
+      "magazine": "1",
+      "reload": "10",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Rocket Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "15",
+      "pierce": "16",
+      "range": "40m-400m",
+      "magazine": "1",
+      "reload": "10",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Rocket Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "4D10",
+      "bonus_damage": "25",
+      "pierce": "18",
+      "range": "30m-330m",
+      "magazine": "1",
+      "reload": "13",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Missile Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "4D10",
+      "bonus_damage": "24",
+      "pierce": "18",
+      "range": "30m-360m",
+      "magazine": "1",
+      "reload": "12",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Missile Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "4D10",
+      "bonus_damage": "22",
+      "pierce": "17",
+      "range": "35m-390m",
+      "magazine": "1",
+      "reload": "12",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Missile Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "4D10",
+      "bonus_damage": "21",
+      "pierce": "17",
+      "range": "35m-420m",
+      "magazine": "1",
+      "reload": "12",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Missile Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "4D10",
+      "bonus_damage": "18",
+      "pierce": "16",
+      "range": "40m-450m",
+      "magazine": "1",
+      "reload": "11",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Missile Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "4D10",
+      "bonus_damage": "18",
+      "pierce": "16",
+      "range": "40m-480m",
+      "magazine": "1",
+      "reload": "11",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Missile Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "4D10",
+      "bonus_damage": "15",
+      "pierce": "15",
+      "range": "45m-510m",
+      "magazine": "1",
+      "reload": "11",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Missile Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "4D10",
+      "bonus_damage": "14",
+      "pierce": "15",
+      "range": "45m-540m",
+      "magazine": "1",
+      "reload": "10",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Missile Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "4D10",
+      "bonus_damage": "12",
+      "pierce": "15",
+      "range": "50m-570m",
+      "magazine": "1",
+      "reload": "10",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Missile Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "4D10",
+      "bonus_damage": "11",
+      "pierce": "15",
+      "range": "50m-600m",
+      "magazine": "1",
+      "reload": "10",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Missile Launcher"
+    }
+  ],
+  "heavy_grenade_launchers": [
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "31",
+      "pierce": "18",
+      "range": "15m-50m",
+      "magazine": "4",
+      "reload": "Single-Load",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Grenade Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "29",
+      "pierce": "18",
+      "range": "15m-50m",
+      "magazine": "4",
+      "reload": "Single-Load",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Grenade Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "25",
+      "pierce": "17",
+      "range": "15m-60m",
+      "magazine": "5",
+      "reload": "Single-Load",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Grenade Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "23",
+      "pierce": "15",
+      "range": "20m-60m",
+      "magazine": "5",
+      "reload": "Single-Load",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Grenade Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "19",
+      "pierce": "15",
+      "range": "20m-70m",
+      "magazine": "6",
+      "reload": "Single-Load",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Grenade Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "17",
+      "pierce": "15",
+      "range": "20m-70m",
+      "magazine": "6",
+      "reload": "Single-Load",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Grenade Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "14",
+      "pierce": "14",
+      "range": "25m-80m",
+      "magazine": "7",
+      "reload": "Single-Load",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Grenade Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (1)",
+      "damage": "3D10",
+      "bonus_damage": "11",
+      "pierce": "13",
+      "range": "25m-80m",
+      "magazine": "7",
+      "reload": "Single-Load",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Grenade Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (2)",
+      "damage": "3D10",
+      "bonus_damage": "8",
+      "pierce": "12",
+      "range": "25m-90m",
+      "magazine": "8",
+      "reload": "Single-Load",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Grenade Launcher"
+    },
+    {
+      "rate_of_fire": "Semi-Auto (2)",
+      "damage": "3D10",
+      "bonus_damage": "5",
+      "pierce": "11",
+      "range": "30m-90m",
+      "magazine": "8",
+      "reload": "Single-Load",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Grenade Launcher"
+    }
+  ],
+  "linear_fusion_rifles": [
+    {
+      "rate_of_fire": "Burst (2)",
+      "damage": "5D10",
+      "bonus_damage": "13",
+      "pierce": "14",
+      "range": "45m-600m",
+      "magazine": "24",
+      "reload": "7",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Linear Fusion Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (2)",
+      "damage": "4D10",
+      "bonus_damage": "12",
+      "pierce": "14",
+      "range": "40m-570m",
+      "magazine": "28",
+      "reload": "7",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Linear Fusion Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (2)",
+      "damage": "4D10",
+      "bonus_damage": "11",
+      "pierce": "14",
+      "range": "35m-540m",
+      "magazine": "32",
+      "reload": "7",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Linear Fusion Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (3)",
+      "damage": "4D10",
+      "bonus_damage": "9",
+      "pierce": "13",
+      "range": "35m-510m",
+      "magazine": "36",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Linear Fusion Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (3)",
+      "damage": "4D10",
+      "bonus_damage": "8",
+      "pierce": "13",
+      "range": "30m-480m",
+      "magazine": "40",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Linear Fusion Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (4)",
+      "damage": "4D10",
+      "bonus_damage": "7",
+      "pierce": "14",
+      "range": "30m-450m",
+      "magazine": "44",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Linear Fusion Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (4)",
+      "damage": "4D10",
+      "bonus_damage": "7",
+      "pierce": "14",
+      "range": "25m-420m",
+      "magazine": "48",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Linear Fusion Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (4)",
+      "damage": "4D10",
+      "bonus_damage": "6",
+      "pierce": "15",
+      "range": "25m-390m",
+      "magazine": "52",
+      "reload": "6",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Linear Fusion Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (4)",
+      "damage": "4D10",
+      "bonus_damage": "5",
+      "pierce": "15",
+      "range": "20m-360m",
+      "magazine": "56",
+      "reload": "5",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Linear Fusion Rifle"
+    },
+    {
+      "rate_of_fire": "Burst (5)",
+      "damage": "3D10",
+      "bonus_damage": "5",
+      "pierce": "14",
+      "range": "20m-330m",
+      "magazine": "60",
+      "reload": "5",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Linear Fusion Rifle"
+    }
+  ],
+  "machine_guns": [
+    {
+      "rate_of_fire": "Auto (8)",
+      "damage": "4D10",
+      "bonus_damage": "13",
+      "pierce": "14",
+      "range": "45m-700m",
+      "magazine": "15",
+      "reload": "9",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Machine Gun"
+    },
+    {
+      "rate_of_fire": "Auto (8)",
+      "damage": "4D10",
+      "bonus_damage": "12",
+      "pierce": "12",
+      "range": "40m-670m",
+      "magazine": "20",
+      "reload": "9",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Machine Gun"
+    },
+    {
+      "rate_of_fire": "Auto (9)",
+      "damage": "3D10",
+      "bonus_damage": "11",
+      "pierce": "12",
+      "range": "35m-640m",
+      "magazine": "25",
+      "reload": "9",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Machine Gun"
+    },
+    {
+      "rate_of_fire": "Auto (9)",
+      "damage": "3D10",
+      "bonus_damage": "10",
+      "pierce": "11",
+      "range": "35m-610m",
+      "magazine": "30",
+      "reload": "8",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Machine Gun"
+    },
+    {
+      "rate_of_fire": "Auto (10)",
+      "damage": "3D10",
+      "bonus_damage": "9",
+      "pierce": "11",
+      "range": "30m-580m",
+      "magazine": "35",
+      "reload": "8",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Machine Gun"
+    },
+    {
+      "rate_of_fire": "Auto (10)",
+      "damage": "3D10",
+      "bonus_damage": "8",
+      "pierce": "12",
+      "range": "30m-550m",
+      "magazine": "40",
+      "reload": "8",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Machine Gun"
+    },
+    {
+      "rate_of_fire": "Auto (11)",
+      "damage": "3D10",
+      "bonus_damage": "7",
+      "pierce": "12",
+      "range": "25m-520m",
+      "magazine": "45",
+      "reload": "8",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Machine Gun"
+    },
+    {
+      "rate_of_fire": "Auto (11)",
+      "damage": "3D10",
+      "bonus_damage": "7",
+      "pierce": "13",
+      "range": "25m-490m",
+      "magazine": "50",
+      "reload": "8",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Machine Gun"
+    },
+    {
+      "rate_of_fire": "Auto (12)",
+      "damage": "3D10",
+      "bonus_damage": "6",
+      "pierce": "13",
+      "range": "20m-460m",
+      "magazine": "55",
+      "reload": "7",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Machine Gun"
+    },
+    {
+      "rate_of_fire": "Auto (12)",
+      "damage": "3D10",
+      "bonus_damage": "6",
+      "pierce": "14",
+      "range": "20m-430m",
+      "magazine": "60",
+      "reload": "7",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Machine Gun"
+    },
+    {
+      "rate_of_fire": "Auto (5)",
+      "damage": "5D10",
+      "bonus_damage": "13",
+      "pierce": "8",
+      "range": "45m-600m",
+      "magazine": "65",
+      "reload": "9",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Machine Gun"
+    },
+    {
+      "rate_of_fire": "Auto (5)",
+      "damage": "5D10",
+      "bonus_damage": "12",
+      "pierce": "8",
+      "range": "40m-570m",
+      "magazine": "70",
+      "reload": "9",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Machine Gun"
+    },
+    {
+      "rate_of_fire": "Auto (6)",
+      "damage": "4D10",
+      "bonus_damage": "11",
+      "pierce": "8",
+      "range": "35m-540m",
+      "magazine": "75",
+      "reload": "9",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Machine Gun"
+    },
+    {
+      "rate_of_fire": "Auto (6)",
+      "damage": "4D10",
+      "bonus_damage": "10",
+      "pierce": "7",
+      "range": "35m-510m",
+      "magazine": "80",
+      "reload": "8",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Machine Gun"
+    },
+    {
+      "rate_of_fire": "Auto (7)",
+      "damage": "4D10",
+      "bonus_damage": "9",
+      "pierce": "7",
+      "range": "30m-480m",
+      "magazine": "85",
+      "reload": "8",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Machine Gun"
+    },
+    {
+      "rate_of_fire": "Auto (7)",
+      "damage": "4D10",
+      "bonus_damage": "8",
+      "pierce": "6",
+      "range": "30m-450m",
+      "magazine": "90",
+      "reload": "8",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Machine Gun"
+    },
+    {
+      "rate_of_fire": "Auto (8)",
+      "damage": "4D10",
+      "bonus_damage": "7",
+      "pierce": "6",
+      "range": "25m-390m",
+      "magazine": "100",
+      "reload": "8",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Machine Gun"
+    },
+    {
+      "rate_of_fire": "Auto (8)",
+      "damage": "4D10",
+      "bonus_damage": "7",
+      "pierce": "5",
+      "range": "25m-390m",
+      "magazine": "105",
+      "reload": "7",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Machine Gun"
+    },
+    {
+      "rate_of_fire": "Auto (9)",
+      "damage": "4D10",
+      "bonus_damage": "6",
+      "pierce": "5",
+      "range": "20m-360m",
+      "magazine": "110",
+      "reload": "7",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Machine Gun"
+    },
+    {
+      "rate_of_fire": "Auto (9)",
+      "damage": "4D10",
+      "bonus_damage": "6",
+      "pierce": "5",
+      "range": "20m-330m",
+      "magazine": "120",
+      "reload": "7",
+      "tags": [
+        "TH",
+        "HW",
+        "UD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Machine Gun"
+    }
+  ],
+  "heavy_swords": [
+    {
+      "rate_of_fire": "Melee Attack",
+      "damage": "3D10",
+      "bonus_damage": "+13 + FSM",
+      "pierce": "7 + HSM",
+      "range": "+2 Reach",
+      "magazine": null,
+      "reload": null,
+      "tags": [
+        "TH",
+        "HW",
+        "SD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Sword"
+    },
+    {
+      "rate_of_fire": "Melee Attack",
+      "damage": "3D10",
+      "bonus_damage": "+12 + FSM",
+      "pierce": "9 + HSM",
+      "range": "+2 Reach",
+      "magazine": null,
+      "reload": null,
+      "tags": [
+        "TH",
+        "HW",
+        "SD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Sword"
+    },
+    {
+      "rate_of_fire": "Melee Attack",
+      "damage": "3D10",
+      "bonus_damage": "+11 + FSM",
+      "pierce": "11 + HSM",
+      "range": "+2 Reach",
+      "magazine": null,
+      "reload": null,
+      "tags": [
+        "TH",
+        "HW",
+        "SD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Sword"
+    },
+    {
+      "rate_of_fire": "Melee Attack",
+      "damage": "3D10",
+      "bonus_damage": "+10 + FSM",
+      "pierce": "13 + HSM",
+      "range": "+2 Reach",
+      "magazine": null,
+      "reload": null,
+      "tags": [
+        "TH",
+        "HW",
+        "SD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Sword"
+    },
+    {
+      "rate_of_fire": "Melee Attack",
+      "damage": "3D10",
+      "bonus_damage": "+9 + FSM",
+      "pierce": "15 + HSM",
+      "range": "+2 Reach",
+      "magazine": null,
+      "reload": null,
+      "tags": [
+        "TH",
+        "HW",
+        "SD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Sword"
+    },
+    {
+      "rate_of_fire": "Melee Attack",
+      "damage": "3D10",
+      "bonus_damage": "+8 + FSM",
+      "pierce": "17 + HSM",
+      "range": "+2 Reach",
+      "magazine": null,
+      "reload": null,
+      "tags": [
+        "TH",
+        "HW",
+        "SD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Sword"
+    },
+    {
+      "rate_of_fire": "Melee Attack",
+      "damage": "3D10",
+      "bonus_damage": "+7 + FSM",
+      "pierce": "19 + HSM",
+      "range": "+2 Reach",
+      "magazine": null,
+      "reload": null,
+      "tags": [
+        "TH",
+        "HW",
+        "SD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Sword"
+    },
+    {
+      "rate_of_fire": "Melee Attack",
+      "damage": "3D10",
+      "bonus_damage": "+6 + FSM",
+      "pierce": "21 + HSM",
+      "range": "+2 Reach",
+      "magazine": null,
+      "reload": null,
+      "tags": [
+        "TH",
+        "HW",
+        "SD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Sword"
+    },
+    {
+      "rate_of_fire": "Melee Attack",
+      "damage": "3D10",
+      "bonus_damage": "+5 + FSM",
+      "pierce": "23 + HSM",
+      "range": "+2 Reach",
+      "magazine": null,
+      "reload": null,
+      "tags": [
+        "TH",
+        "HW",
+        "SD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Sword"
+    },
+    {
+      "rate_of_fire": "Melee Attack",
+      "damage": "3D10",
+      "bonus_damage": "+4 + FSM",
+      "pierce": "25 + HSM",
+      "range": "+2 Reach",
+      "magazine": null,
+      "reload": null,
+      "tags": [
+        "TH",
+        "HW",
+        "SD"
+      ],
+      "ammo_type": "Heavy",
+      "weapon_type": "Heavy Sword"
+    }
+  ],
+  "perks": [
+    {
+      "id": "players_choice",
+      "name": "Player's Choice"
+    },
+    {
+      "id": "adagio",
+      "name": "Adagio"
+    },
+    {
+      "id": "adaptive_burst",
+      "name": "Adaptive Burst"
+    },
+    {
+      "id": "adrenaline",
+      "name": "Adrenaline"
+    },
+    {
+      "id": "aerodynamics",
+      "name": "Aerodynamics"
+    },
+    {
+      "id": "alloy_mag",
+      "name": "Alloy Mag"
+    },
+    {
+      "id": "ambitious",
+      "name": "Ambitious"
+    },
+    {
+      "id": "ambush",
+      "name": "Ambush"
+    },
+    {
+      "id": "amplification",
+      "name": "Amplification"
+    },
+    {
+      "id": "anti_flinch",
+      "name": "Anti-Flinch"
+    },
+    {
+      "id": "archers_gambit",
+      "name": "Archer's Gambit"
+    },
+    {
+      "id": "armor_piercer",
+      "name": "Armor Piercer"
+    },
+    {
+      "id": "attrition_orbs",
+      "name": "Attrition Orbs"
+    },
+    {
+      "id": "autoloader",
+      "name": "Autoloader"
+    },
+    {
+      "id": "bandolier",
+      "name": "Bandolier"
+    },
+    {
+      "id": "barrel_constrictor",
+      "name": "Barrel Constrictor"
+    },
+    {
+      "id": "beacon_round",
+      "name": "Beacon Round"
+    },
+    {
+      "id": "bewildering_burst",
+      "name": "Bewildering Burst"
+    },
+    {
+      "id": "bigger_bombs",
+      "name": "Bigger Bombs"
+    },
+    {
+      "id": "bittersweet",
+      "name": "Bittersweet"
+    },
+    {
+      "id": "blast_distributor",
+      "name": "Blast Distributor"
+    },
+    {
+      "id": "blunt_execution",
+      "name": "Blunt Execution"
+    },
+    {
+      "id": "bottomless_grief",
+      "name": "Bottomless Grief"
+    },
+    {
+      "id": "box_breathing",
+      "name": "Box Breathing"
+    },
+    {
+      "id": "burning_ambition",
+      "name": "Burning Ambition"
+    },
+    {
+      "id": "butterfly",
+      "name": "Butterfly"
+    },
+    {
+      "id": "calm_amidst_chaos",
+      "name": "Calm Amidst Chaos"
+    },
+    {
+      "id": "celerity",
+      "name": "Celerity"
+    },
+    {
+      "id": "chain_reaction",
+      "name": "Chain Reaction"
+    },
+    {
+      "id": "chill_clip",
+      "name": "Chill Clip"
+    },
+    {
+      "id": "closing_time",
+      "name": "Closing Time"
+    },
+    {
+      "id": "clown_cartridge",
+      "name": "Clown Cartridge"
+    },
+    {
+      "id": "collective_action",
+      "name": "Collective Action"
+    },
+    {
+      "id": "complex_optics",
+      "name": "Complex Optics"
+    },
+    {
+      "id": "danger_zone",
+      "name": "Danger Zone"
+    },
+    {
+      "id": "detector",
+      "name": "Detector"
+    },
+    {
+      "id": "dragonfly",
+      "name": "Dragonfly"
+    },
+    {
+      "id": "drop_mag",
+      "name": "Drop Mag"
+    },
+    {
+      "id": "dynamic_sway_reduction",
+      "name": "Dynamic Sway Reduction"
+    },
+    {
+      "id": "energy_transfer",
+      "name": "Energy Transfer"
+    },
+    {
+      "id": "enhanced_accuracy",
+      "name": "Enhanced Accuracy"
+    },
+    {
+      "id": "enlightened_action",
+      "name": "Enlightened Action"
+    },
+    {
+      "id": "explosive_head",
+      "name": "Explosive Head"
+    },
+    {
+      "id": "explosive_payload",
+      "name": "Explosive Payload"
+    },
+    {
+      "id": "eye_of_the_storm",
+      "name": "Eye of the Storm"
+    },
+    {
+      "id": "faster_than_light",
+      "name": "Faster Than Light"
+    },
+    {
+      "id": "field_prep",
+      "name": "Field Prep"
+    },
+    {
+      "id": "fill_up",
+      "name": "Fill Up"
+    },
+    {
+      "id": "fourth_times_the_charm",
+      "name": "Fourth Time's The Charm"
+    },
+    {
+      "id": "fragile_focus",
+      "name": "Fragile Focus"
+    },
+    {
+      "id": "full_auto_trigger_system",
+      "name": "Full Auto Trigger System"
+    },
+    {
+      "id": "headseeker",
+      "name": "Headseeker"
+    },
+    {
+      "id": "headstone",
+      "name": "Headstone"
+    },
+    {
+      "id": "heal_clip",
+      "name": "Heal Clip"
+    },
+    {
+      "id": "high_impact_piercer",
+      "name": "High-Impact Piercer"
+    },
+    {
+      "id": "high_impact_shredder",
+      "name": "High-Impact Shredder"
+    },
+    {
+      "id": "icarus_grip",
+      "name": "Icarus Grip"
+    },
+    {
+      "id": "impact_casing",
+      "name": "Impact Casing"
+    },
+    {
+      "id": "invisible_hand",
+      "name": "Invisible Hand"
+    },
+    {
+      "id": "iron_gaze",
+      "name": "Iron Gaze"
+    },
+    {
+      "id": "keep_away",
+      "name": "Keep Away"
+    },
+    {
+      "id": "kill_clip",
+      "name": "Kill Clip"
+    },
+    {
+      "id": "killing_tally",
+      "name": "Killing Tally"
+    },
+    {
+      "id": "lasting_impact",
+      "name": "Lasting Impact"
+    },
+    {
+      "id": "lead_from_light",
+      "name": "Lead From Light"
+    },
+    {
+      "id": "momentum",
+      "name": "Momentum"
+    },
+    {
+      "id": "moving_target",
+      "name": "Moving Target"
+    },
+    {
+      "id": "mulligan",
+      "name": "Mulligan"
+    },
+    {
+      "id": "one_two_punch",
+      "name": "One-Two Punch"
+    },
+    {
+      "id": "opening_shot",
+      "name": "Opening Shot"
+    },
+    {
+      "id": "osmosis",
+      "name": "Osmosis"
+    },
+    {
+      "id": "overabundance",
+      "name": "Overabundance"
+    },
+    {
+      "id": "overpressurized_munitions",
+      "name": "Overpressurized Munitions"
+    },
+    {
+      "id": "persistent_barrel",
+      "name": "Persistent Barrel"
+    },
+    {
+      "id": "precision_firing",
+      "name": "Precision Firing"
+    },
+    {
+      "id": "rampage",
+      "name": "Rampage"
+    },
+    {
+      "id": "rapid_fire",
+      "name": "Rapid-Fire"
+    },
+    {
+      "id": "readied_reflexes",
+      "name": "Readied Reflexes"
+    },
+    {
+      "id": "right_back_at_you",
+      "name": "Right Back At You"
+    },
+    {
+      "id": "shoot_to_loot",
+      "name": "Shoot To Loot"
+    },
+    {
+      "id": "snapshot_sight",
+      "name": "Snapshot Sight"
+    },
+    {
+      "id": "spread_shot",
+      "name": "Spread Shot"
+    },
+    {
+      "id": "sprint_grip",
+      "name": "Sprint Grip"
+    },
+    {
+      "id": "stasis_shackle",
+      "name": "Stasis Shackle"
+    },
+    {
+      "id": "stopping_power",
+      "name": "Stopping Power"
+    },
+    {
+      "id": "stunloader",
+      "name": "Stunloader"
+    },
+    {
+      "id": "suspending_belief",
+      "name": "Suspending Belief"
+    },
+    {
+      "id": "sympathetic",
+      "name": "Sympathetic"
+    },
+    {
+      "id": "tap_the_trigger",
+      "name": "Tap The Trigger"
+    },
+    {
+      "id": "tension",
+      "name": "Tension"
+    },
+    {
+      "id": "tilted",
+      "name": "Tilted"
+    },
+    {
+      "id": "trench_barrel",
+      "name": "Trench Barrel"
+    },
+    {
+      "id": "turnabout",
+      "name": "Turnabout"
+    },
+    {
+      "id": "under_fire",
+      "name": "Under Fire"
+    },
+    {
+      "id": "under_over",
+      "name": "Under-Over"
+    },
+    {
+      "id": "use_more_gun",
+      "name": "Use More Gun"
+    },
+    {
+      "id": "valiant",
+      "name": "Valiant"
+    },
+    {
+      "id": "well_rounded",
+      "name": "Well-Rounded"
+    },
+    {
+      "id": "zen_moment",
+      "name": "Zen Moment"
+    },
+    {
+      "id": "your_lucky_day",
+      "name": "Your Lucky Day"
+    }
+  ],
+  "exotic_perks": [
+    {
+      "id": "players_choice",
+      "name": "Player's Choice",
+      "description": null
+    },
+    {
+      "id": "plus_one",
+      "name": "+1",
+      "description": null
+    },
+    {
+      "id": "ace_of_spades",
+      "name": "Ace of Spades",
+      "description": null
+    },
+    {
+      "id": "atomization",
+      "name": "Atomization",
+      "description": null
+    },
+    {
+      "id": "bastion",
+      "name": "Bastion",
+      "description": null
+    },
+    {
+      "id": "big_business",
+      "name": "Big Business",
+      "description": null
+    },
+    {
+      "id": "borealis",
+      "name": "Borealis",
+      "description": null
+    },
+    {
+      "id": "burden",
+      "name": "Burden",
+      "description": null
+    },
+    {
+      "id": "calamity_charge",
+      "name": "Calamity Charge",
+      "description": null
+    },
+    {
+      "id": "centrifuse",
+      "name": "Centrifuse",
+      "description": null
+    },
+    {
+      "id": "chaperone",
+      "name": "Chaperone",
+      "description": null
+    },
+    {
+      "id": "choir",
+      "name": "Choir",
+      "description": null
+    },
+    {
+      "id": "cloudstrike",
+      "name": "Cloudstrike",
+      "description": null
+    },
+    {
+      "id": "coldheart",
+      "name": "Coldheart",
+      "description": null
+    },
+    {
+      "id": "crimson_king",
+      "name": "Crimson King",
+      "description": null
+    },
+    {
+      "id": "darci",
+      "name": "D.A.R.C.I.",
+      "description": null
+    },
+    {
+      "id": "deathbringer",
+      "name": "Deathbringer",
+      "description": null
+    },
+    {
+      "id": "delicate_tomb",
+      "name": "Delicate Tomb",
+      "description": null
+    },
+    {
+      "id": "deterministic",
+      "name": "Deterministic",
+      "description": null
+    },
+    {
+      "id": "divinity",
+      "name": "Divinity",
+      "description": null
+    },
+    {
+      "id": "down_for_the_count",
+      "name": "Down for the Count",
+      "description": null
+    },
+    {
+      "id": "dragons_breath",
+      "name": "Dragon's Breath",
+      "description": null
+    },
+    {
+      "id": "dreamwork",
+      "name": "Dreamwork",
+      "description": null
+    },
+    {
+      "id": "erianas_vow",
+      "name": "Eriana's Vow",
+      "description": null
+    },
+    {
+      "id": "ex_diris",
+      "name": "Ex Diris",
+      "description": null
+    },
+    {
+      "id": "exhaustive_research",
+      "name": "Exhaustive Research",
+      "description": null
+    },
+    {
+      "id": "exotic_outbreak",
+      "name": "Exotic Outbreak",
+      "description": null
+    },
+    {
+      "id": "explosive_pact",
+      "name": "Explosive Pact",
+      "description": null
+    },
+    {
+      "id": "eyes_of_tomorrow",
+      "name": "Eyes of Tomorrow",
+      "description": null
+    },
+    {
+      "id": "final_stasis",
+      "name": "Final Stasis",
+      "description": null
+    },
+    {
+      "id": "final_warning",
+      "name": "Final Warning",
+      "description": null
+    },
+    {
+      "id": "finality",
+      "name": "Finality",
+      "description": null
+    },
+    {
+      "id": "forerunner",
+      "name": "Forerunner",
+      "description": null
+    },
+    {
+      "id": "fourth_horseman",
+      "name": "Fourth Horseman",
+      "description": null
+    },
+    {
+      "id": "graviton_burst",
+      "name": "Graviton Burst",
+      "description": null
+    },
+    {
+      "id": "graviton_rain",
+      "name": "Graviton Rain",
+      "description": null
+    },
+    {
+      "id": "gun_and_run",
+      "name": "Gun and Run",
+      "description": null
+    },
+    {
+      "id": "hard_light",
+      "name": "Hard Light",
+      "description": null
+    },
+    {
+      "id": "heartshadow",
+      "name": "Heartshadow",
+      "description": null
+    },
+    {
+      "id": "heir_apparent",
+      "name": "Heir Apparent",
+      "description": null
+    },
+    {
+      "id": "hoarder",
+      "name": "Hoarder",
+      "description": null
+    },
+    {
+      "id": "howl_at_the_moon",
+      "name": "Howl At The Moon",
+      "description": null
+    },
+    {
+      "id": "inheritance",
+      "name": "Inheritance",
+      "description": null
+    },
+    {
+      "id": "karma",
+      "name": "Karma",
+      "description": null
+    },
+    {
+      "id": "kill_shot",
+      "name": "Kill Shot",
+      "description": null
+    },
+    {
+      "id": "leviathans_breath",
+      "name": "Leviathan's Breath",
+      "description": null
+    },
+    {
+      "id": "lifespring",
+      "name": "Lifespring",
+      "description": null
+    },
+    {
+      "id": "malice",
+      "name": "Malice",
+      "description": null
+    },
+    {
+      "id": "manticore",
+      "name": "Manticore",
+      "description": null
+    },
+    {
+      "id": "merciless",
+      "name": "Merciless",
+      "description": null
+    },
+    {
+      "id": "microcosm",
+      "name": "Microcosm",
+      "description": null
+    },
+    {
+      "id": "mida",
+      "name": "MIDA",
+      "description": null
+    },
+    {
+      "id": "my_needs",
+      "name": "My Needs",
+      "description": null
+    },
+    {
+      "id": "my_regime",
+      "name": "My Regime",
+      "description": null
+    },
+    {
+      "id": "natural_volition",
+      "name": "Natural Volition",
+      "description": null
+    },
+    {
+      "id": "necrotech",
+      "name": "Necrotech",
+      "description": null
+    },
+    {
+      "id": "nightmare",
+      "name": "Nightmare",
+      "description": null
+    },
+    {
+      "id": "outlaw",
+      "name": "Outlaw",
+      "description": null
+    },
+    {
+      "id": "overkill",
+      "name": "Overkill",
+      "description": null
+    },
+    {
+      "id": "parasite",
+      "name": "Parasite",
+      "description": null
+    },
+    {
+      "id": "polaris",
+      "name": "Polaris",
+      "description": null
+    },
+    {
+      "id": "pristine_jade",
+      "name": "Pristine Jade",
+      "description": null
+    },
+    {
+      "id": "radiant_dance_machines",
+      "name": "Radiant Dance Machines",
+      "description": null
+    },
+    {
+      "id": "rapid",
+      "name": "Rapid",
+      "description": null
+    },
+    {
+      "id": "rat_king",
+      "name": "Rat King",
+      "description": null
+    },
+    {
+      "id": "remnants_lumina",
+      "name": "Remnant's Lumina",
+      "description": null
+    },
+    {
+      "id": "remnants_thorn",
+      "name": "Remnant's Thorn",
+      "description": null
+    },
+    {
+      "id": "sentient_projectiles",
+      "name": "Sentient Projectiles",
+      "description": null
+    },
+    {
+      "id": "skyburner",
+      "name": "Skyburner",
+      "description": null
+    },
+    {
+      "id": "sleeper_simulant",
+      "name": "Sleeper Simulant",
+      "description": null
+    },
+    {
+      "id": "stay_in_the_fight",
+      "name": "Stay In The Fight",
+      "description": null
+    },
+    {
+      "id": "still_hunt",
+      "name": "Still Hunt",
+      "description": null
+    },
+    {
+      "id": "sturm",
+      "name": "Sturm",
+      "description": null
+    },
+    {
+      "id": "sword_logic",
+      "name": "Sword Logic",
+      "description": null
+    },
+    {
+      "id": "tainted",
+      "name": "Tainted",
+      "description": null
+    },
+    {
+      "id": "tear",
+      "name": "Tear",
+      "description": null
+    },
+    {
+      "id": "the_beast",
+      "name": "The Beast",
+      "description": null
+    },
+    {
+      "id": "the_leech",
+      "name": "The Leech",
+      "description": null
+    },
+    {
+      "id": "thousand_voices",
+      "name": "Thousand Voices",
+      "description": null
+    },
+    {
+      "id": "thunderlord",
+      "name": "Thunderlord",
+      "description": null
+    },
+    {
+      "id": "tracking_module",
+      "name": "Tracking Module",
+      "description": null
+    },
+    {
+      "id": "tractor_cannon",
+      "name": "Tractor Cannon",
+      "description": null
+    },
+    {
+      "id": "transcendence",
+      "name": "Transcendence",
+      "description": null
+    },
+    {
+      "id": "trespasser",
+      "name": "Trespasser",
+      "description": null
+    },
+    {
+      "id": "truth",
+      "name": "Truth",
+      "description": null
+    },
+    {
+      "id": "twin_worms",
+      "name": "Twin Worms",
+      "description": null
+    },
+    {
+      "id": "two_tailed_fox",
+      "name": "Two-Tailed Fox",
+      "description": null
+    },
+    {
+      "id": "venimeuse",
+      "name": "Venimeuse",
+      "description": null
+    },
+    {
+      "id": "vestige_spike",
+      "name": "Vestige Spike",
+      "description": null
+    },
+    {
+      "id": "vexcalibur",
+      "name": "Vexcalibur",
+      "description": null
+    },
+    {
+      "id": "vigilance",
+      "name": "Vigilance",
+      "description": null
+    },
+    {
+      "id": "vorpal",
+      "name": "Vorpal",
+      "description": null
+    },
+    {
+      "id": "wardcliff_coil",
+      "name": "Wardcliff Coil",
+      "description": null
+    },
+    {
+      "id": "whisper_of_the_worm",
+      "name": "Whisper of the Worm",
+      "description": null
+    },
+    {
+      "id": "wicked",
+      "name": "Wicked",
+      "description": null
+    },
+    {
+      "id": "winterbite",
+      "name": "Winterbite",
+      "description": null
+    },
+    {
+      "id": "withered",
+      "name": "Withered",
+      "description": null
+    },
+    {
+      "id": "withering_gaze",
+      "name": "Withering Gaze",
+      "description": null
+    },
+    {
+      "id": "worldline_zero",
+      "name": "Worldline Zero",
+      "description": null
+    }
+  ],
+  "elements": [
+    {
+      "id": "arc",
+      "name": "Arc"
+    },
+    {
+      "id": "solar",
+      "name": "Solar"
+    },
+    {
+      "id": "void",
+      "name": "Void"
+    },
+    {
+      "id": "stasis",
+      "name": "Stasis"
+    },
+    {
+      "id": "strand",
+      "name": "Strand"
+    },
+    {
+      "id": "kinetic",
+      "name": "Kinetic"
+    }
+  ]
+}
