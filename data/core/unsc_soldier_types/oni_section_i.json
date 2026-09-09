@@ -17,6 +17,8 @@
     "LDR": 25
   },
 
+  "mythic_characteristics": {},
+
   "advancements": {
     "INT": "+5 Simple",
     "PER": "+5 Simple",
@@ -67,6 +69,8 @@
     }
   ],
 
+  "optional_rules": {},
+
   "insurrectionist_rules": {
     "weapon_cost_increase": "Weapons without the [I] tag cost 25% more.",
     "modification_discount": "Weapon and Vehicle Modifications cost half cR."
@@ -88,6 +92,8 @@
       "effect": "May call in Army, Marine, Navy, and Air Force Infantry Support at half cost. May call in Ordnance at 1/4 cost."
     }
   },
+
+  "subclasses": {},
 
   "equipment_sets": {
     "standard": [

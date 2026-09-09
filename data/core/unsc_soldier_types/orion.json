@@ -58,6 +58,8 @@
     }
   ],
 
+  "optional_rules": {},
+
   "insurrectionist_rules": {
     "weapon_cost_increase": "Weapons without the [I] tag cost 25% more.",
     "modification_discount": "Weapon and Vehicle Modifications cost half cR."
@@ -80,6 +82,8 @@
       ]
     }
   },
+
+  "subclasses": {},
 
   "equipment_sets": {
     "point_man": [

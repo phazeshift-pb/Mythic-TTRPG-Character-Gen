@@ -17,6 +17,8 @@
     "LDR": 25
   },
 
+  "mythic_characteristics": {},
+
   "advancements": {
     "STR": null,
     "TOU": null,
@@ -55,6 +57,8 @@
     }
   ],
 
+  "optional_rules": {},
+
   "insurrectionist_rules": {
     "weapon_cost_increase": "Weapons without the [I] tag cost 25% more.",
     "modification_discount": "Weapon and Vehicle Modifications cost half cR."
@@ -64,6 +68,8 @@
     "vehicle_discount": "UNSC Military Vehicles cost 1/3rd cR.",
     "vehicle_replacement": "May replace starting vehicle between missions by paying 1/3rd cost of new vehicle."
   },
+
+  "subclasses": {},
 
   "equipment_sets": {
     "point_man": [

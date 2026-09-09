@@ -17,6 +17,8 @@
     "LDR": 25
   },
 
+  "mythic_characteristics": {},
+
   "advancements": {
     "STR": "+5 Simple",
     "TOU": null,
@@ -47,12 +49,16 @@
     }
   ],
 
+  "optional_rules": {},
+
   "insurrectionist_rules": {
     "weapon_cost_increase": "Weapons without the [I] tag cost 25% more.",
     "modification_discount": "Weapon and Vehicle Modifications cost half cR."
   },
 
   "special_rules": {},
+
+  "subclasses": {},
 
   "equipment_sets": {
     "point_man": [

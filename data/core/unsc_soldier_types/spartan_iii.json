@@ -108,6 +108,8 @@
     }
   },
 
+  "subclasses": {},
+
   "equipment_sets": {
     "point_man": [
       "MA5K Carbine",
