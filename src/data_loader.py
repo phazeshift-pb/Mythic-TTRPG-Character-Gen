@@ -7,8 +7,8 @@ from .validators.base_validator import BaseValidator
 
 class DataLoader:
     """
-    Loads all JSON files under /data, identifies document families,
-    validates them, and returns a unified GameData object.
+    Loads JSON files from /data/core and optionally /data/light_and_sky.
+    Identifies document families, validates them, and returns a unified GameData object.
     """
 
     FAMILY_MAP = {
@@ -54,14 +54,58 @@ class DataLoader:
         "attack_sequence": "attack_sequence"
     }
 
-    def __init__(self, data_root="data"):
-        self.data_root = Path(data_root)
+    def __init__(self, use_light_and_sky: bool = False):
+        self.use_light_and_sky = use_light_and_sky
+        self.core_root = Path("data/core")
+        self.lns_root = Path("data/light_and_sky")
 
+    # ---------------------------------------------------------
+    # Main loader
+    # ---------------------------------------------------------
     def load_all(self):
         game_data = GameData()
         validator = BaseValidator(game_data)
 
-        for path in self.data_root.rglob("*.json"):
+        # -----------------------------
+        # CORE MODE
+        # -----------------------------
+        if not self.use_light_and_sky:
+            # Load UNSC soldier types
+            self._load_folder(self.core_root / "unsc_soldier_types", game_data, validator)
+
+            # Load upbringing/environment/lifestyle
+            self._load_folder(self.core_root / "upbringing_envionment_lifestyle", game_data, validator)
+
+            # Load other core rule folders
+            self._load_folder(self.core_root, game_data, validator)
+
+        # -----------------------------
+        # LIGHT & SKY MODE
+        # -----------------------------
+        else:
+            # Load human soldier types (Awoken, Exo, Human)
+            self._load_folder(self.lns_root / "character_creation" / "human_soldier_types",
+                              game_data, validator)
+
+            # Load Guardian classes + subclasses
+            self._load_folder(self.lns_root / "character_creation" / "guardian_classes_subclasses",
+                              game_data, validator)
+
+            # Load other Light & Sky rule folders
+            self._load_folder(self.lns_root, game_data, validator)
+
+        return game_data
+
+
+    # ---------------------------------------------------------
+    # Folder loader
+    # ---------------------------------------------------------
+    def _load_folder(self, root: Path, game_data: GameData, validator: BaseValidator):
+        if not root.exists():
+            game_data.record_error(f"Missing data folder: {root}")
+            return
+
+        for path in root.rglob("*.json"):
             try:
                 with open(path, "r", encoding="utf-8") as f:
                     doc = json.load(f)
@@ -75,36 +119,33 @@ class DataLoader:
                 game_data.record_error(f"{path}: unknown document family")
                 continue
 
-            # Name resolution
             name = path.stem
 
             # Store raw document
+            doc["source_path"] = path.as_posix()
             game_data.add_document(family, name, doc)
 
             # Validate
             self.validate_document(family, name, doc, validator)
 
-        return game_data
-
+    # ---------------------------------------------------------
+    # Family detection
+    # ---------------------------------------------------------
     def identify_family(self, doc: dict):
-        """
-        Determine document family based on top-level keys.
-        """
+        # Soldier types can also contain keys such as "training".
+        if "base_characteristics" in doc:
+            return "soldier_type"
+
         for key in doc.keys():
             if key in self.FAMILY_MAP:
                 return self.FAMILY_MAP[key]
 
-        # Soldier types have "name" and characteristic maps
-        if "base_characteristics" in doc:
-            return "soldier_type"
-
         return None
 
+    # ---------------------------------------------------------
+    # Validation
+    # ---------------------------------------------------------
     def validate_document(self, family, name, doc, validator):
-        """
-        Family-specific validation.
-        """
-
         if family == "soldier_type":
             bc = doc.get("base_characteristics")
             if bc:
