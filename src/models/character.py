@@ -35,11 +35,15 @@ class Character:
     rank: Optional[str] = None
     credits: int = 0
     experience: int = 0
+    starting_experience: int = 0
+    experience_spent: int = 0
+    experience_tier: Optional[int] = None
 
     # Equipment
     equipment: List[str] = field(default_factory=list)
     armor: Optional[str] = None
     weapons: List[str] = field(default_factory=list)
+    connections: List[str] = field(default_factory=list)
 
     # Internal debug log
     debug_log: List[str] = field(default_factory=list)

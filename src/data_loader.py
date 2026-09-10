@@ -56,6 +56,7 @@ class DataLoader:
 
     def __init__(self, use_light_and_sky: bool = False):
         self.use_light_and_sky = use_light_and_sky
+        self.character_creation_root = Path("data/character_creation")
         self.core_root = Path("data/core")
         self.lns_root = Path("data/light_and_sky")
 
@@ -65,6 +66,7 @@ class DataLoader:
     def load_all(self):
         game_data = GameData()
         validator = BaseValidator(game_data)
+        self._load_folder(self.character_creation_root, game_data, validator)
 
         # -----------------------------
         # CORE MODE

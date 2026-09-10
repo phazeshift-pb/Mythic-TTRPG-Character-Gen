@@ -40,9 +40,18 @@ class CharacterGenerator:
         auto_assign_skills: bool = True,
         human_soldier_type: Optional[str] = None,
         guardian_class: Optional[str] = None,
+        connection: Optional[str] = None,
+        starting_experience: int = 0,
     ) -> Character:
 
         char = Character(name=name)
+        char.starting_experience = max(0, int(starting_experience))
+        char.experience = char.starting_experience
+        char.experience_tier = self._get_experience_tier(char.starting_experience)
+        char.log(
+            f"Starting experience: {char.starting_experience} "
+            f"(Tier {char.experience_tier})"
+        )
 
         # Soldier Type (expansion-aware)
         self._apply_soldier_type(
@@ -52,6 +61,15 @@ class CharacterGenerator:
             human_soldier_type=human_soldier_type,
             guardian_class=guardian_class,
         )
+        self._spend_experience(char, self._selected_experience_costs(
+            soldier_type,
+            human_soldier_type,
+            guardian_class,
+        ))
+
+        if self.use_light_and_sky and connection:
+            char.connections.append(connection)
+            char.log(f"Selected connection: {connection}")
 
         # -----------------------------
         # CORE MODE ONLY
@@ -86,8 +104,114 @@ class CharacterGenerator:
 
         # Finalize derived stats
         char.finalize()
+        self._log_characteristic_totals(
+            char,
+            soldier_type,
+            subclass,
+            human_soldier_type,
+            guardian_class,
+        )
 
         return char
+
+    def _get_experience_tier(self, experience: int) -> int:
+        document = self.data.get("experience_tiers", "experience_tiers") or {}
+        tiers = document.get("experience_tiers", {}).get("tiers", [])
+        for tier in tiers:
+            xp_range = tier.get("xp", "")
+            if "+" in xp_range:
+                lower_bound = int(xp_range.replace("+", "").replace(",", ""))
+                if experience >= lower_bound:
+                    return tier["tier"]
+                continue
+
+            bounds = xp_range.replace("–", "-").replace(",", "").split("-")
+            if len(bounds) == 2 and int(bounds[0]) <= experience <= int(bounds[1]):
+                return tier["tier"]
+
+        return 0
+
+    def _selected_experience_costs(
+        self,
+        soldier_type: str,
+        human_soldier_type: Optional[str],
+        guardian_class: Optional[str],
+    ):
+        records = self.data.families.get("soldier_type", {})
+        selected_names = [human_soldier_type, guardian_class]
+        if not human_soldier_type and not guardian_class:
+            selected_names = [soldier_type]
+
+        return [
+            records[name].get("experience_cost", 0)
+            for name in selected_names
+            if name in records
+        ]
+
+    def _spend_experience(self, char: Character, costs):
+        for cost in costs:
+            if not isinstance(cost, (int, float)) or cost <= 0:
+                continue
+
+            cost = int(cost)
+            available = char.experience
+            char.experience = max(0, available - cost)
+            spent = min(available, cost)
+            char.experience_spent += spent
+            char.log(
+                f"Experience cost: {cost}; spent: {spent}; "
+                f"remaining: {char.experience}"
+            )
+
+    def _log_characteristic_totals(
+        self,
+        char: Character,
+        soldier_type: str,
+        subclass: Optional[str],
+        human_soldier_type: Optional[str],
+        guardian_class: Optional[str],
+    ):
+        records = self.data.families.get("soldier_type", {})
+        components = {code: [] for code in char.characteristics}
+
+        if self.use_light_and_sky:
+            human_record = records.get(human_soldier_type)
+            guardian_record = records.get(guardian_class)
+            base_record = human_record or guardian_record
+        else:
+            human_record = None
+            guardian_record = None
+            base_record = records.get(soldier_type)
+
+        if base_record:
+            for code, value in base_record.get("base_characteristics", {}).items():
+                number = self._numeric_value(value)
+                if number is not None:
+                    components.setdefault(code, []).append(number)
+
+        if guardian_record:
+            for code, value in guardian_record.get("base_characteristics", {}).items():
+                number = self._numeric_value(value)
+                if number is not None:
+                    components.setdefault(code, []).append(number)
+
+            subclass_data = guardian_record.get("subclasses", {}).get(subclass, {})
+            for code, value in subclass_data.get("characteristic_modifiers", {}).items():
+                number = self._numeric_value(value)
+                if number is not None:
+                    components.setdefault(code, []).append(number)
+
+        char.log("Characteristic totals:")
+        for code, total in char.characteristics.items():
+            values = components.get(code, [])
+            if values:
+                expression = " ".join(
+                    str(value) if index == 0 else f"{value:+d}"
+                    for index, value in enumerate(values)
+                )
+                char.log(f"{code}: {expression} = {total}")
+            else:
+                char.log(f"{code}: {total}")
 
     # ---------------------------------------------------------
     # Soldier Type (Core vs Light & Sky)
