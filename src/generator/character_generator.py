@@ -42,6 +42,7 @@ class CharacterGenerator:
         guardian_class: Optional[str] = None,
         connection: Optional[str] = None,
         starting_experience: int = 0,
+        lifestyles: Optional[list[str]] = None,
     ) -> Character:
 
         char = Character(name=name)
@@ -81,8 +82,12 @@ class CharacterGenerator:
             if environment:
                 self._apply_environment(char, environment)
 
-            if lifestyle:
-                self._apply_lifestyle(char, lifestyle, lifestyle_roll)
+            selected_lifestyles = lifestyles
+            if selected_lifestyles is None and lifestyle:
+                selected_lifestyles = [lifestyle]
+
+            for selected_lifestyle in selected_lifestyles or []:
+                self._apply_lifestyle(char, selected_lifestyle, lifestyle_roll)
 
         # -----------------------------
         # LIGHT & SKY MODE ONLY
@@ -99,8 +104,10 @@ class CharacterGenerator:
         if auto_assign_skills:
             self._auto_assign_skills(char)
 
-        # Equipment
-        self._apply_equipment(char)
+        # Light & Sky retains its default equipment behavior. Core equipment
+        # is selected on the equipment page after character creation.
+        if self.use_light_and_sky:
+            self._apply_equipment(char)
 
         # Finalize derived stats
         char.finalize()

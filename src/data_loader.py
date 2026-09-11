@@ -18,6 +18,11 @@ class DataLoader:
         "lifestyle": "lifestyle",
         "experience_tiers": "experience_tiers",
         "creation_points": "creation_points",
+        "specialization_packs": "specialization_packs",
+        "outliers": "outliers",
+        "light_aspects": "light_aspects",
+        "light_abilities": "light_abilities",
+        "abilities": "light_abilities",
         "languages": "languages",
         "connections": "connections",
         "characteristics": "characteristics",
@@ -94,7 +99,13 @@ class DataLoader:
                               game_data, validator)
 
             # Load other Light & Sky rule folders
-            self._load_folder(self.lns_root, game_data, validator)
+            self._load_folder(self.lns_root, game_data, validator, exclude_names={"outliers"})
+            self._load_folder(
+                self.lns_root / "character_creation" / "outliers.json",
+                game_data,
+                validator,
+                name_prefix="light_and_sky",
+            )
 
         return game_data
 
@@ -102,12 +113,22 @@ class DataLoader:
     # ---------------------------------------------------------
     # Folder loader
     # ---------------------------------------------------------
-    def _load_folder(self, root: Path, game_data: GameData, validator: BaseValidator):
+    def _load_folder(
+        self,
+        root: Path,
+        game_data: GameData,
+        validator: BaseValidator,
+        exclude_names=None,
+        name_prefix=None,
+    ):
         if not root.exists():
             game_data.record_error(f"Missing data folder: {root}")
             return
 
-        for path in root.rglob("*.json"):
+        paths = [root] if root.is_file() else root.rglob("*.json")
+        for path in paths:
+            if path.stem in (exclude_names or set()):
+                continue
             try:
                 with open(path, "r", encoding="utf-8") as f:
                     doc = json.load(f)
@@ -121,7 +142,7 @@ class DataLoader:
                 game_data.record_error(f"{path}: unknown document family")
                 continue
 
-            name = path.stem
+            name = f"{name_prefix}_{path.stem}" if name_prefix else path.stem
 
             # Store raw document
             doc["source_path"] = path.as_posix()
@@ -137,6 +158,12 @@ class DataLoader:
         # Soldier types can also contain keys such as "training".
         if "base_characteristics" in doc:
             return "soldier_type"
+
+        if "light_aspects" in doc and "rules" in doc["light_aspects"]:
+            return "light_aspect_rules"
+
+        if "light_abilities" in doc and "rules" in doc["light_abilities"]:
+            return "light_ability_rules"
 
         for key in doc.keys():
             if key in self.FAMILY_MAP:

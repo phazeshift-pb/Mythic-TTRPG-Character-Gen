@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+import re
 from typing import Dict, List, Optional, Any
 
 
@@ -23,6 +24,7 @@ class Character:
 
     # Skills
     skills: Dict[str, int] = field(default_factory=dict)  # 0 = trained, 10 = +10, 20 = +20
+    abilities: List[str] = field(default_factory=list)
 
     # Background
     upbringing: Optional[str] = None
@@ -41,9 +43,15 @@ class Character:
 
     # Equipment
     equipment: List[str] = field(default_factory=list)
+    equipment_pack: Optional[str] = None
     armor: Optional[str] = None
     weapons: List[str] = field(default_factory=list)
     connections: List[str] = field(default_factory=list)
+    specialization_packs: List[str] = field(default_factory=list)
+    outliers: List[str] = field(default_factory=list)
+    luck_burned: int = 0
+    light_aspects: List[str] = field(default_factory=list)
+    light_abilities: List[str] = field(default_factory=list)
 
     # Internal debug log
     debug_log: List[str] = field(default_factory=list)
@@ -121,6 +129,70 @@ class Character:
                 for penalty in outcome.get("penalties", []):
                     self._apply_modifier(penalty)
                 break
+
+    # -----------------------------
+    # Apply Specialization Pack
+    # -----------------------------
+    def apply_specialization_pack(self, pack_data: dict):
+        pack_name = pack_data["name"]
+        if pack_name not in self.specialization_packs:
+            self.specialization_packs.append(pack_name)
+        self.log(f"Applying specialization pack: {pack_name}")
+
+        for ability in pack_data.get("abilities", []):
+            if ability not in self.abilities:
+                self.abilities.append(ability)
+                self.log(f"Specialization ability: {ability}")
+
+        for skill_entry in pack_data.get("skills", []):
+            match = re.fullmatch(r"(.+?)\s+\((Trained|\+\d+)\)", skill_entry)
+            if not match:
+                self.log(f"Failed to parse specialization skill: {skill_entry}")
+                continue
+
+            skill_name, level_text = match.groups()
+            target_level = 0 if level_text == "Trained" else int(level_text[1:])
+            if skill_name not in self.skills:
+                self.train_skill(skill_name)
+            while self.skills[skill_name] < target_level:
+                self.upgrade_skill(skill_name)
+            self.log(f"Specialization skill: {skill_name} (+{self.skills[skill_name]})")
+
+    def apply_outlier(self, outlier_data: dict, luck_cost: int):
+        outlier_name = outlier_data["name"]
+        if outlier_name not in self.outliers:
+            self.outliers.append(outlier_name)
+            self.luck_burned += luck_cost
+        self.log(
+            f"Applying outlier: {outlier_name} "
+            f"(Burn Luck: {luck_cost}; effect: {outlier_data['effect']})"
+        )
+
+    def apply_equipment_pack(self, pack_name: str, items: List[str]):
+        self.equipment_pack = pack_name
+        self.equipment = list(items)
+        self.log(f"Applying equipment pack: {pack_name} ({len(items)} items)")
+        for item in items:
+            self.log(f"Equipment: {item}")
+
+    def apply_light_powers(
+        self,
+        aspects: List[dict],
+        abilities: List[dict],
+    ):
+        self.light_aspects = [aspect["name"] for aspect in aspects]
+        self.light_abilities = [ability["name"] for ability in abilities]
+        for aspect in aspects:
+            self.log(
+                f"Light Aspect: {aspect['name']} "
+                f"(XP {aspect.get('experience_cost', 0)}): {aspect['description']}"
+            )
+        for ability in abilities:
+            self.log(
+                f"Light Ability: {ability['name']} "
+                f"(XP {ability.get('experience_cost', 0)}, "
+                f"Light {ability.get('light_cost', 'N/A')}): {ability['description']}"
+            )
 
     # -----------------------------
     # Skill Training
