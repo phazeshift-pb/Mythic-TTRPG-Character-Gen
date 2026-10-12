@@ -13,7 +13,7 @@ from src.ui.equipment_page import EquipmentPage
 from src.ui.landing_page import LandingPage
 from src.ui.initial_character_setup import InitialCharacterSetupPage
 from src.ui.outlier_page import OutlierPage
-from src.ui.specialization_page import SpecializationPage
+from src.ui.specialization_page import DelayedTooltipLabel, SpecializationPage
 from src.ui.stat_allocation import StatAllocationPage
 from src.ui.version_and_expansions import VersionAndExpansionsPage
 
@@ -421,6 +421,16 @@ class TestGeneratorUI(QWidget):
         ) if hasattr(self, "game_data") else None
         if not document:
             return
+        ability_document = self.game_data.get("light_abilities", "abilities") or {}
+        ability_descriptions = {
+            item.get("name", "").casefold(): item.get("description", "")
+            for item in ability_document.get("abilities", [])
+        }
+        skill_document = self.game_data.get("skills", "skills") or {}
+        skill_descriptions = {
+            item.get("name", "").casefold(): item.get("description", "")
+            for item in skill_document.get("skills", [])
+        }
 
         row = 0
         for section_name, packs in (
@@ -492,7 +502,6 @@ class TestGeneratorUI(QWidget):
                     "color: #ffffff; background-color: #526b28; "
                     "font-weight: bold; padding: 3px;"
                 )
-                cell_style = "color: #ffffff; padding: 3px;"
                 ability_header = QLabel("ABILITY")
                 ability_header.setStyleSheet(header_style)
                 skill_header = QLabel("SKILL")
@@ -504,10 +513,19 @@ class TestGeneratorUI(QWidget):
                     zip(pack.get("abilities", []), pack.get("skills", [])),
                     start=1,
                 ):
-                    ability_label = QLabel(ability)
-                    ability_label.setStyleSheet(cell_style)
-                    skill_label = QLabel(skill)
-                    skill_label.setStyleSheet(cell_style)
+                    ability_label = DelayedTooltipLabel(
+                        ability,
+                        ability_descriptions.get(ability.casefold(), ""),
+                    )
+                    skill_name = skill.partition(" (")[0]
+                    skill_key = skill_name.casefold()
+                    skill_description = skill_descriptions.get(skill_key, "")
+                    if not skill_description and skill_key.endswith("s"):
+                        skill_description = skill_descriptions.get(skill_key[:-1], "")
+                    skill_label = DelayedTooltipLabel(
+                        skill,
+                        skill_description,
+                    )
                     table_layout.addWidget(ability_label, index, 0)
                     table_layout.addWidget(skill_label, index, 1)
 
