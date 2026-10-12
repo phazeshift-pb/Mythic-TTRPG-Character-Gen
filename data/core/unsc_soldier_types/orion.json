@@ -20,9 +20,7 @@
   "mythic_characteristics": {
     "STR": "+2",
     "TOU": "+3",
-    "AGI": "+1",
-    "INT": "MYTHIC",
-    "PER": "MYTHIC"
+    "AGI": "+1"
   },
 
   "advancements": {

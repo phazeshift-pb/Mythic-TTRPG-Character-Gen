@@ -17,6 +17,7 @@ class InitialCharacterSetupPage(QWidget):
     option_selected = Signal(str, str, bool)
 
     TILE_COLUMNS = 3
+    LIFESTYLE_TILE_COLUMNS = 2
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -192,29 +193,47 @@ class InitialCharacterSetupPage(QWidget):
         for value in selected_values:
             selected_counts[value] = selected_counts.get(value, 0) + 1
 
-        for index, (label, value) in enumerate(options):
+        for index, (label, value, details) in enumerate(options):
             if is_lifestyle:
                 self._add_lifestyle_tile(
-                    index, label, value, selected_counts.get(value, 0)
+                    index, label, value, details, selected_counts.get(value, 0)
                 )
                 continue
 
-            tile = QPushButton(label, self.options_content)
+            card = QFrame(self.options_content)
+            card.setStyleSheet(
+                "QFrame {"
+                " background-color: #242424;"
+                " border: 2px solid #526b28;"
+                " border-radius: 8px;"
+                "}"
+            )
+            card_layout = QVBoxLayout(card)
+            tile = QPushButton(label, card)
             tile.setCheckable(True)
-            tile.setMinimumSize(190, 100)
+            tile.setMinimumSize(260, 72)
             tile.setStyleSheet(
                 "QPushButton {"
                 " text-align: left;"
-                " background-color: #242424;"
-                " color: #f2f0e6;"
-                " border: 2px solid #526b28;"
-                " border-radius: 8px;"
-                " padding: 12px;"
+                " background-color: #526b28;"
+                " color: #ffffff;"
+                " border: 2px solid #788f3e;"
+                " border-radius: 6px;"
+                " padding: 14px;"
+                " font-size: 16px;"
+                " font-weight: bold;"
                 "}"
-                "QPushButton:hover { border-color: #f7d36b; }"
+                "QPushButton:hover {"
+                " background-color: #788f3e;"
+                " border-color: #f7d36b;"
+                "}"
                 "QPushButton:checked {"
                 " background-color: #35451d;"
                 " border: 3px solid #f7d36b;"
+                "}"
+                "QPushButton:pressed {"
+                " background-color: #35451d;"
+                " border-color: #f7d36b;"
                 "}"
             )
             tile.setChecked(value in selected_values)
@@ -224,16 +243,24 @@ class InitialCharacterSetupPage(QWidget):
                 lambda checked, option_value=value, option_category=self._selected_category:
                 self.option_selected.emit(option_category, option_value, checked)
             )
+            card_layout.addWidget(tile)
+            details_label = QLabel(details, card)
+            details_label.setWordWrap(True)
+            details_label.setStyleSheet(
+                "color: #d5d2c6; border: none; padding: 4px 8px 8px 8px;"
+            )
+            card_layout.addWidget(details_label)
             self.options_grid.addWidget(
-                tile, index // self.TILE_COLUMNS, index % self.TILE_COLUMNS
+                card, index // self.TILE_COLUMNS, index % self.TILE_COLUMNS
             )
 
         if not options:
             empty_label = QLabel("No options are currently available.")
             self.options_grid.addWidget(empty_label, 0, 0)
 
-    def _add_lifestyle_tile(self, index, label, value, selected_count):
+    def _add_lifestyle_tile(self, index, label, value, details, selected_count):
         card = QFrame(self.options_content)
+        card.setMinimumSize(300, 250)
         card.setStyleSheet(
             "QFrame {"
             " background-color: #242424;"
@@ -243,22 +270,39 @@ class InitialCharacterSetupPage(QWidget):
         )
         card_layout = QVBoxLayout(card)
         add_button = QPushButton(label, card)
-        add_button.setMinimumSize(180, 70)
+        add_button.setMinimumSize(260, 72)
         add_button.setStyleSheet(
             "QPushButton {"
             " text-align: left;"
-            " background: transparent;"
-            " color: #f2f0e6;"
-            " border: none;"
-            " padding: 12px;"
+            " background-color: #526b28;"
+            " color: #ffffff;"
+            " border: 2px solid #788f3e;"
+            " border-radius: 6px;"
+            " padding: 14px;"
+            " font-size: 16px;"
+            " font-weight: bold;"
             "}"
-            "QPushButton:hover { color: #f7d36b; }"
+            "QPushButton:hover {"
+            " background-color: #788f3e;"
+            " border-color: #f7d36b;"
+            "}"
+            "QPushButton:pressed {"
+            " background-color: #35451d;"
+            " border-color: #f7d36b;"
+            "}"
         )
         add_button.clicked.connect(
             lambda checked=False, option_value=value:
             self._adjust_lifestyle(option_value, True)
         )
         card_layout.addWidget(add_button)
+
+        details_label = QLabel(details, card)
+        details_label.setWordWrap(True)
+        details_label.setStyleSheet(
+            "color: #d5d2c6; border: none; padding: 4px 8px; font-size: 13px;"
+        )
+        card_layout.addWidget(details_label)
 
         selection_row = QHBoxLayout()
         count_label = QLabel(f"Selected: {selected_count} / 3", card)
@@ -277,7 +321,9 @@ class InitialCharacterSetupPage(QWidget):
         selection_row.addWidget(remove_button)
         card_layout.addLayout(selection_row)
         self.options_grid.addWidget(
-            card, index // self.TILE_COLUMNS, index % self.TILE_COLUMNS
+            card,
+            index // self.LIFESTYLE_TILE_COLUMNS,
+            index % self.LIFESTYLE_TILE_COLUMNS,
         )
 
     def _adjust_lifestyle(self, value, add):

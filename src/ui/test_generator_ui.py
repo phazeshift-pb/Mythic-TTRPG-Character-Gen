@@ -218,8 +218,19 @@ class TestGeneratorUI(QWidget):
                         value = option_combo.itemText(index)
                     if not value:
                         continue
-                    if not any(existing_value == value for _, existing_value in options):
-                        options.append((option_combo.itemText(index), value))
+                    if not any(
+                        existing_value == value
+                        for _, existing_value, _ in options
+                    ):
+                        options.append(
+                            (
+                                option_combo.itemText(index),
+                                value,
+                                self._format_initial_setup_option(
+                                    category, value
+                                ),
+                            )
+                        )
                 value = option_combo.currentData()
                 if value is None:
                     value = option_combo.currentText()
@@ -231,6 +242,101 @@ class TestGeneratorUI(QWidget):
                 options,
                 selected_values,
             )
+
+    def _format_initial_setup_option(self, category, value):
+        record = None
+        if category in {"soldier", "human", "guardian"}:
+            record = self.game_data.get("soldier_type", value)
+        elif category in {"upbringing", "environment", "lifestyles"}:
+            family = "lifestyle" if category == "lifestyles" else category
+            document = self.game_data.get(family, family) or {}
+            record = next(
+                (
+                    item
+                    for item in document.get(family, [])
+                    if item.get("name") == value
+                ),
+                None,
+            )
+        elif category == "subclass":
+            guardian = self.game_data.get(
+                "soldier_type", self.guardian_combo.currentData()
+            ) or {}
+            record = guardian.get("subclasses", {}).get(value)
+        elif category == "connection":
+            document = self.game_data.get("connections", "connections") or {}
+            connections = document.get("connections", document)
+            record = next(
+                (
+                    connection
+                    for group in ("light", "darkness", "specialized")
+                    for connection in connections.get(group, [])
+                    if connection.get("name") == value
+                ),
+                None,
+            )
+
+        if not record:
+            return "No additional details."
+
+        sections = []
+        if record.get("experience_cost") is not None:
+            sections.append(f"Experience Cost: {record['experience_cost']:,} XP")
+        for key, heading in (
+            ("base_characteristics", "Base Characteristics"),
+            ("mythic_characteristics", "Mythic Characteristics"),
+            ("advancements", "Advancements"),
+            ("characteristic_modifiers", "Characteristic Modifiers"),
+        ):
+            values = record.get(key)
+            if isinstance(values, dict):
+                entries = [
+                    f"{code}: {amount}"
+                    for code, amount in values.items()
+                    if amount is not None
+                ]
+                if entries:
+                    sections.append(f"{heading}: {', '.join(entries)}")
+
+        traits = record.get("traits", [])
+        if traits:
+            trait_details = []
+            for trait in traits:
+                if isinstance(trait, dict):
+                    name = trait.get("name", "Trait")
+                    effect = trait.get("effect")
+                    trait_details.append(
+                        f"{name}: {effect}" if effect else name
+                    )
+                else:
+                    trait_details.append(str(trait))
+            sections.append("Traits: " + "; ".join(trait_details))
+
+        for key, heading in (("bonuses", "Bonuses"), ("penalties", "Penalties")):
+            values = record.get(key, [])
+            if values:
+                sections.append(f"{heading}: {', '.join(map(str, values))}")
+
+        if category == "lifestyles":
+            for outcome in record.get("outcomes", []):
+                outcome_details = [f"Roll {outcome.get('roll', '?')}"]
+                for key, heading in (
+                    ("bonuses", "Bonuses"),
+                    ("penalties", "Penalties"),
+                ):
+                    values = outcome.get(key, [])
+                    if values:
+                        outcome_details.append(
+                            f"{heading}: {', '.join(map(str, values))}"
+                        )
+                sections.append(" | ".join(outcome_details))
+
+        if record.get("information"):
+            sections.append(f"Information: {record['information']}")
+        if record.get("training"):
+            sections.append(f"Training: {', '.join(record['training'])}")
+
+        return "\n".join(sections) if sections else "No additional details."
 
     def select_initial_setup_option(self, category, value, checked):
         if category == "lifestyles":
