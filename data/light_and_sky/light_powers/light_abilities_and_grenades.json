@@ -86,7 +86,7 @@
       "category": "Movement",
       "class": "All",
       "experience_cost": 650,
-      "light_cost": null,
+      "light_cost": 20,
       "description": "While on the ground, move in any direction up to the Run Movement Speed in meters as a Half Action.",
       "super_description": "The total distance traveled is tripled."
     },

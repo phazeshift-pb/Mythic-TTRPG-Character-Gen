@@ -117,6 +117,9 @@ class TestGeneratorUI(QWidget):
         self.character_setup_home.specialization_packs_button.clicked.connect(
             lambda: self.pages.setCurrentWidget(self.specialization_page)
         )
+        self.character_setup_home.equipment_or_light_powers_button.clicked.connect(
+            self.open_equipment_page
+        )
         self.version_and_expansions_page.back_button.clicked.connect(
             lambda: self.pages.setCurrentWidget(self.character_setup_home)
         )
@@ -530,7 +533,8 @@ class TestGeneratorUI(QWidget):
                     table_layout.addWidget(skill_label, index, 1)
 
                 pack_button.toggled.connect(
-                    self.update_specialization_selection
+                    lambda checked, selected_button=pack_button:
+                    self.select_specialization_tile(selected_button, checked)
                 )
                 pack_button.toggled.connect(
                     lambda checked, card=tile: card.setStyleSheet(
@@ -543,11 +547,17 @@ class TestGeneratorUI(QWidget):
                         + " border-radius: 8px; }"
                     )
                 )
-                pack_button.toggled.connect(self.update_specialization_selection)
                 self.specialization_tiles.append((pack_button, pack["name"]))
                 self.specialization_grid.addWidget(tile, tile_row, column)
 
             row += (len(packs) + 2) // 3 + 1
+
+    def select_specialization_tile(self, selected_button, checked):
+        if checked:
+            for button, _ in self.specialization_tiles:
+                if button is not selected_button:
+                    button.setChecked(False)
+        self.update_specialization_selection()
 
     def update_specialization_selection(self):
         if self.selected_mode == "Light & Sky":
@@ -690,46 +700,29 @@ class TestGeneratorUI(QWidget):
             return
 
         for index, (pack_name, items) in enumerate(equipment_sets.items()):
-            tile = QGroupBox(pack_name.replace("_", " ").title())
-            tile.setCheckable(True)
-            tile.setChecked(False)
-            tile.setMinimumHeight(145)
-            tile.setMaximumHeight(145)
-            tile.setStyleSheet(
-                "QGroupBox { background-color: #dfe8cd; "
-                "border: 1px solid #f4f2e8; color: #ffffff; "
-                "font-weight: bold; padding-top: 22px; }"
-                "QGroupBox::title { subcontrol-origin: margin; "
-                "subcontrol-position: top center; background-color: #526b28; "
-                "color: #ffffff; padding: 4px 8px; }"
-                "QGroupBox:checked { background-color: #c7dc9c; "
-                "border: 3px solid #f7d36b; }"
+            tile, select_button = self._create_selection_tile(
+                pack_name.replace("_", " ").title(),
+                "\n".join(items),
+                min_height=145,
             )
-            tile_layout = QVBoxLayout(tile)
-            item_label = QLabel("\n".join(items))
-            item_label.setWordWrap(True)
-            item_label.setStyleSheet("color: #ffffff; padding: 4px;")
-            tile_layout.addWidget(item_label)
-            tile.toggled.connect(
-                lambda checked, selected_tile=tile: self.select_equipment_tile(
+            select_button.toggled.connect(
+                lambda checked, selected_tile=select_button: self.select_equipment_tile(
                     selected_tile, checked
                 )
             )
-            self.equipment_tiles.append((tile, pack_name, items))
+            self.equipment_tiles.append((select_button, pack_name, items))
             self.equipment_grid.addWidget(tile, index // 3, index % 3)
 
     def select_equipment_tile(self, selected_tile, checked):
         if checked:
-            for tile, _, _ in self.equipment_tiles:
-                if tile is not selected_tile:
-                    tile.blockSignals(True)
-                    tile.setChecked(False)
-                    tile.blockSignals(False)
+            for button, _, _ in self.equipment_tiles:
+                if button is not selected_tile:
+                    button.setChecked(False)
         self.update_equipment_selection()
 
     def update_equipment_selection(self):
         selected = next(
-            (pack_name for tile, pack_name, _ in self.equipment_tiles if tile.isChecked()),
+            (pack_name for button, pack_name, _ in self.equipment_tiles if button.isChecked()),
             None,
         )
         self.equipment_done_button.setText(
@@ -806,17 +799,18 @@ class TestGeneratorUI(QWidget):
             for aspect in records
         ]
         for index, (connection, aspect) in enumerate(all_aspects):
-            tile = self._create_light_power_tile(
+            tile, select_button = self._create_selection_tile(
                 aspect["name"],
                 f"{connection} | XP {self._light_aspect_cost(aspect, connection)}\n"
                 f"{aspect['description']}",
+                min_height=145,
             )
-            tile.toggled.connect(
-                lambda checked, selected_tile=tile: self._select_light_tile(
+            select_button.toggled.connect(
+                lambda checked, selected_tile=select_button: self._select_light_tile(
                     selected_tile, "aspect", checked
                 )
             )
-            self.light_aspect_tiles.append((tile, aspect, connection))
+            self.light_aspect_tiles.append((select_button, aspect, connection))
             self.equipment_grid.addWidget(tile, row + index // 3, index % 3)
 
         row += (len(all_aspects) + 2) // 3 + 1
@@ -833,43 +827,68 @@ class TestGeneratorUI(QWidget):
             and ability.get("class") in ("All", selected_class)
         ]
         for index, ability in enumerate(available_abilities):
-            tile = self._create_light_power_tile(
+            tile, select_button = self._create_selection_tile(
                 ability["name"],
                 f"{ability.get('category', 'Ability')} | "
                 f"XP {ability.get('experience_cost', 0)} | "
                 f"Light {ability.get('light_cost', 'N/A')}\n"
                 f"{ability['description']}",
+                min_height=145,
             )
-            tile.toggled.connect(
-                lambda checked, selected_tile=tile: self._select_light_tile(
+            select_button.toggled.connect(
+                lambda checked, selected_tile=select_button: self._select_light_tile(
                     selected_tile, "ability", checked
                 )
             )
-            self.light_ability_tiles.append((tile, ability))
+            self.light_ability_tiles.append((select_button, ability))
             self.equipment_grid.addWidget(tile, row + index // 3, index % 3)
 
-    @staticmethod
-    def _create_light_power_tile(title, text):
-        tile = QGroupBox(title)
-        tile.setCheckable(True)
-        tile.setChecked(False)
-        tile.setMinimumHeight(125)
-        tile.setMaximumHeight(125)
-        tile.setStyleSheet(
-            "QGroupBox { background-color: #dfe8cd; border: 1px solid #f4f2e8; "
-            "color: #ffffff; font-weight: bold; padding-top: 22px; }"
-            "QGroupBox::title { subcontrol-origin: margin; "
-            "subcontrol-position: top center; background-color: #526b28; "
-            "color: #ffffff; padding: 4px 8px; }"
-            "QGroupBox:checked { background-color: #c7dc9c; "
-            "border: 3px solid #f7d36b; }"
+    def _create_selection_tile(self, title, text, min_height=125):
+        card = QFrame(self.equipment_content)
+        card.setMinimumHeight(min_height)
+        card.setStyleSheet(
+            "QFrame { background-color: #242424; "
+            "border: 2px solid #526b28; border-radius: 8px; }"
         )
-        layout = QVBoxLayout(tile)
-        label = QLabel(text)
-        label.setWordWrap(True)
-        label.setStyleSheet("color: #ffffff; padding: 4px;")
-        layout.addWidget(label)
-        return tile
+        layout = QVBoxLayout(card)
+        layout.setContentsMargins(5, 5, 5, 5)
+        layout.setSpacing(4)
+
+        select_button = QPushButton(title, card)
+        select_button.setCheckable(True)
+        select_button.setMinimumHeight(56)
+        select_button.setStyleSheet(
+            "QPushButton { text-align: left; background-color: #526b28; "
+            "color: #ffffff; border: 2px solid #788f3e; border-radius: 6px; "
+            "padding: 10px 14px; font-size: 16px; font-weight: bold; }"
+            "QPushButton:hover { background-color: #788f3e; "
+            "border-color: #f7d36b; }"
+            "QPushButton:checked { background-color: #35451d; "
+            "border: 3px solid #f7d36b; }"
+            "QPushButton:pressed { background-color: #35451d; "
+            "border-color: #f7d36b; }"
+        )
+        layout.addWidget(select_button)
+
+        description = QLabel(text, card)
+        description.setWordWrap(True)
+        description.setStyleSheet(
+            "color: #d5d2c6; border: none; padding: 4px 8px 8px 8px;"
+        )
+        layout.addWidget(description)
+
+        select_button.toggled.connect(
+            lambda checked, selected_card=card: selected_card.setStyleSheet(
+                "QFrame { background-color: #242424; "
+                + (
+                    "border: 3px solid #f7d36b;"
+                    if checked
+                    else "border: 2px solid #526b28;"
+                )
+                + " border-radius: 8px; }"
+            )
+        )
+        return card, select_button
 
     def _light_aspect_cost(self, aspect, connection):
         selected_connection = self.connection_combo.currentText()
@@ -883,7 +902,7 @@ class TestGeneratorUI(QWidget):
                 if power_type == "aspect"
                 else self.light_ability_tiles
             )
-            selected_count = sum(tile.isChecked() for tile, *_ in tiles)
+            selected_count = sum(button.isChecked() for button, *_ in tiles)
             limit = 1 if power_type == "aspect" else 2
             if selected_count > limit:
                 selected_tile.blockSignals(True)
@@ -892,8 +911,8 @@ class TestGeneratorUI(QWidget):
         self.update_light_power_selection()
 
     def update_light_power_selection(self):
-        aspect_count = sum(tile.isChecked() for tile, *_ in self.light_aspect_tiles)
-        ability_count = sum(tile.isChecked() for tile, *_ in self.light_ability_tiles)
+        aspect_count = sum(button.isChecked() for button, *_ in self.light_aspect_tiles)
+        ability_count = sum(button.isChecked() for button, *_ in self.light_ability_tiles)
         self.equipment_done_button.setText(
             f"Done (Aspects {aspect_count}/1; Abilities {ability_count}/2)"
         )
@@ -901,10 +920,14 @@ class TestGeneratorUI(QWidget):
     def finish_light_power_selection(self):
         if hasattr(self, "generated_character"):
             aspects = [
-                aspect for tile, aspect, _ in self.light_aspect_tiles if tile.isChecked()
+                aspect
+                for button, aspect, _ in self.light_aspect_tiles
+                if button.isChecked()
             ]
             abilities = [
-                ability for tile, ability in self.light_ability_tiles if tile.isChecked()
+                ability
+                for button, ability in self.light_ability_tiles
+                if button.isChecked()
             ]
             self.generated_character.apply_light_powers(aspects, abilities)
         self.pages.setCurrentWidget(self.creation_page)
@@ -1061,6 +1084,9 @@ class TestGeneratorUI(QWidget):
     # ---------------------------------------------------------
     def update_soldier_types(self):
         use_lns = self.selected_mode == "Light & Sky"
+        self.character_setup_home.equipment_or_light_powers_button.setText(
+            "Light Abilities / Light Aspects" if use_lns else "Equipment"
+        )
         loader = DataLoader(use_light_and_sky=use_lns)
         self.game_data = loader.load_all()
         self._load_creation_point_options()
