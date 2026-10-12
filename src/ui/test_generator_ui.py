@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout,
     QLabel, QPushButton, QComboBox, QTextEdit, QSpinBox,
-    QStackedWidget, QGridLayout, QGroupBox, QScrollArea, QFrame
+    QStackedWidget, QGridLayout, QGroupBox, QScrollArea
 )
 import sys
 
@@ -9,6 +9,12 @@ from PySide6.QtCore import Qt
 from src.data_loader import DataLoader
 from src.generator.character_generator import CharacterGenerator
 from src.models.character import CHAR_CODES
+from src.ui.character_creation_page import CharacterCreationPage
+from src.ui.character_setup_page import CharacterSetupPage
+from src.ui.equipment_page import EquipmentPage
+from src.ui.landing_page import LandingPage
+from src.ui.outlier_page import OutlierPage
+from src.ui.specialization_page import SpecializationPage
 
 
 class TestGeneratorUI(QWidget):
@@ -18,355 +24,115 @@ class TestGeneratorUI(QWidget):
         self.setWindowTitle("Mythic TTRPG Character Manager")
         self.resize(900, 650)
 
-        layout = QVBoxLayout()
-        self.setLayout(layout)
-
+        layout = QVBoxLayout(self)
         self.pages = QStackedWidget()
+
+        self.landing_page = LandingPage()
+        self.selection_page = CharacterSetupPage()
+        self.creation_page = CharacterCreationPage()
+        self.specialization_page = SpecializationPage()
+        self.outlier_page = OutlierPage()
+        self.equipment_page = EquipmentPage()
+        self.page_widgets = (
+            self.landing_page,
+            self.selection_page,
+            self.creation_page,
+            self.specialization_page,
+            self.outlier_page,
+            self.equipment_page,
+        )
+        for page in self.page_widgets:
+            self.pages.addWidget(page)
         layout.addWidget(self.pages)
 
-        self.landing_page = QWidget()
-        landing_layout = QVBoxLayout(self.landing_page)
-        landing_layout.setContentsMargins(48, 40, 48, 40)
-        landing_layout.addStretch(1)
+        self.create_character_button = self.landing_page.create_character_button
+        self.load_character_button = self.landing_page.load_character_button
 
-        title_card = QFrame()
-        title_card.setObjectName("titleCard")
-        title_card.setFrameShape(QFrame.Shape.StyledPanel)
-        title_card_layout = QVBoxLayout(title_card)
-        title_label = QLabel("Mythic TTRPG Character Manager")
-        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        title_label.setStyleSheet("font-size: 28px; font-weight: bold;")
-        title_card_layout.addWidget(title_label)
-        landing_layout.addWidget(title_card)
+        self.selection_layout = self.selection_page.selection_layout
+        for name in (
+            "experience_input", "experience_tier_label", "mode_combo",
+            "soldier_label", "soldier_combo", "core_soldier_row",
+            "upbringing_label", "upbringing_combo", "environment_label",
+            "environment_combo", "lifestyle_label", "lifestyle_combo",
+            "lifestyle_two_label", "lifestyle_two_combo",
+            "lifestyle_three_label", "lifestyle_three_combo",
+            "lifestyle_combos", "core_background_widgets", "human_label",
+            "human_combo", "guardian_label", "guardian_combo",
+            "subclass_label", "subclass_combo", "connection_label",
+            "connection_combo", "human_row_widgets", "guardian_row_widgets",
+            "generate_button",
+        ):
+            setattr(self, name, getattr(self.selection_page, name))
 
-        landing_layout.addSpacing(32)
-        landing_buttons = QHBoxLayout()
-        landing_buttons.setSpacing(24)
-        self.create_character_button = QPushButton("Create New Character")
-        self.create_character_button.setMinimumSize(280, 110)
-        self.create_character_button.setStyleSheet(
-            "QPushButton {"
-            " background-color: #526b28;"
-            " color: #ffffff;"
-            " border: 2px solid #788f3e;"
-            " border-radius: 8px;"
-            " font-size: 20px;"
-            " font-weight: bold;"
-            " padding: 16px;"
-            "}"
-            "QPushButton:hover {"
-            " background-color: #788f3e;"
-            " border-color: #f7d36b;"
-            "}"
-        )
+        for name in (
+            "back_button", "creation_points_combo", "reset_creation_button",
+            "creation_points_remaining_label", "specialization_button",
+            "equipment_button", "characteristic_grid",
+            "characteristic_value_labels", "characteristic_buttons", "output",
+        ):
+            setattr(self, name, getattr(self.creation_page, name))
+
+        self.specialization_back_button = self.specialization_page.back_button
+        self.specialization_done_button = self.specialization_page.done_button
+        self.specialization_scroll = self.specialization_page.scroll_area
+        self.specialization_content = self.specialization_page.content
+        self.specialization_grid = self.specialization_page.grid
+        self.specialization_tiles = self.specialization_page.tiles
+
+        self.outlier_back_button = self.outlier_page.back_button
+        self.outlier_done_button = self.outlier_page.done_button
+        self.outlier_scroll = self.outlier_page.scroll_area
+        self.outlier_content = self.outlier_page.content
+        self.outlier_grid = self.outlier_page.grid
+        self.outlier_tiles = self.outlier_page.tiles
+
+        self.equipment_page_title = self.equipment_page.title
+        self.equipment_back_button = self.equipment_page.back_button
+        self.equipment_done_button = self.equipment_page.done_button
+        self.equipment_scroll = self.equipment_page.scroll_area
+        self.equipment_content = self.equipment_page.content
+        self.equipment_grid = self.equipment_page.grid
+        self.equipment_tiles = self.equipment_page.tiles
+        self.light_aspect_tiles = self.equipment_page.light_aspect_tiles
+        self.light_ability_tiles = self.equipment_page.light_ability_tiles
+
         self.create_character_button.clicked.connect(
             lambda: self.pages.setCurrentWidget(self.selection_page)
         )
-        self.load_character_button = QPushButton("Load Character")
-        self.load_character_button.setMinimumSize(280, 110)
-        self.load_character_button.setStyleSheet(
-            self.create_character_button.styleSheet()
-        )
-        landing_buttons.addStretch(1)
-        landing_buttons.addWidget(self.create_character_button)
-        landing_buttons.addWidget(self.load_character_button)
-        landing_buttons.addStretch(1)
-        landing_layout.addLayout(landing_buttons)
-        landing_layout.addStretch(1)
-
-        self.pages.addWidget(self.landing_page)
-        self.selection_page = QWidget()
-        self.selection_layout = QVBoxLayout(self.selection_page)
-        self.pages.addWidget(self.selection_page)
-
-        # ---------------------------------------------------------
-        # Starting experience and automatic tier
-        # ---------------------------------------------------------
-        experience_row = QHBoxLayout()
-        experience_label = QLabel("Starting XP:")
-        self.experience_input = QSpinBox()
-        self.experience_input.setRange(0, 10_000_000)
-        self.experience_input.setValue(0)
         self.experience_input.valueChanged.connect(self.update_experience_tier)
-        self.experience_tier_label = QLabel("Tier: 0")
-        experience_row.addWidget(experience_label)
-        experience_row.addWidget(self.experience_input)
-        experience_row.addWidget(self.experience_tier_label)
-        self.selection_layout.addLayout(experience_row)
-
-        # ---------------------------------------------------------
-        # Mode selection (Core vs Light & Sky)
-        # ---------------------------------------------------------
-        mode_row = QHBoxLayout()
-        mode_label = QLabel("Mode:")
-        self.mode_combo = QComboBox()
-        self.mode_combo.addItems(["Core", "Light & Sky"])
         self.mode_combo.currentIndexChanged.connect(self.update_soldier_types)
-
-        mode_row.addWidget(mode_label)
-        mode_row.addWidget(self.mode_combo)
-        self.selection_layout.addLayout(mode_row)
-
-        # ---------------------------------------------------------
-        # Core soldier type selection
-        # ---------------------------------------------------------
-        st_row = QHBoxLayout()
-        st_label = QLabel("Soldier Type:")
-        self.soldier_combo = QComboBox()
-
-        st_row.addWidget(st_label)
-        st_row.addWidget(self.soldier_combo)
-        self.selection_layout.addLayout(st_row)
-        self.core_soldier_row = st_row
-        self.soldier_label = st_label
-
-        # ---------------------------------------------------------
-        # Core background selections
-        # ---------------------------------------------------------
-        upbringing_row = QHBoxLayout()
-        self.upbringing_label = QLabel("Upbringing:")
-        self.upbringing_combo = QComboBox()
         self.upbringing_combo.currentIndexChanged.connect(
             self.refresh_core_background_options
         )
-        upbringing_row.addWidget(self.upbringing_label)
-        upbringing_row.addWidget(self.upbringing_combo)
-        self.selection_layout.addLayout(upbringing_row)
-
-        environment_row = QHBoxLayout()
-        self.environment_label = QLabel("Environment:")
-        self.environment_combo = QComboBox()
-        environment_row.addWidget(self.environment_label)
-        environment_row.addWidget(self.environment_combo)
-        self.selection_layout.addLayout(environment_row)
-
-        lifestyle_row = QHBoxLayout()
-        self.lifestyle_label = QLabel("Lifestyle 1:")
-        self.lifestyle_combo = QComboBox()
-        lifestyle_row.addWidget(self.lifestyle_label)
-        lifestyle_row.addWidget(self.lifestyle_combo)
-        self.selection_layout.addLayout(lifestyle_row)
-
-        lifestyle_two_row = QHBoxLayout()
-        self.lifestyle_two_label = QLabel("Lifestyle 2:")
-        self.lifestyle_two_combo = QComboBox()
-        lifestyle_two_row.addWidget(self.lifestyle_two_label)
-        lifestyle_two_row.addWidget(self.lifestyle_two_combo)
-        self.selection_layout.addLayout(lifestyle_two_row)
-
-        lifestyle_three_row = QHBoxLayout()
-        self.lifestyle_three_label = QLabel("Lifestyle 3:")
-        self.lifestyle_three_combo = QComboBox()
-        lifestyle_three_row.addWidget(self.lifestyle_three_label)
-        lifestyle_three_row.addWidget(self.lifestyle_three_combo)
-        self.selection_layout.addLayout(lifestyle_three_row)
-
-        self.lifestyle_combos = (
-            self.lifestyle_combo,
-            self.lifestyle_two_combo,
-            self.lifestyle_three_combo,
-        )
-
-        self.core_background_widgets = (
-            self.upbringing_label,
-            self.upbringing_combo,
-            self.environment_label,
-            self.environment_combo,
-            self.lifestyle_label,
-            self.lifestyle_two_label,
-            self.lifestyle_three_label,
-            *self.lifestyle_combos,
-        )
-
-        # ---------------------------------------------------------
-        # Light & Sky soldier type selections
-        # ---------------------------------------------------------
-        human_row = QHBoxLayout()
-        self.human_label = QLabel("Human Soldier Type:")
-        self.human_combo = QComboBox()
         self.human_combo.currentIndexChanged.connect(self.refresh_selection_options)
-        human_row.addWidget(self.human_label)
-        human_row.addWidget(self.human_combo)
-        self.selection_layout.addLayout(human_row)
-
-        guardian_row = QHBoxLayout()
-        self.guardian_label = QLabel("Guardian Class Soldier Type:")
-        self.guardian_combo = QComboBox()
         self.guardian_combo.currentIndexChanged.connect(self.update_subclasses)
-        guardian_row.addWidget(self.guardian_label)
-        guardian_row.addWidget(self.guardian_combo)
-        self.selection_layout.addLayout(guardian_row)
-
-        # ---------------------------------------------------------
-        # Subclass selection (only for Guardian classes)
-        # ---------------------------------------------------------
-        sub_row = QHBoxLayout()
-        sub_label = QLabel("Subclass:")
-        self.subclass_combo = QComboBox()
-
-        sub_row.addWidget(sub_label)
-        sub_row.addWidget(self.subclass_combo)
-        self.selection_layout.addLayout(sub_row)
-        self.subclass_label = sub_label
-
-        connection_row = QHBoxLayout()
-        self.connection_label = QLabel("Connection:")
-        self.connection_combo = QComboBox()
-        connection_row.addWidget(self.connection_label)
-        connection_row.addWidget(self.connection_combo)
-        self.selection_layout.addLayout(connection_row)
-
-        self.human_row_widgets = (self.human_label, self.human_combo)
-        self.guardian_row_widgets = (self.guardian_label, self.guardian_combo)
-
-        # ---------------------------------------------------------
-        # Generate button
-        # ---------------------------------------------------------
-        self.generate_button = QPushButton("Generate Character")
         self.generate_button.clicked.connect(self.generate_character)
-        self.selection_layout.addWidget(self.generate_button)
-
-        # ---------------------------------------------------------
-        # Creation point allocation page
-        # ---------------------------------------------------------
-        self.creation_page = QWidget()
-        creation_layout = QVBoxLayout(self.creation_page)
-        self.pages.addWidget(self.creation_page)
-
-        creation_header = QHBoxLayout()
-        self.back_button = QPushButton("Back")
-        self.back_button.clicked.connect(lambda: self.pages.setCurrentWidget(self.selection_page))
-        self.creation_points_combo = QComboBox()
-        self.creation_points_combo.currentIndexChanged.connect(self.reset_creation_points)
-        self.reset_creation_button = QPushButton("Reset Points")
+        self.back_button.clicked.connect(
+            lambda: self.pages.setCurrentWidget(self.selection_page)
+        )
+        self.creation_points_combo.currentIndexChanged.connect(
+            self.reset_creation_points
+        )
         self.reset_creation_button.clicked.connect(self.reset_creation_points)
-        self.creation_points_remaining_label = QLabel("Points remaining: 0")
-        self.specialization_button = QPushButton("Specialization Packs")
         self.specialization_button.clicked.connect(self.open_specialization_page)
-        self.equipment_button = QPushButton("Equipment Pack")
         self.equipment_button.clicked.connect(self.open_equipment_page)
-        creation_header.addWidget(self.back_button)
-        creation_header.addWidget(QLabel("Creation points:"))
-        creation_header.addWidget(self.creation_points_combo)
-        creation_header.addWidget(self.reset_creation_button)
-        creation_header.addWidget(self.creation_points_remaining_label)
-        creation_header.addWidget(self.specialization_button)
-        creation_header.addWidget(self.equipment_button)
-        creation_layout.addLayout(creation_header)
-
-        self.characteristic_grid = QGridLayout()
-        self.characteristic_value_labels = {}
-        self.characteristic_buttons = {}
-        creation_layout.addLayout(self.characteristic_grid)
-
-        # Output log
-        self.output = QTextEdit()
-        self.output.setReadOnly(True)
-        creation_layout.addWidget(self.output)
-
-        # ---------------------------------------------------------
-        # Specialization pack selection page
-        # ---------------------------------------------------------
-        self.specialization_page = QWidget()
-        specialization_layout = QVBoxLayout(self.specialization_page)
-        self.pages.addWidget(self.specialization_page)
-
-        specialization_header = QHBoxLayout()
-        specialization_header.addWidget(QLabel("SPECIALIZATION PACKS"))
-        specialization_header.addStretch()
-        self.specialization_back_button = QPushButton("Back")
         self.specialization_back_button.clicked.connect(
             lambda: self.pages.setCurrentWidget(self.creation_page)
         )
-        self.specialization_done_button = QPushButton("Done")
         self.specialization_done_button.clicked.connect(
             self.finish_specialization_selection
         )
-        specialization_header.addWidget(self.specialization_back_button)
-        specialization_header.addWidget(self.specialization_done_button)
-        specialization_layout.addLayout(specialization_header)
-
-        self.specialization_scroll = QScrollArea()
-        self.specialization_scroll.setWidgetResizable(True)
-        self.specialization_content = QWidget()
-        self.specialization_content.setStyleSheet("background-color: #242424;")
-        self.specialization_grid = QGridLayout(self.specialization_content)
-        self.specialization_grid.setSpacing(18)
-        self.specialization_grid.setColumnStretch(0, 1)
-        self.specialization_grid.setColumnStretch(1, 1)
-        self.specialization_grid.setColumnStretch(2, 1)
-        self.specialization_scroll.setWidget(self.specialization_content)
-        specialization_layout.addWidget(self.specialization_scroll)
-        self.specialization_tiles = []
-
-        # ---------------------------------------------------------
-        # Outlier selection page
-        # ---------------------------------------------------------
-        self.outlier_page = QWidget()
-        outlier_layout = QVBoxLayout(self.outlier_page)
-        self.pages.addWidget(self.outlier_page)
-
-        outlier_header = QHBoxLayout()
-        outlier_header.addWidget(QLabel("OUTLIERS"))
-        outlier_header.addStretch()
-        self.outlier_back_button = QPushButton("Back")
         self.outlier_back_button.clicked.connect(
             lambda: self.pages.setCurrentWidget(self.specialization_page)
         )
-        self.outlier_done_button = QPushButton("Done")
         self.outlier_done_button.clicked.connect(self.finish_outlier_selection)
-        outlier_header.addWidget(self.outlier_back_button)
-        outlier_header.addWidget(self.outlier_done_button)
-        outlier_layout.addLayout(outlier_header)
-
-        self.outlier_scroll = QScrollArea()
-        self.outlier_scroll.setWidgetResizable(True)
-        self.outlier_content = QWidget()
-        self.outlier_content.setStyleSheet("background-color: #242424;")
-        self.outlier_grid = QGridLayout(self.outlier_content)
-        self.outlier_grid.setSpacing(18)
-        for column in range(3):
-            self.outlier_grid.setColumnStretch(column, 1)
-        self.outlier_scroll.setWidget(self.outlier_content)
-        outlier_layout.addWidget(self.outlier_scroll)
-        self.outlier_tiles = []
-
-        # ---------------------------------------------------------
-        # Core equipment pack selection page
-        # ---------------------------------------------------------
-        self.equipment_page = QWidget()
-        equipment_layout = QVBoxLayout(self.equipment_page)
-        self.pages.addWidget(self.equipment_page)
-
-        equipment_header = QHBoxLayout()
-        self.equipment_page_title = QLabel("EQUIPMENT PACK")
-        equipment_header.addWidget(self.equipment_page_title)
-        equipment_header.addStretch()
-        self.equipment_back_button = QPushButton("Back")
         self.equipment_back_button.clicked.connect(
             lambda: self.pages.setCurrentWidget(self.outlier_page)
         )
-        self.equipment_done_button = QPushButton("Done")
         self.equipment_done_button.clicked.connect(self.finish_equipment_selection)
-        equipment_header.addWidget(self.equipment_back_button)
-        equipment_header.addWidget(self.equipment_done_button)
-        equipment_layout.addLayout(equipment_header)
 
-        self.equipment_scroll = QScrollArea()
-        self.equipment_scroll.setWidgetResizable(True)
-        self.equipment_content = QWidget()
-        self.equipment_content.setStyleSheet("background-color: #242424;")
-        self.equipment_grid = QGridLayout(self.equipment_content)
-        self.equipment_grid.setSpacing(18)
-        for column in range(3):
-            self.equipment_grid.setColumnStretch(column, 1)
-        self.equipment_scroll.setWidget(self.equipment_content)
-        equipment_layout.addWidget(self.equipment_scroll)
-        self.equipment_tiles = []
-        self.light_aspect_tiles = []
-        self.light_ability_tiles = []
+        self._creation_allocations = {code: 0 for code in CHAR_CODES}
 
-        # Load initial data
         self.update_soldier_types()
         self._build_specialization_pack_tiles()
         self._build_outlier_tiles()
