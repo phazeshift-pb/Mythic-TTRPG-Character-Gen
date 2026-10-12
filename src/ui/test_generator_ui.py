@@ -10,11 +10,13 @@ from src.data_loader import DataLoader
 from src.generator.character_generator import CharacterGenerator
 from src.models.character import CHAR_CODES
 from src.ui.character_creation_page import CharacterCreationPage
-from src.ui.character_setup_page import CharacterSetupPage
+from src.ui.character_setup_home import CharacterSetupHome
 from src.ui.equipment_page import EquipmentPage
 from src.ui.landing_page import LandingPage
+from src.ui.initial_character_setup import InitialCharacterSetupPage
 from src.ui.outlier_page import OutlierPage
 from src.ui.specialization_page import SpecializationPage
+from src.ui.version_and_expansions import VersionAndExpansionsPage
 
 
 class TestGeneratorUI(QWidget):
@@ -28,14 +30,18 @@ class TestGeneratorUI(QWidget):
         self.pages = QStackedWidget()
 
         self.landing_page = LandingPage()
-        self.selection_page = CharacterSetupPage()
+        self.character_setup_home = CharacterSetupHome()
+        self.version_and_expansions_page = VersionAndExpansionsPage()
+        self.initial_character_setup_page = InitialCharacterSetupPage()
         self.creation_page = CharacterCreationPage()
         self.specialization_page = SpecializationPage()
         self.outlier_page = OutlierPage()
         self.equipment_page = EquipmentPage()
         self.page_widgets = (
             self.landing_page,
-            self.selection_page,
+            self.character_setup_home,
+            self.version_and_expansions_page,
+            self.initial_character_setup_page,
             self.creation_page,
             self.specialization_page,
             self.outlier_page,
@@ -48,21 +54,14 @@ class TestGeneratorUI(QWidget):
         self.create_character_button = self.landing_page.create_character_button
         self.load_character_button = self.landing_page.load_character_button
 
-        self.selection_layout = self.selection_page.selection_layout
+        self.experience_input = self.character_setup_home.experience_input
+        self.experience_tier_label = self.character_setup_home.experience_tier_label
         for name in (
-            "experience_input", "experience_tier_label", "mode_combo",
-            "soldier_label", "soldier_combo", "core_soldier_row",
-            "upbringing_label", "upbringing_combo", "environment_label",
-            "environment_combo", "lifestyle_label", "lifestyle_combo",
-            "lifestyle_two_label", "lifestyle_two_combo",
-            "lifestyle_three_label", "lifestyle_three_combo",
-            "lifestyle_combos", "core_background_widgets", "human_label",
-            "human_combo", "guardian_label", "guardian_combo",
-            "subclass_label", "subclass_combo", "connection_label",
-            "connection_combo", "human_row_widgets", "guardian_row_widgets",
-            "generate_button",
+            "soldier_combo", "upbringing_combo", "environment_combo",
+            "lifestyle_combos", "human_combo", "guardian_combo",
+            "subclass_combo", "connection_combo", "generate_button",
         ):
-            setattr(self, name, getattr(self.selection_page, name))
+            setattr(self, name, getattr(self.initial_character_setup_page, name))
 
         for name in (
             "back_button", "creation_points_combo", "reset_creation_button",
@@ -97,18 +96,38 @@ class TestGeneratorUI(QWidget):
         self.light_ability_tiles = self.equipment_page.light_ability_tiles
 
         self.create_character_button.clicked.connect(
-            lambda: self.pages.setCurrentWidget(self.selection_page)
+            lambda: self.pages.setCurrentWidget(self.character_setup_home)
+        )
+        self.character_setup_home.version_and_expansions_button.clicked.connect(
+            lambda: self.pages.setCurrentWidget(self.version_and_expansions_page)
+        )
+        self.character_setup_home.initial_setup_button.clicked.connect(
+            self.open_initial_setup_from_home
+        )
+        self.version_and_expansions_page.back_button.clicked.connect(
+            lambda: self.pages.setCurrentWidget(self.character_setup_home)
+        )
+        self.version_and_expansions_page.continue_button.clicked.connect(
+            self.open_initial_setup_from_version
         )
         self.experience_input.valueChanged.connect(self.update_experience_tier)
-        self.mode_combo.currentIndexChanged.connect(self.update_soldier_types)
+        self.version_and_expansions_page.mode_changed.connect(
+            lambda _mode: self.update_soldier_types()
+        )
         self.upbringing_combo.currentIndexChanged.connect(
             self.refresh_core_background_options
         )
         self.human_combo.currentIndexChanged.connect(self.refresh_selection_options)
         self.guardian_combo.currentIndexChanged.connect(self.update_subclasses)
         self.generate_button.clicked.connect(self.generate_character)
+        self.initial_character_setup_page.back_button.clicked.connect(
+            self.return_from_initial_setup
+        )
+        self.initial_character_setup_page.option_selected.connect(
+            self.select_initial_setup_option
+        )
         self.back_button.clicked.connect(
-            lambda: self.pages.setCurrentWidget(self.selection_page)
+            lambda: self.pages.setCurrentWidget(self.initial_character_setup_page)
         )
         self.creation_points_combo.currentIndexChanged.connect(
             self.reset_creation_points
@@ -137,6 +156,124 @@ class TestGeneratorUI(QWidget):
         self._build_specialization_pack_tiles()
         self._build_outlier_tiles()
         self._build_equipment_tiles()
+        self._refresh_initial_setup_options()
+
+    def open_initial_setup_from_home(self):
+        self._initial_setup_return_page = self.character_setup_home
+        self.pages.setCurrentWidget(self.initial_character_setup_page)
+
+    def open_initial_setup_from_version(self):
+        self._initial_setup_return_page = self.version_and_expansions_page
+        self.pages.setCurrentWidget(self.initial_character_setup_page)
+
+    def return_from_initial_setup(self):
+        self.pages.setCurrentWidget(self._initial_setup_return_page)
+
+    @property
+    def selected_mode(self):
+        return self.version_and_expansions_page.selected_mode
+
+    def _refresh_initial_setup_options(self):
+        if not hasattr(self, "game_data"):
+            return
+
+        page = self.initial_character_setup_page
+        if self.selected_mode == "Light & Sky":
+            categories = (
+                ("human", "Human Soldier Type"),
+                ("guardian", "Guardian Soldier Type"),
+                ("subclass", "Subclass"),
+                ("connection", "Connection"),
+            )
+            option_combos = {
+                "human": self.human_combo,
+                "guardian": self.guardian_combo,
+                "subclass": self.subclass_combo,
+                "connection": self.connection_combo,
+            }
+        else:
+            categories = (
+                ("soldier", "Soldier Type"),
+                ("upbringing", "Upbringing"),
+                ("environment", "Environment"),
+                ("lifestyles", "Lifestyles"),
+            )
+            option_combos = {
+                "soldier": self.soldier_combo,
+                "upbringing": self.upbringing_combo,
+                "environment": self.environment_combo,
+                "lifestyles": self.lifestyle_combos[0],
+            }
+
+        page.set_categories(categories)
+        for category, label in categories:
+            combo = option_combos[category]
+            combos = self.lifestyle_combos if category == "lifestyles" else (combo,)
+            options = []
+            selected_values = []
+            for option_combo in combos:
+                for index in range(option_combo.count()):
+                    value = option_combo.itemData(index)
+                    if value is None:
+                        value = option_combo.itemText(index)
+                    if not value:
+                        continue
+                    if not any(existing_value == value for _, existing_value in options):
+                        options.append((option_combo.itemText(index), value))
+                value = option_combo.currentData()
+                if value is None:
+                    value = option_combo.currentText()
+                if value:
+                    selected_values.append(value)
+            page.set_category_options(
+                category,
+                label,
+                options,
+                selected_values,
+            )
+
+    def select_initial_setup_option(self, category, value, checked):
+        if category == "lifestyles":
+            if checked:
+                matching_combo = next(
+                    (combo for combo in self.lifestyle_combos if not combo.currentData()),
+                    None,
+                )
+                if matching_combo is None:
+                    self._refresh_initial_setup_options()
+                    return
+                index = matching_combo.findData(value)
+            else:
+                matching_combo = next(
+                    (
+                        combo
+                        for combo in reversed(self.lifestyle_combos)
+                        if (combo.currentData() or combo.currentText()) == value
+                    ),
+                    None,
+                )
+                if matching_combo is None:
+                    return
+                index = 0
+        else:
+            combo = {
+                "soldier": self.soldier_combo,
+                "human": self.human_combo,
+                "guardian": self.guardian_combo,
+                "upbringing": self.upbringing_combo,
+                "environment": self.environment_combo,
+                "subclass": self.subclass_combo,
+                "connection": self.connection_combo,
+            }[category]
+            index = combo.findData(value)
+            if index < 0:
+                index = combo.findText(value)
+        if index >= 0:
+            if category == "lifestyles":
+                matching_combo.setCurrentIndex(index)
+            else:
+                combo.setCurrentIndex(index)
+        self._refresh_initial_setup_options()
 
     def _build_specialization_pack_tiles(self):
         while self.specialization_grid.count():
@@ -283,7 +420,7 @@ class TestGeneratorUI(QWidget):
 
         self.outlier_tiles.clear()
         documents = [("CORE", "outliers", 1)]
-        if self.mode_combo.currentText() == "Light & Sky":
+        if self.selected_mode == "Light & Sky":
             documents.append(("LIGHT & SKY", "light_and_sky_outliers", 2))
 
         row = 0
@@ -346,10 +483,10 @@ class TestGeneratorUI(QWidget):
             self.output.append(
                 f"Luck burned on outliers: {self.generated_character.luck_burned}"
             )
-        if self.mode_combo.currentText() == "Core" and self.equipment_tiles:
+        if self.selected_mode == "Core" and self.equipment_tiles:
             self.update_equipment_selection()
             self.pages.setCurrentWidget(self.equipment_page)
-        elif self.mode_combo.currentText() == "Light & Sky":
+        elif self.selected_mode == "Light & Sky":
             self._build_light_power_tiles()
             self.update_light_power_selection()
             self.pages.setCurrentWidget(self.equipment_page)
@@ -363,7 +500,7 @@ class TestGeneratorUI(QWidget):
                 item.widget().deleteLater()
 
         self.equipment_tiles.clear()
-        if self.mode_combo.currentText() != "Core" or not hasattr(self, "game_data"):
+        if self.selected_mode != "Core" or not hasattr(self, "game_data"):
             return
 
         soldier_name = getattr(self, "_selected_core_soldier", None)
@@ -426,7 +563,7 @@ class TestGeneratorUI(QWidget):
         )
 
     def open_equipment_page(self):
-        if self.mode_combo.currentText() == "Light & Sky":
+        if self.selected_mode == "Light & Sky":
             self._build_light_power_tiles()
             self.update_light_power_selection()
         else:
@@ -435,7 +572,7 @@ class TestGeneratorUI(QWidget):
         self.pages.setCurrentWidget(self.equipment_page)
 
     def finish_equipment_selection(self):
-        if self.mode_combo.currentText() == "Light & Sky":
+        if self.selected_mode == "Light & Sky":
             self.finish_light_power_selection()
             return
 
@@ -712,7 +849,7 @@ class TestGeneratorUI(QWidget):
     # Load soldier types based on mode
     # ---------------------------------------------------------
     def update_soldier_types(self):
-        use_lns = self.mode_combo.currentText() == "Light & Sky"
+        use_lns = self.selected_mode == "Light & Sky"
         loader = DataLoader(use_light_and_sky=use_lns)
         self.game_data = loader.load_all()
         self._load_creation_point_options()
@@ -750,25 +887,13 @@ class TestGeneratorUI(QWidget):
                 self.connection_combo.addItems(
                     item["name"] for item in connections.get(category, [])
                 )
-        self.soldier_combo.setVisible(not use_lns)
-        self.soldier_label.setVisible(not use_lns)
         self.equipment_button.setVisible(True)
         self.equipment_button.setText(
             "Light Aspects / Abilities" if use_lns else "Equipment Pack"
         )
-        for widget in self.core_background_widgets:
-            widget.setVisible(not use_lns)
-        for widget in self.human_row_widgets:
-            widget.setVisible(use_lns)
-        for widget in self.guardian_row_widgets:
-            widget.setVisible(use_lns)
-        self.subclass_combo.setVisible(use_lns)
-        self.subclass_label.setVisible(use_lns)
-        self.connection_combo.setVisible(use_lns)
-        self.connection_label.setVisible(use_lns)
-
         self.refresh_selection_options()
         self.update_subclasses()
+        self._refresh_initial_setup_options()
         self._build_outlier_tiles()
         if use_lns:
             self._build_light_power_tiles()
@@ -795,7 +920,7 @@ class TestGeneratorUI(QWidget):
         try:
             records = self.game_data.families.get("soldier_type", {})
             available_xp = self.experience_input.value()
-            use_lns = self.mode_combo.currentText() == "Light & Sky"
+            use_lns = self.selected_mode == "Light & Sky"
             selected_human = self.human_combo.currentData()
             selected_guardian = self.guardian_combo.currentData()
 
@@ -823,12 +948,13 @@ class TestGeneratorUI(QWidget):
                 self.update_subclasses()
         finally:
             self._refreshing_options = False
+        self._refresh_initial_setup_options()
 
     def refresh_core_background_options(self):
         if (
             not hasattr(self, "game_data")
             or getattr(self, "_refreshing_background_options", False)
-            or self.mode_combo.currentText() != "Core"
+            or self.selected_mode != "Core"
         ):
             return
 
@@ -899,6 +1025,7 @@ class TestGeneratorUI(QWidget):
             for combo in self.lifestyle_combos:
                 combo.blockSignals(False)
             self._refreshing_background_options = False
+        self._refresh_initial_setup_options()
 
     @staticmethod
     def _restore_combo_selection(combo, key):
@@ -916,10 +1043,12 @@ class TestGeneratorUI(QWidget):
 
         soldier_type = self.guardian_combo.currentData()
         if not soldier_type:
+            self._refresh_initial_setup_options()
             return
 
         record = self.game_data.get("soldier_type", soldier_type)
         if not record:
+            self._refresh_initial_setup_options()
             return
 
         path = record.get("source_path", "")
@@ -931,13 +1060,14 @@ class TestGeneratorUI(QWidget):
         else:
             # No subclasses for UNSC or Human soldier types
             self.subclass_combo.clear()
+        self._refresh_initial_setup_options()
 
     # ---------------------------------------------------------
     # Generate character
     # ---------------------------------------------------------
     def generate_character(self):
         name = "Test Character"
-        use_lns = self.mode_combo.currentText() == "Light & Sky"
+        use_lns = self.selected_mode == "Light & Sky"
         if use_lns:
             human_type = self.human_combo.currentData()
             guardian_type = self.guardian_combo.currentData()
