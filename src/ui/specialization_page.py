@@ -15,12 +15,12 @@ class SpecializationPage(QWidget):
         layout = QVBoxLayout(self)
 
         header = QHBoxLayout()
-        header.addWidget(QLabel("SPECIALIZATION PACKS"))
-        header.addStretch()
-        self.back_button = QPushButton("Back")
-        self.done_button = QPushButton("Done")
-        header.addWidget(self.back_button)
-        header.addWidget(self.done_button)
+        title = QLabel("Specialization Packs")
+        title.setStyleSheet(
+            "font-size: 24px; font-weight: bold; "
+            "padding: 10px; border-bottom: 2px solid #526b28;"
+        )
+        header.addWidget(title)
         layout.addLayout(header)
 
         self.scroll_area = QScrollArea()
@@ -36,8 +36,13 @@ class SpecializationPage(QWidget):
         self.tiles = []
 
         navigation = QHBoxLayout()
-        navigation.addStretch(1)
+        self.back_button = QPushButton("Back")
         self.home_button = QPushButton("Home")
+        self.next_button = QPushButton("Next: Equipment Packs")
+        self.done_button = self.next_button
+        navigation.addWidget(self.back_button)
+        navigation.addStretch(1)
         navigation.addWidget(self.home_button)
         navigation.addStretch(1)
+        navigation.addWidget(self.next_button)
         layout.addLayout(navigation)

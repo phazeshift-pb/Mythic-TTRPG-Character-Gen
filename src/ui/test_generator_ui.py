@@ -1,7 +1,6 @@
 from PySide6.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout, QHBoxLayout,
-    QLabel, QPushButton, QComboBox, QSpinBox,
-    QStackedWidget, QGridLayout, QGroupBox, QScrollArea
+    QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QFrame,
+    QStackedWidget, QGridLayout, QGroupBox,
 )
 import sys
 
@@ -56,23 +55,31 @@ class TestGeneratorUI(QWidget):
 
         self.experience_input = self.character_setup_home.experience_input
         self.experience_tier_label = self.character_setup_home.experience_tier_label
-        for name in (
-            "soldier_combo", "upbringing_combo", "environment_combo",
-            "lifestyle_combos", "human_combo", "guardian_combo",
-            "subclass_combo", "connection_combo", "generate_button",
-        ):
-            setattr(self, name, getattr(self.initial_character_setup_page, name))
+        self.soldier_combo = self.initial_character_setup_page.soldier_combo
+        self.upbringing_combo = self.initial_character_setup_page.upbringing_combo
+        self.environment_combo = self.initial_character_setup_page.environment_combo
+        self.lifestyle_combos = self.initial_character_setup_page.lifestyle_combos
+        self.human_combo = self.initial_character_setup_page.human_combo
+        self.guardian_combo = self.initial_character_setup_page.guardian_combo
+        self.subclass_combo = self.initial_character_setup_page.subclass_combo
+        self.connection_combo = self.initial_character_setup_page.connection_combo
+        self.generate_button = self.initial_character_setup_page.generate_button
 
-        for name in (
-            "back_button", "creation_points_combo", "reset_creation_button",
-            "creation_points_remaining_label", "characteristic_grid",
-            "characteristic_value_labels", "characteristic_buttons",
-            "next_button",
-        ):
-            setattr(self, name, getattr(self.creation_page, name))
+        self.back_button = self.creation_page.back_button
+        self.creation_points_combo = self.creation_page.creation_points_combo
+        self.reset_creation_button = self.creation_page.reset_creation_button
+        self.creation_points_remaining_label = (
+            self.creation_page.creation_points_remaining_label
+        )
+        self.characteristic_grid = self.creation_page.characteristic_grid
+        self.characteristic_value_labels = (
+            self.creation_page.characteristic_value_labels
+        )
+        self.characteristic_buttons = self.creation_page.characteristic_buttons
+        self.next_button = self.creation_page.next_button
 
         self.specialization_back_button = self.specialization_page.back_button
-        self.specialization_done_button = self.specialization_page.done_button
+        self.specialization_done_button = self.specialization_page.next_button
         self.specialization_scroll = self.specialization_page.scroll_area
         self.specialization_content = self.specialization_page.content
         self.specialization_grid = self.specialization_page.grid
@@ -107,6 +114,9 @@ class TestGeneratorUI(QWidget):
         self.character_setup_home.stat_point_allocation_button.clicked.connect(
             lambda: self.pages.setCurrentWidget(self.creation_page)
         )
+        self.character_setup_home.specialization_packs_button.clicked.connect(
+            lambda: self.pages.setCurrentWidget(self.specialization_page)
+        )
         self.version_and_expansions_page.back_button.clicked.connect(
             lambda: self.pages.setCurrentWidget(self.character_setup_home)
         )
@@ -118,7 +128,7 @@ class TestGeneratorUI(QWidget):
         )
         self.experience_input.valueChanged.connect(self.update_experience_tier)
         self.version_and_expansions_page.mode_changed.connect(
-            lambda _mode: self.update_soldier_types()
+            self.update_soldier_types
         )
         self.upbringing_combo.currentIndexChanged.connect(
             self.refresh_core_background_options
@@ -156,7 +166,7 @@ class TestGeneratorUI(QWidget):
         )
         self.outlier_done_button.clicked.connect(self.finish_outlier_selection)
         self.equipment_back_button.clicked.connect(
-            lambda: self.pages.setCurrentWidget(self.outlier_page)
+            lambda: self.pages.setCurrentWidget(self.specialization_page)
         )
         self.equipment_done_button.clicked.connect(self.finish_equipment_selection)
         for page in (
@@ -399,8 +409,11 @@ class TestGeneratorUI(QWidget):
     def _build_specialization_pack_tiles(self):
         while self.specialization_grid.count():
             item = self.specialization_grid.takeAt(0)
-            if item.widget():
-                item.widget().deleteLater()
+            if item is None:
+                continue
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()
 
         self.specialization_tiles.clear()
         document = self.game_data.get(
@@ -427,39 +440,54 @@ class TestGeneratorUI(QWidget):
             for index, pack in enumerate(packs):
                 column = index % 3
                 tile_row = row + index // 3
-                tile = QGroupBox(pack["name"])
-                tile.setCheckable(True)
-                tile.setChecked(False)
+                tile = QFrame(self.specialization_content)
                 tile.setStyleSheet(
-                    "QGroupBox {"
-                    " background-color: #dfe8cd;"
-                    " border: 1px solid #f4f2e8;"
-                    " color: #ffffff;"
-                    " font-weight: bold;"
-                    " padding-top: 22px;"
-                    "}"
-                    "QGroupBox::title {"
-                    " subcontrol-origin: margin;"
-                    " subcontrol-position: top center;"
-                    " background-color: #526b28;"
-                    " color: #ffffff;"
-                    " padding: 4px 8px;"
-                    "}"
-                    "QGroupBox:checked {"
-                    " background-color: #c7dc9c;"
-                    " border: 3px solid #f7d36b;"
-                    "}"
-                    "QGroupBox:checked::title { background-color: #788f3e; }"
-                    "QGroupBox::indicator { width: 14px; height: 14px; }"
+                    "QFrame { background-color: #242424; "
+                    "border: 2px solid #526b28; border-radius: 8px; }"
                 )
                 tile.setMinimumHeight(145)
                 tile.setMaximumHeight(145)
-                tile_layout = QGridLayout(tile)
+                tile_layout = QVBoxLayout(tile)
                 tile_layout.setContentsMargins(5, 5, 5, 5)
-                tile_layout.setHorizontalSpacing(0)
-                tile_layout.setVerticalSpacing(1)
-                tile_layout.setColumnStretch(0, 1)
-                tile_layout.setColumnStretch(1, 1)
+                tile_layout.setSpacing(4)
+                pack_button = QPushButton(pack["name"])
+                pack_button.setCheckable(True)
+                pack_button.setMinimumHeight(48)
+                pack_button.setStyleSheet(
+                    "QPushButton {"
+                    " text-align: left;"
+                    " background-color: #526b28;"
+                    " color: #ffffff;"
+                    " border: 2px solid #788f3e;"
+                    " border-radius: 6px;"
+                    " padding: 8px 12px;"
+                    " font-size: 16px;"
+                    " font-weight: bold;"
+                    "}"
+                    "QPushButton:hover {"
+                    " background-color: #788f3e;"
+                    " border-color: #f7d36b;"
+                    "}"
+                    "QPushButton:checked {"
+                    " background-color: #35451d;"
+                    " border: 3px solid #f7d36b;"
+                    "}"
+                    "QPushButton:pressed {"
+                    " background-color: #35451d;"
+                    " border-color: #f7d36b;"
+                    "}"
+                )
+                tile_layout.addWidget(pack_button)
+                table_widget = QWidget(tile)
+                table_widget.setStyleSheet("border: none;")
+                table_layout = QGridLayout(table_widget)
+                table_layout.setContentsMargins(0, 0, 0, 0)
+                table_layout.setHorizontalSpacing(0)
+                table_layout.setVerticalSpacing(1)
+                table_layout.setColumnStretch(0, 1)
+                table_layout.setColumnStretch(1, 1)
+                tile_layout.addWidget(table_widget)
+
                 header_style = (
                     "color: #ffffff; background-color: #526b28; "
                     "font-weight: bold; padding: 3px;"
@@ -469,8 +497,8 @@ class TestGeneratorUI(QWidget):
                 ability_header.setStyleSheet(header_style)
                 skill_header = QLabel("SKILL")
                 skill_header.setStyleSheet(header_style)
-                tile_layout.addWidget(ability_header, 0, 0)
-                tile_layout.addWidget(skill_header, 0, 1)
+                table_layout.addWidget(ability_header, 0, 0)
+                table_layout.addWidget(skill_header, 0, 1)
 
                 for index, (ability, skill) in enumerate(
                     zip(pack.get("abilities", []), pack.get("skills", [])),
@@ -480,18 +508,35 @@ class TestGeneratorUI(QWidget):
                     ability_label.setStyleSheet(cell_style)
                     skill_label = QLabel(skill)
                     skill_label.setStyleSheet(cell_style)
-                    tile_layout.addWidget(ability_label, index, 0)
-                    tile_layout.addWidget(skill_label, index, 1)
+                    table_layout.addWidget(ability_label, index, 0)
+                    table_layout.addWidget(skill_label, index, 1)
 
-                tile.toggled.connect(self.update_specialization_selection)
-                self.specialization_tiles.append((tile, pack["name"]))
+                pack_button.toggled.connect(
+                    self.update_specialization_selection
+                )
+                pack_button.toggled.connect(
+                    lambda checked, card=tile: card.setStyleSheet(
+                        "QFrame { background-color: #242424; "
+                        + (
+                            "border: 3px solid #f7d36b;"
+                            if checked
+                            else "border: 2px solid #526b28;"
+                        )
+                        + " border-radius: 8px; }"
+                    )
+                )
+                pack_button.toggled.connect(self.update_specialization_selection)
+                self.specialization_tiles.append((pack_button, pack["name"]))
                 self.specialization_grid.addWidget(tile, tile_row, column)
 
             row += (len(packs) + 2) // 3 + 1
 
     def update_specialization_selection(self):
-        selected_count = sum(tile.isChecked() for tile, _ in self.specialization_tiles)
-        self.specialization_done_button.setText(f"Done ({selected_count})")
+        if self.selected_mode == "Light & Sky":
+            button_text = "Next: Light Abilities / Light Aspects"
+        else:
+            button_text = "Next: Equipment Packs"
+        self.specialization_done_button.setText(button_text)
 
     def open_specialization_page(self):
         self.update_specialization_selection()
@@ -507,7 +552,7 @@ class TestGeneratorUI(QWidget):
                 self.generated_character.abilities = self._pre_specialization_abilities.copy()
 
             selected_names = [
-                name for tile, name in self.specialization_tiles if tile.isChecked()
+                name for button, name in self.specialization_tiles if button.isChecked()
             ]
             document = self.game_data.get(
                 "specialization_packs", "specialization_packs"
@@ -522,14 +567,16 @@ class TestGeneratorUI(QWidget):
             self.generated_character.specialization_packs = []
             for pack in selected_packs:
                 self.generated_character.apply_specialization_pack(pack)
-        self.update_outlier_selection()
-        self.pages.setCurrentWidget(self.outlier_page)
+        self.open_equipment_page()
 
     def _build_outlier_tiles(self):
         while self.outlier_grid.count():
             item = self.outlier_grid.takeAt(0)
-            if item.widget():
-                item.widget().deleteLater()
+            if item is None:
+                continue
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()
 
         self.outlier_tiles.clear()
         documents = [("CORE", "outliers", 1)]
@@ -602,8 +649,11 @@ class TestGeneratorUI(QWidget):
     def _build_equipment_tiles(self):
         while self.equipment_grid.count():
             item = self.equipment_grid.takeAt(0)
-            if item.widget():
-                item.widget().deleteLater()
+            if item is None:
+                continue
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()
 
         self.equipment_tiles.clear()
         if self.selected_mode != "Core" or not hasattr(self, "game_data"):
@@ -700,8 +750,11 @@ class TestGeneratorUI(QWidget):
     def _clear_equipment_grid(self):
         while self.equipment_grid.count():
             item = self.equipment_grid.takeAt(0)
-            if item.widget():
-                item.widget().deleteLater()
+            if item is None:
+                continue
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()
 
     def _build_light_power_tiles(self):
         self._clear_equipment_grid()
@@ -896,8 +949,11 @@ class TestGeneratorUI(QWidget):
     def _build_characteristic_controls(self):
         while self.characteristic_grid.count():
             item = self.characteristic_grid.takeAt(0)
-            if item.widget():
-                item.widget().deleteLater()
+            if item is None:
+                continue
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()
 
         self.characteristic_value_labels.clear()
         self.characteristic_buttons.clear()
@@ -942,12 +998,22 @@ class TestGeneratorUI(QWidget):
             plus_button = QPushButton("+")
             for button in (minus_button, plus_button):
                 button.setFixedSize(44, 36)
-            minus_button.clicked.connect(lambda checked=False, c=code: self.adjust_creation_points(c, -1))
-            plus_button.clicked.connect(lambda checked=False, c=code: self.adjust_creation_points(c, 1))
+            minus_button.clicked.connect(
+                self._make_creation_point_adjuster(code, -1)
+            )
+            plus_button.clicked.connect(
+                self._make_creation_point_adjuster(code, 1)
+            )
             self.characteristic_grid.addWidget(minus_button, row, 2)
             self.characteristic_grid.addWidget(plus_button, row, 3)
             self.characteristic_value_labels[code] = value_label
             self.characteristic_buttons[code] = (minus_button, plus_button)
+
+    def _make_creation_point_adjuster(self, code, amount):
+        def adjust():
+            self.adjust_creation_points(code, amount)
+
+        return adjust
 
     def update_experience_tier(self):
         if not hasattr(self, "game_data"):
@@ -1012,7 +1078,7 @@ class TestGeneratorUI(QWidget):
             connections = connections.get("connections", connections)
             for category in ("light", "darkness", "specialized"):
                 self.connection_combo.addItems(
-                    item["name"] for item in connections.get(category, [])
+                    [item["name"] for item in connections.get(category, [])]
                 )
         self.refresh_selection_options()
         self.update_subclasses()
@@ -1022,6 +1088,7 @@ class TestGeneratorUI(QWidget):
             self._build_light_power_tiles()
         else:
             self._build_equipment_tiles()
+        self.update_specialization_selection()
 
     @staticmethod
     def _add_costed_items(combo, names, records, available_xp):
