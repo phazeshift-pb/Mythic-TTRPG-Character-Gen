@@ -901,6 +901,13 @@ class TestGeneratorUI(QWidget):
 
         self.characteristic_value_labels.clear()
         self.characteristic_buttons.clear()
+        characteristic_document = (
+            self.game_data.get("characteristics", "characteristics") or {}
+        )
+        characteristic_descriptions = {
+            item.get("id", "").upper(): item.get("description", "")
+            for item in characteristic_document.get("characteristics", [])
+        }
         headers = ("Characteristic", "Total", "-", "+")
         for column, text in enumerate(headers):
             header = QLabel(text)
@@ -915,6 +922,10 @@ class TestGeneratorUI(QWidget):
         for row, code in enumerate(CHAR_CODES, start=1):
             name_label = QLabel(code)
             name_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            name_label.setToolTip(characteristic_descriptions.get(code, ""))
+            name_label.setStyleSheet(
+                "QLabel:hover { color: #39ff14; }"
+            )
             font = name_label.font()
             font.setPointSizeF(font.pointSizeF() * 2)
             name_label.setFont(font)

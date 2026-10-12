@@ -72,6 +72,7 @@ class DataLoader:
         game_data = GameData()
         validator = BaseValidator(game_data)
         self._load_folder(self.character_creation_root, game_data, validator)
+        self._load_folder(Path("data/characteristics.json"), game_data, validator)
 
         # -----------------------------
         # CORE MODE
