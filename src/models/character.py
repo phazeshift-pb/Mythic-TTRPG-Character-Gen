@@ -52,6 +52,7 @@ class Character:
     luck_burned: int = 0
     light_aspects: List[str] = field(default_factory=list)
     light_abilities: List[str] = field(default_factory=list)
+    light_grenades: List[str] = field(default_factory=list)
 
     # Internal debug log
     debug_log: List[str] = field(default_factory=list)
@@ -181,17 +182,30 @@ class Character:
         abilities: List[dict],
     ):
         self.light_aspects = [aspect["name"] for aspect in aspects]
-        self.light_abilities = [ability["name"] for ability in abilities]
+        selected_abilities = [
+            ability
+            for ability in abilities
+            if ability.get("_power_type") != "Light Grenade"
+        ]
+        selected_grenades = [
+            ability
+            for ability in abilities
+            if ability.get("_power_type") == "Light Grenade"
+        ]
+        self.light_abilities = [ability["name"] for ability in selected_abilities]
+        self.light_grenades = [grenade["name"] for grenade in selected_grenades]
         for aspect in aspects:
             self.log(
                 f"Light Aspect: {aspect['name']} "
                 f"(XP {aspect.get('experience_cost', 0)}): {aspect['description']}"
             )
         for ability in abilities:
+            power_type = ability.get("_power_type", "Light Ability")
+            description = ability.get("description") or ability.get("special_rules", "")
             self.log(
-                f"Light Ability: {ability['name']} "
+                f"{power_type}: {ability['name']} "
                 f"(XP {ability.get('experience_cost', 0)}, "
-                f"Light {ability.get('light_cost', 'N/A')}): {ability['description']}"
+                f"Light {ability.get('light_cost', 'N/A')}): {description}"
             )
 
     # -----------------------------
