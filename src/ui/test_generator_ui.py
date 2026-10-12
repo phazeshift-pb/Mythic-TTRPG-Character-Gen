@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout,
-    QLabel, QPushButton, QComboBox, QTextEdit, QSpinBox,
+    QLabel, QPushButton, QComboBox, QSpinBox,
     QStackedWidget, QGridLayout, QGroupBox, QScrollArea
 )
 import sys
@@ -9,13 +9,13 @@ from PySide6.QtCore import Qt
 from src.data_loader import DataLoader
 from src.generator.character_generator import CharacterGenerator
 from src.models.character import CHAR_CODES
-from src.ui.character_creation_page import CharacterCreationPage
 from src.ui.character_setup_home import CharacterSetupHome
 from src.ui.equipment_page import EquipmentPage
 from src.ui.landing_page import LandingPage
 from src.ui.initial_character_setup import InitialCharacterSetupPage
 from src.ui.outlier_page import OutlierPage
 from src.ui.specialization_page import SpecializationPage
+from src.ui.stat_allocation import StatAllocationPage
 from src.ui.version_and_expansions import VersionAndExpansionsPage
 
 
@@ -33,7 +33,7 @@ class TestGeneratorUI(QWidget):
         self.character_setup_home = CharacterSetupHome()
         self.version_and_expansions_page = VersionAndExpansionsPage()
         self.initial_character_setup_page = InitialCharacterSetupPage()
-        self.creation_page = CharacterCreationPage()
+        self.creation_page = StatAllocationPage()
         self.specialization_page = SpecializationPage()
         self.outlier_page = OutlierPage()
         self.equipment_page = EquipmentPage()
@@ -65,9 +65,9 @@ class TestGeneratorUI(QWidget):
 
         for name in (
             "back_button", "creation_points_combo", "reset_creation_button",
-            "creation_points_remaining_label", "specialization_button",
-            "equipment_button", "characteristic_grid",
-            "characteristic_value_labels", "characteristic_buttons", "output",
+            "creation_points_remaining_label", "characteristic_grid",
+            "characteristic_value_labels", "characteristic_buttons",
+            "next_button",
         ):
             setattr(self, name, getattr(self.creation_page, name))
 
@@ -104,8 +104,14 @@ class TestGeneratorUI(QWidget):
         self.character_setup_home.initial_setup_button.clicked.connect(
             self.open_initial_setup_from_home
         )
+        self.character_setup_home.stat_point_allocation_button.clicked.connect(
+            lambda: self.pages.setCurrentWidget(self.creation_page)
+        )
         self.version_and_expansions_page.back_button.clicked.connect(
             lambda: self.pages.setCurrentWidget(self.character_setup_home)
+        )
+        self.version_and_expansions_page.home_button.clicked.connect(
+            self.return_to_character_setup_home
         )
         self.version_and_expansions_page.continue_button.clicked.connect(
             self.open_initial_setup_from_version
@@ -121,7 +127,10 @@ class TestGeneratorUI(QWidget):
         self.guardian_combo.currentIndexChanged.connect(self.update_subclasses)
         self.generate_button.clicked.connect(self.generate_character)
         self.initial_character_setup_page.back_button.clicked.connect(
-            self.return_from_initial_setup
+            lambda: self.pages.setCurrentWidget(self.version_and_expansions_page)
+        )
+        self.initial_character_setup_page.home_button.clicked.connect(
+            self.return_to_character_setup_home
         )
         self.initial_character_setup_page.option_selected.connect(
             self.select_initial_setup_option
@@ -133,8 +142,9 @@ class TestGeneratorUI(QWidget):
             self.reset_creation_points
         )
         self.reset_creation_button.clicked.connect(self.reset_creation_points)
-        self.specialization_button.clicked.connect(self.open_specialization_page)
-        self.equipment_button.clicked.connect(self.open_equipment_page)
+        self.next_button.clicked.connect(
+            lambda: self.pages.setCurrentWidget(self.specialization_page)
+        )
         self.specialization_back_button.clicked.connect(
             lambda: self.pages.setCurrentWidget(self.creation_page)
         )
@@ -149,6 +159,13 @@ class TestGeneratorUI(QWidget):
             lambda: self.pages.setCurrentWidget(self.outlier_page)
         )
         self.equipment_done_button.clicked.connect(self.finish_equipment_selection)
+        for page in (
+            self.creation_page,
+            self.specialization_page,
+            self.outlier_page,
+            self.equipment_page,
+        ):
+            page.home_button.clicked.connect(self.return_to_character_setup_home)
 
         self._creation_allocations = {code: 0 for code in CHAR_CODES}
 
@@ -159,15 +176,13 @@ class TestGeneratorUI(QWidget):
         self._refresh_initial_setup_options()
 
     def open_initial_setup_from_home(self):
-        self._initial_setup_return_page = self.character_setup_home
         self.pages.setCurrentWidget(self.initial_character_setup_page)
 
     def open_initial_setup_from_version(self):
-        self._initial_setup_return_page = self.version_and_expansions_page
         self.pages.setCurrentWidget(self.initial_character_setup_page)
 
-    def return_from_initial_setup(self):
-        self.pages.setCurrentWidget(self._initial_setup_return_page)
+    def return_to_character_setup_home(self):
+        self.pages.setCurrentWidget(self.character_setup_home)
 
     @property
     def selected_mode(self):
@@ -507,14 +522,6 @@ class TestGeneratorUI(QWidget):
             self.generated_character.specialization_packs = []
             for pack in selected_packs:
                 self.generated_character.apply_specialization_pack(pack)
-            self.output.append(
-                "Specialization packs: "
-                + (", ".join(self.generated_character.specialization_packs) or "None")
-            )
-            for ability in self.generated_character.abilities:
-                self.output.append(f"Ability: {ability}")
-            for skill_name, skill_value in self.generated_character.skills.items():
-                self.output.append(f"Skill: {skill_name} (+{skill_value})")
         self.update_outlier_selection()
         self.pages.setCurrentWidget(self.outlier_page)
 
@@ -582,13 +589,6 @@ class TestGeneratorUI(QWidget):
             for tile, outlier, luck_cost in self.outlier_tiles:
                 if tile.isChecked():
                     self.generated_character.apply_outlier(outlier, luck_cost)
-            self.output.append(
-                "Outliers: "
-                + (", ".join(self.generated_character.outliers) or "None")
-            )
-            self.output.append(
-                f"Luck burned on outliers: {self.generated_character.luck_burned}"
-            )
         if self.selected_mode == "Core" and self.equipment_tiles:
             self.update_equipment_selection()
             self.pages.setCurrentWidget(self.equipment_page)
@@ -695,11 +695,6 @@ class TestGeneratorUI(QWidget):
             self.generated_character.equipment_pack = None
             if selected:
                 self.generated_character.apply_equipment_pack(*selected)
-                self.output.append(f"Equipment pack: {selected[0]}")
-                for item in selected[1]:
-                    self.output.append(f"Equipment: {item}")
-            else:
-                self.output.append("Equipment pack: None")
         self.pages.setCurrentWidget(self.creation_page)
 
     def _clear_equipment_grid(self):
@@ -841,14 +836,6 @@ class TestGeneratorUI(QWidget):
                 ability for tile, ability in self.light_ability_tiles if tile.isChecked()
             ]
             self.generated_character.apply_light_powers(aspects, abilities)
-            self.output.append(
-                "Light Aspects: "
-                + (", ".join(item["name"] for item in aspects) or "None")
-            )
-            self.output.append(
-                "Light Abilities: "
-                + (", ".join(item["name"] for item in abilities) or "None")
-            )
         self.pages.setCurrentWidget(self.creation_page)
 
     def reset_creation_points(self):
@@ -914,17 +901,40 @@ class TestGeneratorUI(QWidget):
 
         self.characteristic_value_labels.clear()
         self.characteristic_buttons.clear()
-        for column, code in enumerate(CHAR_CODES):
-            self.characteristic_grid.addWidget(QLabel(code), 0, column)
+        headers = ("Characteristic", "Total", "-", "+")
+        for column, text in enumerate(headers):
+            header = QLabel(text)
+            header.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            header.setStyleSheet("font-weight: bold; padding: 4px;")
+            if column < 2:
+                font = header.font()
+                font.setPointSizeF(font.pointSizeF() * 2)
+                header.setFont(font)
+            self.characteristic_grid.addWidget(header, 0, column)
+
+        for row, code in enumerate(CHAR_CODES, start=1):
+            name_label = QLabel(code)
+            name_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            font = name_label.font()
+            font.setPointSizeF(font.pointSizeF() * 2)
+            name_label.setFont(font)
+            self.characteristic_grid.addWidget(name_label, row, 0)
+
             value_label = QLabel("0")
             value_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            self.characteristic_grid.addWidget(value_label, 1, column)
+            font = value_label.font()
+            font.setPointSizeF(font.pointSizeF() * 2)
+            value_label.setFont(font)
+            self.characteristic_grid.addWidget(value_label, row, 1)
+
             minus_button = QPushButton("-")
             plus_button = QPushButton("+")
+            for button in (minus_button, plus_button):
+                button.setFixedSize(44, 36)
             minus_button.clicked.connect(lambda checked=False, c=code: self.adjust_creation_points(c, -1))
             plus_button.clicked.connect(lambda checked=False, c=code: self.adjust_creation_points(c, 1))
-            self.characteristic_grid.addWidget(plus_button, 2, column)
-            self.characteristic_grid.addWidget(minus_button, 3, column)
+            self.characteristic_grid.addWidget(minus_button, row, 2)
+            self.characteristic_grid.addWidget(plus_button, row, 3)
             self.characteristic_value_labels[code] = value_label
             self.characteristic_buttons[code] = (minus_button, plus_button)
 
@@ -993,10 +1003,6 @@ class TestGeneratorUI(QWidget):
                 self.connection_combo.addItems(
                     item["name"] for item in connections.get(category, [])
                 )
-        self.equipment_button.setVisible(True)
-        self.equipment_button.setText(
-            "Light Aspects / Abilities" if use_lns else "Equipment Pack"
-        )
         self.refresh_selection_options()
         self.update_subclasses()
         self._refresh_initial_setup_options()
@@ -1216,10 +1222,6 @@ class TestGeneratorUI(QWidget):
         self._creation_allocations = {code: 0 for code in CHAR_CODES}
         self._build_characteristic_controls()
 
-        # Show debug log
-        self.output.clear()
-        for line in char.debug_log:
-            self.output.append(line)
         self._update_creation_point_display()
         self.pages.setCurrentWidget(self.creation_page)
 
@@ -1230,5 +1232,5 @@ class TestGeneratorUI(QWidget):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = TestGeneratorUI()
-    window.show()
+    window.showMaximized()
     sys.exit(app.exec())

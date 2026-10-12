@@ -61,8 +61,11 @@ class InitialCharacterSetupPage(QWidget):
 
         navigation = QHBoxLayout()
         self.back_button = QPushButton("Back")
+        self.home_button = QPushButton("Home")
         self.generate_button = QPushButton("Next: Stat Point Allocation")
         navigation.addWidget(self.back_button)
+        navigation.addStretch(1)
+        navigation.addWidget(self.home_button)
         navigation.addStretch(1)
         navigation.addWidget(self.generate_button)
         layout.addLayout(navigation)

@@ -78,8 +78,11 @@ class VersionAndExpansionsPage(QWidget):
 
         navigation = QHBoxLayout()
         self.back_button = QPushButton("Back")
+        self.home_button = QPushButton("Home")
         self.continue_button = QPushButton("Continue to Initial Setup")
         navigation.addWidget(self.back_button)
+        navigation.addStretch(1)
+        navigation.addWidget(self.home_button)
         navigation.addStretch(1)
         navigation.addWidget(self.continue_button)
         layout.addLayout(navigation)

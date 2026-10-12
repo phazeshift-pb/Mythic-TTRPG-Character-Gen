@@ -37,3 +37,10 @@ class EquipmentPage(QWidget):
         self.tiles = []
         self.light_aspect_tiles = []
         self.light_ability_tiles = []
+
+        navigation = QHBoxLayout()
+        navigation.addStretch(1)
+        self.home_button = QPushButton("Home")
+        navigation.addWidget(self.home_button)
+        navigation.addStretch(1)
+        layout.addLayout(navigation)

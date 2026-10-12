@@ -34,3 +34,10 @@ class OutlierPage(QWidget):
         self.scroll_area.setWidget(self.content)
         layout.addWidget(self.scroll_area)
         self.tiles = []
+
+        navigation = QHBoxLayout()
+        navigation.addStretch(1)
+        self.home_button = QPushButton("Home")
+        navigation.addWidget(self.home_button)
+        navigation.addStretch(1)
+        layout.addLayout(navigation)

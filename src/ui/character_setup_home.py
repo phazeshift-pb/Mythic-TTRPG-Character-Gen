@@ -32,9 +32,11 @@ class CharacterSetupHome(QWidget):
 
         self.version_and_expansions_button = QPushButton("Version and Expansions")
         self.initial_setup_button = QPushButton("Initial Character Setup")
+        self.stat_point_allocation_button = QPushButton("Stat Point Allocation")
         for button in (
             self.version_and_expansions_button,
             self.initial_setup_button,
+            self.stat_point_allocation_button,
         ):
             button.setMinimumSize(280, 90)
             button.setStyleSheet(

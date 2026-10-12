@@ -9,7 +9,7 @@ def main():
     app = QApplication(sys.argv)
 
     window = TestGeneratorUI()
-    window.show()
+    window.showMaximized()
 
     sys.exit(app.exec())
 
