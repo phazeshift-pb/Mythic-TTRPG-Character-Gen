@@ -101,6 +101,12 @@ class TestGeneratorUI(QWidget):
         self.equipment_tiles = self.equipment_page.tiles
         self.light_aspect_tiles = self.equipment_page.light_aspect_tiles
         self.light_ability_tiles = self.equipment_page.light_ability_tiles
+        self._selected_light_category = None
+        self._selected_light_aspects = {}
+        self._selected_light_powers = {}
+        self.equipment_page.light_category_selected.connect(
+            self.select_light_category
+        )
 
         self.create_character_button.clicked.connect(
             lambda: self.pages.setCurrentWidget(self.character_setup_home)
@@ -675,6 +681,7 @@ class TestGeneratorUI(QWidget):
             self.pages.setCurrentWidget(self.creation_page)
 
     def _build_equipment_tiles(self):
+        self.equipment_page.set_light_mode(False)
         while self.equipment_grid.count():
             item = self.equipment_grid.takeAt(0)
             if item is None:
@@ -731,6 +738,7 @@ class TestGeneratorUI(QWidget):
 
     def open_equipment_page(self):
         if self.selected_mode == "Light & Sky":
+            self.equipment_page.set_light_mode(True)
             self._build_light_power_tiles()
             self.update_light_power_selection()
         else:
@@ -767,13 +775,17 @@ class TestGeneratorUI(QWidget):
             if widget is not None:
                 widget.deleteLater()
 
+    def select_light_category(self, category):
+        self._selected_light_category = category
+        self._build_light_power_tiles()
+
     def _build_light_power_tiles(self):
         self._clear_equipment_grid()
         self.equipment_tiles.clear()
         self.light_aspect_tiles.clear()
         self.light_ability_tiles.clear()
+        self.equipment_page.set_light_mode(True)
         self.equipment_page_title.setText("LIGHT ASPECTS AND ABILITIES")
-        self.equipment_done_button.setText("Done")
 
         aspects_document = self.game_data.get("light_aspects", "light_aspects") or {}
         aspects_by_connection = aspects_document.get("light_aspects", {})
@@ -785,14 +797,6 @@ class TestGeneratorUI(QWidget):
         ) or {}
         abilities = ability_document.get("abilities", [])
         grenades = ability_document.get("grenades", [])
-
-        row = 0
-        aspect_header = QLabel("ASPECTS (1 STARTING SLOT)")
-        aspect_header.setStyleSheet(
-            "color: #f2f0e6; font-weight: bold; font-size: 14px;"
-        )
-        self.equipment_grid.addWidget(aspect_header, row, 0, 1, 3)
-        row += 1
 
         all_aspects = [
             (connection.title(), aspect)
@@ -806,28 +810,6 @@ class TestGeneratorUI(QWidget):
                 fallback_connection=connection,
             )
         ]
-        for index, (connection, aspect) in enumerate(all_aspects):
-            tile, select_button = self._create_selection_tile(
-                aspect["name"],
-                f"{connection} | XP {self._light_aspect_cost(aspect, connection)}\n"
-                f"{aspect['description']}",
-                min_height=145,
-            )
-            select_button.toggled.connect(
-                lambda checked, selected_tile=select_button: self._select_light_tile(
-                    selected_tile, "aspect", checked
-                )
-            )
-            self.light_aspect_tiles.append((select_button, aspect, connection))
-            self.equipment_grid.addWidget(tile, row + index // 3, index % 3)
-
-        row += (len(all_aspects) + 2) // 3 + 1
-        ability_header = QLabel("LIGHT ABILITIES AND GRENADES (2 STARTING SLOTS)")
-        ability_header.setStyleSheet(
-            "color: #f2f0e6; font-weight: bold; font-size: 14px;"
-        )
-        self.equipment_grid.addWidget(ability_header, row, 0, 1, 3)
-        row += 1
 
         available_powers = [
             (ability, "Light Ability")
@@ -848,24 +830,105 @@ class TestGeneratorUI(QWidget):
                 grenade, selected_connection, selected_connection_group
             )
         )
-        for index, (power, power_type) in enumerate(available_powers):
-            description = power.get("description") or power.get("special_rules", "")
-            power_data = dict(power)
-            power_data["description"] = description
-            power_data["_power_type"] = power_type
-            tile, select_button = self._create_selection_tile(
-                power["name"],
-                f"{power_type} | XP {power.get('experience_cost', 0)} | "
-                f"Light {power.get('light_cost', 'N/A')}\n{description}",
-                min_height=145,
+
+        valid_aspect_keys = {
+            (connection.casefold(), aspect["name"].casefold())
+            for connection, aspect in all_aspects
+        }
+        valid_power_keys = {
+            (power_type, power["name"].casefold())
+            for power, power_type in available_powers
+        }
+        self._selected_light_aspects = {
+            key: value
+            for key, value in self._selected_light_aspects.items()
+            if key in valid_aspect_keys
+        }
+        self._selected_light_powers = {
+            key: value
+            for key, value in self._selected_light_powers.items()
+            if key in valid_power_keys
+        }
+
+        if self._selected_light_category == "aspects":
+            self.equipment_page.options_title.setText("Light Aspects")
+            self.equipment_page.options_description.setText(
+                "Select one Light Aspect."
             )
-            select_button.toggled.connect(
-                lambda checked, selected_tile=select_button: self._select_light_tile(
-                    selected_tile, "ability", checked
+            for index, (connection, aspect) in enumerate(all_aspects):
+                key = (connection.casefold(), aspect["name"].casefold())
+                tile, select_button = self._create_selection_tile(
+                    aspect["name"],
+                    f"{connection} | XP {self._light_aspect_cost(aspect, connection)}\n"
+                    f"{aspect['description']}",
+                    min_height=145,
                 )
+                select_button.toggled.connect(
+                    lambda checked, selected_tile=select_button, selected_key=key,
+                    selected_aspect=aspect, selected_connection_name=connection:
+                    self._select_light_tile(
+                        selected_tile,
+                        "aspect",
+                        checked,
+                        selected_key,
+                        (selected_aspect, selected_connection_name),
+                    )
+                )
+                self.light_aspect_tiles.append(
+                    (select_button, aspect, connection)
+                )
+                select_button.setChecked(key in self._selected_light_aspects)
+                self.equipment_grid.addWidget(tile, index // 3, index % 3)
+        elif self._selected_light_category == "powers":
+            self.equipment_page.options_title.setText("Light Abilities / Grenades")
+            self.equipment_page.options_description.setText(
+                "Select up to two Light Abilities and/or Light Grenades."
             )
-            self.light_ability_tiles.append((select_button, power_data))
-            self.equipment_grid.addWidget(tile, row + index // 3, index % 3)
+            for index, (power, power_type) in enumerate(available_powers):
+                description = power.get("description") or power.get("special_rules", "")
+                tile_details = (
+                    f"{power_type} | XP {power.get('experience_cost', 0)} | "
+                    f"Light {power.get('light_cost', 'N/A')}"
+                )
+                if power_type == "Light Grenade":
+                    damage_parts = [
+                        str(power[field])
+                        for field in ("damage_roll", "base_damage")
+                        if power.get(field) is not None
+                    ]
+                    damage = " + ".join(damage_parts) if damage_parts else "None"
+                    tile_details += (
+                        f"\nDamage: {damage} | Range: {power.get('range') or 'N/A'}"
+                    )
+                power_data = dict(power)
+                power_data["description"] = description
+                power_data["_power_type"] = power_type
+                key = (power_type, power["name"].casefold())
+                tile, select_button = self._create_selection_tile(
+                    power["name"],
+                    f"{tile_details}\n{description}",
+                    min_height=145,
+                )
+                select_button.toggled.connect(
+                    lambda checked, selected_tile=select_button,
+                    selected_key=key, selected_power=power_data:
+                    self._select_light_tile(
+                        selected_tile,
+                        "power",
+                        checked,
+                        selected_key,
+                        selected_power,
+                    )
+                )
+                self.light_ability_tiles.append((select_button, power_data))
+                select_button.setChecked(key in self._selected_light_powers)
+                self.equipment_grid.addWidget(tile, index // 3, index % 3)
+        else:
+            self.equipment_page.options_title.setText("Select a category")
+            self.equipment_page.options_description.setText(
+                "Choose Light Aspects or Light Abilities / Grenades to view options."
+            )
+        self.update_light_power_selection()
 
     def _create_selection_tile(self, title, text, min_height=125):
         card = QFrame(self.equipment_content)
@@ -880,26 +943,39 @@ class TestGeneratorUI(QWidget):
 
         select_button = QPushButton(title, card)
         select_button.setCheckable(True)
-        select_button.setMinimumHeight(56)
+        select_button.setMinimumSize(260, 72)
         select_button.setStyleSheet(
-            "QPushButton { text-align: left; background-color: #526b28; "
-            "color: #ffffff; border: 2px solid #788f3e; border-radius: 6px; "
-            "padding: 10px 14px; font-size: 16px; font-weight: bold; }"
-            "QPushButton:hover { background-color: #788f3e; "
-            "border-color: #f7d36b; }"
-            "QPushButton:checked { background-color: #35451d; "
-            "border: 3px solid #f7d36b; }"
-            "QPushButton:pressed { background-color: #35451d; "
-            "border-color: #f7d36b; }"
+            "QPushButton {"
+            " text-align: left;"
+            " background-color: #526b28;"
+            " color: #ffffff;"
+            " border: 2px solid #788f3e;"
+            " border-radius: 6px;"
+            " padding: 14px;"
+            " font-size: 16px;"
+            " font-weight: bold;"
+            "}"
+            "QPushButton:hover {"
+            " background-color: #788f3e;"
+            " border-color: #f7d36b;"
+            "}"
+            "QPushButton:checked {"
+            " background-color: #35451d;"
+            " border: 3px solid #f7d36b;"
+            "}"
+            "QPushButton:pressed {"
+            " background-color: #35451d;"
+            " border-color: #f7d36b;"
+            "}"
         )
         layout.addWidget(select_button)
 
-        description = QLabel(text, card)
-        description.setWordWrap(True)
-        description.setStyleSheet(
+        details_label = QLabel(text, card)
+        details_label.setWordWrap(True)
+        details_label.setStyleSheet(
             "color: #d5d2c6; border: none; padding: 4px 8px 8px 8px;"
         )
-        layout.addWidget(description)
+        layout.addWidget(details_label)
 
         select_button.toggled.connect(
             lambda checked, selected_card=card: selected_card.setStyleSheet(
@@ -914,6 +990,42 @@ class TestGeneratorUI(QWidget):
         )
         return card, select_button
 
+    def _select_light_tile(
+        self, selected_tile, selection_kind, checked, selection_key, selected_value
+    ):
+        selections = (
+            self._selected_light_aspects
+            if selection_kind == "aspect"
+            else self._selected_light_powers
+        )
+        limit = 1 if selection_kind == "aspect" else 2
+        if checked and selection_key not in selections and len(selections) >= limit:
+            selected_tile.blockSignals(True)
+            selected_tile.setChecked(False)
+            selected_tile.blockSignals(False)
+        elif checked:
+            selections[selection_key] = selected_value
+        else:
+            selections.pop(selection_key, None)
+        self.update_light_power_selection()
+
+    def update_light_power_selection(self):
+        aspect_count = len(self._selected_light_aspects)
+        ability_count = len(self._selected_light_powers)
+        self.equipment_done_button.setText(
+            f"Done (Aspects {aspect_count}/1; Light Powers {ability_count}/2)"
+        )
+
+    def finish_light_power_selection(self):
+        if hasattr(self, "generated_character"):
+            aspects = [
+                aspect_and_connection[0]
+                for aspect_and_connection in self._selected_light_aspects.values()
+            ]
+            abilities = list(self._selected_light_powers.values())
+            self.generated_character.apply_light_powers(aspects, abilities)
+        self.pages.setCurrentWidget(self.creation_page)
+
     def _light_aspect_cost(self, aspect, connection):
         selected_connection = self.connection_combo.currentText()
         cost = aspect.get("experience_cost", 0)
@@ -925,9 +1037,7 @@ class TestGeneratorUI(QWidget):
 
     def _connection_group(self, selected_connection):
         selected = selected_connection.strip().casefold()
-        connections_document = (
-            self.game_data.get("connections", "connections") or {}
-        )
+        connections_document = self.game_data.get("connections", "connections") or {}
         connections = connections_document.get("connections", connections_document)
         for group in ("light", "darkness", "specialized"):
             for connection in connections.get(group, []):
@@ -966,43 +1076,6 @@ class TestGeneratorUI(QWidget):
                 ):
                     return True
         return False
-
-    def _select_light_tile(self, selected_tile, power_type, checked):
-        if checked:
-            tiles = (
-                self.light_aspect_tiles
-                if power_type == "aspect"
-                else self.light_ability_tiles
-            )
-            selected_count = sum(button.isChecked() for button, *_ in tiles)
-            limit = 1 if power_type == "aspect" else 2
-            if selected_count > limit:
-                selected_tile.blockSignals(True)
-                selected_tile.setChecked(False)
-                selected_tile.blockSignals(False)
-        self.update_light_power_selection()
-
-    def update_light_power_selection(self):
-        aspect_count = sum(button.isChecked() for button, *_ in self.light_aspect_tiles)
-        ability_count = sum(button.isChecked() for button, *_ in self.light_ability_tiles)
-        self.equipment_done_button.setText(
-            f"Done (Aspects {aspect_count}/1; Light Powers {ability_count}/2)"
-        )
-
-    def finish_light_power_selection(self):
-        if hasattr(self, "generated_character"):
-            aspects = [
-                aspect
-                for button, aspect, _ in self.light_aspect_tiles
-                if button.isChecked()
-            ]
-            abilities = [
-                ability
-                for button, ability in self.light_ability_tiles
-                if button.isChecked()
-            ]
-            self.generated_character.apply_light_powers(aspects, abilities)
-        self.pages.setCurrentWidget(self.creation_page)
 
     def reset_creation_points(self):
         if not hasattr(self, "generated_character"):
