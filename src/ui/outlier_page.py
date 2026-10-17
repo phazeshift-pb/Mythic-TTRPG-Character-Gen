@@ -15,12 +15,13 @@ class OutlierPage(QWidget):
         layout = QVBoxLayout(self)
 
         header = QHBoxLayout()
-        header.addWidget(QLabel("OUTLIERS"))
+        title = QLabel("Outliers")
+        title.setStyleSheet(
+            "font-size: 24px; font-weight: bold; "
+            "padding: 10px; border-bottom: 2px solid #526b28;"
+        )
+        header.addWidget(title)
         header.addStretch()
-        self.back_button = QPushButton("Back")
-        self.done_button = QPushButton("Done")
-        header.addWidget(self.back_button)
-        header.addWidget(self.done_button)
         layout.addLayout(header)
 
         self.scroll_area = QScrollArea()
@@ -36,8 +37,12 @@ class OutlierPage(QWidget):
         self.tiles = []
 
         navigation = QHBoxLayout()
-        navigation.addStretch(1)
+        self.back_button = QPushButton("Back")
+        self.done_button = QPushButton("Next: Specialization Packs")
         self.home_button = QPushButton("Home")
+        navigation.addWidget(self.back_button)
+        navigation.addStretch(1)
         navigation.addWidget(self.home_button)
         navigation.addStretch(1)
+        navigation.addWidget(self.done_button)
         layout.addLayout(navigation)

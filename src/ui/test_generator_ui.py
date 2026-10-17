@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QFrame,
-    QStackedWidget, QGridLayout, QGroupBox,
+    QStackedWidget, QGridLayout,
 )
 import sys
 
@@ -42,8 +42,8 @@ class TestGeneratorUI(QWidget):
             self.version_and_expansions_page,
             self.initial_character_setup_page,
             self.creation_page,
-            self.specialization_page,
             self.outlier_page,
+            self.specialization_page,
             self.equipment_page,
         )
         for page in self.page_widgets:
@@ -120,6 +120,9 @@ class TestGeneratorUI(QWidget):
         self.character_setup_home.stat_point_allocation_button.clicked.connect(
             lambda: self.pages.setCurrentWidget(self.creation_page)
         )
+        self.character_setup_home.outliers_button.clicked.connect(
+            lambda: self.pages.setCurrentWidget(self.outlier_page)
+        )
         self.character_setup_home.specialization_packs_button.clicked.connect(
             lambda: self.pages.setCurrentWidget(self.specialization_page)
         )
@@ -162,16 +165,16 @@ class TestGeneratorUI(QWidget):
         )
         self.reset_creation_button.clicked.connect(self.reset_creation_points)
         self.next_button.clicked.connect(
-            lambda: self.pages.setCurrentWidget(self.specialization_page)
+            lambda: self.pages.setCurrentWidget(self.outlier_page)
         )
         self.specialization_back_button.clicked.connect(
-            lambda: self.pages.setCurrentWidget(self.creation_page)
+            lambda: self.pages.setCurrentWidget(self.outlier_page)
         )
         self.specialization_done_button.clicked.connect(
             self.finish_specialization_selection
         )
         self.outlier_back_button.clicked.connect(
-            lambda: self.pages.setCurrentWidget(self.specialization_page)
+            lambda: self.pages.setCurrentWidget(self.creation_page)
         )
         self.outlier_done_button.clicked.connect(self.finish_outlier_selection)
         self.equipment_back_button.clicked.connect(
@@ -632,36 +635,26 @@ class TestGeneratorUI(QWidget):
             row += 1
 
             for index, outlier in enumerate(outliers):
-                tile = QGroupBox(outlier["name"])
-                tile.setCheckable(True)
-                tile.setChecked(False)
-                tile.setMinimumHeight(105)
-                tile.setMaximumHeight(105)
-                tile.setStyleSheet(
-                    "QGroupBox { background-color: #dfe8cd; "
-                    "border: 1px solid #f4f2e8; color: #ffffff; "
-                    "font-weight: bold; padding-top: 22px; }"
-                    "QGroupBox::title { subcontrol-origin: margin; "
-                    "subcontrol-position: top center; background-color: #526b28; "
-                    "color: #ffffff; padding: 4px 8px; }"
-                    "QGroupBox:checked { background-color: #c7dc9c; "
-                    "border: 3px solid #f7d36b; }"
+                card, select_button = self._create_selection_tile(
+                    outlier["name"],
+                    outlier["effect"],
+                    min_height=125,
+                    parent=self.outlier_content,
                 )
-                tile_layout = QVBoxLayout(tile)
-                effect_label = QLabel(outlier["effect"])
-                effect_label.setWordWrap(True)
-                effect_label.setStyleSheet("color: #ffffff; padding: 4px;")
-                tile_layout.addWidget(effect_label)
-                tile.toggled.connect(self.update_outlier_selection)
-                self.outlier_tiles.append((tile, outlier, luck_cost))
-                self.outlier_grid.addWidget(tile, row + index // 3, index % 3)
+                select_button.toggled.connect(
+                    self.update_outlier_selection
+                )
+                self.outlier_tiles.append((select_button, outlier, luck_cost))
+                self.outlier_grid.addWidget(card, row + index // 3, index % 3)
 
             row += (len(outliers) + 2) // 3 + 1
 
     def update_outlier_selection(self):
         selected_count = sum(tile.isChecked() for tile, _, _ in self.outlier_tiles)
         luck_cost = sum(cost for tile, _, cost in self.outlier_tiles if tile.isChecked())
-        self.outlier_done_button.setText(f"Done ({selected_count}; Burn {luck_cost} Luck)")
+        self.outlier_done_button.setText(
+            f"Next: Specialization Packs ({selected_count}; Burn {luck_cost} Luck)"
+        )
 
     def finish_outlier_selection(self):
         if hasattr(self, "generated_character"):
@@ -670,15 +663,7 @@ class TestGeneratorUI(QWidget):
             for tile, outlier, luck_cost in self.outlier_tiles:
                 if tile.isChecked():
                     self.generated_character.apply_outlier(outlier, luck_cost)
-        if self.selected_mode == "Core" and self.equipment_tiles:
-            self.update_equipment_selection()
-            self.pages.setCurrentWidget(self.equipment_page)
-        elif self.selected_mode == "Light & Sky":
-            self._build_light_power_tiles()
-            self.update_light_power_selection()
-            self.pages.setCurrentWidget(self.equipment_page)
-        else:
-            self.pages.setCurrentWidget(self.creation_page)
+        self.open_specialization_page()
 
     def _build_equipment_tiles(self):
         self.equipment_page.set_light_mode(False)
@@ -930,8 +915,9 @@ class TestGeneratorUI(QWidget):
             )
         self.update_light_power_selection()
 
-    def _create_selection_tile(self, title, text, min_height=125):
-        card = QFrame(self.equipment_content)
+    def _create_selection_tile(self, title, text, min_height=125, parent=None):
+        card_parent = parent if parent is not None else self.equipment_content
+        card = QFrame(card_parent)
         card.setMinimumHeight(min_height)
         card.setStyleSheet(
             "QFrame { background-color: #242424; "

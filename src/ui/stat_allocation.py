@@ -54,7 +54,7 @@ class StatAllocationPage(QWidget):
         navigation = QHBoxLayout()
         self.back_button = QPushButton("Back")
         self.home_button = QPushButton("Home")
-        self.next_button = QPushButton("Next: Specialization Packs")
+        self.next_button = QPushButton("Next: Outliers")
         navigation.addWidget(self.back_button)
         navigation.addStretch(1)
         navigation.addWidget(self.home_button)
