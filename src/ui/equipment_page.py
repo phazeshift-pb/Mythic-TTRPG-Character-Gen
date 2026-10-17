@@ -22,10 +22,6 @@ class EquipmentPage(QWidget):
         self.title = QLabel("EQUIPMENT PACK")
         header.addWidget(self.title)
         header.addStretch()
-        self.back_button = QPushButton("Back")
-        self.done_button = QPushButton("Done")
-        header.addWidget(self.back_button)
-        header.addWidget(self.done_button)
         layout.addLayout(header)
 
         content_layout = QHBoxLayout()
@@ -44,6 +40,12 @@ class EquipmentPage(QWidget):
         self.options_panel = QWidget()
         options_layout = QVBoxLayout(self.options_panel)
         options_layout.setContentsMargins(0, 0, 0, 0)
+        self.experience_remaining_label = QLabel("XP remaining: 0 / 0")
+        self.experience_remaining_label.setStyleSheet(
+            "font-size: 16px; font-weight: bold; padding: 4px;"
+        )
+        self.experience_remaining_label.hide()
+        options_layout.addWidget(self.experience_remaining_label)
         self.options_title = QLabel()
         self.options_title.setStyleSheet("font-size: 18px; font-weight: bold;")
         self.options_title.hide()
@@ -71,10 +73,14 @@ class EquipmentPage(QWidget):
         self.light_ability_tiles = []
 
         navigation = QHBoxLayout()
-        navigation.addStretch(1)
+        self.back_button = QPushButton("Back")
         self.home_button = QPushButton("Home")
+        self.done_button = QPushButton("Done")
+        navigation.addWidget(self.back_button)
+        navigation.addStretch(1)
         navigation.addWidget(self.home_button)
         navigation.addStretch(1)
+        navigation.addWidget(self.done_button)
         layout.addLayout(navigation)
 
     def _add_light_category(self, key, label):
@@ -112,6 +118,7 @@ class EquipmentPage(QWidget):
 
     def set_light_mode(self, enabled):
         self.category_panel.setVisible(enabled)
+        self.experience_remaining_label.setVisible(enabled)
         self.options_title.setVisible(enabled)
         self.options_description.setVisible(enabled)
 

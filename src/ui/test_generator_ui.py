@@ -107,6 +107,7 @@ class TestGeneratorUI(QWidget):
         self._selected_light_category = None
         self._selected_light_aspects = {}
         self._selected_light_powers = {}
+        self._light_xp_spent = 0
         self._starting_luck = 0
         self.equipment_page.light_category_selected.connect(
             self.select_light_category
@@ -1348,19 +1349,30 @@ class TestGeneratorUI(QWidget):
             else self._selected_light_powers
         )
         limit = 1 if selection_kind == "aspect" else 2
-        if checked and selection_key not in selections and len(selections) >= limit:
+        if (
+            checked
+            and selection_key not in selections
+            and len(selections) >= limit
+        ):
             selected_tile.blockSignals(True)
             selected_tile.setChecked(False)
             selected_tile.blockSignals(False)
         elif checked:
             selections[selection_key] = selected_value
+            if self._selected_light_xp_cost() > self._light_xp_budget():
+                selections.pop(selection_key, None)
+                selected_tile.blockSignals(True)
+                selected_tile.setChecked(False)
+                selected_tile.blockSignals(False)
         else:
             selections.pop(selection_key, None)
+        self._update_light_xp_display()
         self.update_light_power_selection()
 
     def update_light_power_selection(self):
         aspect_count = len(self._selected_light_aspects)
         ability_count = len(self._selected_light_powers)
+        self._update_light_xp_display()
         self.equipment_done_button.setText(
             f"Done (Aspects {aspect_count}/1; Light Powers {ability_count}/2)"
         )
@@ -1373,6 +1385,15 @@ class TestGeneratorUI(QWidget):
             ]
             abilities = list(self._selected_light_powers.values())
             self.generated_character.apply_light_powers(aspects, abilities)
+            current_budget = (
+                self.generated_character.experience + self._light_xp_spent
+            )
+            new_xp_spent = self._selected_light_xp_cost()
+            self.generated_character.experience = current_budget - new_xp_spent
+            self.generated_character.experience_spent += (
+                new_xp_spent - self._light_xp_spent
+            )
+            self._light_xp_spent = new_xp_spent
         self.pages.setCurrentWidget(self.creation_page)
 
     def _light_aspect_cost(self, aspect, connection):
@@ -1383,6 +1404,40 @@ class TestGeneratorUI(QWidget):
             if connection.strip().casefold() == selected_connection.strip().casefold()
             else cost * 2
         )
+
+    def _light_power_xp_cost(self, power):
+        return int(power.get("experience_cost", 0) or 0)
+
+    def _selected_light_xp_cost(self):
+        aspect_cost = sum(
+            self._light_aspect_cost(aspect, connection)
+            for aspect, connection in self._selected_light_aspects.values()
+        )
+        power_cost = sum(
+            self._light_power_xp_cost(power)
+            for power in self._selected_light_powers.values()
+        )
+        return aspect_cost + power_cost
+
+    def _light_xp_budget(self):
+        if hasattr(self, "generated_character"):
+            return self.generated_character.experience + self._light_xp_spent
+        return self.experience_input.value()
+
+    def _update_light_xp_display(self):
+        available_xp = self._light_xp_budget()
+        spent_xp = self._selected_light_xp_cost()
+        self.equipment_page.experience_remaining_label.setText(
+            f"XP remaining: {available_xp - spent_xp:,} / {available_xp:,}"
+        )
+
+        xp_left = available_xp - spent_xp
+        for button, aspect, connection in self.light_aspect_tiles:
+            cost = self._light_aspect_cost(aspect, connection)
+            button.setEnabled(button.isChecked() or cost <= xp_left)
+        for button, power in self.light_ability_tiles:
+            cost = self._light_power_xp_cost(power)
+            button.setEnabled(button.isChecked() or cost <= xp_left)
 
     def _connection_group(self, selected_connection):
         selected = selected_connection.strip().casefold()
