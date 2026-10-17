@@ -34,6 +34,7 @@ class EquipmentPage(QWidget):
         self.category_buttons = {}
         self._add_light_category("aspects", "Light Aspects")
         self._add_light_category("powers", "Light Abilities / Grenades")
+        self._add_light_category("supers", "Supers")
         self.category_panel.hide()
         content_layout.addWidget(self.category_panel)
 

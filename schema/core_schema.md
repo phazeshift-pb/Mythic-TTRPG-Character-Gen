@@ -140,7 +140,7 @@ All records in these families may use `citation`, `reference_page`, `requirement
 
 - `light_aspect_rules.json`: `{ "light_aspects": { "rules": object } }`.
 - `light_aspects.json`: `{ "light_aspects": { "arc": [record], "solar": [record], "void": [record], "terraform": [record], "resurrection": [record], "strand": [record], "stasis": [record] } }`; each record has `name`, `experience_cost`, and `description`.
-- `light_ability_rules.json`: `{ "light_abilities": { "rules": object, "supers": object, "grenade_supers": object, "energy": object, "double_jump": object } }`.
+- `light_ability_rules.json`: `{ "light_abilities": { "rules": object, "supers": { ..., "experience_cost_multiplier": number, "energy_cost_multiplier": number }, "grenade_supers": object, "energy": object, "double_jump": object } }`.
 - `light_abilities_and_grenades.json`: `{ "abilities": [record], "grenades": [record] }`; abilities use `connection`, `category`, `experience_cost`, `light_cost`, `description`, and optional `super_description`; grenades also use `pierce`, `base_damage`, `damage_roll`, `range`, and `special_rules`.
 - `light_weapon_abilities.json`: `{ "light_weapon_abilities": { "base_ability": object, "effects": { "connection": [record] } } }`; effect records use `description`, `additional_light_energy`, and optional `cost_modifier`.
 - `character_creation/guardian_soldier_types/*.json`: soldier profiles with required `subclasses` and class-specific characteristic modifiers.

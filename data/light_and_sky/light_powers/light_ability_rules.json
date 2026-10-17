@@ -17,7 +17,9 @@
     "supers": {
       "description": "Supers are powerful versions of Light Abilities that gain extra benefits such as more Damage, a larger radius of effect, or additional effects.",
       "energy_cost": "All Super Abilities cost double the Energy to perform and use Super Energy instead of Light Energy.",
+      "energy_cost_multiplier": 2,
       "experience_cost": "The Experience Cost of a Super is increased by 50%.",
+      "experience_cost_multiplier": 1.5,
       "availability": "A Character can only have a single Super at a time.",
       "ability_slots": "Supers do not take up Light Ability Slots.",
       "purchase": "A Super is purchased separately from its base Light Ability.",

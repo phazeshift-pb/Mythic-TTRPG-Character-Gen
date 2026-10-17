@@ -53,6 +53,7 @@ class Character:
     light_aspects: List[str] = field(default_factory=list)
     light_abilities: List[str] = field(default_factory=list)
     light_grenades: List[str] = field(default_factory=list)
+    supers: List[str] = field(default_factory=list)
 
     # Internal debug log
     debug_log: List[str] = field(default_factory=list)
@@ -180,7 +181,9 @@ class Character:
         self,
         aspects: List[dict],
         abilities: List[dict],
+        supers: Optional[List[dict]] = None,
     ):
+        supers = supers or []
         self.light_aspects = [aspect["name"] for aspect in aspects]
         selected_abilities = [
             ability
@@ -194,6 +197,7 @@ class Character:
         ]
         self.light_abilities = [ability["name"] for ability in selected_abilities]
         self.light_grenades = [grenade["name"] for grenade in selected_grenades]
+        self.supers = [super_power["name"] for super_power in supers]
         for aspect in aspects:
             self.log(
                 f"Light Aspect: {aspect['name']} "
@@ -206,6 +210,14 @@ class Character:
                 f"{power_type}: {ability['name']} "
                 f"(XP {ability.get('experience_cost', 0)}, "
                 f"Light {ability.get('light_cost', 'N/A')}): {description}"
+            )
+        for super_power in supers:
+            description = super_power.get("super_description") or ""
+            self.log(
+                f"Super: {super_power['name']} "
+                f"(XP {super_power.get('experience_cost', 0)}, "
+                f"Super Energy {super_power.get('super_energy_cost', 'N/A')}): "
+                f"{description}"
             )
 
     # -----------------------------

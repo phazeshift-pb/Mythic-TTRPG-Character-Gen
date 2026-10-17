@@ -107,6 +107,7 @@ class TestGeneratorUI(QWidget):
         self._selected_light_category = None
         self._selected_light_aspects = {}
         self._selected_light_powers = {}
+        self._selected_light_supers = {}
         self._light_xp_spent = 0
         self._starting_luck = 0
         self.equipment_page.light_category_selected.connect(
@@ -323,8 +324,12 @@ class TestGeneratorUI(QWidget):
             selected_powers = [
                 value["name"] for value in self._selected_light_powers.values()
             ]
+            selected_supers = [
+                value["name"] for value in self._selected_light_supers.values()
+            ]
             lines.append(f"Light Aspects: {', '.join(selected_aspects) or 'None'}")
             lines.append(f"Light Abilities / Grenades: {', '.join(selected_powers) or 'None'}")
+            lines.append(f"Supers: {', '.join(selected_supers) or 'None'}")
 
         character = getattr(self, "generated_character", None)
         if character is None:
@@ -378,6 +383,7 @@ class TestGeneratorUI(QWidget):
                 f"Light Aspects: {', '.join(character.light_aspects) or 'None'}",
                 f"Light Abilities: {', '.join(character.light_abilities) or 'None'}",
                 f"Light Grenades: {', '.join(character.light_grenades) or 'None'}",
+                f"Supers: {', '.join(character.supers) or 'None'}",
                 f"Wounds / fatigue / credits / Luck burned: {character.wounds} / "
                 f"{character.fatigue} / {character.credits} / {character.luck_burned}",
                 "",
@@ -1146,6 +1152,12 @@ class TestGeneratorUI(QWidget):
         ) or {}
         abilities = ability_document.get("abilities", [])
         grenades = ability_document.get("grenades", [])
+        ability_rules = self.game_data.get(
+            "light_ability_rules", "light_ability_rules"
+        ) or {}
+        light_ability_rules = ability_rules.get("light_abilities", {})
+        super_rules = light_ability_rules["supers"]
+        grenade_super_rule = light_ability_rules["grenade_supers"]["rule"]
 
         all_aspects = [
             (connection.title(), aspect)
@@ -1198,6 +1210,11 @@ class TestGeneratorUI(QWidget):
             for key, value in self._selected_light_powers.items()
             if key in valid_power_keys
         }
+        self._selected_light_supers = {
+            key: value
+            for key, value in self._selected_light_supers.items()
+            if key in valid_power_keys
+        }
 
         if self._selected_light_category == "aspects":
             self.equipment_page.options_title.setText("Light Aspects")
@@ -1233,12 +1250,43 @@ class TestGeneratorUI(QWidget):
             self.equipment_page.options_description.setText(
                 "Select up to two Light Abilities and/or Light Grenades."
             )
+            power_selection = self._selected_light_powers
+        elif self._selected_light_category == "supers":
+            self.equipment_page.options_title.setText("Supers")
+            self.equipment_page.options_description.setText(
+                "Select one Super. Cost: "
+                f"{super_rules['experience_cost_multiplier']:g}x XP and "
+                f"{super_rules['energy_cost_multiplier']:g}x Energy."
+            )
+            power_selection = self._selected_light_supers
+        else:
+            power_selection = None
+
+        if self._selected_light_category in {"powers", "supers"}:
             for index, (power, power_type) in enumerate(available_powers):
                 description = power.get("description") or power.get("special_rules", "")
-                tile_details = (
-                    f"{power_type} | XP {power.get('experience_cost', 0)} | "
-                    f"Light {power.get('light_cost', 'N/A')}"
+                is_super = self._selected_light_category == "supers"
+                experience_cost = (
+                    self._super_experience_cost(
+                        power, super_rules["experience_cost_multiplier"]
+                    )
+                    if is_super
+                    else int(power.get("experience_cost", 0) or 0)
                 )
+                energy_cost = power.get("light_cost", "N/A")
+                if is_super:
+                    energy_cost = self._super_energy_cost(
+                        energy_cost, super_rules["energy_cost_multiplier"]
+                    )
+                    tile_details = (
+                        f"{power_type} Super | XP {experience_cost} | "
+                        f"Super Energy {energy_cost}"
+                    )
+                else:
+                    tile_details = (
+                        f"{power_type} | XP {experience_cost} | "
+                        f"Light {energy_cost}"
+                    )
                 if power_type == "Light Grenade":
                     damage_parts = [
                         str(power[field])
@@ -1249,13 +1297,37 @@ class TestGeneratorUI(QWidget):
                     tile_details += (
                         f"\nDamage: {damage} | Range: {power.get('range') or 'N/A'}"
                     )
+                    if is_super:
+                        tile_details += f"\nSuper effect: {grenade_super_rule}"
+                if is_super:
+                    super_description = power.get("super_description") or (
+                        grenade_super_rule
+                        if power_type == "Light Grenade"
+                        else "No Super description is specified in the data."
+                    )
+                    tile_details += (
+                        f"\nRegular description: {description}"
+                        f"\nSuper description: {super_description}"
+                    )
+                else:
+                    tile_details += f"\n{description}"
                 power_data = dict(power)
-                power_data["description"] = description
-                power_data["_power_type"] = power_type
+                if is_super:
+                    power_data["experience_cost"] = experience_cost
+                    power_data["super_energy_cost"] = energy_cost
+                    power_data["super_description"] = super_description
+                    power_data["_power_type"] = (
+                        "Super Grenade"
+                        if power_type == "Light Grenade"
+                        else "Super Ability"
+                    )
+                else:
+                    power_data["description"] = description
+                    power_data["_power_type"] = power_type
                 key = (power_type, power["name"].casefold())
                 tile, select_button = self._create_selection_tile(
                     power["name"],
-                    f"{tile_details}\n{description}",
+                    tile_details,
                     min_height=145,
                 )
                 select_button.toggled.connect(
@@ -1263,19 +1335,19 @@ class TestGeneratorUI(QWidget):
                     selected_key=key, selected_power=power_data:
                     self._select_light_tile(
                         selected_tile,
-                        "power",
+                        "super" if is_super else "power",
                         checked,
                         selected_key,
                         selected_power,
                     )
                 )
                 self.light_ability_tiles.append((select_button, power_data))
-                select_button.setChecked(key in self._selected_light_powers)
+                select_button.setChecked(key in power_selection)
                 self.equipment_grid.addWidget(tile, index // 3, index % 3)
-        else:
+        elif self._selected_light_category not in {"aspects", "powers", "supers"}:
             self.equipment_page.options_title.setText("Select a category")
             self.equipment_page.options_description.setText(
-                "Choose Light Aspects or Light Abilities / Grenades to view options."
+                "Choose Light Aspects, Light Abilities / Grenades, or Supers to view options."
             )
         self.update_light_power_selection()
 
@@ -1346,9 +1418,13 @@ class TestGeneratorUI(QWidget):
         selections = (
             self._selected_light_aspects
             if selection_kind == "aspect"
-            else self._selected_light_powers
+            else (
+                self._selected_light_supers
+                if selection_kind == "super"
+                else self._selected_light_powers
+            )
         )
-        limit = 1 if selection_kind == "aspect" else 2
+        limit = 1 if selection_kind in {"aspect", "super"} else 2
         if (
             checked
             and selection_key not in selections
@@ -1372,9 +1448,11 @@ class TestGeneratorUI(QWidget):
     def update_light_power_selection(self):
         aspect_count = len(self._selected_light_aspects)
         ability_count = len(self._selected_light_powers)
+        super_count = len(self._selected_light_supers)
         self._update_light_xp_display()
         self.equipment_done_button.setText(
-            f"Done (Aspects {aspect_count}/1; Light Powers {ability_count}/2)"
+            f"Done (Aspects {aspect_count}/1; Light Powers {ability_count}/2; "
+            f"Supers {super_count}/1)"
         )
 
     def finish_light_power_selection(self):
@@ -1384,7 +1462,8 @@ class TestGeneratorUI(QWidget):
                 for aspect_and_connection in self._selected_light_aspects.values()
             ]
             abilities = list(self._selected_light_powers.values())
-            self.generated_character.apply_light_powers(aspects, abilities)
+            supers = list(self._selected_light_supers.values())
+            self.generated_character.apply_light_powers(aspects, abilities, supers)
             current_budget = (
                 self.generated_character.experience + self._light_xp_spent
             )
@@ -1408,6 +1487,16 @@ class TestGeneratorUI(QWidget):
     def _light_power_xp_cost(self, power):
         return int(power.get("experience_cost", 0) or 0)
 
+    @staticmethod
+    def _super_experience_cost(power, multiplier):
+        return int(power.get("experience_cost", 0) * multiplier)
+
+    @staticmethod
+    def _super_energy_cost(light_cost, multiplier):
+        if isinstance(light_cost, (int, float)):
+            return light_cost * multiplier
+        return f"{multiplier} x {light_cost}"
+
     def _selected_light_xp_cost(self):
         aspect_cost = sum(
             self._light_aspect_cost(aspect, connection)
@@ -1417,7 +1506,11 @@ class TestGeneratorUI(QWidget):
             self._light_power_xp_cost(power)
             for power in self._selected_light_powers.values()
         )
-        return aspect_cost + power_cost
+        super_cost = sum(
+            self._light_power_xp_cost(power)
+            for power in self._selected_light_supers.values()
+        )
+        return aspect_cost + power_cost + super_cost
 
     def _light_xp_budget(self):
         if hasattr(self, "generated_character"):

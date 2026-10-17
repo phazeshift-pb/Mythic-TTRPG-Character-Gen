@@ -197,7 +197,8 @@
       "class": "Warlock",
       "experience_cost": 550,
       "light_cost": 25,
-      "description": "Fire forward Arc Energy with Spread in a cone reaching (X) meters. Lasts 3 Turns; each Half Action deals (X)D5 + Agility Modifier Damage, beginning at X=1 and increasing by 1 each active Half Action."
+      "description": "Fire forward Arc Energy with Spread in a cone reaching (X) meters. Lasts 3 Turns; each Half Action deals (X)D5 + Agility Modifier Damage, beginning at X=1 and increasing by 1 each active Half Action.",
+      "super_description": "Deal (X)D10 + Agility Modifier in Damage and last an additional Turn."
     },
     {
       "name": "Chaos Reach",
