@@ -13,6 +13,13 @@ class CharacterSetupHome(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         layout = QVBoxLayout(self)
+
+        header = QHBoxLayout()
+        header.addStretch(1)
+        self.debug_button = QPushButton("Debug")
+        header.addWidget(self.debug_button)
+        layout.addLayout(header)
+
         layout.addStretch(1)
 
         title = QLabel("Character Creator")

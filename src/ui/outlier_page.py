@@ -24,6 +24,17 @@ class OutlierPage(QWidget):
         header.addStretch()
         layout.addLayout(header)
 
+        self.optional_notice = QLabel(
+            "Outliers are optional. Each selected outlier permanently burns Luck."
+        )
+        layout.addWidget(self.optional_notice)
+
+        self.available_luck_label = QLabel("Luck available: 0 / 0")
+        self.available_luck_label.setStyleSheet(
+            "font-size: 16px; font-weight: bold; padding: 4px;"
+        )
+        layout.addWidget(self.available_luck_label)
+
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
         self.content = QWidget()

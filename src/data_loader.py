@@ -17,6 +17,8 @@ class DataLoader:
         "environment": "environment",
         "lifestyle": "lifestyle",
         "experience_tiers": "experience_tiers",
+        "wounds_formula": "wounds_formula",
+        "perceptive_range": "perceptive_range",
         "creation_points": "creation_points",
         "specialization_packs": "specialization_packs",
         "outliers": "outliers",
@@ -41,6 +43,10 @@ class DataLoader:
         "lighting": "lighting",
         "movement_stealth_modifiers": "movement_stealth_modifiers",
         "passive_perception": "passive_perception",
+        "movement_speeds": "movement_speeds",
+        "encumbrance": "encumberance",
+        "characteristic_modifiers": "characteristic_modifiers",
+        "mythic": "mythic_characteristics",
         "radar": "radar",
         "visr": "visr",
         "iff": "iff",
@@ -75,6 +81,26 @@ class DataLoader:
         self._load_folder(Path("data/characteristics.json"), game_data, validator)
         self._load_folder(Path("data/abilities.json"), game_data, validator)
         self._load_folder(Path("data/skills.json"), game_data, validator)
+        self._load_folder(
+            Path("data/movement/movement_speeds.json"), game_data, validator
+        )
+        self._load_folder(
+            Path("data/movement/encumberance.json"), game_data, validator
+        )
+        self._load_folder(
+            Path("data/hiding_spotting_visr/passive_perception.json"),
+            game_data,
+            validator,
+        )
+        self._load_folder(
+            Path("data/perceptive_range.json"), game_data, validator
+        )
+        self._load_folder(
+            Path("data/characteristic_modifiers.json"), game_data, validator
+        )
+        self._load_folder(
+            Path("data/mythic_characteristics.json"), game_data, validator
+        )
 
         # -----------------------------
         # CORE MODE
