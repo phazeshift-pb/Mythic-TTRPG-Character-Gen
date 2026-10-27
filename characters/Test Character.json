@@ -1,0 +1,118 @@
+{
+  "format_version": 1,
+  "ruleset": "Light & Sky",
+  "character": {
+    "name": "Test Character",
+    "soldier_type": "Hunter Class Soldier Type",
+    "characteristics": {
+      "STR": 50,
+      "TOU": 50,
+      "AGI": 60,
+      "WFR": 50,
+      "WFM": 45,
+      "INT": 25,
+      "PER": 25,
+      "CRG": 25,
+      "CHA": 25,
+      "LDR": 25
+    },
+    "mythic_characteristics": {
+      "STR": "+2",
+      "TOU": "+3",
+      "AGI": "+3"
+    },
+    "skills": {
+      "Gambling": 0,
+      "Technology": 0,
+      "Navigation": 0,
+      "Appeal": 0,
+      "Athletics": 0,
+      "Survival": 0,
+      "Intimidation": 0
+    },
+    "abilities": [
+      "Gather Senses",
+      "Mobile Fire",
+      "Rapid Reload"
+    ],
+    "upbringing": null,
+    "environment": null,
+    "lifestyle": null,
+    "wounds": 60,
+    "fatigue": 3,
+    "rank": null,
+    "credits": 0,
+    "experience": 2925,
+    "starting_experience": 15000,
+    "experience_spent": 12075,
+    "experience_tier": 5,
+    "equipment": [],
+    "equipment_pack": null,
+    "armor": null,
+    "weapons": [],
+    "connections": [
+      "Arc"
+    ],
+    "specialization_packs": [
+      "Heavy Weapons"
+    ],
+    "outliers": [
+      "Acumen"
+    ],
+    "luck_burned": 1,
+    "light_aspects": [
+      "Ionic Trace"
+    ],
+    "light_abilities": [
+      "Marksman's Dodge",
+      "Thruster"
+    ],
+    "light_grenades": [],
+    "supers": [
+      "Storm"
+    ]
+  },
+  "selections": {
+    "starting_xp": 15000,
+    "initial_setup": {
+      "human_soldier_type": "human_awoken",
+      "guardian_soldier_type": "hunter",
+      "subclass": "Bladedancer",
+      "connection": "Arc"
+    },
+    "creation_points": {
+      "option": "Base (85 points)",
+      "total": 85,
+      "allocations": {
+        "STR": 20,
+        "TOU": 20,
+        "AGI": 20,
+        "WFR": 20,
+        "WFM": 5,
+        "INT": 0,
+        "PER": 0,
+        "CRG": 0,
+        "CHA": 0,
+        "LDR": 0
+      }
+    },
+    "outliers": [
+      "Acumen"
+    ],
+    "specialization_packs": [
+      "Heavy Weapons"
+    ],
+    "equipment": {
+      "light_aspects": [
+        "Ionic Trace"
+      ],
+      "light_abilities": [
+        "Marksman's Dodge",
+        "Thruster"
+      ],
+      "supers": [
+        "Storm"
+      ]
+    }
+  }
+}

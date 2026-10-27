@@ -1,8 +1,13 @@
+from dataclasses import asdict
+import json
+from pathlib import Path
+import re
+import sys
+
 from PySide6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QFrame,
-    QStackedWidget, QGridLayout,
+    QStackedWidget, QGridLayout, QInputDialog, QMessageBox,
 )
-import sys
 
 from PySide6.QtCore import Qt
 from src.data_loader import DataLoader
@@ -55,6 +60,9 @@ class TestGeneratorUI(QWidget):
 
         self.create_character_button = self.landing_page.create_character_button
         self.load_character_button = self.landing_page.load_character_button
+        self.character_setup_home.finish_character_button.clicked.connect(
+            self.finish_and_name_character
+        )
 
         self.experience_input = self.character_setup_home.experience_input
         self.experience_tier_label = self.character_setup_home.experience_tier_label
@@ -83,6 +91,7 @@ class TestGeneratorUI(QWidget):
 
         self.specialization_back_button = self.specialization_page.back_button
         self.specialization_done_button = self.specialization_page.next_button
+        self.specialization_done_button.setEnabled(False)
         self.specialization_scroll = self.specialization_page.scroll_area
         self.specialization_content = self.specialization_page.content
         self.specialization_grid = self.specialization_page.grid
@@ -149,7 +158,7 @@ class TestGeneratorUI(QWidget):
         )
         self.experience_input.valueChanged.connect(self.update_experience_tier)
         self.version_and_expansions_page.mode_changed.connect(
-            self.update_soldier_types
+            self._handle_version_selection_changed
         )
         self.upbringing_combo.currentIndexChanged.connect(
             self.refresh_core_background_options
@@ -165,6 +174,9 @@ class TestGeneratorUI(QWidget):
         )
         self.initial_character_setup_page.option_selected.connect(
             self.select_initial_setup_option
+        )
+        self.initial_character_setup_page.selection_requirements_changed.connect(
+            self.character_setup_home.set_initial_setup_complete
         )
         self.back_button.clicked.connect(
             lambda: self.pages.setCurrentWidget(self.initial_character_setup_page)
@@ -221,6 +233,154 @@ class TestGeneratorUI(QWidget):
     def open_debug_page(self):
         self.debug_page.set_report(self._build_debug_report())
         self.pages.setCurrentWidget(self.debug_page)
+
+    def _handle_version_selection_changed(self, mode):
+        self.character_setup_home.set_version_selected(mode is not None)
+        self.character_setup_home.set_character_ready_to_export(False)
+        self.update_soldier_types()
+
+    def _character_export_data(self):
+        character_data = asdict(self.generated_character)
+        character_data.pop("debug_log", None)
+        use_light_and_sky = self.selected_mode == "Light & Sky"
+
+        def selected_value(combo):
+            return combo.currentData() or combo.currentText() or None
+
+        if use_light_and_sky:
+            initial_setup = {
+                "human_soldier_type": selected_value(self.human_combo),
+                "guardian_soldier_type": selected_value(self.guardian_combo),
+                "subclass": selected_value(self.subclass_combo),
+                "connection": selected_value(self.connection_combo),
+            }
+            equipment = {
+                "light_aspects": [
+                    aspect["name"]
+                    for aspect, _ in self._selected_light_aspects.values()
+                ],
+                "light_abilities": [
+                    power["name"]
+                    for power in self._selected_light_powers.values()
+                ],
+                "supers": [
+                    power["name"]
+                    for power in self._selected_light_supers.values()
+                ],
+            }
+        else:
+            initial_setup = {
+                "soldier_type": selected_value(self.soldier_combo),
+                "upbringing": selected_value(self.upbringing_combo),
+                "environment": selected_value(self.environment_combo),
+                "lifestyles": [
+                    selected_value(combo)
+                    for combo in self.lifestyle_combos
+                    if selected_value(combo)
+                ],
+            }
+            equipment = {
+                "pack": next(
+                    (
+                        name
+                        for button, name, _ in self.equipment_tiles
+                        if button.isChecked()
+                    ),
+                    None,
+                )
+            }
+
+        return {
+            "format_version": 1,
+            "ruleset": self.selected_mode,
+            "character": character_data,
+            "selections": {
+                "starting_xp": self.experience_input.value(),
+                "initial_setup": initial_setup,
+                "creation_points": {
+                    "option": self.creation_points_combo.currentText(),
+                    "total": self.creation_points_combo.currentData(),
+                    "allocations": self._creation_allocations.copy(),
+                },
+                "outliers": [
+                    outlier["name"]
+                    for button, outlier, _ in self.outlier_tiles
+                    if button.isChecked()
+                ],
+                "specialization_packs": [
+                    name
+                    for button, name in self.specialization_tiles
+                    if button.isChecked()
+                ],
+                "equipment": equipment,
+            },
+        }
+
+    def finish_and_name_character(self):
+        if not hasattr(self, "generated_character"):
+            QMessageBox.warning(
+                self,
+                "Character Not Ready",
+                "Complete character creation before exporting.",
+            )
+            return
+
+        character_name, accepted = QInputDialog.getText(
+            self,
+            "Finish and Name Your Character",
+            "Character name:",
+            text=self.generated_character.name,
+        )
+        if not accepted:
+            return
+        character_name = character_name.strip()
+        file_name = re.sub(
+            r'[<>:"/\\|?*\x00-\x1f]', "_", character_name
+        ).strip(" .")
+        if not file_name:
+            QMessageBox.warning(
+                self,
+                "Invalid Character Name",
+                "Enter a name that can be used as a file name.",
+            )
+            return
+
+        characters_directory = Path(__file__).resolve().parents[2] / "characters"
+        output_path = characters_directory / f"{file_name}.json"
+        if output_path.exists():
+            answer = QMessageBox.question(
+                self,
+                "Replace Character File?",
+                f"{output_path.name} already exists. Replace it?",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                QMessageBox.StandardButton.No,
+            )
+            if answer != QMessageBox.StandardButton.Yes:
+                return
+
+        original_name = self.generated_character.name
+        self.generated_character.name = character_name
+        export_data = self._character_export_data()
+        try:
+            characters_directory.mkdir(parents=True, exist_ok=True)
+            output_path.write_text(
+                json.dumps(export_data, indent=2, ensure_ascii=False) + "\n",
+                encoding="utf-8",
+            )
+        except OSError as error:
+            self.generated_character.name = original_name
+            QMessageBox.critical(
+                self,
+                "Character Export Failed",
+                f"Could not save the character file:\n{error}",
+            )
+            return
+
+        QMessageBox.information(
+            self,
+            "Character Exported",
+            f"Character saved to:\n{output_path}",
+        )
 
     @staticmethod
     def _selected_option(combo):
@@ -795,6 +955,7 @@ class TestGeneratorUI(QWidget):
             "specialization_packs", "specialization_packs"
         ) if hasattr(self, "game_data") else None
         if not document:
+            self.update_specialization_selection()
             return
         ability_document = self.game_data.get("light_abilities", "abilities") or {}
         ability_descriptions = {
@@ -923,6 +1084,7 @@ class TestGeneratorUI(QWidget):
                 self.specialization_grid.addWidget(tile, tile_row, column)
 
             row += (len(packs) + 2) // 3 + 1
+        self.update_specialization_selection()
 
     def select_specialization_tile(self, selected_button, checked):
         if checked:
@@ -937,6 +1099,11 @@ class TestGeneratorUI(QWidget):
         else:
             button_text = "Next: Equipment Packs"
         self.specialization_done_button.setText(button_text)
+        has_selection = any(
+            button.isChecked() for button, _ in self.specialization_tiles
+        )
+        self.specialization_done_button.setEnabled(has_selection)
+        self.character_setup_home.set_specialization_selected(has_selection)
 
     def open_specialization_page(self):
         self.update_specialization_selection()
@@ -1092,6 +1259,7 @@ class TestGeneratorUI(QWidget):
         )
 
     def open_equipment_page(self):
+        self.character_setup_home.set_character_ready_to_export(False)
         if self.selected_mode == "Light & Sky":
             self.equipment_page.set_light_mode(True)
             self._build_light_power_tiles()
@@ -1119,7 +1287,8 @@ class TestGeneratorUI(QWidget):
             self.generated_character.equipment_pack = None
             if selected:
                 self.generated_character.apply_equipment_pack(*selected)
-        self.pages.setCurrentWidget(self.creation_page)
+        self.character_setup_home.set_character_ready_to_export(True)
+        self.pages.setCurrentWidget(self.character_setup_home)
 
     def _clear_equipment_grid(self):
         while self.equipment_grid.count():
@@ -1473,7 +1642,8 @@ class TestGeneratorUI(QWidget):
                 new_xp_spent - self._light_xp_spent
             )
             self._light_xp_spent = new_xp_spent
-        self.pages.setCurrentWidget(self.creation_page)
+        self.character_setup_home.set_character_ready_to_export(True)
+        self.pages.setCurrentWidget(self.character_setup_home)
 
     def _light_aspect_cost(self, aspect, connection):
         selected_connection = self.connection_combo.currentText()
@@ -1602,6 +1772,11 @@ class TestGeneratorUI(QWidget):
     def _update_creation_point_display(self):
         spent = sum(self._creation_allocations.values())
         total_points = self.creation_points_combo.currentData() or 0
+        all_points_allocated = total_points > 0 and spent == total_points
+        self.next_button.setEnabled(all_points_allocated)
+        self.character_setup_home.set_all_stat_points_allocated(
+            all_points_allocated
+        )
         self.creation_points_remaining_label.setText(
             f"Points remaining: {total_points - spent}"
         )
@@ -1947,6 +2122,7 @@ class TestGeneratorUI(QWidget):
     # Generate character
     # ---------------------------------------------------------
     def generate_character(self):
+        self.character_setup_home.set_character_ready_to_export(False)
         name = "Test Character"
         use_lns = self.selected_mode == "Light & Sky"
         if use_lns:

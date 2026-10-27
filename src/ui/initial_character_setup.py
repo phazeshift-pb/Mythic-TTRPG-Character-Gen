@@ -15,6 +15,7 @@ from PySide6.QtWidgets import (
 
 class InitialCharacterSetupPage(QWidget):
     option_selected = Signal(str, str, bool)
+    selection_requirements_changed = Signal(bool)
 
     TILE_COLUMNS = 3
     LIFESTYLE_TILE_COLUMNS = 2
@@ -74,8 +75,8 @@ class InitialCharacterSetupPage(QWidget):
         self.category_button_group.setExclusive(True)
         self.option_button_group = None
         self._category_options = {}
+        self._required_categories = ()
         self._selected_category = None
-        self._requires_lifestyles = False
 
         self.selection_state = QWidget(self)
         self.selection_state.hide()
@@ -99,8 +100,9 @@ class InitialCharacterSetupPage(QWidget):
         self.connection_combo = QComboBox(self.selection_state)
 
     def set_categories(self, categories):
-        self._requires_lifestyles = any(key == "lifestyles" for key, _ in categories)
-        self.generate_button.setEnabled(not self._requires_lifestyles)
+        self._required_categories = tuple(key for key, _ in categories)
+        self._category_options.clear()
+        self._update_selection_completion()
         while self.category_layout.count():
             item = self.category_layout.takeAt(0)
             widget = item.widget()
@@ -149,10 +151,22 @@ class InitialCharacterSetupPage(QWidget):
             tuple(options),
             tuple(selected_values),
         )
-        if category == "lifestyles":
-            self.generate_button.setEnabled(len(selected_values) == 3)
+        self._update_selection_completion()
         if category == self._selected_category:
             self._render_options()
+
+    def _update_selection_completion(self):
+        complete = bool(self._required_categories) and all(
+            category in self._category_options
+            and (
+                len(self._category_options[category][2]) == 3
+                if category == "lifestyles"
+                else bool(self._category_options[category][2])
+            )
+            for category in self._required_categories
+        )
+        self.generate_button.setEnabled(complete)
+        self.selection_requirements_changed.emit(complete)
 
     def select_category(self, category):
         if category not in self.category_buttons:

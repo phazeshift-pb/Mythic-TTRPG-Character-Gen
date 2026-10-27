@@ -55,6 +55,7 @@ class StatAllocationPage(QWidget):
         self.back_button = QPushButton("Back")
         self.home_button = QPushButton("Home")
         self.next_button = QPushButton("Next: Outliers")
+        self.next_button.setEnabled(False)
         navigation.addWidget(self.back_button)
         navigation.addStretch(1)
         navigation.addWidget(self.home_button)

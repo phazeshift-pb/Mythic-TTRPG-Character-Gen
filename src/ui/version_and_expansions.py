@@ -30,7 +30,7 @@ class VersionAndExpansionsPage(QWidget):
         )
         layout.addWidget(title)
 
-        self._selected_mode = self.OPTIONS[0][0]
+        self._selected_mode = None
         self.mode_tiles = {}
         self.mode_button_group = QButtonGroup(self)
         self.mode_button_group.setExclusive(True)
@@ -72,7 +72,6 @@ class VersionAndExpansionsPage(QWidget):
                 tile, index // self.TILE_COLUMNS, index % self.TILE_COLUMNS
             )
 
-        self.mode_tiles[self._selected_mode].setChecked(True)
         layout.addLayout(tiles_layout)
         layout.addStretch(1)
 
@@ -80,6 +79,7 @@ class VersionAndExpansionsPage(QWidget):
         self.back_button = QPushButton("Back")
         self.home_button = QPushButton("Home")
         self.continue_button = QPushButton("Continue to Initial Setup")
+        self.continue_button.setEnabled(False)
         navigation.addWidget(self.back_button)
         navigation.addStretch(1)
         navigation.addWidget(self.home_button)
@@ -94,4 +94,5 @@ class VersionAndExpansionsPage(QWidget):
     def _select_mode(self, mode, checked):
         if checked and mode != self._selected_mode:
             self._selected_mode = mode
+            self.continue_button.setEnabled(True)
             self.mode_changed.emit(mode)
