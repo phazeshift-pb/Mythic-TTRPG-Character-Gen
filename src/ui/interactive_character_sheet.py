@@ -1,3 +1,4 @@
+import re
 from typing import Any
 
 from PySide6.QtCore import Qt
@@ -18,6 +19,8 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+
+from src.game_data import GameData
 
 
 class InteractiveCharacterSheet(QWidget):
@@ -68,7 +71,12 @@ class InteractiveCharacterSheet(QWidget):
         self._build_character_tab(self.character_content_layout)
         self._build_combat_tab(self.combat_content_layout)
 
-    def set_character(self, character: dict[str, Any], ruleset: str = ""):
+    def set_character(
+        self,
+        character: dict[str, Any],
+        ruleset: str = "",
+        game_data: GameData | None = None,
+    ):
         self.character_data = dict(character)
         self.name_label.setText(str(character.get("name") or "Unnamed Character"))
         self.ruleset_label.setText(ruleset)
@@ -101,10 +109,13 @@ class InteractiveCharacterSheet(QWidget):
         mythic = mythic if isinstance(mythic, dict) else {}
         for code, label in self.characteristic_labels.items():
             value = characteristics.get(code, "—")
-            mythic_value = mythic.get(code)
-            label.setText(
-                f"{value}" + (f"  ({mythic_value})" if mythic_value else "")
-            )
+            label.setText(str(value))
+        for code, label in self.mythic_characteristic_labels.items():
+            value = self._display_value(mythic[code]) if code in mythic else "—"
+            label.setText(value)
+        self._set_movement_speeds(character, game_data)
+        self._set_perceptive_range(character, game_data)
+        self._set_carrying_capacity(character, game_data)
 
         self._set_skill_rows(character.get("skills"))
         self.ability_label.setText(self._format_items(character.get("abilities")))
@@ -137,7 +148,21 @@ class InteractiveCharacterSheet(QWidget):
     def _build_character_tab(self, layout):
         self.identity_labels = self._add_identity_section(layout)
         self.characteristic_labels = self._add_characteristic_section(layout)
-        self.movement_labels = self._add_derived_stats_section(layout)
+        derived_stats = QHBoxLayout()
+        self.movement_labels = self._add_movement_section(derived_stats)
+        range_and_capacity = QHBoxLayout()
+        self.movement_labels["sight"] = self._add_derived_stat_section(
+            range_and_capacity, "Perceptive Range", "Not provided"
+        )
+        self.carrying_capacity_labels = self._add_carrying_capacity_section(
+            range_and_capacity
+        )
+        range_and_capacity.setStretch(0, 1)
+        range_and_capacity.setStretch(1, 1)
+        derived_stats.addLayout(range_and_capacity)
+        derived_stats.setStretch(0, 1)
+        derived_stats.setStretch(1, 1)
+        layout.addLayout(derived_stats)
 
         columns = QHBoxLayout()
         self.skill_table = self._add_skill_section(columns)
@@ -236,6 +261,7 @@ class InteractiveCharacterSheet(QWidget):
     def _add_characteristic_section(self, parent_layout):
         section, grid = self._new_section("Characteristics")
         labels = {}
+        mythic_labels = {}
         for index, (code, name) in enumerate(self.CHARACTERISTICS):
             label = QLabel(f"{name}\n{code}")
             label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -250,17 +276,33 @@ class InteractiveCharacterSheet(QWidget):
             grid.addWidget(label, 0, index)
             grid.addWidget(value, 1, index)
             labels[code] = value
+            if code in {"STR", "TOU", "AGI"}:
+                mythic_title = QLabel("Mythic")
+                mythic_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+                mythic_value = QLabel("—")
+                mythic_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
+                mythic_value.setMinimumHeight(28)
+                mythic_value.setStyleSheet(
+                    "QLabel { background-color: #1b1b1b; border: 1px solid #788f3e; "
+                    "border-radius: 4px; padding: 2px; }"
+                )
+                grid.addWidget(mythic_title, 2, index)
+                grid.addWidget(mythic_value, 3, index)
+                mythic_labels[code] = mythic_value
         parent_layout.addWidget(section)
+        self.mythic_characteristic_labels = mythic_labels
         return labels
 
-    def _add_derived_stats_section(self, parent_layout):
-        section, grid = self._new_section("Movement, Sight, and Carrying Capacity")
+    def _add_movement_section(self, parent_layout):
+        section, grid = self._new_section("Movement")
         labels = {}
         for column, (key, title) in enumerate(
             (
-                ("movement", "Movement"),
-                ("sight", "Perceptive Range"),
-                ("carrying_capacity", "Carry / Lift / Push"),
+                ("half", "Half"),
+                ("full", "Full"),
+                ("charge", "Charge"),
+                ("run", "Run"),
+                ("sprint", "Sprint"),
             )
         ):
             title_label = QLabel(title)
@@ -270,8 +312,474 @@ class InteractiveCharacterSheet(QWidget):
             grid.addWidget(title_label, 0, column)
             grid.addWidget(value_label, 1, column)
             labels[key] = value_label
+        modifier_label = QLabel("Agility Modifier: Not provided")
+        grid.addWidget(modifier_label, 2, 0, 1, 5)
+        labels["agility_modifier"] = modifier_label
         parent_layout.addWidget(section)
         return labels
+
+    def _add_derived_stat_section(self, parent_layout, title, initial_value):
+        section, grid = self._new_section(title)
+        value_label = QLabel(initial_value)
+        value_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        grid.addWidget(value_label, 0, 0)
+        parent_layout.addWidget(section)
+        return value_label
+
+    def _add_carrying_capacity_section(self, parent_layout):
+        section, grid = self._new_section("Carrying Capacity")
+        labels = {}
+        for column, key in enumerate(("carry", "lift", "push")):
+            title = QLabel(key.title())
+            title.setStyleSheet("font-weight: bold;")
+            value = QLabel("Not provided")
+            value.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            grid.addWidget(title, 0, column)
+            grid.addWidget(value, 1, column)
+            labels[key] = value
+        parent_layout.addWidget(section)
+        return labels
+
+    def _set_carrying_capacity(
+        self, character: dict[str, Any], game_data: GameData | None
+    ):
+        unavailable = "Not available"
+        if game_data is None:
+            self._display_unavailable_carrying_capacity(unavailable)
+            return
+
+        encumbrance_doc = game_data.get("encumberance", "encumberance")
+        encumbrance_rules = (
+            encumbrance_doc.get("encumbrance")
+            if isinstance(encumbrance_doc, dict)
+            else None
+        )
+        mythic_doc = game_data.get(
+            "mythic_characteristics", "mythic_characteristics"
+        )
+        mythic_rules = mythic_doc.get("mythic") if isinstance(mythic_doc, dict) else None
+        strength_rule = (
+            mythic_rules.get("strength") if isinstance(mythic_rules, dict) else None
+        )
+        toughness_rule = (
+            mythic_rules.get("toughness") if isinstance(mythic_rules, dict) else None
+        )
+        if (
+            not isinstance(encumbrance_rules, dict)
+            or not isinstance(strength_rule, dict)
+            or not isinstance(toughness_rule, dict)
+        ):
+            self._display_unavailable_carrying_capacity(unavailable)
+            return
+
+        carry_formula = encumbrance_rules.get("carry_weight")
+        if not isinstance(carry_formula, str) or re.fullmatch(
+            r"\s*half\s+of\s+strength\s*\+\s*toughness\s*",
+            carry_formula,
+            re.IGNORECASE,
+        ) is None:
+            self._display_unavailable_carrying_capacity(unavailable)
+            return
+
+        lift_multiplier = self._formula_multiplier(
+            encumbrance_rules.get("lift_weight"), "Carry Weight"
+        )
+        push_multiplier = self._formula_multiplier(
+            encumbrance_rules.get("push_weight"), "Carry Weight"
+        )
+        strength_bonus_multiplier = self._formula_multiplier(
+            strength_rule.get("carry_weight_bonus"), "X"
+        )
+        toughness_bonus_multiplier = self._formula_multiplier(
+            toughness_rule.get("carry_weight_bonus"), "X"
+        )
+        characteristics = character.get("characteristics")
+        mythic_characteristics = character.get("mythic_characteristics")
+        if (
+            lift_multiplier is None
+            or push_multiplier is None
+            or strength_bonus_multiplier is None
+            or toughness_bonus_multiplier is None
+            or not isinstance(characteristics, dict)
+        ):
+            self._display_unavailable_carrying_capacity(unavailable)
+            return
+
+        strength = self._parse_integer(characteristics.get("STR"))
+        toughness = self._parse_integer(characteristics.get("TOU"))
+        mythic_strength = (
+            self._parse_integer(mythic_characteristics.get("STR", 0))
+            if isinstance(mythic_characteristics, dict)
+            else 0
+        )
+        mythic_toughness = (
+            self._parse_integer(mythic_characteristics.get("TOU", 0))
+            if isinstance(mythic_characteristics, dict)
+            else 0
+        )
+        if (
+            strength is None
+            or toughness is None
+            or mythic_strength is None
+            or mythic_toughness is None
+        ):
+            self._display_unavailable_carrying_capacity(unavailable)
+            return
+
+        strength_value = strength + mythic_strength * strength_bonus_multiplier
+        toughness_value = toughness + mythic_toughness * toughness_bonus_multiplier
+        soldier_record = self._soldier_type_record(character, game_data)
+        traits = (
+            soldier_record.get("traits", [])
+            if isinstance(soldier_record, dict)
+            else []
+        )
+        spartan_doubling = any(
+            isinstance(trait, dict)
+            and trait.get("name") == "Carry Weight"
+            and isinstance(trait.get("effect"), str)
+            and "Doubles Strength and Toughness" in trait["effect"]
+            for trait in traits
+        )
+        if spartan_doubling:
+            strength_value *= 2
+            toughness_value *= 2
+
+        selected_outliers = self._selected_outlier_effects(character, game_data)
+        strongman_effect = selected_outliers.get("Strongman", "")
+        selected_outlier_names = self._as_list(character.get("outliers"))
+        if "Strongman" in selected_outlier_names and not strongman_effect:
+            self._display_unavailable_carrying_capacity(unavailable)
+            return
+        strongman = (
+            isinstance(strongman_effect, str)
+            and "no halving" in strongman_effect.lower()
+        )
+        strong_back = self._strong_back_selected(character, game_data)
+        if strong_back is None:
+            self._display_unavailable_carrying_capacity(unavailable)
+            return
+
+        carry_basis = strength_value + toughness_value
+        lift_push_toughness = toughness_value * (2 if strong_back else 1)
+        lift_push_basis = strength_value + lift_push_toughness
+        if not strongman:
+            carry_basis /= 2
+            lift_push_basis /= 2
+
+        values = {
+            "carry": carry_basis,
+            "lift": lift_push_basis * lift_multiplier,
+            "push": lift_push_basis * push_multiplier,
+        }
+        for key, value in values.items():
+            self.carrying_capacity_labels[key].setText(f"{value:g}")
+
+    def _display_unavailable_carrying_capacity(self, message: str):
+        for label in self.carrying_capacity_labels.values():
+            label.setText(message)
+
+    @staticmethod
+    def _formula_multiplier(formula, subject):
+        if not isinstance(formula, str):
+            return None
+        match = re.fullmatch(
+            rf"\s*{re.escape(subject)}\s*[*×]\s*(\d+)\s*",
+            formula,
+            re.IGNORECASE,
+        )
+        if match is None:
+            return None
+        return int(match.group(1))
+
+    @staticmethod
+    def _soldier_type_record(character: dict[str, Any], game_data: GameData):
+        soldier_type = character.get("soldier_type")
+        if not isinstance(soldier_type, str):
+            return None
+        return next(
+            (
+                record
+                for record in game_data.families.get("soldier_type", {}).values()
+                if isinstance(record, dict) and record.get("name") == soldier_type
+            ),
+            None,
+        )
+
+    @staticmethod
+    def _selected_outlier_effects(
+        character: dict[str, Any], game_data: GameData
+    ) -> dict[str, str]:
+        selected_names = {
+            name
+            for name in InteractiveCharacterSheet._as_list(
+                character.get("outliers")
+            )
+            if isinstance(name, str)
+        }
+        effects = {}
+        for document in game_data.families.get("outliers", {}).values():
+            outlier_data = (
+                document.get("outliers") if isinstance(document, dict) else None
+            )
+            outliers = (
+                outlier_data.get("list") if isinstance(outlier_data, dict) else None
+            )
+            if not isinstance(outliers, list):
+                continue
+            for outlier in outliers:
+                if (
+                    isinstance(outlier, dict)
+                    and outlier.get("name") in selected_names
+                    and isinstance(outlier.get("effect"), str)
+                ):
+                    effects[outlier["name"]] = outlier["effect"]
+        return effects
+
+    @staticmethod
+    def _strong_back_selected(
+        character: dict[str, Any], game_data: GameData
+    ) -> bool | None:
+        selected_abilities = {
+            name
+            for name in InteractiveCharacterSheet._as_list(
+                character.get("abilities")
+            )
+            if isinstance(name, str)
+        }
+        if "Strong Back" not in selected_abilities:
+            return False
+
+        ability_doc = game_data.get("light_abilities", "abilities")
+        ability_entries = (
+            ability_doc.get("abilities") if isinstance(ability_doc, dict) else None
+        )
+        if not isinstance(ability_entries, list):
+            return None
+        for ability in ability_entries:
+            if not isinstance(ability, dict) or ability.get("name") != "Strong Back":
+                continue
+            description = ability.get("description")
+            if not isinstance(description, str):
+                return None
+            return (
+                "doubles their Toughness Characteristic for figuring Lift and Push"
+                in description
+            )
+        return None
+
+    def _set_movement_speeds(
+        self, character: dict[str, Any], game_data: GameData | None
+    ):
+        unavailable = "Not available"
+        if game_data is None:
+            self._display_unavailable_movement(unavailable)
+            return
+
+        movement_doc = game_data.get("movement_speeds", "movement_speeds")
+        modifier_doc = game_data.get(
+            "characteristic_modifiers", "characteristic_modifiers"
+        )
+        mythic_doc = game_data.get(
+            "mythic_characteristics", "mythic_characteristics"
+        )
+        movement_rules = (
+            movement_doc.get("movement_speeds")
+            if isinstance(movement_doc, dict)
+            else None
+        )
+        modifier_rules = (
+            modifier_doc.get("modifier_rules")
+            if isinstance(modifier_doc, dict)
+            else None
+        )
+        mythic_rules = mythic_doc.get("mythic") if isinstance(mythic_doc, dict) else None
+        agility_rule = (
+            mythic_rules.get("agility")
+            if isinstance(mythic_rules, dict)
+            else None
+        )
+        if (
+            not isinstance(movement_rules, dict)
+            or not isinstance(modifier_rules, dict)
+            or not isinstance(agility_rule, dict)
+            or agility_rule.get("movement_bonus") != "modifier + X"
+        ):
+            self._display_unavailable_movement(unavailable)
+            return
+
+        characteristics = character.get("characteristics")
+        mythic_characteristics = character.get("mythic_characteristics")
+        if not isinstance(characteristics, dict):
+            self._display_unavailable_movement(unavailable)
+            return
+        agility = self._parse_integer(characteristics.get("AGI"))
+        mythic_agility = (
+            self._parse_integer(mythic_characteristics.get("AGI", 0))
+            if isinstance(mythic_characteristics, dict)
+            else 0
+        )
+        if agility is None or mythic_agility is None:
+            self._display_unavailable_movement(unavailable)
+            return
+
+        modifier_key = "above_100" if agility >= 100 else "below_100"
+        if modifier_rules.get(modifier_key) != "floor(value / 10)":
+            self._display_unavailable_movement(unavailable)
+            return
+        agility_modifier = agility // 10 + mythic_agility
+        aspect_bonus = self._movement_aspect_bonus(character, game_data)
+        if aspect_bonus is None:
+            self._display_unavailable_movement(unavailable)
+            return
+        agility_modifier += aspect_bonus
+        self.movement_labels["agility_modifier"].setText(
+            f"Agility Modifier: {agility_modifier}"
+        )
+
+        movement_table = movement_rules.get("table")
+        if not isinstance(movement_table, list):
+            self._display_unavailable_movement(unavailable)
+            return
+        movement = next(
+            (
+                row
+                for row in movement_table
+                if isinstance(row, dict) and row.get("mod") == agility_modifier
+            ),
+            None,
+        )
+        if movement is None:
+            self._display_unavailable_movement(
+                f"No movement entry for modifier {agility_modifier}"
+            )
+            return
+
+        for key in ("half", "full", "charge", "run", "sprint"):
+            speed = movement.get(key)
+            if isinstance(speed, (int, float)):
+                self.movement_labels[key].setText(f"{speed:g} m")
+            else:
+                self.movement_labels[key].setText(unavailable)
+
+    def _set_perceptive_range(
+        self, character: dict[str, Any], game_data: GameData | None
+    ):
+        label = self.movement_labels["sight"]
+        if game_data is None:
+            label.setText("Not available")
+            return
+
+        range_doc = game_data.get("perceptive_range", "perceptive_range")
+        range_rules = (
+            range_doc.get("perceptive_range")
+            if isinstance(range_doc, dict)
+            else None
+        )
+        base_formula = (
+            range_rules.get("base_formula")
+            if isinstance(range_rules, dict)
+            else None
+        )
+        formula_match = (
+            re.fullmatch(r"\s*perception\s*\*\s*(\d+)\s*", base_formula)
+            if isinstance(base_formula, str)
+            else None
+        )
+        characteristics = character.get("characteristics")
+        perception = (
+            self._parse_integer(characteristics.get("PER"))
+            if isinstance(characteristics, dict)
+            else None
+        )
+        if formula_match is None or perception is None:
+            label.setText("Not available")
+            return
+
+        multiplier = int(formula_match.group(1))
+        selected_outliers = {
+            name
+            for name in self._as_list(character.get("outliers"))
+            if isinstance(name, str)
+        }
+        outlier_documents = game_data.families.get("outliers", {})
+        for document in outlier_documents.values():
+            outlier_data = (
+                document.get("outliers") if isinstance(document, dict) else None
+            )
+            outlier_list = (
+                outlier_data.get("list")
+                if isinstance(outlier_data, dict)
+                else None
+            )
+            if not isinstance(outlier_list, list):
+                continue
+            for outlier in outlier_list:
+                if (
+                    not isinstance(outlier, dict)
+                    or outlier.get("name") not in selected_outliers
+                ):
+                    continue
+                effect = outlier.get("effect")
+                if not isinstance(effect, str):
+                    continue
+                bonus_match = re.search(
+                    r"Perceptive Range multiplier increases by (\d+)",
+                    effect,
+                    re.IGNORECASE,
+                )
+                if bonus_match is not None:
+                    multiplier += int(bonus_match.group(1))
+
+        label.setText(f"{perception * multiplier} m")
+
+    @classmethod
+    def _movement_aspect_bonus(
+        cls, character: dict[str, Any], game_data: GameData
+    ) -> int | None:
+        raw_selected_aspects = cls._as_list(character.get("light_aspects"))
+        if not all(isinstance(name, str) for name in raw_selected_aspects):
+            return None
+        selected_aspects = set(raw_selected_aspects)
+        if not selected_aspects:
+            return 0
+
+        aspect_doc = game_data.get("light_aspects", "light_aspects")
+        aspects_by_connection = (
+            aspect_doc.get("light_aspects") if isinstance(aspect_doc, dict) else None
+        )
+        if not isinstance(aspects_by_connection, dict):
+            return None
+
+        found_aspects = set()
+        movement_bonus = 0
+        for aspects in aspects_by_connection.values():
+            if not isinstance(aspects, list):
+                continue
+            for aspect in aspects:
+                if not isinstance(aspect, dict):
+                    continue
+                name = aspect.get("name")
+                if name not in selected_aspects:
+                    continue
+                found_aspects.add(name)
+                description = aspect.get("description", "")
+                if isinstance(description, str) and (
+                    "Agility Modifier is increased by 1 when figuring Movement Speeds."
+                    in description
+                ):
+                    movement_bonus += 1
+
+        if found_aspects != selected_aspects:
+            return None
+        return movement_bonus
+
+    def _display_unavailable_movement(self, message: str):
+        for key in ("half", "full", "charge", "run", "sprint"):
+            self.movement_labels[key].setText(message)
+        self.movement_labels["agility_modifier"].setText(
+            f"Agility Modifier: {message}"
+        )
 
     def _add_skill_section(self, parent_layout):
         section, body = self._new_section("Skills")
@@ -399,3 +907,10 @@ class InteractiveCharacterSheet(QWidget):
             return int(value)
         except (TypeError, ValueError):
             return 0
+
+    @staticmethod
+    def _parse_integer(value):
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            return None

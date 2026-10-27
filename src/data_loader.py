@@ -28,6 +28,7 @@ class DataLoader:
         "languages": "languages",
         "connections": "connections",
         "characteristics": "characteristics",
+        "modifier_rules": "characteristic_modifiers",
         "actions": "actions",
         "equipment_packs": "equipment_packs",
         "weapon_training": "weapon_training",

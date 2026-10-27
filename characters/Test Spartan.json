@@ -1,0 +1,115 @@
+{
+  "format_version": 1,
+  "ruleset": "Core",
+  "character": {
+    "name": "Test Spartan",
+    "soldier_type": "UNSC / ONI Spartan II Augmented Soldier",
+    "characteristics": {
+      "STR": 60,
+      "TOU": 50,
+      "AGI": 55,
+      "WFR": 51,
+      "WFM": 51,
+      "INT": 39,
+      "PER": 42,
+      "CRG": 43,
+      "CHA": 27,
+      "LDR": 30
+    },
+    "mythic_characteristics": {
+      "STR": "+5",
+      "TOU": "+4",
+      "AGI": "+3"
+    },
+    "skills": {
+      "Interrogation": 0,
+      "Evasion": 0,
+      "Navigation": 0,
+      "Command": 0,
+      "Demolitions": 0,
+      "Technology": 0,
+      "Investigation": 0
+    },
+    "abilities": [
+      "Gather Senses",
+      "Mind Timer",
+      "Under Control"
+    ],
+    "upbringing": "Commoner",
+    "environment": "City",
+    "lifestyle": "Body Builder",
+    "wounds": 103,
+    "fatigue": 4,
+    "rank": "Petty Officer Second Class.",
+    "credits": 0,
+    "experience": 3300,
+    "starting_experience": 15000,
+    "experience_spent": 11700,
+    "experience_tier": 5,
+    "equipment": [
+      "MA5K Carbine",
+      "Hard Case, Two Tactical Softcases",
+      "M6 Series Pistol or M61 Carbine",
+      "Flashlight",
+      "Two M9 Dual-Purpose Grenades",
+      "M1 Combat Knife or Model 52 Knife",
+      "Two Flashbang Grenades",
+      "Utility Webbing"
+    ],
+    "equipment_pack": "point_man",
+    "armor": null,
+    "weapons": [],
+    "connections": [],
+    "specialization_packs": [
+      "Demolitions"
+    ],
+    "outliers": [
+      "Strongman",
+      "Vigil"
+    ],
+    "luck_burned": 2,
+    "light_aspects": [],
+    "light_abilities": [],
+    "light_grenades": [],
+    "supers": []
+  },
+  "selections": {
+    "starting_xp": 15000,
+    "initial_setup": {
+      "soldier_type": "spartan_ii",
+      "upbringing": "Commoner",
+      "environment": "City",
+      "lifestyles": [
+        "Body Builder",
+        "Body Builder",
+        "Body Builder"
+      ]
+    },
+    "creation_points": {
+      "option": "Base (85 points)",
+      "total": 85,
+      "allocations": {
+        "STR": 6,
+        "TOU": 1,
+        "AGI": 0,
+        "WFR": 11,
+        "WFM": 11,
+        "INT": 20,
+        "PER": 8,
+        "CRG": 8,
+        "CHA": 20,
+        "LDR": 0
+      }
+    },
+    "outliers": [
+      "Strongman",
+      "Vigil"
+    ],
+    "specialization_packs": [
+      "Demolitions"
+    ],
+    "equipment": {
+      "pack": "point_man"
+    }
+  }
+}

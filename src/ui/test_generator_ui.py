@@ -274,9 +274,15 @@ class TestGeneratorUI(QWidget):
             )
             return
 
+        ruleset = str(export_data.get("ruleset") or "")
+        character_game_data = self.game_data
+        if (ruleset == "Light & Sky") != (self.selected_mode == "Light & Sky"):
+            character_game_data = DataLoader(
+                use_light_and_sky=ruleset == "Light & Sky"
+            ).load_all()
+
         self.character_sheet.set_character(
-            export_data["character"],
-            str(export_data.get("ruleset") or ""),
+            export_data["character"], ruleset, character_game_data
         )
         self.pages.setCurrentWidget(self.character_sheet)
 
