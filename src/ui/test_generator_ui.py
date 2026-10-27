@@ -6,7 +6,7 @@ import sys
 
 from PySide6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QFrame,
-    QStackedWidget, QGridLayout, QInputDialog, QMessageBox,
+    QStackedWidget, QGridLayout, QInputDialog, QMessageBox, QFileDialog,
 )
 
 from PySide6.QtCore import Qt
@@ -18,6 +18,7 @@ from src.ui.debug_page import DebugPage
 from src.ui.equipment_page import EquipmentPage
 from src.ui.landing_page import LandingPage
 from src.ui.initial_character_setup import InitialCharacterSetupPage
+from src.ui.interactive_character_sheet import InteractiveCharacterSheet
 from src.ui.outlier_page import OutlierPage
 from src.ui.specialization_page import DelayedTooltipLabel, SpecializationPage
 from src.ui.stat_allocation import StatAllocationPage
@@ -43,6 +44,7 @@ class TestGeneratorUI(QWidget):
         self.outlier_page = OutlierPage()
         self.equipment_page = EquipmentPage()
         self.debug_page = DebugPage()
+        self.character_sheet = InteractiveCharacterSheet()
         self.page_widgets = (
             self.landing_page,
             self.character_setup_home,
@@ -53,6 +55,7 @@ class TestGeneratorUI(QWidget):
             self.specialization_page,
             self.equipment_page,
             self.debug_page,
+            self.character_sheet,
         )
         for page in self.page_widgets:
             self.pages.addWidget(page)
@@ -60,6 +63,10 @@ class TestGeneratorUI(QWidget):
 
         self.create_character_button = self.landing_page.create_character_button
         self.load_character_button = self.landing_page.load_character_button
+        self.load_character_button.clicked.connect(self.load_character)
+        self.character_sheet.home_button.clicked.connect(
+            lambda: self.pages.setCurrentWidget(self.landing_page)
+        )
         self.character_setup_home.finish_character_button.clicked.connect(
             self.finish_and_name_character
         )
@@ -233,6 +240,45 @@ class TestGeneratorUI(QWidget):
     def open_debug_page(self):
         self.debug_page.set_report(self._build_debug_report())
         self.pages.setCurrentWidget(self.debug_page)
+
+    def load_character(self):
+        characters_directory = Path(__file__).resolve().parents[2] / "characters"
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            "Load Character",
+            str(characters_directory),
+            "Character files (*.json)",
+        )
+        if not file_path:
+            return
+
+        try:
+            export_data = json.loads(
+                Path(file_path).read_text(encoding="utf-8")
+            )
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
+            QMessageBox.critical(
+                self,
+                "Character Load Failed",
+                f"Could not load the character file:\n{error}",
+            )
+            return
+
+        if not isinstance(export_data, dict) or not isinstance(
+            export_data.get("character"), dict
+        ):
+            QMessageBox.warning(
+                self,
+                "Invalid Character File",
+                "The selected file does not contain a valid character export.",
+            )
+            return
+
+        self.character_sheet.set_character(
+            export_data["character"],
+            str(export_data.get("ruleset") or ""),
+        )
+        self.pages.setCurrentWidget(self.character_sheet)
 
     def _handle_version_selection_changed(self, mode):
         self.character_setup_home.set_version_selected(mode is not None)

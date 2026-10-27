@@ -1,0 +1,401 @@
+from typing import Any
+
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import (
+    QCheckBox,
+    QFrame,
+    QGridLayout,
+    QHBoxLayout,
+    QHeaderView,
+    QLabel,
+    QPlainTextEdit,
+    QPushButton,
+    QScrollArea,
+    QSpinBox,
+    QTabWidget,
+    QTableWidget,
+    QTableWidgetItem,
+    QVBoxLayout,
+    QWidget,
+)
+
+
+class InteractiveCharacterSheet(QWidget):
+    CHARACTERISTICS = (
+        ("STR", "Strength"),
+        ("TOU", "Toughness"),
+        ("AGI", "Agility"),
+        ("WFR", "Warfare Melee"),
+        ("WFM", "Warfare Range"),
+        ("INT", "Intellect"),
+        ("PER", "Perception"),
+        ("CRG", "Courage"),
+        ("CHA", "Charisma"),
+        ("LDR", "Leadership"),
+    )
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.character_data: dict[str, Any] = {}
+        self.note_fields: dict[str, QPlainTextEdit] = {}
+
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(24, 20, 24, 20)
+        layout.setSpacing(12)
+
+        header = QHBoxLayout()
+        title_layout = QVBoxLayout()
+        self.name_label = QLabel("Character Sheet")
+        self.name_label.setStyleSheet("font-size: 28px; font-weight: bold;")
+        self.ruleset_label = QLabel("")
+        title_layout.addWidget(self.name_label)
+        title_layout.addWidget(self.ruleset_label)
+        header.addLayout(title_layout)
+        header.addStretch(1)
+        self.home_button = QPushButton("Back to Home")
+        header.addWidget(self.home_button)
+        layout.addLayout(header)
+
+        self.tabs = QTabWidget()
+        self.character_tab, self.character_content_layout = (
+            self._create_scrollable_tab()
+        )
+        self.combat_tab, self.combat_content_layout = self._create_scrollable_tab()
+        self.tabs.addTab(self.character_tab, "Character")
+        self.tabs.addTab(self.combat_tab, "Combat & Notes")
+        layout.addWidget(self.tabs)
+
+        self._build_character_tab(self.character_content_layout)
+        self._build_combat_tab(self.combat_content_layout)
+
+    def set_character(self, character: dict[str, Any], ruleset: str = ""):
+        self.character_data = dict(character)
+        self.name_label.setText(str(character.get("name") or "Unnamed Character"))
+        self.ruleset_label.setText(ruleset)
+
+        background = ", ".join(
+            str(value)
+            for value in (
+                character.get("upbringing"),
+                character.get("environment"),
+                character.get("lifestyle"),
+            )
+            if value
+        ) or "None"
+        identity = {
+            "Faction": "Not provided",
+            "Soldier Type": character.get("soldier_type"),
+            "Rank": character.get("rank"),
+            "Specialization": self._format_items(
+                character.get("specialization_packs")
+            ),
+            "Race": "Not provided",
+            "Background": background,
+        }
+        for key, label in self.identity_labels.items():
+            label.setText(self._display_value(identity[key]))
+
+        characteristics = character.get("characteristics")
+        mythic = character.get("mythic_characteristics")
+        characteristics = characteristics if isinstance(characteristics, dict) else {}
+        mythic = mythic if isinstance(mythic, dict) else {}
+        for code, label in self.characteristic_labels.items():
+            value = characteristics.get(code, "—")
+            mythic_value = mythic.get(code)
+            label.setText(
+                f"{value}" + (f"  ({mythic_value})" if mythic_value else "")
+            )
+
+        self._set_skill_rows(character.get("skills"))
+        self.ability_label.setText(self._format_items(character.get("abilities")))
+        equipment = [
+            character.get("equipment_pack"),
+            *self._as_list(character.get("equipment")),
+        ]
+        self.equipment_label.setText(self._format_items(equipment))
+        self.weapon_label.setText(self._format_items(character.get("weapons")))
+        self.armor_label.setText(self._display_value(character.get("armor")))
+        self.shield_label.setText("Not provided")
+
+        experience = {
+            "Current": character.get("experience"),
+            "Spent": character.get("experience_spent"),
+            "Total": character.get("starting_experience"),
+        }
+        for key, label in self.experience_labels.items():
+            label.setText(self._display_value(experience[key]))
+        self.luck_burned_label.setText(
+            self._display_value(character.get("luck_burned", 0))
+        )
+        self._set_resource_value("credits", character.get("credits", 0))
+        self._set_resource_value("wounds", character.get("wounds", 0))
+        self._set_resource_value("fatigue", character.get("fatigue", 0))
+
+        for key, field in self.note_fields.items():
+            field.setPlainText(str(character.get(key) or ""))
+
+    def _build_character_tab(self, layout):
+        self.identity_labels = self._add_identity_section(layout)
+        self.characteristic_labels = self._add_characteristic_section(layout)
+        self.movement_labels = self._add_derived_stats_section(layout)
+
+        columns = QHBoxLayout()
+        self.skill_table = self._add_skill_section(columns)
+        right_column = QVBoxLayout()
+        self.ability_label = self._add_text_section(
+            right_column, "Abilities and Education"
+        )
+        self.equipment_label = self._add_text_section(right_column, "Equipment")
+        columns.addLayout(right_column)
+        columns.setStretch(0, 1)
+        columns.setStretch(1, 1)
+        layout.addLayout(columns)
+
+        progress_row = QHBoxLayout()
+        self.experience_labels = self._add_display_section(
+            progress_row, "Experience", ("Current", "Spent", "Total")
+        )
+        resource_layout = QVBoxLayout()
+        self.luck_burned_label = self._add_value_section(
+            resource_layout, "Luck Burned"
+        )
+        self.support_points_label = self._add_value_section(
+            resource_layout, "Support Points", "Not provided"
+        )
+        self.resource_inputs = {}
+        self.resource_inputs["credits"] = self._add_resource_input(
+            resource_layout, "Credits", "credits"
+        )
+        progress_row.addLayout(resource_layout)
+        layout.addLayout(progress_row)
+        layout.addStretch(1)
+
+    def _build_combat_tab(self, layout):
+        columns = QHBoxLayout()
+        self.weapon_label = self._add_text_section(columns, "Weapons")
+        right_column = QVBoxLayout()
+        self.armor_label = self._add_value_section(right_column, "Armor")
+        self.shield_label = self._add_value_section(right_column, "Shields")
+        self.resource_inputs["wounds"] = self._add_resource_input(
+            right_column, "Wounds", "wounds"
+        )
+        self.resource_inputs["fatigue"] = self._add_resource_input(
+            right_column, "Fatigue", "fatigue"
+        )
+        columns.addLayout(right_column)
+        columns.setStretch(0, 2)
+        columns.setStretch(1, 1)
+        layout.addLayout(columns)
+
+        notes_row = QHBoxLayout()
+        for key, title in (
+            ("medical_notes", "Medical Information"),
+            ("character_notes", "Character Information"),
+            ("combat_notes", "Armor and Weapons Misc"),
+        ):
+            section, body = self._new_section(title)
+            note = QPlainTextEdit()
+            note.setPlaceholderText(f"Add {title.lower()}...")
+            note.setMinimumHeight(130)
+            body.addWidget(note, 0, 0)
+            self.note_fields[key] = note
+            notes_row.addWidget(section)
+        layout.addLayout(notes_row)
+        layout.addStretch(1)
+
+    def _create_scrollable_tab(self):
+        tab = QWidget()
+        tab_layout = QVBoxLayout(tab)
+        tab_layout.setContentsMargins(4, 8, 4, 4)
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        content = QWidget()
+        content_layout = QVBoxLayout(content)
+        content_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        content_layout.setSpacing(12)
+        scroll.setWidget(content)
+        tab_layout.addWidget(scroll)
+        return tab, content_layout
+
+    def _add_identity_section(self, parent_layout):
+        section, grid = self._new_section("Character Identity")
+        fields = ("Faction", "Soldier Type", "Rank", "Specialization", "Race", "Background")
+        labels = {}
+        for index, field in enumerate(fields):
+            row, column = divmod(index, 3)
+            field_label = QLabel(f"{field}:")
+            field_label.setStyleSheet("font-weight: bold;")
+            value_label = QLabel("Not provided")
+            value_label.setWordWrap(True)
+            grid.addWidget(field_label, row * 2, column)
+            grid.addWidget(value_label, row * 2 + 1, column)
+            labels[field] = value_label
+        parent_layout.addWidget(section)
+        return labels
+
+    def _add_characteristic_section(self, parent_layout):
+        section, grid = self._new_section("Characteristics")
+        labels = {}
+        for index, (code, name) in enumerate(self.CHARACTERISTICS):
+            label = QLabel(f"{name}\n{code}")
+            label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            label.setStyleSheet("font-weight: bold;")
+            value = QLabel("—")
+            value.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            value.setMinimumHeight(36)
+            value.setStyleSheet(
+                "QLabel { background-color: #1b1b1b; border: 1px solid #788f3e; "
+                "border-radius: 4px; padding: 4px; font-size: 16px; }"
+            )
+            grid.addWidget(label, 0, index)
+            grid.addWidget(value, 1, index)
+            labels[code] = value
+        parent_layout.addWidget(section)
+        return labels
+
+    def _add_derived_stats_section(self, parent_layout):
+        section, grid = self._new_section("Movement, Sight, and Carrying Capacity")
+        labels = {}
+        for column, (key, title) in enumerate(
+            (
+                ("movement", "Movement"),
+                ("sight", "Perceptive Range"),
+                ("carrying_capacity", "Carry / Lift / Push"),
+            )
+        ):
+            title_label = QLabel(title)
+            title_label.setStyleSheet("font-weight: bold;")
+            value_label = QLabel("Not provided")
+            value_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            grid.addWidget(title_label, 0, column)
+            grid.addWidget(value_label, 1, column)
+            labels[key] = value_label
+        parent_layout.addWidget(section)
+        return labels
+
+    def _add_skill_section(self, parent_layout):
+        section, body = self._new_section("Skills")
+        table = QTableWidget(0, 4)
+        table.setHorizontalHeaderLabels(("Skill", "Trained", "+10", "+20"))
+        table.horizontalHeader().setSectionResizeMode(
+            0, QHeaderView.ResizeMode.Stretch
+        )
+        for column in range(1, 4):
+            table.horizontalHeader().setSectionResizeMode(
+                column, QHeaderView.ResizeMode.ResizeToContents
+            )
+        table.verticalHeader().setVisible(False)
+        table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
+        table.setSelectionMode(QTableWidget.SelectionMode.NoSelection)
+        table.setMinimumHeight(250)
+        body.addWidget(table, 0, 0)
+        parent_layout.addWidget(section)
+        return table
+
+    def _set_skill_rows(self, skills):
+        self.skill_table.setRowCount(0)
+        if not isinstance(skills, dict):
+            return
+        for name, raw_value in skills.items():
+            value = self._integer_value(raw_value)
+            row = self.skill_table.rowCount()
+            self.skill_table.insertRow(row)
+            self.skill_table.setItem(row, 0, QTableWidgetItem(str(name)))
+            for column, selected in enumerate((True, value >= 10, value >= 20), 1):
+                checkbox = QCheckBox()
+                checkbox.setChecked(selected)
+                checkbox.setEnabled(False)
+                checkbox.setStyleSheet("QCheckBox { margin-left: 8px; }")
+                cell = QWidget()
+                cell_layout = QHBoxLayout(cell)
+                cell_layout.setContentsMargins(0, 0, 0, 0)
+                cell_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+                cell_layout.addWidget(checkbox)
+                self.skill_table.setCellWidget(row, column, cell)
+        self.skill_table.resizeRowsToContents()
+
+    def _add_display_section(self, parent_layout, title, fields):
+        section, grid = self._new_section(title)
+        labels = {}
+        for column, field in enumerate(fields):
+            field_label = QLabel(field)
+            field_label.setStyleSheet("font-weight: bold;")
+            value_label = QLabel("—")
+            value_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            grid.addWidget(field_label, 0, column)
+            grid.addWidget(value_label, 1, column)
+            labels[field] = value_label
+        parent_layout.addWidget(section)
+        return labels
+
+    def _add_resource_input(self, parent_layout, title, key):
+        section, grid = self._new_section(title)
+        spin_box = QSpinBox()
+        spin_box.setRange(0, 1_000_000)
+        spin_box.valueChanged.connect(
+            lambda value, field=key: self.character_data.__setitem__(field, value)
+        )
+        grid.addWidget(spin_box, 0, 0)
+        parent_layout.addWidget(section)
+        return spin_box
+
+    def _set_resource_value(self, key, value):
+        spin_box = self.resource_inputs[key]
+        spin_box.setValue(self._integer_value(value))
+        self.character_data[key] = spin_box.value()
+
+    def _add_text_section(self, parent_layout, title):
+        section, body = self._new_section(title)
+        label = QLabel("None")
+        label.setWordWrap(True)
+        body.addWidget(label)
+        parent_layout.addWidget(section)
+        return label
+
+    def _add_value_section(self, parent_layout, title, value="Not provided"):
+        section, grid = self._new_section(title)
+        label = QLabel(value)
+        label.setWordWrap(True)
+        grid.addWidget(label, 0, 0)
+        parent_layout.addWidget(section)
+        return label
+
+    @staticmethod
+    def _new_section(title):
+        section = QFrame()
+        section.setFrameShape(QFrame.Shape.StyledPanel)
+        section.setStyleSheet(
+            "QFrame { background-color: #242424; border: 1px solid #526b28; "
+            "border-radius: 6px; }"
+        )
+        layout = QVBoxLayout(section)
+        title_label = QLabel(title)
+        title_label.setStyleSheet("font-size: 17px; font-weight: bold;")
+        layout.addWidget(title_label)
+        grid = QGridLayout()
+        layout.addLayout(grid)
+        return section, grid
+
+    @staticmethod
+    def _format_items(values):
+        if not isinstance(values, (list, tuple)):
+            return InteractiveCharacterSheet._display_value(values)
+        items = [str(value) for value in values if value]
+        return "\n".join(items) or "None"
+
+    @staticmethod
+    def _as_list(value):
+        if isinstance(value, (list, tuple)):
+            return value
+        return [value] if value else []
+
+    @staticmethod
+    def _display_value(value):
+        return str(value) if value not in (None, "") else "None"
+
+    @staticmethod
+    def _integer_value(value):
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            return 0
