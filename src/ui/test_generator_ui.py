@@ -5,14 +5,14 @@ import re
 import sys
 
 from PySide6.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QFrame,
+    QApplication, QDialog, QWidget, QVBoxLayout, QLabel, QPushButton, QFrame,
     QStackedWidget, QGridLayout, QInputDialog, QMessageBox, QFileDialog,
 )
 
 from PySide6.QtCore import Qt
 from src.data_loader import DataLoader
 from src.generator.character_generator import CharacterGenerator
-from src.models.character import CHAR_CODES
+from src.models.character import CHAR_CODES, MYTHIC_CHAR_CODES
 from src.ui.character_setup_home import CharacterSetupHome
 from src.ui.debug_page import DebugPage
 from src.ui.equipment_page import EquipmentPage
@@ -21,6 +21,7 @@ from src.ui.initial_character_setup import InitialCharacterSetupPage
 from src.ui.interactive_character_sheet import InteractiveCharacterSheet
 from src.ui.outlier_page import OutlierPage
 from src.ui.specialization_page import DelayedTooltipLabel, SpecializationPage
+from src.ui.skill_training_dialog import SkillTrainingDialog
 from src.ui.stat_allocation import StatAllocationPage
 from src.ui.version_and_expansions import VersionAndExpansionsPage
 
@@ -221,6 +222,8 @@ class TestGeneratorUI(QWidget):
         )
 
         self._creation_allocations = {code: 0 for code in CHAR_CODES}
+        self._selected_soldier_skills = {}
+        self._outlier_characteristics = {}
 
         self.update_soldier_types()
         self._build_specialization_pack_tiles()
@@ -300,11 +303,20 @@ class TestGeneratorUI(QWidget):
             return combo.currentData() or combo.currentText() or None
 
         if use_light_and_sky:
+            selected_soldier_types = (
+                selected_value(self.human_combo),
+                selected_value(self.guardian_combo),
+            )
             initial_setup = {
-                "human_soldier_type": selected_value(self.human_combo),
-                "guardian_soldier_type": selected_value(self.guardian_combo),
+                "human_soldier_type": selected_soldier_types[0],
+                "guardian_soldier_type": selected_soldier_types[1],
                 "subclass": selected_value(self.subclass_combo),
                 "connection": selected_value(self.connection_combo),
+                "skill_training": {
+                    soldier_type: self._selected_soldier_skills[soldier_type]
+                    for soldier_type in selected_soldier_types
+                    if soldier_type in self._selected_soldier_skills
+                },
             }
             equipment = {
                 "light_aspects": [
@@ -330,6 +342,9 @@ class TestGeneratorUI(QWidget):
                     for combo in self.lifestyle_combos
                     if selected_value(combo)
                 ],
+                "skill_training": self._selected_soldier_skills.get(
+                    selected_value(self.soldier_combo), {}
+                ),
             }
             equipment = {
                 "pack": next(
@@ -359,6 +374,12 @@ class TestGeneratorUI(QWidget):
                     for button, outlier, _ in self.outlier_tiles
                     if button.isChecked()
                 ],
+                "outlier_characteristics": {
+                    outlier_name: characteristic
+                    for outlier_name, characteristic
+                    in self._outlier_characteristics.items()
+                    if outlier_name in self._selected_outlier_names()
+                },
                 "specialization_packs": [
                     name
                     for button, name in self.specialization_tiles
@@ -952,6 +973,44 @@ class TestGeneratorUI(QWidget):
         return "\n".join(sections) if sections else "No additional details."
 
     def select_initial_setup_option(self, category, value, checked):
+        if checked and category in {"soldier", "human", "guardian"}:
+            soldier_data = self.game_data.get("soldier_type", value) or {}
+            try:
+                requirements = self._skill_training_requirements(soldier_data)
+                if requirements:
+                    skill_count, training_bonus = requirements
+                    skills_document = self.game_data.get("skills", "skills") or {}
+                    skill_names = [
+                        skill.get("name")
+                        for skill in skills_document.get("skills", [])
+                        if skill.get("name")
+                    ]
+                    previous_selection = self._selected_soldier_skills.get(
+                        value, {}
+                    )
+                    dialog = SkillTrainingDialog(
+                        skill_names,
+                        skill_count,
+                        training_bonus,
+                        selected_skills=previous_selection,
+                        parent=self,
+                    )
+                    if dialog.exec() != QDialog.DialogCode.Accepted:
+                        self._refresh_initial_setup_options()
+                        return
+                    self._selected_soldier_skills[value] = {
+                        skill: training_bonus
+                        for skill in dialog.selected_skills
+                    }
+            except ValueError as error:
+                QMessageBox.warning(
+                    self,
+                    "Skill Training Selection",
+                    str(error),
+                )
+                self._refresh_initial_setup_options()
+                return
+
         if category == "lifestyles":
             if checked:
                 matching_combo = next(
@@ -993,6 +1052,72 @@ class TestGeneratorUI(QWidget):
             else:
                 combo.setCurrentIndex(index)
         self._refresh_initial_setup_options()
+
+    @staticmethod
+    def _skill_training_requirements(soldier_data):
+        skill_trait = next(
+            (
+                trait
+                for trait in soldier_data.get("traits", [])
+                if isinstance(trait, dict)
+                and isinstance(trait.get("name"), str)
+                and trait["name"].casefold() == "skill training"
+            ),
+            None,
+        )
+        if skill_trait is None:
+            return None
+
+        effect = skill_trait.get("effect")
+        if not isinstance(effect, str):
+            raise ValueError("The Skill Training trait is missing its effect text.")
+
+        number_words = {
+            "one": 1,
+            "two": 2,
+            "three": 3,
+            "four": 4,
+            "five": 5,
+            "six": 6,
+            "seven": 7,
+            "eight": 8,
+            "nine": 9,
+            "ten": 10,
+        }
+        count_match = re.search(
+            r"\b(\d+|one|two|three|four|five|six|seven|eight|nine|ten)"
+            r"\s+skills?\b",
+            effect,
+            re.IGNORECASE,
+        )
+        level_match = re.search(
+            r"\bat\s+(Trained|\+\d+)\b",
+            effect,
+            re.IGNORECASE,
+        )
+        if not count_match or not level_match:
+            raise ValueError(
+                "The Skill Training trait must specify a skill count and training level."
+            )
+
+        count_text = count_match.group(1).casefold()
+        skill_count = number_words.get(count_text)
+        if skill_count is None:
+            skill_count = int(count_text)
+        level_text = level_match.group(1)
+        training_bonus = (
+            0 if level_text.casefold() == "trained" else int(level_text[1:])
+        )
+        if (
+            skill_count < 1
+            or training_bonus < 0
+            or training_bonus > 20
+            or training_bonus % 10
+        ):
+            raise ValueError(
+                "The Skill Training trait specifies an unsupported count or training level."
+            )
+        return skill_count, training_bonus
 
     def _build_specialization_pack_tiles(self):
         while self.specialization_grid.count():
@@ -1225,12 +1350,95 @@ class TestGeneratorUI(QWidget):
                     parent=self.outlier_content,
                 )
                 select_button.toggled.connect(
-                    self.update_outlier_selection
+                    lambda checked, button=select_button, selected_outlier=outlier:
+                    self._handle_outlier_selection(
+                        button, selected_outlier, checked
+                    )
                 )
                 self.outlier_tiles.append((select_button, outlier, luck_cost))
                 self.outlier_grid.addWidget(card, row + index // 3, index % 3)
 
             row += (len(outliers) + 2) // 3 + 1
+        self.update_outlier_selection()
+
+    def _handle_outlier_selection(self, button, outlier, checked):
+        outlier_name = outlier.get("name")
+        if checked and outlier_name in {"Aptitude", "Forte"}:
+            if not hasattr(self, "generated_character"):
+                button.blockSignals(True)
+                button.setChecked(False)
+                button.blockSignals(False)
+                self.update_outlier_selection()
+                return
+
+            if outlier_name == "Aptitude":
+                characteristic_document = (
+                    self.game_data.get("characteristics", "characteristics") or {}
+                )
+                characteristics = characteristic_document.get(
+                    "characteristics", []
+                )
+                options = [
+                    (item["name"], item["id"].upper())
+                    for item in characteristics
+                    if isinstance(item.get("id"), str)
+                    and item["id"].upper() in CHAR_CODES
+                    and item.get("name")
+                ]
+                prompt = "Choose a characteristic to increase by +5:"
+            else:
+                mythic_names = {
+                    "STR": "Strength",
+                    "TOU": "Toughness",
+                    "AGI": "Agility",
+                }
+                options = [
+                    (mythic_names[code], code)
+                    for code in MYTHIC_CHAR_CODES
+                ]
+                prompt = "Choose a Mythic Characteristic to increase by +1:"
+
+            if not options:
+                QMessageBox.warning(
+                    self,
+                    f"{outlier_name} Selection Unavailable",
+                    "No eligible characteristics are available to choose.",
+                )
+                button.blockSignals(True)
+                button.setChecked(False)
+                button.blockSignals(False)
+                self.update_outlier_selection()
+                return
+
+            previous_choice = self._outlier_characteristics.get(outlier_name)
+            current_index = next(
+                (
+                    index
+                    for index, (_, code) in enumerate(options)
+                    if code == previous_choice
+                ),
+                0,
+            )
+            labels = [label for label, _ in options]
+            label, accepted = QInputDialog.getItem(
+                self,
+                f"{outlier_name} Selection",
+                prompt,
+                labels,
+                current_index,
+                False,
+            )
+            if not accepted:
+                button.blockSignals(True)
+                button.setChecked(False)
+                button.blockSignals(False)
+                self.update_outlier_selection()
+                return
+
+            selected_code = next(
+                code for option_label, code in options if option_label == label
+            )
+            self._outlier_characteristics[outlier_name] = selected_code
         self.update_outlier_selection()
 
     def update_outlier_selection(self):
@@ -1251,9 +1459,21 @@ class TestGeneratorUI(QWidget):
             self.generated_character.outliers = []
             self.generated_character.luck_available = self._starting_luck
             self.generated_character.luck_total = self._starting_luck
+            self.generated_character.characteristics = (
+                self._pre_outlier_characteristics.copy()
+            )
+            self.generated_character.mythic_characteristics = (
+                self._pre_outlier_mythic_characteristics.copy()
+            )
             for tile, outlier, luck_cost in self.outlier_tiles:
                 if tile.isChecked():
-                    self.generated_character.apply_outlier(outlier, luck_cost)
+                    self.generated_character.apply_outlier(
+                        outlier,
+                        luck_cost,
+                        characteristic=self._outlier_characteristics.get(
+                            outlier.get("name")
+                        ),
+                    )
         self.open_specialization_page()
 
     def _build_equipment_tiles(self):
@@ -1960,6 +2180,7 @@ class TestGeneratorUI(QWidget):
     # ---------------------------------------------------------
     def update_soldier_types(self):
         use_lns = self.selected_mode == "Light & Sky"
+        self._selected_soldier_skills.clear()
         self.character_setup_home.equipment_or_light_powers_button.setText(
             "Light Abilities / Light Aspects" if use_lns else "Equipment"
         )
@@ -2194,6 +2415,19 @@ class TestGeneratorUI(QWidget):
             connection = None
 
         generator = CharacterGenerator(self.game_data, use_light_and_sky=use_lns)
+        selected_soldier_types = (
+            [human_type, guardian_type]
+            if use_lns
+            else [soldier_type]
+        )
+        skill_training = {}
+        for selected_type in selected_soldier_types:
+            for skill, bonus in self._selected_soldier_skills.get(
+                selected_type, {}
+            ).items():
+                skill_training[skill] = max(
+                    skill_training.get(skill, 0), bonus
+                )
 
         char = generator.generate(
             name=name,
@@ -2210,9 +2444,15 @@ class TestGeneratorUI(QWidget):
                 else None
             ),
             starting_experience=self.experience_input.value(),
+            skill_training=skill_training or None,
         )
 
         self.generated_character = char
+        self._pre_outlier_characteristics = char.characteristics.copy()
+        self._pre_outlier_mythic_characteristics = (
+            char.mythic_characteristics.copy()
+        )
+        self._outlier_characteristics.clear()
         if use_lns:
             self._build_light_power_tiles()
         else:

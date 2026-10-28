@@ -10,9 +10,13 @@ confirmation.
 
 Each export has a `format_version` field, a `ruleset`, a `character` object
 containing the character's generated data, and a `selections` object containing
-the choices made during creation. `selections.initial_setup` varies by ruleset;
-`creation_points` records the point option and per-characteristic allocations;
-and `outliers`, `specialization_packs`, and `equipment` record later choices.
+the choices made during creation. `selections.initial_setup` varies by ruleset.
+Soldier types with a Skill Training trait prompt for the listed number of skills;
+those choices and training levels are recorded there and applied to the
+character. `creation_points` records the point option and per-characteristic
+allocations, while `outliers`, `specialization_packs`, and `equipment` record
+later choices. The selected characteristic for Aptitude or mythic
+characteristic for Forte is stored in `selections.outlier_characteristics`.
 
 Choose **Load Character** on the landing screen to open an exported JSON file in
 the interactive character sheet. Its **Character** and **Combat & Notes** tabs

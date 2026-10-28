@@ -43,6 +43,7 @@ class CharacterGenerator:
         connection: Optional[str] = None,
         starting_experience: int = 0,
         lifestyles: Optional[list[str]] = None,
+        skill_training: Optional[dict[str, int]] = None,
     ) -> Character:
 
         char = Character(name=name)
@@ -103,7 +104,21 @@ class CharacterGenerator:
                 char.log("ERROR: Guardian subclass required in Light & Sky mode.")
 
         # Skills
-        if auto_assign_skills:
+        if skill_training is not None:
+            for skill, bonus in skill_training.items():
+                if (
+                    not isinstance(bonus, int)
+                    or bonus < 0
+                    or bonus > 20
+                    or bonus % 10
+                ):
+                    raise ValueError(
+                        f"Invalid skill training bonus for {skill}: {bonus}"
+                    )
+                char.train_skill(skill)
+                for _ in range(bonus // 10):
+                    char.upgrade_skill(skill)
+        elif auto_assign_skills:
             self._auto_assign_skills(char)
 
         # Light & Sky retains its default equipment behavior. Core equipment

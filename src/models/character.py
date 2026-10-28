@@ -4,6 +4,7 @@ from typing import Dict, List, Optional, Any
 
 
 CHAR_CODES = ["STR", "TOU", "AGI", "WFR", "WFM", "INT", "PER", "CRG", "CHA", "LDR"]
+MYTHIC_CHAR_CODES = ("STR", "TOU", "AGI")
 
 
 @dataclass
@@ -161,9 +162,32 @@ class Character:
                 self.upgrade_skill(skill_name)
             self.log(f"Specialization skill: {skill_name} (+{self.skills[skill_name]})")
 
-    def apply_outlier(self, outlier_data: dict, luck_cost: int):
+    def apply_outlier(
+        self, outlier_data: dict, luck_cost: int, characteristic: Optional[str] = None
+    ):
         outlier_name = outlier_data["name"]
         if outlier_name not in self.outliers:
+            if outlier_name == "Aptitude":
+                if characteristic not in CHAR_CODES:
+                    raise ValueError("Aptitude requires a valid characteristic code.")
+                self.characteristics[characteristic] += 5
+                self.log(f"Aptitude: +5 {characteristic}")
+            elif outlier_name == "Forte":
+                if characteristic not in MYTHIC_CHAR_CODES:
+                    raise ValueError(
+                        "Forte requires a valid mythic characteristic code."
+                    )
+                current_value = self.mythic_characteristics.get(characteristic, 0)
+                try:
+                    new_value = int(current_value) + 1
+                except (TypeError, ValueError) as error:
+                    raise ValueError(
+                        f"Invalid mythic characteristic value for {characteristic}: "
+                        f"{current_value!r}"
+                    ) from error
+                self.mythic_characteristics[characteristic] = f"+{new_value}"
+                self.log(f"Forte: +1 Mythic {characteristic} (now +{new_value})")
+
             self.outliers.append(outlier_name)
             self.luck_total -= luck_cost
         self.log(
