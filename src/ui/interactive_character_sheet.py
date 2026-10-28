@@ -1,7 +1,7 @@
 import re
 from typing import Any
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
@@ -21,9 +21,12 @@ from PySide6.QtWidgets import (
 )
 
 from src.game_data import GameData
+from src.ui.specialization_page import DelayedTooltipLabel
 
 
 class InteractiveCharacterSheet(QWidget):
+    save_requested = Signal()
+
     CHARACTERISTICS = (
         ("STR", "Strength"),
         ("TOU", "Toughness"),
@@ -46,17 +49,53 @@ class InteractiveCharacterSheet(QWidget):
         layout.setContentsMargins(24, 20, 24, 20)
         layout.setSpacing(12)
 
-        header = QHBoxLayout()
+        header = QGridLayout()
         title_layout = QVBoxLayout()
         self.name_label = QLabel("Character Sheet")
         self.name_label.setStyleSheet("font-size: 28px; font-weight: bold;")
         self.ruleset_label = QLabel("")
         title_layout.addWidget(self.name_label)
         title_layout.addWidget(self.ruleset_label)
-        header.addLayout(title_layout)
-        header.addStretch(1)
+        header.addLayout(title_layout, 0, 0, Qt.AlignmentFlag.AlignLeft)
+
+        experience_controls = QHBoxLayout()
+        adjustment_section, adjustment_layout = self._new_section("Adjust XP")
+        adjustment_layout.setColumnStretch(0, 1)
+        self.xp_adjustment_input = QSpinBox()
+        self.xp_adjustment_input.setRange(0, 1_000_000)
+        self.xp_adjustment_input.setKeyboardTracking(False)
+        self.add_xp_button = QPushButton("Add")
+        self.subtract_xp_button = QPushButton("Subtract")
+        adjustment_buttons = QHBoxLayout()
+        adjustment_buttons.addWidget(self.add_xp_button)
+        adjustment_buttons.addWidget(self.subtract_xp_button)
+        adjustment_layout.addWidget(self.xp_adjustment_input, 0, 0, 1, 2)
+        adjustment_layout.addLayout(adjustment_buttons, 1, 0, 1, 2)
+        self.add_xp_button.clicked.connect(
+            lambda: self._adjust_experience(self.xp_adjustment_input.value())
+        )
+        self.subtract_xp_button.clicked.connect(
+            lambda: self._adjust_experience(-self.xp_adjustment_input.value())
+        )
+        experience_controls.addWidget(adjustment_section)
+        self.experience_labels = self._add_display_section(
+            experience_controls, "Experience", ("Current", "Spent", "Total")
+        )
+        self.spend_xp_button = QPushButton("Spend XP")
+        experience_controls.addWidget(self.spend_xp_button)
+        header.addLayout(experience_controls, 0, 1, Qt.AlignmentFlag.AlignCenter)
+
+        header_buttons = QHBoxLayout()
+        self.save_button = QPushButton("Save")
+        self.save_button.setEnabled(False)
+        self.save_button.clicked.connect(self.save_requested.emit)
         self.home_button = QPushButton("Back to Home")
-        header.addWidget(self.home_button)
+        header_buttons.addWidget(self.save_button)
+        header_buttons.addWidget(self.home_button)
+        header.addLayout(header_buttons, 0, 2, Qt.AlignmentFlag.AlignRight)
+        header.setColumnStretch(0, 1)
+        header.setColumnStretch(1, 1)
+        header.setColumnStretch(2, 1)
         layout.addLayout(header)
 
         self.tabs = QTabWidget()
@@ -110,6 +149,7 @@ class InteractiveCharacterSheet(QWidget):
         for code, label in self.characteristic_labels.items():
             value = characteristics.get(code, "—")
             label.setText(str(value))
+        self._set_characteristic_tooltips(game_data)
         for code, label in self.mythic_characteristic_labels.items():
             value = self._display_value(mythic[code]) if code in mythic else "—"
             label.setText(value)
@@ -117,13 +157,18 @@ class InteractiveCharacterSheet(QWidget):
         self._set_perceptive_range(character, game_data)
         self._set_carrying_capacity(character, game_data)
 
-        self._set_skill_rows(character.get("skills"))
-        self.ability_label.setText(self._format_items(character.get("abilities")))
-        equipment = [
-            character.get("equipment_pack"),
-            *self._as_list(character.get("equipment")),
-        ]
-        self.equipment_label.setText(self._format_items(equipment))
+        self._set_skill_rows(character.get("skills"), game_data)
+        self._set_ability_labels(character.get("abilities"), game_data)
+        self.equipment_pack_label.setText(
+            self._display_value(character.get("equipment_pack"))
+        )
+        self.equipment_editor.setPlainText(
+            "\n".join(
+                str(item)
+                for item in self._as_list(character.get("equipment"))
+                if item
+            )
+        )
         self.weapon_label.setText(self._format_items(character.get("weapons")))
         self.armor_label.setText(self._display_value(character.get("armor")))
         self.shield_label.setText("Not provided")
@@ -142,6 +187,19 @@ class InteractiveCharacterSheet(QWidget):
 
         for key, field in self.note_fields.items():
             field.setPlainText(str(character.get(key) or ""))
+
+    def set_save_available(self, available: bool):
+        self.save_button.setEnabled(available)
+
+    def character_data_for_save(self):
+        for key, field in self.note_fields.items():
+            self.character_data[key] = field.toPlainText()
+        self.character_data["equipment"] = [
+            item.strip()
+            for item in self.equipment_editor.toPlainText().splitlines()
+            if item.strip()
+        ]
+        return dict(self.character_data)
 
     def _build_character_tab(self, layout):
         self.identity_labels = self._add_identity_section(layout)
@@ -165,19 +223,27 @@ class InteractiveCharacterSheet(QWidget):
         columns = QHBoxLayout()
         self.skill_table = self._add_skill_section(columns)
         right_column = QVBoxLayout()
-        self.ability_label = self._add_text_section(
-            right_column, "Abilities and Education"
+        ability_section, self.ability_layout = self._new_section(
+            "Abilities and Education"
         )
-        self.equipment_label = self._add_text_section(right_column, "Equipment")
+        right_column.addWidget(ability_section)
+        equipment_section, equipment_body = self._new_section("Equipment")
+        self.equipment_pack_label = QLabel("None")
+        self.equipment_pack_label.setWordWrap(True)
+        equipment_body.addWidget(self.equipment_pack_label)
+        self.equipment_editor = QPlainTextEdit()
+        self.equipment_editor.setPlaceholderText(
+            "Add or remove equipment, one item per line..."
+        )
+        self.equipment_editor.setMinimumHeight(130)
+        equipment_body.addWidget(self.equipment_editor)
+        right_column.addWidget(equipment_section)
         columns.addLayout(right_column)
         columns.setStretch(0, 1)
         columns.setStretch(1, 1)
         layout.addLayout(columns)
 
         progress_row = QHBoxLayout()
-        self.experience_labels = self._add_display_section(
-            progress_row, "Experience", ("Current", "Spent", "Total")
-        )
         resource_layout = QVBoxLayout()
         self.luck_inputs = self._add_luck_inputs(resource_layout)
         self.support_points_label = self._add_value_section(
@@ -257,6 +323,7 @@ class InteractiveCharacterSheet(QWidget):
     def _add_characteristic_section(self, parent_layout):
         section, grid = self._new_section("Characteristics")
         labels = {}
+        self.characteristic_name_labels = {}
         mythic_labels = {}
         for index, (code, name) in enumerate(self.CHARACTERISTICS):
             label = QLabel(f"{name}\n{code}")
@@ -271,6 +338,7 @@ class InteractiveCharacterSheet(QWidget):
             )
             grid.addWidget(label, 0, index)
             grid.addWidget(value, 1, index)
+            self.characteristic_name_labels[code] = label
             labels[code] = value
             if code in {"STR", "TOU", "AGI"}:
                 mythic_title = QLabel("Mythic")
@@ -288,6 +356,63 @@ class InteractiveCharacterSheet(QWidget):
         parent_layout.addWidget(section)
         self.mythic_characteristic_labels = mythic_labels
         return labels
+
+    def _set_characteristic_tooltips(self, game_data: GameData | None):
+        document = (
+            game_data.get("characteristics", "characteristics")
+            if game_data is not None
+            else None
+        )
+        records = (
+            document.get("characteristics", [])
+            if isinstance(document, dict)
+            else []
+        )
+        descriptions = {
+            record["id"].upper(): record.get("description", "")
+            for record in records
+            if isinstance(record, dict)
+            and isinstance(record.get("id"), str)
+        }
+        for code, label in self.characteristic_name_labels.items():
+            description = descriptions.get(code, "")
+            label.setToolTip(description)
+            self.characteristic_labels[code].setToolTip(description)
+
+    def _set_ability_labels(self, abilities, game_data: GameData | None):
+        while self.ability_layout.count():
+            item = self.ability_layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()
+
+        descriptions = {}
+        if game_data is not None:
+            for document in game_data.families.get("light_abilities", {}).values():
+                for record in document.get("abilities", []):
+                    if not isinstance(record, dict):
+                        continue
+                    name = record.get("name")
+                    description = record.get("description")
+                    if isinstance(name, str) and isinstance(description, str):
+                        descriptions[name.casefold()] = description
+
+        ability_names = [
+            str(name)
+            for name in self._as_list(abilities)
+            if name
+        ]
+        if not ability_names:
+            self.ability_layout.addWidget(QLabel("None"))
+            return
+
+        for name in ability_names:
+            label = DelayedTooltipLabel(
+                name,
+                descriptions.get(name.casefold(), ""),
+            )
+            label.setWordWrap(True)
+            self.ability_layout.addWidget(label)
 
     def _add_movement_section(self, parent_layout):
         section, grid = self._new_section("Movement")
@@ -791,21 +916,46 @@ class InteractiveCharacterSheet(QWidget):
         table.verticalHeader().setVisible(False)
         table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         table.setSelectionMode(QTableWidget.SelectionMode.NoSelection)
-        table.setMinimumHeight(250)
+        table.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         body.addWidget(table, 0, 0)
         parent_layout.addWidget(section)
         return table
 
-    def _set_skill_rows(self, skills):
+    def _set_skill_rows(self, skills, game_data):
         self.skill_table.setRowCount(0)
-        if not isinstance(skills, dict):
-            return
-        for name, raw_value in skills.items():
-            value = self._integer_value(raw_value)
+        trained_skills = skills if isinstance(skills, dict) else {}
+        skills_document = (
+            game_data.get("skills", "skills") if game_data is not None else None
+        )
+        skill_records = (
+            skills_document.get("skills", [])
+            if isinstance(skills_document, dict)
+            else []
+        )
+        skill_names = [
+            record["name"]
+            for record in skill_records
+            if isinstance(record, dict)
+            and isinstance(record.get("name"), str)
+        ]
+        skill_names.extend(
+            name
+            for name in trained_skills
+            if isinstance(name, str) and name not in skill_names
+        )
+
+        for name in skill_names:
+            trained = name in trained_skills
+            value = (
+                self._integer_value(trained_skills[name]) if trained else 0
+            )
             row = self.skill_table.rowCount()
             self.skill_table.insertRow(row)
-            self.skill_table.setItem(row, 0, QTableWidgetItem(str(name)))
-            for column, selected in enumerate((True, value >= 10, value >= 20), 1):
+            self.skill_table.setItem(row, 0, QTableWidgetItem(name))
+            for column, selected in enumerate(
+                (trained, trained and value >= 10, trained and value >= 20),
+                1,
+            ):
                 checkbox = QCheckBox()
                 checkbox.setChecked(selected)
                 checkbox.setEnabled(False)
@@ -817,6 +967,15 @@ class InteractiveCharacterSheet(QWidget):
                 cell_layout.addWidget(checkbox)
                 self.skill_table.setCellWidget(row, column, cell)
         self.skill_table.resizeRowsToContents()
+        table_height = (
+            self.skill_table.horizontalHeader().height()
+            + sum(
+                self.skill_table.rowHeight(row)
+                for row in range(self.skill_table.rowCount())
+            )
+            + 2 * self.skill_table.frameWidth()
+        )
+        self.skill_table.setFixedHeight(table_height)
 
     def _add_display_section(self, parent_layout, title, fields):
         section, grid = self._new_section(title)
@@ -831,6 +990,22 @@ class InteractiveCharacterSheet(QWidget):
             labels[field] = value_label
         parent_layout.addWidget(section)
         return labels
+
+    def _adjust_experience(self, adjustment):
+        current = max(
+            0, self._parse_integer(self.character_data.get("experience")) or 0
+        )
+        spent = max(
+            0,
+            self._parse_integer(self.character_data.get("experience_spent"))
+            or 0,
+        )
+        current = max(0, current + adjustment)
+        total = current + spent
+        self.character_data["experience"] = current
+        self.character_data["starting_experience"] = total
+        self.experience_labels["Current"].setText(str(current))
+        self.experience_labels["Total"].setText(str(total))
 
     def _add_resource_input(self, parent_layout, title, key):
         section, grid = self._new_section(title)
@@ -853,6 +1028,8 @@ class InteractiveCharacterSheet(QWidget):
             field_label.setStyleSheet("font-weight: bold;")
             spin_box = QSpinBox()
             spin_box.setRange(0, 1_000_000)
+            if key == "available":
+                spin_box.setMaximum(0)
             grid.addWidget(field_label, 0, column)
             grid.addWidget(spin_box, 1, column)
             inputs[key] = spin_box
@@ -865,6 +1042,9 @@ class InteractiveCharacterSheet(QWidget):
 
     def _set_luck_total(self, value):
         self.character_data["luck_total"] = value
+        available_input = self.luck_inputs["available"]
+        available_input.setMaximum(value)
+        available_input.setValue(min(available_input.value(), value))
 
     def _set_luck_values(
         self, character: dict[str, Any], game_data: GameData | None
@@ -883,7 +1063,7 @@ class InteractiveCharacterSheet(QWidget):
                 available = total + max(0, legacy_burned)
             else:
                 available = total
-        available = max(0, available)
+        available = min(total, max(0, available))
 
         self.character_data.pop("luck_burned", None)
         self.character_data["luck_total"] = total
@@ -891,6 +1071,7 @@ class InteractiveCharacterSheet(QWidget):
         total_input = self.luck_inputs["total"]
         available_input = self.luck_inputs["available"]
         total_input.setValue(total)
+        available_input.setMaximum(total)
         available_input.setValue(available)
 
     @classmethod

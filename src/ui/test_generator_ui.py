@@ -1,8 +1,10 @@
 from dataclasses import asdict
 import json
+import os
 from pathlib import Path
 import re
 import sys
+import tempfile
 
 from PySide6.QtWidgets import (
     QApplication, QDialog, QWidget, QVBoxLayout, QLabel, QPushButton, QFrame,
@@ -68,6 +70,7 @@ class TestGeneratorUI(QWidget):
         self.character_sheet.home_button.clicked.connect(
             lambda: self.pages.setCurrentWidget(self.landing_page)
         )
+        self.character_sheet.save_requested.connect(self.save_loaded_character)
         self.character_setup_home.finish_character_button.clicked.connect(
             self.finish_and_name_character
         )
@@ -224,6 +227,7 @@ class TestGeneratorUI(QWidget):
         self._creation_allocations = {code: 0 for code in CHAR_CODES}
         self._selected_soldier_skills = {}
         self._outlier_characteristics = {}
+        self._loaded_character_path = None
 
         self.update_soldier_types()
         self._build_specialization_pack_tiles()
@@ -287,7 +291,68 @@ class TestGeneratorUI(QWidget):
         self.character_sheet.set_character(
             export_data["character"], ruleset, character_game_data
         )
+        self._loaded_character_path = Path(file_path)
+        self.character_sheet.set_save_available(True)
         self.pages.setCurrentWidget(self.character_sheet)
+
+    def save_loaded_character(self):
+        file_path = self._loaded_character_path
+        if file_path is None:
+            QMessageBox.warning(
+                self,
+                "Character Not Loaded",
+                "Load a character file before saving changes.",
+            )
+            return
+
+        temporary_path = None
+        try:
+            export_data = json.loads(file_path.read_text(encoding="utf-8"))
+            if not isinstance(export_data, dict) or not isinstance(
+                export_data.get("character"), dict
+            ):
+                QMessageBox.warning(
+                    self,
+                    "Invalid Character File",
+                    "The character file no longer contains a valid character export.",
+                )
+                return
+
+            export_data["character"] = (
+                self.character_sheet.character_data_for_save()
+            )
+            with tempfile.NamedTemporaryFile(
+                mode="w",
+                encoding="utf-8",
+                dir=file_path.parent,
+                prefix=f".{file_path.name}.",
+                suffix=".tmp",
+                delete=False,
+            ) as temporary_file:
+                temporary_path = Path(temporary_file.name)
+                json.dump(export_data, temporary_file, indent=2, ensure_ascii=False)
+                temporary_file.write("\n")
+            os.replace(temporary_path, file_path)
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError, TypeError) as error:
+            if temporary_path is not None:
+                try:
+                    temporary_path.unlink()
+                except FileNotFoundError:
+                    pass
+                except OSError:
+                    pass
+            QMessageBox.critical(
+                self,
+                "Character Save Failed",
+                f"Could not save changes to the character file:\n{error}",
+            )
+            return
+
+        QMessageBox.information(
+            self,
+            "Character Saved",
+            f"Character saved to:\n{file_path}",
+        )
 
     def _handle_version_selection_changed(self, mode):
         self.character_setup_home.set_version_selected(mode is not None)

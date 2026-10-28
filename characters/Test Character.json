@@ -42,8 +42,8 @@
     "fatigue": 3,
     "rank": null,
     "credits": 0,
-    "experience": 2925,
-    "starting_experience": 15000,
+    "experience": 4425,
+    "starting_experience": 16500,
     "experience_spent": 12075,
     "experience_tier": 5,
     "equipment": [],
@@ -59,7 +59,6 @@
     "outliers": [
       "Acumen"
     ],
-    "luck_burned": 1,
     "light_aspects": [
       "Ionic Trace"
     ],
@@ -70,7 +69,12 @@
     "light_grenades": [],
     "supers": [
       "Storm"
-    ]
+    ],
+    "luck_total": 5,
+    "luck_available": 5,
+    "medical_notes": "",
+    "character_notes": "",
+    "combat_notes": ""
   },
   "selections": {
     "starting_xp": 15000,

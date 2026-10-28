@@ -190,6 +190,7 @@ class Character:
 
             self.outliers.append(outlier_name)
             self.luck_total -= luck_cost
+            self.luck_available = min(self.luck_available, self.luck_total)
         self.log(
             f"Applying outlier: {outlier_name} "
             f"(Burn Luck: {luck_cost}; effect: {outlier_data['effect']})"
