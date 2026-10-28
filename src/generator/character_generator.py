@@ -49,6 +49,8 @@ class CharacterGenerator:
         char.starting_experience = max(0, int(starting_experience))
         char.experience = char.starting_experience
         char.experience_tier = self._get_experience_tier(char.starting_experience)
+        char.luck_total = self._get_tier_luck(char.experience_tier)
+        char.luck_available = char.luck_total
         char.log(
             f"Starting experience: {char.starting_experience} "
             f"(Tier {char.experience_tier})"
@@ -136,6 +138,14 @@ class CharacterGenerator:
             if len(bounds) == 2 and int(bounds[0]) <= experience <= int(bounds[1]):
                 return tier["tier"]
 
+        return 0
+
+    def _get_tier_luck(self, tier_number: int) -> int:
+        document = self.data.get("experience_tiers", "experience_tiers") or {}
+        tiers = document.get("experience_tiers", {}).get("tiers", [])
+        for tier in tiers:
+            if tier.get("tier") == tier_number:
+                return int(tier.get("luck", 0))
         return 0
 
     def _selected_experience_costs(

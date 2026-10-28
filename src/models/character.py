@@ -49,7 +49,8 @@ class Character:
     connections: List[str] = field(default_factory=list)
     specialization_packs: List[str] = field(default_factory=list)
     outliers: List[str] = field(default_factory=list)
-    luck_burned: int = 0
+    luck_available: int = 0
+    luck_total: int = 0
     light_aspects: List[str] = field(default_factory=list)
     light_abilities: List[str] = field(default_factory=list)
     light_grenades: List[str] = field(default_factory=list)
@@ -164,7 +165,7 @@ class Character:
         outlier_name = outlier_data["name"]
         if outlier_name not in self.outliers:
             self.outliers.append(outlier_name)
-            self.luck_burned += luck_cost
+            self.luck_total -= luck_cost
         self.log(
             f"Applying outlier: {outlier_name} "
             f"(Burn Luck: {luck_cost}; effect: {outlier_data['effect']})"

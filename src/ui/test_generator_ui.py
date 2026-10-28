@@ -596,8 +596,9 @@ class TestGeneratorUI(QWidget):
                 f"Light Abilities: {', '.join(character.light_abilities) or 'None'}",
                 f"Light Grenades: {', '.join(character.light_grenades) or 'None'}",
                 f"Supers: {', '.join(character.supers) or 'None'}",
-                f"Wounds / fatigue / credits / Luck burned: {character.wounds} / "
-                f"{character.fatigue} / {character.credits} / {character.luck_burned}",
+                f"Wounds / fatigue / credits / Luck available / total: "
+                f"{character.wounds} / {character.fatigue} / {character.credits} / "
+                f"{character.luck_available} / {character.luck_total}",
                 "",
                 "CALCULATED OUTPUTS",
             )
@@ -1235,12 +1236,12 @@ class TestGeneratorUI(QWidget):
     def update_outlier_selection(self):
         selected_count = sum(tile.isChecked() for tile, _, _ in self.outlier_tiles)
         luck_cost = sum(cost for tile, _, cost in self.outlier_tiles if tile.isChecked())
-        luck_remaining = self._starting_luck - luck_cost
+        luck_total = self._starting_luck - luck_cost
         self.outlier_page.available_luck_label.setText(
-            f"Luck available: {luck_remaining} / {self._starting_luck}"
+            f"Luck available: {self._starting_luck} / Total: {luck_total}"
         )
         for select_button, _, cost in self.outlier_tiles:
-            select_button.setEnabled(select_button.isChecked() or cost <= luck_remaining)
+            select_button.setEnabled(select_button.isChecked() or cost <= luck_total)
         self.outlier_done_button.setText(
             f"Next: Specialization Packs ({selected_count}; Burn {luck_cost} Luck)"
         )
@@ -1248,7 +1249,8 @@ class TestGeneratorUI(QWidget):
     def finish_outlier_selection(self):
         if hasattr(self, "generated_character"):
             self.generated_character.outliers = []
-            self.generated_character.luck_burned = 0
+            self.generated_character.luck_available = self._starting_luck
+            self.generated_character.luck_total = self._starting_luck
             for tile, outlier, luck_cost in self.outlier_tiles:
                 if tile.isChecked():
                     self.generated_character.apply_outlier(outlier, luck_cost)

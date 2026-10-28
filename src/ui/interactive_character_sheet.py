@@ -135,9 +135,7 @@ class InteractiveCharacterSheet(QWidget):
         }
         for key, label in self.experience_labels.items():
             label.setText(self._display_value(experience[key]))
-        self.luck_burned_label.setText(
-            self._display_value(character.get("luck_burned", 0))
-        )
+        self._set_luck_values(character, game_data)
         self._set_resource_value("credits", character.get("credits", 0))
         self._set_resource_value("wounds", character.get("wounds", 0))
         self._set_resource_value("fatigue", character.get("fatigue", 0))
@@ -181,9 +179,7 @@ class InteractiveCharacterSheet(QWidget):
             progress_row, "Experience", ("Current", "Spent", "Total")
         )
         resource_layout = QVBoxLayout()
-        self.luck_burned_label = self._add_value_section(
-            resource_layout, "Luck Burned"
-        )
+        self.luck_inputs = self._add_luck_inputs(resource_layout)
         self.support_points_label = self._add_value_section(
             resource_layout, "Support Points", "Not provided"
         )
@@ -846,6 +842,84 @@ class InteractiveCharacterSheet(QWidget):
         grid.addWidget(spin_box, 0, 0)
         parent_layout.addWidget(section)
         return spin_box
+
+    def _add_luck_inputs(self, parent_layout):
+        section, grid = self._new_section("Luck")
+        inputs = {}
+        for column, (key, title) in enumerate(
+            (("available", "Available"), ("total", "Total"))
+        ):
+            field_label = QLabel(title)
+            field_label.setStyleSheet("font-weight: bold;")
+            spin_box = QSpinBox()
+            spin_box.setRange(0, 1_000_000)
+            grid.addWidget(field_label, 0, column)
+            grid.addWidget(spin_box, 1, column)
+            inputs[key] = spin_box
+        inputs["available"].valueChanged.connect(
+            lambda value: self.character_data.__setitem__("luck_available", value)
+        )
+        inputs["total"].valueChanged.connect(self._set_luck_total)
+        parent_layout.addWidget(section)
+        return inputs
+
+    def _set_luck_total(self, value):
+        self.character_data["luck_total"] = value
+
+    def _set_luck_values(
+        self, character: dict[str, Any], game_data: GameData | None
+    ):
+        total = self._parse_integer(character.get("luck_total"))
+        if total is None:
+            total = self._tier_luck(character, game_data)
+        total_known = total is not None
+        total = max(0, total or 0)
+
+        available = self._parse_integer(character.get("luck_available"))
+        legacy_burned = self._parse_integer(character.get("luck_burned"))
+        if available is None:
+            if legacy_burned is not None and total_known:
+                total = max(0, total - max(0, legacy_burned))
+                available = total + max(0, legacy_burned)
+            else:
+                available = total
+        available = max(0, available)
+
+        self.character_data.pop("luck_burned", None)
+        self.character_data["luck_total"] = total
+        self.character_data["luck_available"] = available
+        total_input = self.luck_inputs["total"]
+        available_input = self.luck_inputs["available"]
+        total_input.setValue(total)
+        available_input.setValue(available)
+
+    @classmethod
+    def _tier_luck(
+        cls, character: dict[str, Any], game_data: GameData | None
+    ) -> int | None:
+        if game_data is None:
+            return None
+        experience_tier = cls._parse_integer(character.get("experience_tier"))
+        if experience_tier is None:
+            return None
+
+        document = game_data.get("experience_tiers", "experience_tiers")
+        experience_data = (
+            document.get("experience_tiers") if isinstance(document, dict) else None
+        )
+        tiers = (
+            experience_data.get("tiers")
+            if isinstance(experience_data, dict)
+            else None
+        )
+        if not isinstance(tiers, list):
+            return None
+        for tier in tiers:
+            if not isinstance(tier, dict):
+                continue
+            if cls._parse_integer(tier.get("tier")) == experience_tier:
+                return cls._parse_integer(tier.get("luck"))
+        return None
 
     def _set_resource_value(self, key, value):
         spin_box = self.resource_inputs[key]
