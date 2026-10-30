@@ -22,6 +22,7 @@ from PySide6.QtWidgets import (
 
 from src.game_data import GameData
 from src.ui.specialization_page import DelayedTooltipLabel
+from src.ui.skill_test_dialog import SkillTestDialog
 
 
 class InteractiveCharacterSheet(QWidget):
@@ -117,6 +118,7 @@ class InteractiveCharacterSheet(QWidget):
         game_data: GameData | None = None,
     ):
         self.character_data = dict(character)
+        self.game_data = game_data
         self.name_label.setText(str(character.get("name") or "Unnamed Character"))
         self.ruleset_label.setText(ruleset)
 
@@ -915,8 +917,10 @@ class InteractiveCharacterSheet(QWidget):
             )
         table.verticalHeader().setVisible(False)
         table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
-        table.setSelectionMode(QTableWidget.SelectionMode.NoSelection)
+        table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
+        table.setSelectionMode(QTableWidget.SelectionMode.SingleSelection)
         table.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        table.cellClicked.connect(self._open_skill_test)
         body.addWidget(table, 0, 0)
         parent_layout.addWidget(section)
         return table
@@ -976,6 +980,126 @@ class InteractiveCharacterSheet(QWidget):
             + 2 * self.skill_table.frameWidth()
         )
         self.skill_table.setFixedHeight(table_height)
+
+    def _open_skill_test(self, row, column):
+        skill_item = self.skill_table.item(row, 0)
+        if skill_item is None:
+            return
+
+        skill_name = skill_item.text()
+        skills_document = (
+            self.game_data.get("skills", "skills")
+            if self.game_data is not None
+            else None
+        )
+        skill_records = (
+            skills_document.get("skills", [])
+            if isinstance(skills_document, dict)
+            else []
+        )
+        skill_record = next(
+            (
+                record
+                for record in skill_records
+                if isinstance(record, dict)
+                and record.get("name") == skill_name
+            ),
+            {},
+        )
+
+        characteristics_document = (
+            self.game_data.get("characteristics", "characteristics")
+            if self.game_data is not None
+            else None
+        )
+        characteristic_records = (
+            characteristics_document.get("characteristics", [])
+            if isinstance(characteristics_document, dict)
+            else []
+        )
+        records_by_name = {
+            record["name"].casefold(): record
+            for record in characteristic_records
+            if isinstance(record, dict)
+            and isinstance(record.get("name"), str)
+            and isinstance(record.get("id"), str)
+        }
+        records_by_code = {
+            record["id"].upper(): record
+            for record in characteristic_records
+            if isinstance(record, dict)
+            and isinstance(record.get("name"), str)
+            and isinstance(record.get("id"), str)
+        }
+        characteristic_values = self.character_data.get("characteristics")
+        characteristic_values = (
+            characteristic_values
+            if isinstance(characteristic_values, dict)
+            else {}
+        )
+
+        linked_characteristics = skill_record.get("characteristics", [])
+        if not isinstance(linked_characteristics, list):
+            linked_characteristics = []
+        characteristic_options = []
+        for linked_name in linked_characteristics:
+            if not isinstance(linked_name, str):
+                continue
+            record = records_by_name.get(linked_name.casefold())
+            if record is None:
+                record = records_by_code.get(linked_name.upper())
+            if record is None:
+                continue
+            code = record["id"].upper()
+            characteristic_value = self._parse_integer(
+                characteristic_values.get(code)
+            )
+            if characteristic_value is None:
+                characteristic_value = 0
+            characteristic_options.append(
+                (record["name"], code, characteristic_value)
+            )
+
+        if not characteristic_options:
+            characteristic_options = [
+                (
+                    record["name"],
+                    code,
+                    self._parse_integer(characteristic_values.get(code)) or 0,
+                )
+                for code, record in records_by_code.items()
+            ]
+
+        raw_skill_value = self.character_data.get("skills")
+        is_trained = isinstance(raw_skill_value, dict) and skill_name in raw_skill_value
+        skill_level = (
+            self._integer_value(raw_skill_value[skill_name]) if is_trained else -10
+        )
+        skill_level = max(-10, min(20, skill_level))
+
+        difficulty_modifiers = (
+            skills_document.get("difficulty_modifiers", [])
+            if isinstance(skills_document, dict)
+            else []
+        )
+        difficulty_options = [
+            (entry["difficulty"], entry["modifier"])
+            for entry in difficulty_modifiers
+            if isinstance(entry, dict)
+            and isinstance(entry.get("difficulty"), str)
+            and isinstance(entry.get("modifier"), int)
+        ]
+        if not characteristic_options or not difficulty_options:
+            return
+
+        dialog = SkillTestDialog(
+            skill_name,
+            characteristic_options,
+            skill_level,
+            difficulty_options,
+            parent=self,
+        )
+        dialog.exec()
 
     def _add_display_section(self, parent_layout, title, fields):
         section, grid = self._new_section(title)
