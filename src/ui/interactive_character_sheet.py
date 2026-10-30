@@ -174,6 +174,7 @@ class InteractiveCharacterSheet(QWidget):
         self.weapon_label.setText(self._format_items(character.get("weapons")))
         self.armor_label.setText(self._display_value(character.get("armor")))
         self.shield_label.setText("Not provided")
+        self._set_light_and_sky_powers(character, ruleset)
 
         experience = {
             "Current": character.get("experience"),
@@ -290,7 +291,42 @@ class InteractiveCharacterSheet(QWidget):
             self.note_fields[key] = note
             notes_row.addWidget(section)
         layout.addLayout(notes_row)
+
+        self.light_and_sky_section, light_and_sky_grid = self._new_section(
+            "Light & Sky Powers"
+        )
+        light_power_fields = (
+            ("Light Aspects", "light_aspects_label"),
+            ("Light Abilities", "light_abilities_label"),
+            ("Light Grenades", "light_grenades_label"),
+        )
+        for column, (title, label_attribute) in enumerate(light_power_fields):
+            section, body = self._new_section(title)
+            label = QLabel("None")
+            label.setWordWrap(True)
+            body.addWidget(label, 0, 0)
+            setattr(self, label_attribute, label)
+            light_and_sky_grid.addWidget(section, 0, column)
+            light_and_sky_grid.setColumnStretch(column, 1)
+        self.light_and_sky_section.hide()
         layout.addStretch(1)
+        layout.addWidget(self.light_and_sky_section)
+
+    def _set_light_and_sky_powers(self, character, ruleset):
+        is_light_and_sky = ruleset == "Light & Sky"
+        self.light_and_sky_section.setVisible(is_light_and_sky)
+        if not is_light_and_sky:
+            return
+
+        self.light_aspects_label.setText(
+            self._format_items(character.get("light_aspects"))
+        )
+        self.light_abilities_label.setText(
+            self._format_items(character.get("light_abilities"))
+        )
+        self.light_grenades_label.setText(
+            self._format_items(character.get("light_grenades"))
+        )
 
     def _create_scrollable_tab(self):
         tab = QWidget()
