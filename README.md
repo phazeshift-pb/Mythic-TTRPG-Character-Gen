@@ -20,6 +20,11 @@ characteristic for Forte is stored in `selections.outlier_characteristics`.
 Upbringings and environments that offer a choice (for example City: "+5 Agility,
 Courage, or Perception") open a dialog when selected so you can pick one option
 per line. The picks are stored in `selections.initial_setup.background_choices`.
+Lifestyles are rolled when the character is generated. If the rolled outcome
+offers a choice (Hunter, Weapon Training, and Wise Guy on a 10 ask which Warfare
+Characteristic), a dialog shows the roll and asks for it; cancelling stops
+generation. Each lifestyle's roll and choices are saved in
+`character.lifestyle_results`.
 
 Choose **Load Character** on the landing screen to open an exported JSON file in
 the interactive character sheet. Its **Character** and **Combat & Notes** tabs

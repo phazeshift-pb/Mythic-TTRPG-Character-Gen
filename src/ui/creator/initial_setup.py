@@ -13,6 +13,10 @@ from src.ui.background_choice_dialog import BackgroundChoiceDialog
 from src.ui.skill_training_dialog import SkillTrainingDialog
 
 
+class CreationCancelled(Exception):
+    """The player cancelled a choice dialog part-way through generation."""
+
+
 class InitialSetupMixin:
     def _handle_version_selection_changed(self, mode):
         self.character_setup_home.set_version_selected(mode is not None)
@@ -219,6 +223,15 @@ class InitialSetupMixin:
             "choices": dialog.selected_choices,
         }
         return True
+
+    def _choose_lifestyle_options(self, record, roll, groups):
+        """Generator callback: pick Warfare (or other) options after a lifestyle roll."""
+        dialog = BackgroundChoiceDialog(
+            f"{record['name']} (rolled {roll})", groups, parent=self
+        )
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            raise CreationCancelled()
+        return dialog.selected_choices
 
     def _ensure_background_choices(self):
         """Before generating, make sure every chosen background has its picks."""

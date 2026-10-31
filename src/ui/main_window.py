@@ -30,7 +30,7 @@ from src.ui.stat_allocation import StatAllocationPage
 from src.ui.version_and_expansions import VersionAndExpansionsPage
 from src.ui.creator.character_files import CharacterFilesMixin
 from src.ui.creator.debug_report import DebugReportMixin
-from src.ui.creator.initial_setup import InitialSetupMixin
+from src.ui.creator.initial_setup import CreationCancelled, InitialSetupMixin
 from src.ui.creator.specialization import SpecializationMixin
 from src.ui.creator.outliers import OutliersMixin
 from src.ui.creator.equipment import EquipmentMixin
@@ -367,37 +367,41 @@ class MainWindow(
                     skill_training.get(skill, 0), bonus
                 )
 
-        char = generator.generate(
-            name=name,
-            soldier_type=soldier_type,
-            subclass=subclass,
-            human_soldier_type=human_type if use_lns else None,
-            guardian_class=guardian_type if use_lns else None,
-            connection=connection,
-            upbringing=(self.upbringing_combo.currentData() if not use_lns else None),
-            environment=(self.environment_combo.currentData() if not use_lns else None),
-            upbringing_choices=(
-                self._background_choices_for(
-                    "upbringing", self.upbringing_combo.currentData()
-                )
-                if not use_lns
-                else None
-            ),
-            environment_choices=(
-                self._background_choices_for(
-                    "environment", self.environment_combo.currentData()
-                )
-                if not use_lns
-                else None
-            ),
-            lifestyles=(
-                [combo.currentData() for combo in self.lifestyle_combos if combo.currentData()]
-                if not use_lns
-                else None
-            ),
-            starting_experience=self.experience_input.value(),
-            skill_training=skill_training or None,
-        )
+        try:
+            char = generator.generate(
+                name=name,
+                soldier_type=soldier_type,
+                subclass=subclass,
+                human_soldier_type=human_type if use_lns else None,
+                guardian_class=guardian_type if use_lns else None,
+                connection=connection,
+                upbringing=(self.upbringing_combo.currentData() if not use_lns else None),
+                environment=(self.environment_combo.currentData() if not use_lns else None),
+                upbringing_choices=(
+                    self._background_choices_for(
+                        "upbringing", self.upbringing_combo.currentData()
+                    )
+                    if not use_lns
+                    else None
+                ),
+                environment_choices=(
+                    self._background_choices_for(
+                        "environment", self.environment_combo.currentData()
+                    )
+                    if not use_lns
+                    else None
+                ),
+                lifestyle_choice=self._choose_lifestyle_options,
+                lifestyles=(
+                    [combo.currentData() for combo in self.lifestyle_combos if combo.currentData()]
+                    if not use_lns
+                    else None
+                ),
+                starting_experience=self.experience_input.value(),
+                skill_training=skill_training or None,
+            )
+        except CreationCancelled:
+            return
 
         self.generated_character = char
         self._pre_outlier_characteristics = char.characteristics.copy()

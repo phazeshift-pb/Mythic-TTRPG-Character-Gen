@@ -55,12 +55,12 @@
       "outcomes": [
         {
           "roll": "1-5",
-          "bonuses": ["+3 to chosen Warfare Characteristic"],
+          "bonuses": [{"choose_one": ["+3 Warfare Range", "+3 Warfare Melee"]}],
           "penalties": ["-3 Intellect"]
         },
         {
           "roll": "6-10",
-          "bonuses": ["+3 to chosen Warfare Characteristic"],
+          "bonuses": [{"choose_one": ["+3 Warfare Range", "+3 Warfare Melee"]}],
           "penalties": ["-3 Courage"]
         }
       ]
@@ -185,12 +185,12 @@
       "outcomes": [
         {
           "roll": "1-5",
-          "bonuses": ["+5 to selected Warfare Characteristic"],
-          "penalties": ["-5 to the other Warfare Characteristic"]
+          "bonuses": [{"choose_one": [["+5 Warfare Range", "-5 Warfare Melee"], ["+5 Warfare Melee", "-5 Warfare Range"]]}],
+          "penalties": []
         },
         {
           "roll": "6-10",
-          "bonuses": ["+5 to selected Warfare Characteristic"],
+          "bonuses": [{"choose_one": ["+5 Warfare Range", "+5 Warfare Melee"]}],
           "penalties": ["-5 Charisma"]
         }
       ]
@@ -231,7 +231,7 @@
         {
           "roll": "10",
           "bonuses": ["+5 Intellect"],
-          "penalties": ["-5 to chosen Warfare Characteristic"]
+          "penalties": [{"choose_one": ["-5 Warfare Range", "-5 Warfare Melee"]}]
         }
       ]
     }

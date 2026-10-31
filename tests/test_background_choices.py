@@ -87,3 +87,59 @@ def test_generator_threads_choices_through(core):
     )
     diff = {k: picked.characteristics[k] - plain.characteristics[k] for k in CHAR_CODES}
     assert {k: v for k, v in diff.items() if v} == {"CHA": 10, "AGI": -5, "INT": -5}
+
+
+def _lifestyle(core, name):
+    return record(core, "lifestyle", name)
+
+
+def test_hunter_asks_after_the_roll(core):
+    asked = []
+
+    def choose(rec, roll, groups):
+        asked.append((rec["name"], roll, [g["labels"] for g in groups]))
+        return ["+3 Warfare Melee"]
+
+    c = blank()
+    c.apply_lifestyle(_lifestyle(core, "Hunter"), 7, choose)
+    assert asked == [("Hunter", 7, [["+3 Warfare Range", "+3 Warfare Melee"]])]
+    assert c.characteristics["WFM"] == 33 and c.characteristics["CRG"] == 27
+    assert c.lifestyle_results == [{"name": "Hunter", "roll": 7, "choices": ["+3 Warfare Melee"]}]
+
+
+def test_weapon_training_low_roll_is_plus_one_minus_the_other(core):
+    c = blank()
+    c.apply_lifestyle(
+        _lifestyle(core, "Weapon Training"), 3,
+        lambda r, roll, g: ["+5 Warfare Range and -5 Warfare Melee"],
+    )
+    assert (c.characteristics["WFR"], c.characteristics["WFM"]) == (35, 25)
+
+
+def test_wise_guy_only_asks_on_a_ten(core):
+    calls = []
+    c = blank()
+    c.apply_lifestyle(_lifestyle(core, "Wise Guy"), 5, lambda *a: calls.append(a) or [])
+    assert calls == [] and c.characteristics["INT"] == 32
+    c.apply_lifestyle(_lifestyle(core, "Wise Guy"), 10, lambda r, roll, g: ["-5 Warfare Range"])
+    assert c.characteristics["WFR"] == 25 and c.characteristics["INT"] == 37
+
+
+def test_generator_passes_lifestyle_callback_and_can_be_cancelled(core):
+    soldier = core.list("soldier_type")[0]
+    gen = CharacterGenerator(core, use_light_and_sky=False)
+    char = gen.generate(
+        name="H", soldier_type=soldier, lifestyles=["Hunter", "Hunter", "Hunter"],
+        lifestyle_choice=lambda r, roll, g: ["+3 Warfare Range"],
+    )
+    assert len(char.lifestyle_results) == 3
+    assert all(r["choices"] == ["+3 Warfare Range"] for r in char.lifestyle_results)
+
+    class Cancelled(Exception):
+        pass
+
+    def cancel(*_):
+        raise Cancelled()
+
+    with pytest.raises(Cancelled):
+        gen.generate(name="X", soldier_type=soldier, lifestyles=["Hunter"], lifestyle_choice=cancel)

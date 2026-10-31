@@ -46,7 +46,10 @@ class CharacterGenerator:
         skill_training: Optional[dict[str, int]] = None,
         upbringing_choices: Optional[list[str]] = None,
         environment_choices: Optional[list[str]] = None,
+        lifestyle_choice=None,
     ) -> Character:
+        """lifestyle_choice(record, roll, groups) -> [label, ...] picks options
+        for lifestyle outcomes that offer a choice; it may raise to cancel."""
 
         char = Character(name=name)
         char.starting_experience = max(0, int(starting_experience))
@@ -92,7 +95,9 @@ class CharacterGenerator:
                 selected_lifestyles = [lifestyle]
 
             for selected_lifestyle in selected_lifestyles or []:
-                self._apply_lifestyle(char, selected_lifestyle, lifestyle_roll)
+                self._apply_lifestyle(
+                    char, selected_lifestyle, lifestyle_roll, lifestyle_choice
+                )
 
         # -----------------------------
         # LIGHT & SKY MODE ONLY
@@ -381,7 +386,9 @@ class CharacterGenerator:
     # ---------------------------------------------------------
     # Lifestyle (CORE ONLY)
     # ---------------------------------------------------------
-    def _apply_lifestyle(self, char: Character, name: str, roll: Optional[int]):
+    def _apply_lifestyle(
+        self, char: Character, name: str, roll: Optional[int], choose=None
+    ):
         records = self.data.get("lifestyle", "lifestyle")
         if not records:
             char.log("Lifestyle data missing.")
@@ -393,7 +400,7 @@ class CharacterGenerator:
                     roll = random.randint(1, 10)
                     char.log(f"Lifestyle roll auto-generated: {roll}")
 
-                char.apply_lifestyle(record, roll)
+                char.apply_lifestyle(record, roll, choose)
                 return
 
         char.log(f"Lifestyle '{name}' not found.")

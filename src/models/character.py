@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 import re
 from typing import Dict, List, Optional, Any
 
-from .background_choices import resolve_modifiers
+from .background_choices import choice_groups, resolve_modifiers
 from .derived_stats import max_wounds
 
 
@@ -49,6 +49,8 @@ class Character:
     upbringing: Optional[str] = None
     environment: Optional[str] = None
     lifestyle: Optional[str] = None
+    # One entry per lifestyle applied: {"name", "roll", "choices"}
+    lifestyle_results: List[Dict[str, Any]] = field(default_factory=list)
 
     # Meta
     wounds: int = 0
@@ -137,18 +139,30 @@ class Character:
     # -----------------------------
     # Apply Lifestyle
     # -----------------------------
-    def apply_lifestyle(self, lifestyle_data: dict, roll: int):
+    def apply_lifestyle(self, lifestyle_data: dict, roll: int, choose=None):
+        """Apply the outcome matching roll.
+
+        If that outcome has choice groups (e.g. Hunter's "+3 to chosen
+        Warfare Characteristic"), choose(lifestyle_data, roll, groups) is
+        called and must return one option label per group.
+        """
         self.lifestyle = lifestyle_data["name"]
         self.log(f"Applying lifestyle: {self.lifestyle} (roll={roll})")
 
-        # Find matching outcome
         for outcome in lifestyle_data["outcomes"]:
             low, high = self._parse_roll_range(outcome["roll"])
             if low <= roll <= high:
-                for bonus in outcome.get("bonuses", []):
-                    self._apply_modifier(bonus)
-                for penalty in outcome.get("penalties", []):
-                    self._apply_modifier(penalty)
+                groups = choice_groups(outcome)
+                choices = list(choose(lifestyle_data, roll, groups)) if groups and choose else []
+                resolved = dict(outcome, name=f"{self.lifestyle} (roll {roll})")
+                modifiers, problems = resolve_modifiers(resolved, choices)
+                for problem in problems:
+                    self.log(problem)
+                for modifier in modifiers:
+                    self._apply_modifier(modifier)
+                self.lifestyle_results.append(
+                    {"name": self.lifestyle, "roll": roll, "choices": choices}
+                )
                 break
 
     # -----------------------------
