@@ -7,6 +7,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+from src.ui import theme
 
 
 class CharacterSetupHome(QWidget):
@@ -53,8 +54,7 @@ class CharacterSetupHome(QWidget):
         ):
             button.setMinimumSize(280, 90)
             button.setStyleSheet(
-                "QPushButton { font-size: 18px; font-weight: bold; padding: 12px; }"
-                "QPushButton:hover { border: 2px solid #f7d36b; }"
+                theme.HOME_MENU_BUTTON
             )
             layout.addWidget(button)
         layout.addStretch(1)
@@ -64,8 +64,7 @@ class CharacterSetupHome(QWidget):
         )
         self.finish_character_button.setMinimumHeight(56)
         self.finish_character_button.setStyleSheet(
-            "QPushButton { font-size: 18px; font-weight: bold; padding: 12px; }"
-            "QPushButton:hover { border: 2px solid #f7d36b; }"
+            theme.HOME_MENU_BUTTON
         )
         layout.addWidget(self.finish_character_button)
 

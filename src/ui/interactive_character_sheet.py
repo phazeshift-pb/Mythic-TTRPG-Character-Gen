@@ -23,6 +23,7 @@ from PySide6.QtWidgets import (
 from src.game_data import GameData
 from src.ui.specialization_page import DelayedTooltipLabel
 from src.ui.skill_test_dialog import SkillTestDialog
+from src.ui import theme
 
 
 class InteractiveCharacterSheet(QWidget):
@@ -53,7 +54,7 @@ class InteractiveCharacterSheet(QWidget):
         header = QGridLayout()
         title_layout = QVBoxLayout()
         self.name_label = QLabel("Character Sheet")
-        self.name_label.setStyleSheet("font-size: 28px; font-weight: bold;")
+        self.name_label.setStyleSheet(theme.APP_TITLE)
         self.ruleset_label = QLabel("")
         title_layout.addWidget(self.name_label)
         title_layout.addWidget(self.ruleset_label)

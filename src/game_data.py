@@ -9,7 +9,6 @@ class GameData:
     """
 
     def __init__(self):
-        self.documents = {}          # raw JSON by path
         self.families = {}           # grouped by document type
         self.errors = []             # validation errors
 

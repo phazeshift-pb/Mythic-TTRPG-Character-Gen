@@ -7,6 +7,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+from src.ui import theme
 
 
 class OutlierPage(QWidget):
@@ -17,8 +18,7 @@ class OutlierPage(QWidget):
         header = QHBoxLayout()
         title = QLabel("Outliers")
         title.setStyleSheet(
-            "font-size: 24px; font-weight: bold; "
-            "padding: 10px; border-bottom: 2px solid #526b28;"
+            theme.PAGE_TITLE
         )
         header.addWidget(title)
         header.addStretch()
@@ -31,14 +31,14 @@ class OutlierPage(QWidget):
 
         self.available_luck_label = QLabel("Luck available: 0 / 0")
         self.available_luck_label.setStyleSheet(
-            "font-size: 16px; font-weight: bold; padding: 4px;"
+            theme.SUBHEADING
         )
         layout.addWidget(self.available_luck_label)
 
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
         self.content = QWidget()
-        self.content.setStyleSheet("background-color: #242424;")
+        self.content.setStyleSheet(theme.PANEL_BACKGROUND)
         self.grid = QGridLayout(self.content)
         self.grid.setSpacing(18)
         for column in range(3):

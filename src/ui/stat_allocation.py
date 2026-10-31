@@ -7,6 +7,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+from src.ui import theme
 
 
 class StatAllocationPage(QWidget):
@@ -16,8 +17,7 @@ class StatAllocationPage(QWidget):
 
         title = QLabel("Stat Point Allocation")
         title.setStyleSheet(
-            "font-size: 24px; font-weight: bold; "
-            "padding: 10px; border-bottom: 2px solid #526b28;"
+            theme.PAGE_TITLE
         )
         layout.addWidget(title)
         layout.addStretch(1)

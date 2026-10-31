@@ -8,6 +8,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+from src.ui import theme
 
 
 class VersionAndExpansionsPage(QWidget):
@@ -25,8 +26,7 @@ class VersionAndExpansionsPage(QWidget):
 
         title = QLabel("Version and Expansions")
         title.setStyleSheet(
-            "font-size: 24px; font-weight: bold; "
-            "padding: 10px; border-bottom: 2px solid #526b28;"
+            theme.PAGE_TITLE
         )
         layout.addWidget(title)
 

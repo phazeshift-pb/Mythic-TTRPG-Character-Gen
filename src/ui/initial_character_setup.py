@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+from src.ui import theme
 
 
 class InitialCharacterSetupPage(QWidget):
@@ -26,8 +27,7 @@ class InitialCharacterSetupPage(QWidget):
         layout = QVBoxLayout(self)
         title = QLabel("Initial Character Setup")
         title.setStyleSheet(
-            "font-size: 24px; font-weight: bold; "
-            "padding: 10px; border-bottom: 2px solid #526b28;"
+            theme.PAGE_TITLE
         )
         layout.addWidget(title)
 
@@ -43,7 +43,7 @@ class InitialCharacterSetupPage(QWidget):
         options_layout = QVBoxLayout(self.options_panel)
         options_layout.setContentsMargins(0, 0, 0, 0)
         self.options_title = QLabel()
-        self.options_title.setStyleSheet("font-size: 18px; font-weight: bold;")
+        self.options_title.setStyleSheet(theme.SECTION_HEADING)
         options_layout.addWidget(self.options_title)
         self.options_description = QLabel()
         self.options_description.setWordWrap(True)
@@ -91,11 +91,6 @@ class InitialCharacterSetupPage(QWidget):
             QComboBox(self.selection_state),
             QComboBox(self.selection_state),
         )
-        (
-            self.lifestyle_combo,
-            self.lifestyle_two_combo,
-            self.lifestyle_three_combo,
-        ) = self.lifestyle_combos
         self.subclass_combo = QComboBox(self.selection_state)
         self.connection_combo = QComboBox(self.selection_state)
 
@@ -116,20 +111,7 @@ class InitialCharacterSetupPage(QWidget):
             button.setCheckable(True)
             button.setMinimumHeight(48)
             button.setStyleSheet(
-                "QPushButton {"
-                " text-align: left;"
-                " background-color: #242424;"
-                " color: #f2f0e6;"
-                " border: 2px solid #526b28;"
-                " border-radius: 6px;"
-                " padding: 8px;"
-                " font-weight: bold;"
-                "}"
-                "QPushButton:hover { border-color: #f7d36b; }"
-                "QPushButton:checked {"
-                " background-color: #35451d;"
-                " border: 3px solid #f7d36b;"
-                "}"
+                theme.CATEGORY_BUTTON
             )
             button.clicked.connect(
                 lambda checked=False, category=key: self.select_category(category)
@@ -219,39 +201,14 @@ class InitialCharacterSetupPage(QWidget):
 
             card = QFrame(self.options_content)
             card.setStyleSheet(
-                "QFrame {"
-                " background-color: #242424;"
-                " border: 2px solid #526b28;"
-                " border-radius: 8px;"
-                "}"
+                theme.TILE_FRAME
             )
             card_layout = QVBoxLayout(card)
             tile = QPushButton(label, card)
             tile.setCheckable(True)
             tile.setMinimumSize(260, 72)
             tile.setStyleSheet(
-                "QPushButton {"
-                " text-align: left;"
-                " background-color: #526b28;"
-                " color: #ffffff;"
-                " border: 2px solid #788f3e;"
-                " border-radius: 6px;"
-                " padding: 14px;"
-                " font-size: 16px;"
-                " font-weight: bold;"
-                "}"
-                "QPushButton:hover {"
-                " background-color: #788f3e;"
-                " border-color: #f7d36b;"
-                "}"
-                "QPushButton:checked {"
-                " background-color: #35451d;"
-                " border: 3px solid #f7d36b;"
-                "}"
-                "QPushButton:pressed {"
-                " background-color: #35451d;"
-                " border-color: #f7d36b;"
-                "}"
+                theme.SELECT_BUTTON
             )
             tile.setChecked(value in selected_values)
             if self.option_button_group:
@@ -264,7 +221,7 @@ class InitialCharacterSetupPage(QWidget):
             details_label = QLabel(details, card)
             details_label.setWordWrap(True)
             details_label.setStyleSheet(
-                "color: #d5d2c6; border: none; padding: 4px 8px 8px 8px;"
+                theme.TILE_TEXT
             )
             card_layout.addWidget(details_label)
             self.options_grid.addWidget(
@@ -279,11 +236,7 @@ class InitialCharacterSetupPage(QWidget):
         card = QFrame(self.options_content)
         card.setMinimumSize(300, 250)
         card.setStyleSheet(
-            "QFrame {"
-            " background-color: #242424;"
-            " border: 2px solid #526b28;"
-            " border-radius: 8px;"
-            "}"
+            theme.TILE_FRAME
         )
         card_layout = QVBoxLayout(card)
         add_button = QPushButton(label, card)
