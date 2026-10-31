@@ -89,3 +89,22 @@ def test_abilities_have_no_copy_paste_artifacts():
     abilities = json.loads(text)["abilities"]
     for ability in abilities:
         assert not re.search(r"\s(99|10[0-4])$", ability["description"]), ability["name"]
+
+
+def test_lifestyle_and_grenade_checks():
+    core = DataLoader().load_all()
+    lns = DataLoader(use_light_and_sky=True).load_all()
+    errors = []
+    validate_all.check_lifestyle_rolls(core, errors)
+    validate_all.check_grenades(lns, errors)
+    assert errors == []
+
+    bad = GameData()
+    bad.add_document("lifestyle", "x", {"lifestyle": [{"name": "Patient", "outcomes": [
+        {"roll": "1-6"}, {"roll": "7-10"}, {"roll": "10"}]}]})
+    bad.add_document("light_abilities", "y", {"grenades": [
+        {"name": "Storm", "pierce": None, "base_damage": "5; second detonation 10"}]})
+    errors = []
+    validate_all.check_lifestyle_rolls(bad, errors)
+    validate_all.check_grenades(bad, errors)
+    assert len(errors) == 2
