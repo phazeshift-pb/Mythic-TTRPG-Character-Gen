@@ -5,10 +5,17 @@ from .game_data import GameData
 from .validators.base_validator import BaseValidator
 
 
+REPO_ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_DATA_ROOT = REPO_ROOT / "data"
+
+
 class DataLoader:
     """
-    Loads JSON files from /data/core and optionally /data/light_and_sky.
+    Loads JSON files from data/core and optionally data/light_and_sky.
     Identifies document families, validates them, and returns a unified GameData object.
+
+    Paths are resolved from the repository, not the current working
+    directory, so the app and tools work no matter where they are launched.
     """
 
     FAMILY_MAP = {
@@ -63,14 +70,23 @@ class DataLoader:
         "time": "time",
         "turn_structure": "turn_structure",
         "attack_limits": "attack_limits",
-        "attack_sequence": "attack_sequence"
+        "attack_sequence": "attack_sequence",
+        # Light & Sky equipment and weapon abilities
+        "armor_perks": "lns_armor_perks",
+        "perks": "lns_weapon_perks",
+        "plasteel_armor_table": "lns_armor",
+        "elements": "lns_elements",
+        "hand_cannons": "lns_weapons",
+        "light_weapon_abilities": "light_weapon_abilities",
     }
 
-    def __init__(self, use_light_and_sky: bool = False):
+    def __init__(self, use_light_and_sky: bool = False, data_root=None):
         self.use_light_and_sky = use_light_and_sky
-        self.character_creation_root = Path("data/character_creation")
-        self.core_root = Path("data/core")
-        self.lns_root = Path("data/light_and_sky")
+        self.data_root = Path(data_root) if data_root else DEFAULT_DATA_ROOT
+        self.character_creation_root = self.data_root / "character_creation"
+        self.core_root = self.data_root / "core"
+        self.lns_root = self.data_root / "light_and_sky"
+        self._loaded_paths = set()
 
     # ---------------------------------------------------------
     # Main loader
@@ -78,29 +94,31 @@ class DataLoader:
     def load_all(self):
         game_data = GameData()
         validator = BaseValidator(game_data)
+        self._loaded_paths = set()
+        data = self.data_root
         self._load_folder(self.character_creation_root, game_data, validator)
-        self._load_folder(Path("data/characteristics.json"), game_data, validator)
-        self._load_folder(Path("data/abilities.json"), game_data, validator)
-        self._load_folder(Path("data/skills.json"), game_data, validator)
+        self._load_folder(data / "characteristics.json", game_data, validator)
+        self._load_folder(data / "abilities.json", game_data, validator)
+        self._load_folder(data / "skills.json", game_data, validator)
         self._load_folder(
-            Path("data/movement/movement_speeds.json"), game_data, validator
+            data / "movement/movement_speeds.json", game_data, validator
         )
         self._load_folder(
-            Path("data/movement/encumberance.json"), game_data, validator
+            data / "movement/encumberance.json", game_data, validator
         )
         self._load_folder(
-            Path("data/hiding_spotting_visr/passive_perception.json"),
+            data / "hiding_spotting_visr/passive_perception.json",
             game_data,
             validator,
         )
         self._load_folder(
-            Path("data/perceptive_range.json"), game_data, validator
+            data / "perceptive_range.json", game_data, validator
         )
         self._load_folder(
-            Path("data/characteristic_modifiers.json"), game_data, validator
+            data / "characteristic_modifiers.json", game_data, validator
         )
         self._load_folder(
-            Path("data/mythic_characteristics.json"), game_data, validator
+            data / "mythic_characteristics.json", game_data, validator
         )
 
         # -----------------------------
@@ -152,13 +170,17 @@ class DataLoader:
         name_prefix=None,
     ):
         if not root.exists():
-            game_data.record_error(f"Missing data folder: {root}")
+            game_data.record_error(f"Missing data folder: {self._display_path(root)}")
             return
 
-        paths = [root] if root.is_file() else root.rglob("*.json")
+        paths = [root] if root.is_file() else sorted(root.rglob("*.json"))
         for path in paths:
             if path.stem in (exclude_names or set()):
                 continue
+            resolved = path.resolve()
+            if resolved in self._loaded_paths:
+                continue  # already loaded by a more specific call
+            self._loaded_paths.add(resolved)
             try:
                 with open(path, "r", encoding="utf-8") as f:
                     doc = json.load(f)
@@ -173,13 +195,29 @@ class DataLoader:
                 continue
 
             name = f"{name_prefix}_{path.stem}" if name_prefix else path.stem
+            source_path = self._display_path(path)
+
+            existing = game_data.get(family, name)
+            if existing is not None and existing.get("source_path") != source_path:
+                game_data.record_error(
+                    f"{source_path}: duplicate {family} name '{name}' "
+                    f"(already loaded from {existing.get('source_path')})"
+                )
+                continue
 
             # Store raw document
-            doc["source_path"] = path.as_posix()
+            doc["source_path"] = source_path
             game_data.add_document(family, name, doc)
 
             # Validate
             self.validate_document(family, name, doc, validator)
+
+    def _display_path(self, path: Path) -> str:
+        """'data/...'-style path, matching what saved data has always used."""
+        try:
+            return path.resolve().relative_to(self.data_root.parent).as_posix()
+        except ValueError:
+            return path.as_posix()
 
     # ---------------------------------------------------------
     # Family detection
@@ -232,6 +270,6 @@ class DataLoader:
                 if "characteristics" in skill:
                     for ch in skill["characteristics"]:
                         validator.require(
-                            ch in validator.CHARACTERISTIC_CODES,
-                            f"{name}: skill '{skill['name']}' invalid characteristic '{ch}'"
+                            validator.characteristic_code(ch) is not None,
+                            f"{name}: skill '{skill.get('name')}' invalid characteristic '{ch}'"
                         )
