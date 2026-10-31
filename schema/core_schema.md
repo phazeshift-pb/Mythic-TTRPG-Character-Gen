@@ -27,7 +27,7 @@ RuleText = string|number|boolean|object|array|null
 
 ## Soldier Type
 
-Files: `core/unsc_soldier_types/*.json`, `light_and_sky/character_creation/human_soldier_types/*.json`, and `light_and_sky/character_creation/guardian_soldier_types/*.json`.
+Files: `core/unsc_soldier_types/*.json`, `light_and_sky/character_creation/human_soldier_types/*.json`, and `light_and_sky/character_creation/guardian_classes_subclasses/*.json`.
 
 ```json
 {
@@ -143,7 +143,7 @@ All records in these families may use `citation`, `reference_page`, `requirement
 - `light_ability_rules.json`: `{ "light_abilities": { "rules": object, "supers": { ..., "experience_cost_multiplier": number, "energy_cost_multiplier": number }, "grenade_supers": object, "energy": object, "double_jump": object } }`.
 - `light_abilities_and_grenades.json`: `{ "abilities": [record], "grenades": [record] }`; abilities use `connection`, `category`, `experience_cost`, `light_cost`, `description`, and optional `super_description`; grenades also use `pierce`, `base_damage`, `damage_roll`, `range`, and `special_rules`.
 - `light_weapon_abilities.json`: `{ "light_weapon_abilities": { "base_ability": object, "effects": { "connection": [record] } } }`; effect records use `description`, `additional_light_energy`, and optional `cost_modifier`.
-- `character_creation/guardian_soldier_types/*.json`: soldier profiles with required `subclasses` and class-specific characteristic modifiers.
+- `character_creation/guardian_classes_subclasses/*.json`: soldier profiles with required `subclasses` and class-specific characteristic modifiers.
 
 ## Validation and Compatibility
 
@@ -152,4 +152,4 @@ Validation must be performed in two layers:
 1. **Document validation:** valid UTF-8 JSON, object root, known top-level document family, and correct primitive/container types for that family.
 2. **Game validation:** required rules, allowed characteristic codes, non-negative costs, valid ranges, unique names within a catalog, and references to existing skills, abilities, equipment, and Connections.
 
-The schema is intentionally permissive for rule payloads and polymorphic `effects`; the validator must report unknown fields rather than delete them. Filename aliases such as `encumberance.json`/`encumbrance`, `camoflage.json`/`camouflage`, and `multi-targeting.json`/`multi_targeting.json` are compatibility aliases and do not change the JSON contract.
+The schema is intentionally permissive for rule payloads and polymorphic `effects`; the validator must report unknown fields rather than delete them. Files are named in `snake_case` with standard spelling (for example `encumbrance.json`, `camouflage.json`, `multi_targeting.json`). Run `python tools/validate_all.py` to check both layers; it exits non-zero when any error is found.

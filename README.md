@@ -23,8 +23,9 @@ the interactive character sheet. Its **Character** and **Combat & Notes** tabs
 follow the printable sheet's identity, characteristics, skills, resources,
 equipment, and notes sections. Movement has its own half-width panel, alongside
 separate Perceptive Range and Carrying Capacity panels. Wounds, fatigue,
-credits, notes, available Luck, and total Luck can be adjusted while the sheet
-is open, but these changes are not yet saved back to the character file. Outliers
+credits, experience, equipment, notes, available Luck, and total Luck can be
+adjusted while the sheet is open, and **Save** writes them back to the
+character file. Outliers
 permanently reduce total Luck without changing available Luck. Fields not
 included in the character export are shown as unavailable. Movement speeds are
 calculated from Agility, its characteristic modifier, and any Mythic Agility
@@ -34,3 +35,15 @@ Push capacities use the encumbrance formulas and include Mythic bonuses,
 applicable soldier traits, and Strongman or Strong Back effects. Mythic
 Strength, Toughness, and Agility values appear in separate boxes below their
 base characteristics.
+
+## Development
+
+Install dependencies with `pip install PySide6 pytest`, then run the app with
+`python main.py`. Data paths resolve from the repository, so commands work from
+any folder.
+
+- `python tools/validate_all.py` checks every JSON file, loads both rulesets,
+  and cross-checks specialization packs against skills and abilities. It exits
+  with status 1 on errors. Add `--verbose` to list data files the creator does
+  not load yet.
+- `python -m pytest tests` runs the unit tests.

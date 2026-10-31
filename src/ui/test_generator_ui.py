@@ -803,7 +803,7 @@ class TestGeneratorUI(QWidget):
         )
 
         encumbrance_document = (
-            self.game_data.get("encumberance", "encumberance") or {}
+            self.game_data.get("encumbrance", "encumbrance") or {}
         ).get("encumbrance", {})
         carry_formula = encumbrance_document.get(
             "carry_weight", "Half of Strength + Toughness"
