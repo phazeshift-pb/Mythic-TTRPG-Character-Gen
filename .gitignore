@@ -1,3 +1,6 @@
 __pycache__/
 *.pyc
 .pytest_cache/
+src/models/__pycache__/character.cpython-314.pyc
+src/ui/__pycache__/interactive_character_sheet.cpython-314.pyc
+src/ui/__pycache__/test_generator_ui.cpython-314.pyc
