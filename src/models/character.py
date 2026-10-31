@@ -6,6 +6,21 @@ from typing import Dict, List, Optional, Any
 CHAR_CODES = ["STR", "TOU", "AGI", "WFR", "WFM", "INT", "PER", "CRG", "CHA", "LDR"]
 MYTHIC_CHAR_CODES = ("STR", "TOU", "AGI")
 
+CHARACTERISTIC_NAME_TO_CODE = {
+    "strength": "STR",
+    "toughness": "TOU",
+    "agility": "AGI",
+    "warfare range": "WFR",
+    "warfare melee": "WFM",
+    "intellect": "INT",
+    "perception": "PER",
+    "courage": "CRG",
+    "charisma": "CHA",
+    "leadership": "LDR",
+}
+
+_MODIFIER_PATTERN = re.compile(r"^\s*([+-]\d+)\s+(.+?)\s*$")
+
 
 @dataclass
 class Character:
@@ -269,18 +284,21 @@ class Character:
     # -----------------------------
     def _apply_modifier(self, text: str):
         """
-        Applies modifiers like '+5 Strength' or '-3 Charisma'.
+        Applies modifiers like '+5 Strength' or '-3 Courage'.
         """
-        try:
-            parts = text.split()
-            value = int(parts[0])
-            stat = parts[1].upper()[:3]  # STR, TOU, AGI, etc.
+        match = _MODIFIER_PATTERN.match(text) if isinstance(text, str) else None
+        if match is None:
+            self.log(f"Failed to parse modifier: {text!r}")
+            return
 
-            if stat in self.characteristics:
-                self.characteristics[stat] += value
-                self.log(f"Applied modifier: {text}")
-        except Exception:
-            self.log(f"Failed to parse modifier: {text}")
+        value = int(match.group(1))
+        code = CHARACTERISTIC_NAME_TO_CODE.get(match.group(2).casefold())
+        if code is None or code not in self.characteristics:
+            self.log(f"Unsupported modifier target (not applied): {text!r}")
+            return
+
+        self.characteristics[code] += value
+        self.log(f"Applied modifier: {text} -> {code} {value:+d}")
 
     def _parse_roll_range(self, roll_text: str):
         """
