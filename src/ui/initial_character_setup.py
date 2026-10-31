@@ -91,11 +91,6 @@ class InitialCharacterSetupPage(QWidget):
             QComboBox(self.selection_state),
             QComboBox(self.selection_state),
         )
-        (
-            self.lifestyle_combo,
-            self.lifestyle_two_combo,
-            self.lifestyle_three_combo,
-        ) = self.lifestyle_combos
         self.subclass_combo = QComboBox(self.selection_state)
         self.connection_combo = QComboBox(self.selection_state)
 
