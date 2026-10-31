@@ -63,6 +63,7 @@ Files: `core/unsc_soldier_types/*.json`, `light_and_sky/character_creation/human
 
 - `upbringing`: `{ "upbringing": [NamedRecord] }`, with `bonuses`, `penalties`, and `environment_available` arrays where supplied.
 - `environment`: `{ "environment": [NamedRecord] }`, with `bonuses` and `penalties` arrays.
+- In `upbringing` and `environment` records, each `bonuses`/`penalties` entry is either a modifier string that always applies (`"+5 Charisma"`, `"+2 Wounds"`) or a choice group `{ "choose_one": [option, ...] }`, where the player picks one option. An option is a modifier string or an array of modifiers taken together (Laborer: `["+2 Strength", "+1 Toughness"]`). This mirrors the rulebook's "X or Y" wording.
 - `lifestyle`: `{ "lifestyle": [{ "name": string, "outcomes": [{ "roll": string, "bonuses": [string], "penalties": [string] }] }] }`.
 - `experience_tiers`: `{ "experience_tiers": { "tiers": [record], "luck": number, "credits": number, "notes": string } }`.
 - `creation_points`: `{ "creation_points": object }`.

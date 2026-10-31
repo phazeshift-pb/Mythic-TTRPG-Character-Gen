@@ -2,28 +2,28 @@
   "environment": [
     {
       "name": "City",
-      "bonuses": ["+5 Agility", "+5 Courage", "+5 Perception"],
-      "penalties": ["-5 Strength", "-5 Toughness", "-5 Perception"]
+      "bonuses": [{"choose_one": ["+5 Agility", "+5 Courage", "+5 Perception"]}],
+      "penalties": [{"choose_one": ["-5 Strength", "-5 Toughness", "-5 Perception"]}]
     },
     {
       "name": "Country",
-      "bonuses": ["+5 Perception", "+5 Agility", "+5 Strength"],
-      "penalties": ["-5 Charisma", "-5 Intellect", "-5 Perception"]
+      "bonuses": [{"choose_one": ["+5 Perception", "+5 Agility", "+5 Strength"]}],
+      "penalties": [{"choose_one": ["-5 Charisma", "-5 Intellect", "-5 Perception"]}]
     },
     {
       "name": "Forest/Jungle",
-      "bonuses": ["+5 Perception", "+5 Strength", "+5 Toughness"],
-      "penalties": ["-5 Leadership", "-5 Intellect", "-5 Charisma"]
+      "bonuses": [{"choose_one": ["+5 Perception", "+5 Strength", "+5 Toughness"]}],
+      "penalties": [{"choose_one": ["-5 Leadership", "-5 Intellect", "-5 Charisma"]}]
     },
     {
       "name": "Town",
-      "bonuses": ["+5 Charisma", "+5 Leadership", "+5 Perception"],
-      "penalties": ["-5 Courage", "-5 Intellect", "-5 Agility"]
+      "bonuses": [{"choose_one": ["+5 Charisma", "+5 Leadership", "+5 Perception"]}],
+      "penalties": [{"choose_one": ["-5 Courage", "-5 Intellect", "-5 Agility"]}]
     },
     {
       "name": "Wasteland",
-      "bonuses": ["+5 Courage", "+5 Toughness", "+5 Agility"],
-      "penalties": ["-5 Charisma", "-5 Leadership", "-5 Strength"]
+      "bonuses": [{"choose_one": ["+5 Courage", "+5 Toughness", "+5 Agility"]}],
+      "penalties": [{"choose_one": ["-5 Charisma", "-5 Leadership", "-5 Strength"]}]
     }
   ]
 }

@@ -44,6 +44,8 @@ class CharacterGenerator:
         starting_experience: int = 0,
         lifestyles: Optional[list[str]] = None,
         skill_training: Optional[dict[str, int]] = None,
+        upbringing_choices: Optional[list[str]] = None,
+        environment_choices: Optional[list[str]] = None,
     ) -> Character:
 
         char = Character(name=name)
@@ -80,10 +82,10 @@ class CharacterGenerator:
         # -----------------------------
         if not self.use_light_and_sky:
             if upbringing:
-                self._apply_upbringing(char, upbringing)
+                self._apply_upbringing(char, upbringing, upbringing_choices)
 
             if environment:
-                self._apply_environment(char, environment)
+                self._apply_environment(char, environment, environment_choices)
 
             selected_lifestyles = lifestyles
             if selected_lifestyles is None and lifestyle:
@@ -347,7 +349,7 @@ class CharacterGenerator:
     # ---------------------------------------------------------
     # Upbringing (CORE ONLY)
     # ---------------------------------------------------------
-    def _apply_upbringing(self, char: Character, name: str):
+    def _apply_upbringing(self, char: Character, name: str, choices=None):
         records = self.data.get("upbringing", "upbringing")
         if not records:
             char.log("Upbringing data missing.")
@@ -355,7 +357,7 @@ class CharacterGenerator:
 
         for record in records.get("upbringing", []):
             if record["name"].lower() == name.lower():
-                char.apply_upbringing(record)
+                char.apply_upbringing(record, choices)
                 return
 
         char.log(f"Upbringing '{name}' not found.")
@@ -363,7 +365,7 @@ class CharacterGenerator:
     # ---------------------------------------------------------
     # Environment (CORE ONLY)
     # ---------------------------------------------------------
-    def _apply_environment(self, char: Character, name: str):
+    def _apply_environment(self, char: Character, name: str, choices=None):
         records = self.data.get("environment", "environment")
         if not records:
             char.log("Environment data missing.")
@@ -371,7 +373,7 @@ class CharacterGenerator:
 
         for record in records.get("environment", []):
             if record["name"].lower() == name.lower():
-                char.apply_environment(record)
+                char.apply_environment(record, choices)
                 return
 
         char.log(f"Environment '{name}' not found.")

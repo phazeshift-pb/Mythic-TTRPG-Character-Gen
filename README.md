@@ -17,6 +17,9 @@ character. `creation_points` records the point option and per-characteristic
 allocations, while `outliers`, `specialization_packs`, and `equipment` record
 later choices. The selected characteristic for Aptitude or mythic
 characteristic for Forte is stored in `selections.outlier_characteristics`.
+Upbringings and environments that offer a choice (for example City: "+5 Agility,
+Courage, or Perception") open a dialog when selected so you can pick one option
+per line. The picks are stored in `selections.initial_setup.background_choices`.
 
 Choose **Load Character** on the landing screen to open an exported JSON file in
 the interactive character sheet. Its **Character** and **Combat & Notes** tabs

@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 import re
 from typing import Dict, List, Optional, Any
 
+from .background_choices import resolve_modifiers
 from .derived_stats import max_wounds
 
 
@@ -51,6 +52,7 @@ class Character:
 
     # Meta
     wounds: int = 0
+    wounds_modifier: int = 0  # flat +/- Wounds from backgrounds (e.g. Street Urchin)
     fatigue: int = 0
     rank: Optional[str] = None
     credits: int = 0
@@ -111,28 +113,26 @@ class Character:
     # -----------------------------
     # Apply Upbringing
     # -----------------------------
-    def apply_upbringing(self, upbringing_data: dict):
+    def apply_upbringing(self, upbringing_data: dict, choices=None):
         self.upbringing = upbringing_data["name"]
         self.log(f"Applying upbringing: {self.upbringing}")
-
-        for bonus in upbringing_data.get("bonuses", []):
-            self._apply_modifier(bonus)
-
-        for penalty in upbringing_data.get("penalties", []):
-            self._apply_modifier(penalty)
+        self._apply_background(upbringing_data, choices)
 
     # -----------------------------
     # Apply Environment
     # -----------------------------
-    def apply_environment(self, env_data: dict):
+    def apply_environment(self, env_data: dict, choices=None):
         self.environment = env_data["name"]
         self.log(f"Applying environment: {self.environment}")
+        self._apply_background(env_data, choices)
 
-        for bonus in env_data.get("bonuses", []):
-            self._apply_modifier(bonus)
-
-        for penalty in env_data.get("penalties", []):
-            self._apply_modifier(penalty)
+    def _apply_background(self, record: dict, choices=None):
+        """Apply fixed modifiers plus the player's pick from each choice group."""
+        modifiers, problems = resolve_modifiers(record, choices)
+        for problem in problems:
+            self.log(problem)
+        for modifier in modifiers:
+            self._apply_modifier(modifier)
 
     # -----------------------------
     # Apply Lifestyle
@@ -295,7 +295,12 @@ class Character:
             return
 
         value = int(match.group(1))
-        code = CHARACTERISTIC_NAME_TO_CODE.get(match.group(2).casefold())
+        target = match.group(2).casefold()
+        if target == "wounds":
+            self.wounds_modifier += value
+            self.log(f"Applied modifier: {text} -> Wounds {value:+d}")
+            return
+        code = CHARACTERISTIC_NAME_TO_CODE.get(target)
         if code is None or code not in self.characteristics:
             self.log(f"Unsupported modifier target (not applied): {text!r}")
             return
@@ -321,6 +326,7 @@ class Character:
             self.characteristics["TOU"],
             self.mythic_characteristics.get("TOU", 0),
             list(self.outliers).count("Robust"),
+            flat_bonus=self.wounds_modifier,
         )
         self.log(f"Computed wounds = {self.wounds}")
 
