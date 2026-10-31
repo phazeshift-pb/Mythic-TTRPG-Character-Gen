@@ -36,6 +36,7 @@ from src.ui.creator.outliers import OutliersMixin
 from src.ui.creator.equipment import EquipmentMixin
 from src.ui.creator.light_powers import LightPowersMixin
 from src.ui.creator.creation_points import CreationPointsMixin
+from src.ui import theme
 
 
 class MainWindow(
@@ -294,8 +295,7 @@ class MainWindow(
         card = QFrame(card_parent)
         card.setMinimumHeight(min_height)
         card.setStyleSheet(
-            "QFrame { background-color: #242424; "
-            "border: 2px solid #526b28; border-radius: 8px; }"
+            theme.TILE_FRAME
         )
         layout = QVBoxLayout(card)
         layout.setContentsMargins(5, 5, 5, 5)
@@ -305,35 +305,14 @@ class MainWindow(
         select_button.setCheckable(True)
         select_button.setMinimumSize(260, 72)
         select_button.setStyleSheet(
-            "QPushButton {"
-            " text-align: left;"
-            " background-color: #526b28;"
-            " color: #ffffff;"
-            " border: 2px solid #788f3e;"
-            " border-radius: 6px;"
-            " padding: 14px;"
-            " font-size: 16px;"
-            " font-weight: bold;"
-            "}"
-            "QPushButton:hover {"
-            " background-color: #788f3e;"
-            " border-color: #f7d36b;"
-            "}"
-            "QPushButton:checked {"
-            " background-color: #35451d;"
-            " border: 3px solid #f7d36b;"
-            "}"
-            "QPushButton:pressed {"
-            " background-color: #35451d;"
-            " border-color: #f7d36b;"
-            "}"
+            theme.SELECT_BUTTON
         )
         layout.addWidget(select_button)
 
         details_label = QLabel(text, card)
         details_label.setWordWrap(True)
         details_label.setStyleSheet(
-            "color: #d5d2c6; border: none; padding: 4px 8px 8px 8px;"
+            theme.TILE_TEXT
         )
         layout.addWidget(details_label)
 

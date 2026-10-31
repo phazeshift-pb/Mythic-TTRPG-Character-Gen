@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+from src.ui import theme
 
 
 class EquipmentPage(QWidget):
@@ -43,12 +44,12 @@ class EquipmentPage(QWidget):
         options_layout.setContentsMargins(0, 0, 0, 0)
         self.experience_remaining_label = QLabel("XP remaining: 0 / 0")
         self.experience_remaining_label.setStyleSheet(
-            "font-size: 16px; font-weight: bold; padding: 4px;"
+            theme.SUBHEADING
         )
         self.experience_remaining_label.hide()
         options_layout.addWidget(self.experience_remaining_label)
         self.options_title = QLabel()
-        self.options_title.setStyleSheet("font-size: 18px; font-weight: bold;")
+        self.options_title.setStyleSheet(theme.SECTION_HEADING)
         self.options_title.hide()
         options_layout.addWidget(self.options_title)
         self.options_description = QLabel()
@@ -59,7 +60,7 @@ class EquipmentPage(QWidget):
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
         self.content = QWidget()
-        self.content.setStyleSheet("background-color: #242424;")
+        self.content.setStyleSheet(theme.PANEL_BACKGROUND)
         self.grid = QGridLayout(self.content)
         self.grid.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
         self.grid.setSpacing(14)
@@ -89,20 +90,7 @@ class EquipmentPage(QWidget):
         button.setCheckable(True)
         button.setMinimumHeight(48)
         button.setStyleSheet(
-            "QPushButton {"
-            " text-align: left;"
-            " background-color: #242424;"
-            " color: #f2f0e6;"
-            " border: 2px solid #526b28;"
-            " border-radius: 6px;"
-            " padding: 8px;"
-            " font-weight: bold;"
-            "}"
-            "QPushButton:hover { border-color: #f7d36b; }"
-            "QPushButton:checked {"
-            " background-color: #35451d;"
-            " border: 3px solid #f7d36b;"
-            "}"
+            theme.CATEGORY_BUTTON
         )
         button.clicked.connect(
             lambda checked=False, category=key: self._on_light_category_clicked(

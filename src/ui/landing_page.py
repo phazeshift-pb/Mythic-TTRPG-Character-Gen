@@ -7,6 +7,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+from src.ui import theme
 
 
 class LandingPage(QWidget):
@@ -23,7 +24,7 @@ class LandingPage(QWidget):
         title_card_layout = QVBoxLayout(title_card)
         title_label = QLabel("Mythic TTRPG Character Manager")
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        title_label.setStyleSheet("font-size: 28px; font-weight: bold;")
+        title_label.setStyleSheet(theme.APP_TITLE)
         title_card_layout.addWidget(title_label)
         layout.addWidget(title_card)
 

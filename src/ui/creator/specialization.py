@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
 )
 
 from src.ui.specialization_page import DelayedTooltipLabel
+from src.ui import theme
 
 
 class SpecializationMixin:
@@ -53,7 +54,7 @@ class SpecializationMixin:
 
             section_label = QLabel(section_name)
             section_label.setStyleSheet(
-                "color: #f2f0e6; font-weight: bold; font-size: 14px;"
+                theme.TILE_TITLE
             )
             self.specialization_grid.addWidget(section_label, row, 0, 1, 3)
             row += 1
@@ -63,8 +64,7 @@ class SpecializationMixin:
                 tile_row = row + index // 3
                 tile = QFrame(self.specialization_content)
                 tile.setStyleSheet(
-                    "QFrame { background-color: #242424; "
-                    "border: 2px solid #526b28; border-radius: 8px; }"
+                    theme.TILE_FRAME
                 )
                 tile.setMinimumHeight(145)
                 tile.setMaximumHeight(145)

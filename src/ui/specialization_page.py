@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+from src.ui import theme
 
 
 class DelayedTooltipLabel(QLabel):
@@ -48,8 +49,7 @@ class SpecializationPage(QWidget):
         header = QHBoxLayout()
         title = QLabel("Specialization Packs")
         title.setStyleSheet(
-            "font-size: 24px; font-weight: bold; "
-            "padding: 10px; border-bottom: 2px solid #526b28;"
+            theme.PAGE_TITLE
         )
         header.addWidget(title)
         layout.addLayout(header)
@@ -57,7 +57,7 @@ class SpecializationPage(QWidget):
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
         self.content = QWidget()
-        self.content.setStyleSheet("background-color: #242424;")
+        self.content.setStyleSheet(theme.PANEL_BACKGROUND)
         self.grid = QGridLayout(self.content)
         self.grid.setSpacing(18)
         for column in range(3):
