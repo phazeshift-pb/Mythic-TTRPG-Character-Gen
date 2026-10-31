@@ -71,3 +71,40 @@ def test_validator_flags_unknown_pack_skill():
 
 def test_validate_all_passes_on_repo_data(capsys):
     assert validate_all.main([]) == 0
+
+
+def test_renamed_files_still_feed_the_ui():
+    core = DataLoader().load_all()
+    assert core.get("encumbrance", "encumbrance") is not None
+    assert core.get("perceptive_range", "perceptive_range")["perceptive_range"]["lighting_modifiers"]
+    assert core.list("upbringing") and core.list("environment") and core.list("lifestyle")
+
+
+def test_abilities_have_no_copy_paste_artifacts():
+    import re
+    from pathlib import Path
+
+    text = (Path(__file__).resolve().parent.parent / "data" / "abilities.json").read_text(encoding="utf-8")
+    assert not re.search(r"[+-]\d+o\b", text)  # letter o typed for zero
+    abilities = json.loads(text)["abilities"]
+    for ability in abilities:
+        assert not re.search(r"\s(99|10[0-4])$", ability["description"]), ability["name"]
+
+
+def test_lifestyle_and_grenade_checks():
+    core = DataLoader().load_all()
+    lns = DataLoader(use_light_and_sky=True).load_all()
+    errors = []
+    validate_all.check_lifestyle_rolls(core, errors)
+    validate_all.check_grenades(lns, errors)
+    assert errors == []
+
+    bad = GameData()
+    bad.add_document("lifestyle", "x", {"lifestyle": [{"name": "Patient", "outcomes": [
+        {"roll": "1-6"}, {"roll": "7-10"}, {"roll": "10"}]}]})
+    bad.add_document("light_abilities", "y", {"grenades": [
+        {"name": "Storm", "pierce": None, "base_damage": "5; second detonation 10"}]})
+    errors = []
+    validate_all.check_lifestyle_rolls(bad, errors)
+    validate_all.check_grenades(bad, errors)
+    assert len(errors) == 2

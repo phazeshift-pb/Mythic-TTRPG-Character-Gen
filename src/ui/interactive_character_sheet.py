@@ -507,7 +507,7 @@ class InteractiveCharacterSheet(QWidget):
             self._display_unavailable_carrying_capacity(unavailable)
             return
 
-        encumbrance_doc = game_data.get("encumberance", "encumberance")
+        encumbrance_doc = game_data.get("encumbrance", "encumbrance")
         encumbrance_rules = (
             encumbrance_doc.get("encumbrance")
             if isinstance(encumbrance_doc, dict)

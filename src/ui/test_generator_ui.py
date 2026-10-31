@@ -803,7 +803,7 @@ class TestGeneratorUI(QWidget):
         )
 
         encumbrance_document = (
-            self.game_data.get("encumberance", "encumberance") or {}
+            self.game_data.get("encumbrance", "encumbrance") or {}
         ).get("encumbrance", {})
         carry_formula = encumbrance_document.get(
             "carry_weight", "Half of Strength + Toughness"
@@ -1811,6 +1811,17 @@ class TestGeneratorUI(QWidget):
                     tile_details += (
                         f"\nDamage: {damage} | Range: {power.get('range') or 'N/A'}"
                     )
+                    second = power.get("second_detonation")
+                    if isinstance(second, dict):
+                        second_damage = " + ".join(
+                            str(second[field])
+                            for field in ("damage_roll", "base_damage")
+                            if second.get(field) is not None
+                        ) or "None"
+                        tile_details += (
+                            f"\nSecond detonation: {second_damage} | "
+                            f"Range: {second.get('range') or 'N/A'}"
+                        )
                     if is_super:
                         tile_details += f"\nSuper effect: {grenade_super_rule}"
                 if is_super:

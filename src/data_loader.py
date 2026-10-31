@@ -52,7 +52,7 @@ class DataLoader:
         "movement_stealth_modifiers": "movement_stealth_modifiers",
         "passive_perception": "passive_perception",
         "movement_speeds": "movement_speeds",
-        "encumbrance": "encumberance",
+        "encumbrance": "encumbrance",
         "characteristic_modifiers": "characteristic_modifiers",
         "mythic": "mythic_characteristics",
         "radar": "radar",
@@ -104,7 +104,7 @@ class DataLoader:
             data / "movement/movement_speeds.json", game_data, validator
         )
         self._load_folder(
-            data / "movement/encumberance.json", game_data, validator
+            data / "movement/encumbrance.json", game_data, validator
         )
         self._load_folder(
             data / "hiding_spotting_visr/passive_perception.json",
@@ -129,7 +129,7 @@ class DataLoader:
             self._load_folder(self.core_root / "unsc_soldier_types", game_data, validator)
 
             # Load upbringing/environment/lifestyle
-            self._load_folder(self.core_root / "upbringing_envionment_lifestyle", game_data, validator)
+            self._load_folder(self.core_root / "upbringing_environment_lifestyle", game_data, validator)
 
             # Load other core rule folders
             self._load_folder(self.core_root, game_data, validator)

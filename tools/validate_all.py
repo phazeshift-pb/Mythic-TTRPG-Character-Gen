@@ -66,6 +66,47 @@ def check_specialization_packs(game_data, known_skills, known_abilities, errors)
                         )
 
 
+def _roll_range(text):
+    low, _, high = str(text).partition("-")
+    return int(low), int(high or low)
+
+
+def check_lifestyle_rolls(game_data, errors):
+    """Lifestyle outcomes must cover 1-10 exactly once."""
+    for doc in game_data.families.get("lifestyle", {}).values():
+        source = doc.get("source_path", "lifestyle")
+        for lifestyle in doc.get("lifestyle", []):
+            covered = []
+            try:
+                for outcome in lifestyle.get("outcomes", []):
+                    low, high = _roll_range(outcome["roll"])
+                    covered.extend(range(low, high + 1))
+            except (KeyError, ValueError):
+                errors.append(f"{source}: lifestyle '{lifestyle.get('name')}' has an unreadable roll range")
+                continue
+            if sorted(covered) != list(range(1, 11)):
+                errors.append(
+                    f"{source}: lifestyle '{lifestyle.get('name')}' rolls do not cover 1-10 "
+                    f"exactly once (got {sorted(covered)})"
+                )
+
+
+def check_grenades(game_data, errors):
+    """Grenade stat fields hold one value each; extra detonations get their own object."""
+    for doc in game_data.families.get("light_abilities", {}).values():
+        source = doc.get("source_path", "light_abilities")
+        for grenade in doc.get("grenades", []):
+            for stats in (grenade, grenade.get("second_detonation") or {}):
+                pierce = stats.get("pierce")
+                if pierce is not None and not isinstance(pierce, int):
+                    errors.append(f"{source}: grenade '{grenade.get('name')}' pierce must be a number")
+                for field in ("base_damage", "damage_roll", "range"):
+                    if ";" in str(stats.get(field) or ""):
+                        errors.append(
+                            f"{source}: grenade '{grenade.get('name')}' {field} mixes several values"
+                        )
+
+
 def check_saved_characters(known_skills, known_abilities, warnings):
     for path in sorted(CHARACTERS_ROOT.glob("*.json")):
         rel = path.relative_to(REPO_ROOT).as_posix()
@@ -108,6 +149,8 @@ def main(argv=None):
         for doc in game_data.families.get("light_abilities", {}).values():
             known_abilities |= _names(doc, "abilities")
         check_specialization_packs(game_data, known_skills, known_abilities, errors)
+        check_lifestyle_rolls(game_data, errors)
+        check_grenades(game_data, errors)
 
     check_saved_characters(known_skills, known_abilities, warnings)
 

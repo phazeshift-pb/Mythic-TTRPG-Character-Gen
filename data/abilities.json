@@ -46,7 +46,7 @@
       "name": "Ask Nicely",
       "cost": 500,
       "prerequisite": "Charisma: 40",
-      "description": "If spending 2 or more Support Points on a single call-in, the Character may make a -1o Charisma Test. If Successful, the Support Point cost is reduced by 1."
+      "description": "If spending 2 or more Support Points on a single call-in, the Character may make a -10 Charisma Test. If Successful, the Support Point cost is reduced by 1."
     },
     {
       "name": "Aviator",
@@ -58,7 +58,7 @@
       "name": "Battle mind",
       "cost": 250,
       "prerequisite": "Intellect: 40",
-      "description": "The character rolls initiative and adds the character's Intellect Modifier instead of the Agility Modifier. This is to show the character's ability to access the situation and to handle it with intelligence and not speed. The character may choose which Characteristic Modifier is used, Agility or Intellect. 99"
+      "description": "The character rolls initiative and adds the character's Intellect Modifier instead of the Agility Modifier. This is to show the character's ability to access the situation and to handle it with intelligence and not speed. The character may choose which Characteristic Modifier is used, Agility or Intellect."
     },
     {
       "name": "Barnstormer",
@@ -76,7 +76,7 @@
       "name": "Blur",
       "cost": 750,
       "prerequisite": "Toughness: 45; Agility: 45",
-      "description": "The Character gains the Sprint Movement Action, giving them Agility Modifier *8 in Meters. The Character must make a +4o Toughness Test after each use or gain 1 level of Fatigue. If Blur is used more than 10 times in 30 minutes, the Character gains a stacking -10 Penalty for each use until the Character rests for a minimum of 2 hours. If this Toughness Test is failed, the Character takes 8D10 Special Damage for each shin Sublocation."
+      "description": "The Character gains the Sprint Movement Action, giving them Agility Modifier *8 in Meters. The Character must make a +40 Toughness Test after each use or gain 1 level of Fatigue. If Blur is used more than 10 times in 30 minutes, the Character gains a stacking -10 Penalty for each use until the Character rests for a minimum of 2 hours. If this Toughness Test is failed, the Character takes 8D10 Special Damage for each shin Sublocation."
     },
     {
       "name": "Bound Back",
@@ -148,7 +148,7 @@
       "name": "Eagle Eye",
       "cost": 250,
       "prerequisite": "Perception: 40",
-      "description": "The character with Eagle Eye gains a +1o Bonus to all Visual Investigation and Perception Tests."
+      "description": "The character with Eagle Eye gains a +10 Bonus to all Visual Investigation and Perception Tests."
     },
     {
       "name": "Emergency Procedure",
@@ -166,7 +166,7 @@
       "name": "Evasive Maneuvers",
       "cost": 650,
       "prerequisite": "Agility: 45",
-      "description": "The character may begin their Turn declaring Evasive Maneuvers as a Free Action. When declared, the Character gains a -2o Penalty to attacks made and a +20 Bonus to Evasion until the beginning of their next turn. The Character halves all Penalties gained to Reactions when making Evasion Tests. These effects may be stacked with Guarded Attack action."
+      "description": "The character may begin their Turn declaring Evasive Maneuvers as a Free Action. When declared, the Character gains a -20 Penalty to attacks made and a +20 Bonus to Evasion until the beginning of their next turn. The Character halves all Penalties gained to Reactions when making Evasion Tests. These effects may be stacked with Guarded Attack action."
     },
     {
       "name": "Even Out",
@@ -214,7 +214,7 @@
       "name": "Flame Spray",
       "cost": 250,
       "prerequisite": "Intellect: 25",
-      "description": "A character using Flame Spray with any flame-based weaponry gives any opponent within the fire a -1o Penalty to any Evasion Test."
+      "description": "A character using Flame Spray with any flame-based weaponry gives any opponent within the fire a -10 Penalty to any Evasion Test."
     },
     {
       "name": "Focused Warrior",
@@ -226,7 +226,7 @@
       "name": "Frenzy",
       "cost": 250,
       "prerequisite": "Courage: 30; Berserker or Adrenaline Rush Trait",
-      "description": "Characters using the Frenzy Ability no longer take Penalties to Evasion from Berserker and Adrenaline Rush. 100"
+      "description": "Characters using the Frenzy Ability no longer take Penalties to Evasion from Berserker and Adrenaline Rush."
     },
     {
       "name": "Gather Senses",
@@ -238,7 +238,7 @@
       "name": "Guarded",
       "cost": 400,
       "prerequisite": "Agility: 40",
-      "description": "The Character gains a +10 Bonus when moving a Physical Shield to block incoming Attacks. The Character also gains a +1o To Hit when Attacking with a Physical Shield."
+      "description": "The Character gains a +10 Bonus when moving a Physical Shield to block incoming Attacks. The Character also gains a +10 To Hit when Attacking with a Physical Shield."
     },
     {
       "name": "Grand Entrance",
@@ -256,7 +256,7 @@
       "name": "Gunboat Diplomacy",
       "cost": 600,
       "prerequisite": "Courage: 45 or Leadership: 45",
-      "description": "The Character attempts to change the course of a discussion by using a weapon. Depending on the weapon used, the Character makes a Warfare Melee or Warfare Range Test that opposes the Opponent's Courage. If Successful, the Character can either gain a +1o Bonus to a Appeal, Negotiation, Intimidation, or Interrogation Test, or be used to reroll the test once if the Test Fails."
+      "description": "The Character attempts to change the course of a discussion by using a weapon. Depending on the weapon used, the Character makes a Warfare Melee or Warfare Range Test that opposes the Opponent's Courage. If Successful, the Character can either gain a +10 Bonus to a Appeal, Negotiation, Intimidation, or Interrogation Test, or be used to reroll the test once if the Test Fails."
     },
     {
       "name": "Hand-To-Hand Basic",
@@ -328,7 +328,7 @@
       "name": "Medical Insight",
       "cost": 750,
       "prerequisite": "Medication: +20 Skill",
-      "description": "Medical Insight shows true ability in the Medical field. Those with Medical Insight double what they rolled on a Medical Test to heal wounds. For example, a Medical Test that increased healing by +3 wounds per day now heals +6 wounds per day. 101"
+      "description": "Medical Insight shows true ability in the Medical field. Those with Medical Insight double what they rolled on a Medical Test to heal wounds. For example, a Medical Test that increased healing by +3 wounds per day now heals +6 wounds per day."
     },
     {
       "name": "Medical Prowess",
@@ -388,7 +388,7 @@
       "name": "Peer",
       "cost": 250,
       "prerequisite": "Charisma: 40",
-      "description": "Can be taken multiple times with different groups. The Peer Ability allows the character to have good standings with a selected group, giving the character a +20 to any social Skill Test. Peer works with subgroups such a battalion or 'Medical Teams.' A large Peer, such as an entire Country, can't be chosen. 102"
+      "description": "Can be taken multiple times with different groups. The Peer Ability allows the character to have good standings with a selected group, giving the character a +20 to any social Skill Test. Peer works with subgroups such a battalion or 'Medical Teams.' A large Peer, such as an entire Country, can't be chosen."
     },
     {
       "name": "Practiced Fighter",
@@ -424,7 +424,7 @@
       "name": "Quick Toss",
       "cost": 300,
       "prerequisite": "Warfare Melee: 55",
-      "description": "The character gains the ability to use a Reaction to throw one-handed weaponry at a -1o Penalty. This attack does not use up the Reaction, but any other Reactions are at a -20 while Evasions gain only an extra -1o, instead. It is considered that both actions are happening at the same time, such as Evading and throwing an Explosive."
+      "description": "The character gains the ability to use a Reaction to throw one-handed weaponry at a -10 Penalty. This attack does not use up the Reaction, but any other Reactions are at a -20 while Evasions gain only an extra -10, instead. It is considered that both actions are happening at the same time, such as Evading and throwing an Explosive."
     },
     {
       "name": "Quickdraw",
@@ -454,7 +454,7 @@
       "name": "Resilient",
       "cost": 500,
       "prerequisite": "Toughness: 35",
-      "description": "If a Character would have a bone Broken or a body location Lost, the Character will make a -1o Toughness Test. If Successful, the Body Location is not Broken or Lost. All other effects will be taken from the attack."
+      "description": "If a Character would have a bone Broken or a body location Lost, the Character will make a -10 Toughness Test. If Successful, the Body Location is not Broken or Lost. All other effects will be taken from the attack."
     },
     {
       "name": "Resourceful",
@@ -478,7 +478,7 @@
       "name": "Second Chance",
       "cost": 750,
       "prerequisite": "Toughness: 55",
-      "description": "The character is able to roll a Toughness Test when going under O Wounds from 1 or more Wounds. If the Toughness Test passes, the character stays at 1 Wound from the attack and takes no Special Damage. This can only be done once per day. Shotfun Opponents attempting to Evade the Character's shotgun attacks gain a -10 Penalty. 103"
+      "description": "The character is able to roll a Toughness Test when going under 0 Wounds from 1 or more Wounds. If the Toughness Test passes, the character stays at 1 Wound from the attack and takes no Special Damage. This can only be done once per day."
     },
     {
       "name": "Shotgun",
@@ -496,7 +496,7 @@
       "name": "Snapshot",
       "cost": 750,
       "prerequisite": "Perception: 45",
-      "description": "If using a Scope or Sight under 6x Magnification, Snapshot allows for a Half Aim Action to be taken as a Reaction. This gives a -1o Penalty to all following Reactions during the Round."
+      "description": "If using a Scope or Sight under 6x Magnification, Snapshot allows for a Half Aim Action to be taken as a Reaction. This gives a -10 Penalty to all following Reactions during the Round."
     },
     {
       "name": "Soldier of Fortune",
@@ -586,13 +586,13 @@
       "name": "Under Control",
       "cost": 250,
       "prerequisite": "Courage: 45",
-      "description": "Characters under Suppressing Fire or taking Fear Tests gain a +15 to the Courage Test. This also counts for rerolls of the Tests given by other Abilities. Unrestrained Reflexes The Character, if aware of an Opponent who is in Point Blank Range, causes that Opponent to lose their Point-Blank Range Bonuses against the Character. Unrestrained Reflexes also gives the Character a +10 to spotting Lasers from Opponent weaponry."
+      "description": "Characters under Suppressing Fire or taking Fear Tests gain a +15 to the Courage Test. This also counts for rerolls of the Tests given by other Abilities."
     },
     {
-      "name": "Unstrained Reflexes",
+      "name": "Unrestrained Reflexes",
       "cost": 750,
       "prerequisite": "Agility: 45",
-      "description": "Ignore Point Blank Bonuses against an opponent and spot Lasers more easily."
+      "description": "The Character, if aware of an Opponent who is in Point Blank Range, causes that Opponent to lose their Point-Blank Range Bonuses against the Character. Unrestrained Reflexes also gives the Character a +10 to spotting Lasers from Opponent weaponry."
     },
     {
       "name": "Valorous",
@@ -610,7 +610,7 @@
       "name": "Wheelman",
       "cost": 500,
       "prerequisite": "Pilot (Ground): +20 Skill",
-      "description": "When piloting ground vehicles, the operator only takes half Penalties when it comes to Difficult and Dangerous Terrain . Any Penalties originating from terrain are halved. This shows that the operator of the vehicle is trained and experienced in dealing with difficult driving situations. 104"
+      "description": "When piloting ground vehicles, the operator only takes half Penalties when it comes to Difficult and Dangerous Terrain . Any Penalties originating from terrain are halved. This shows that the operator of the vehicle is trained and experienced in dealing with difficult driving situations."
     }
   ]
 }

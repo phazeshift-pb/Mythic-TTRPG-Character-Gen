@@ -119,7 +119,7 @@
           "penalties": ["-2 Charisma"]
         },
         {
-          "roll": "7-10",
+          "roll": "7-9",
           "bonuses": ["+3 Intellect"],
           "penalties": ["-2 Strength", "-1 Toughness"]
         },
