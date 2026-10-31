@@ -1,14 +1,14 @@
 from PySide6.QtWidgets import QApplication
 import sys
 
-# Import the UI
-from src.ui.test_generator_ui import TestGeneratorUI
+# Import the main window
+from src.ui.main_window import MainWindow
 
 
 def main():
     app = QApplication(sys.argv)
 
-    window = TestGeneratorUI()
+    window = MainWindow()
     window.showMaximized()
 
     sys.exit(app.exec())
