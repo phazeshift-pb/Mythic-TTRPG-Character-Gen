@@ -2,6 +2,8 @@ from dataclasses import dataclass, field
 import re
 from typing import Dict, List, Optional, Any
 
+from .derived_stats import max_wounds
+
 
 CHAR_CODES = ["STR", "TOU", "AGI", "WFR", "WFM", "INT", "PER", "CRG", "CHA", "LDR"]
 MYTHIC_CHAR_CODES = ("STR", "TOU", "AGI")
@@ -206,6 +208,7 @@ class Character:
             self.outliers.append(outlier_name)
             self.luck_total -= luck_cost
             self.luck_available = min(self.luck_available, self.luck_total)
+            self.compute_wounds()
         self.log(
             f"Applying outlier: {outlier_name} "
             f"(Burn Luck: {luck_cost}; effect: {outlier_data['effect']})"
@@ -313,15 +316,17 @@ class Character:
     # Derived Stats
     # -----------------------------
     def compute_wounds(self):
-        """
-        Basic wounds formula (placeholder).
-        You will replace this with your actual rule document.
-        """
-        self.wounds = self.characteristics["TOU"] + self.characteristics["STR"]
+        """Maximum Wounds per data/character_creation/wounds_formula.json."""
+        self.wounds = max_wounds(
+            self.characteristics["TOU"],
+            self.mythic_characteristics.get("TOU", 0),
+            list(self.outliers).count("Robust"),
+        )
         self.log(f"Computed wounds = {self.wounds}")
 
     def compute_fatigue(self):
-        self.fatigue = self.characteristics["TOU"] // 10
+        """Fatigue is a damage-style track: new characters start with none."""
+        self.fatigue = 0
         self.log(f"Computed fatigue = {self.fatigue}")
 
     # -----------------------------

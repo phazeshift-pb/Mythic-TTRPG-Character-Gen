@@ -15,6 +15,14 @@ from PySide6.QtCore import Qt
 from src.data_loader import DataLoader
 from src.generator.character_generator import CharacterGenerator
 from src.models.character import CHAR_CODES, MYTHIC_CHAR_CODES
+from src.models.derived_stats import (
+    ROBUST_WOUNDS,
+    WOUNDS_BASE,
+    WOUNDS_PER_MYTHIC_TOUGHNESS,
+    WOUNDS_PER_TOUGHNESS_MODIFIER,
+    max_wounds,
+    mythic_value,
+)
 from src.ui.character_setup_home import CharacterSetupHome
 from src.ui.debug_page import DebugPage
 from src.ui.equipment_page import EquipmentPage
@@ -360,6 +368,8 @@ class TestGeneratorUI(QWidget):
         self.update_soldier_types()
 
     def _character_export_data(self):
+        # Stat allocation and outliers change Toughness after generation.
+        self.generated_character.compute_wounds()
         character_data = asdict(self.generated_character)
         character_data.pop("debug_log", None)
         use_light_and_sky = self.selected_mode == "Light & Sky"
@@ -739,34 +749,30 @@ class TestGeneratorUI(QWidget):
             self.game_data.get("wounds_formula", "wounds_formula") or {}
         ).get("wounds_formula", {})
         wounds_formula = wounds_document.get("formula", {})
-        wounds_base = wounds_formula.get("base", 40)
         toughness_modifier = characteristic_modifiers["TOU"]
-        mythic_toughness = self._mythic_value(character, "TOU")
+        mythic_toughness = mythic_value(character.mythic_characteristics.get("TOU", 0))
         toughness_multiplier = self._rule_multiplier(
             wounds_formula.get("toughness_modifier", "Add Toughness Modifier * 2"),
-            2,
+            WOUNDS_PER_TOUGHNESS_MODIFIER,
         )
         mythic_toughness_multiplier = self._rule_multiplier(
             wounds_formula.get("mythic_toughness", "Add Mythic Toughness * 2"),
-            2,
+            WOUNDS_PER_MYTHIC_TOUGHNESS,
         )
-        robust_effect = self._outlier_record("Robust").get("effect", "+0 Wounds")
-        robust_bonus = (
-            int(robust_effect.split()[0].lstrip("+"))
-            if "Robust" in selected_outlier_names
-            else 0
-        )
-        wounds_total = (
-            wounds_base
-            + toughness_modifier * toughness_multiplier
-            + mythic_toughness * mythic_toughness_multiplier
-            + robust_bonus
+        robust_count = selected_outlier_names.count("Robust")
+        wounds_total = max_wounds(
+            character.characteristics["TOU"],
+            mythic_toughness,
+            robust_count,
+            base=wounds_formula.get("base", WOUNDS_BASE),
+            toughness_multiplier=toughness_multiplier,
+            mythic_multiplier=mythic_toughness_multiplier,
         )
         lines.append(
             f"Wounds ({wounds_document.get('calculation', '40 + (Toughness Modifier × 2) + (Mythic Toughness × 2)')}): "
-            f"{wounds_base} + ({toughness_modifier} × {toughness_multiplier}) + "
+            f"{wounds_formula.get('base', WOUNDS_BASE)} + ({toughness_modifier} × {toughness_multiplier}) + "
             f"({mythic_toughness} × {mythic_toughness_multiplier}) + "
-            f"Robust {robust_bonus} = {wounds_total}"
+            f"Robust {robust_count} × {ROBUST_WOUNDS} = {wounds_total}"
         )
         lines.append(
             f"Character model Wounds value: {character.wounds}"
