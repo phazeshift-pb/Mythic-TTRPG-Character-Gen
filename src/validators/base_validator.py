@@ -1,3 +1,6 @@
+from ..models.character import CHARACTERISTIC_NAME_TO_CODE
+
+
 class BaseValidator:
     """
     Shared validation helpers used by all document validators.
@@ -10,6 +13,14 @@ class BaseValidator:
 
     def __init__(self, game_data):
         self.game_data = game_data
+
+    def characteristic_code(self, value):
+        """Accept a code ('STR') or a full name ('Strength'); None if invalid."""
+        if not isinstance(value, str):
+            return None
+        if value.upper() in self.CHARACTERISTIC_CODES:
+            return value.upper()
+        return CHARACTERISTIC_NAME_TO_CODE.get(value.strip().casefold())
 
     def require(self, condition, message):
         if not condition:
