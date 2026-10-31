@@ -32,6 +32,8 @@ from src.ui.interactive_character_sheet import InteractiveCharacterSheet
 from src.ui.outlier_page import OutlierPage
 from src.ui.specialization_page import DelayedTooltipLabel, SpecializationPage
 from src.ui.skill_training_dialog import SkillTrainingDialog
+from src.ui.background_choice_dialog import BackgroundChoiceDialog
+from src.models.background_choices import choice_groups, describe
 from src.ui.stat_allocation import StatAllocationPage
 from src.ui.version_and_expansions import VersionAndExpansionsPage
 
@@ -235,6 +237,8 @@ class TestGeneratorUI(QWidget):
         self._creation_allocations = {code: 0 for code in CHAR_CODES}
         self._selected_soldier_skills = {}
         self._outlier_characteristics = {}
+        # {"upbringing"|"environment": {"name": str, "choices": [label, ...]}}
+        self._background_choices = {}
         self._loaded_character_path = None
 
         self.update_soldier_types()
@@ -412,6 +416,17 @@ class TestGeneratorUI(QWidget):
                 "soldier_type": selected_value(self.soldier_combo),
                 "upbringing": selected_value(self.upbringing_combo),
                 "environment": selected_value(self.environment_combo),
+                "background_choices": {
+                    category: self._background_choices_for(
+                        category, selected_value(combo)
+                    )
+                    for category, combo in (
+                        ("upbringing", self.upbringing_combo),
+                        ("environment", self.environment_combo),
+                    )
+                    if selected_value(combo)
+                    and self._background_choices_for(category, selected_value(combo))
+                },
                 "lifestyles": [
                     selected_value(combo)
                     for combo in self.lifestyle_combos
@@ -1020,7 +1035,7 @@ class TestGeneratorUI(QWidget):
         for key, heading in (("bonuses", "Bonuses"), ("penalties", "Penalties")):
             values = record.get(key, [])
             if values:
-                sections.append(f"{heading}: {', '.join(map(str, values))}")
+                sections.append(f"{heading}: {', '.join(describe(values))}")
 
         if category == "lifestyles":
             for outcome in record.get("outcomes", []):
@@ -1043,7 +1058,61 @@ class TestGeneratorUI(QWidget):
 
         return "\n".join(sections) if sections else "No additional details."
 
+    def _background_record(self, category, name):
+        document = self.game_data.get(category, category) or {}
+        return next(
+            (
+                record
+                for record in document.get(category, [])
+                if name and record.get("name", "").casefold() == str(name).casefold()
+            ),
+            None,
+        )
+
+    def _background_choices_for(self, category, name):
+        stored = self._background_choices.get(category) or {}
+        return list(stored.get("choices", [])) if stored.get("name") == name else []
+
+    def _prompt_background_choices(self, category, name):
+        """Ask for this background's either/or picks. False if the player cancels."""
+        record = self._background_record(category, name)
+        groups = choice_groups(record) if record else []
+        if not groups:
+            self._background_choices.pop(category, None)
+            return True
+        dialog = BackgroundChoiceDialog(
+            record["name"],
+            groups,
+            selected=self._background_choices_for(category, name),
+            parent=self,
+        )
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return False
+        self._background_choices[category] = {
+            "name": name,
+            "choices": dialog.selected_choices,
+        }
+        return True
+
+    def _ensure_background_choices(self):
+        """Before generating, make sure every chosen background has its picks."""
+        for category, combo in (
+            ("upbringing", self.upbringing_combo),
+            ("environment", self.environment_combo),
+        ):
+            name = combo.currentData()
+            record = self._background_record(category, name)
+            needed = len(choice_groups(record)) if record else 0
+            if needed and len(self._background_choices_for(category, name)) != needed:
+                if not self._prompt_background_choices(category, name):
+                    return False
+        return True
+
     def select_initial_setup_option(self, category, value, checked):
+        if checked and category in {"upbringing", "environment"}:
+            if not self._prompt_background_choices(category, value):
+                self._refresh_initial_setup_options()
+                return
         if checked and category in {"soldier", "human", "guardian"}:
             soldier_data = self.game_data.get("soldier_type", value) or {}
             try:
@@ -2482,6 +2551,8 @@ class TestGeneratorUI(QWidget):
         self.character_setup_home.set_character_ready_to_export(False)
         name = "Test Character"
         use_lns = self.selected_mode == "Light & Sky"
+        if not use_lns and not self._ensure_background_choices():
+            return
         if use_lns:
             human_type = self.human_combo.currentData()
             guardian_type = self.guardian_combo.currentData()
@@ -2520,6 +2591,20 @@ class TestGeneratorUI(QWidget):
             connection=connection,
             upbringing=(self.upbringing_combo.currentData() if not use_lns else None),
             environment=(self.environment_combo.currentData() if not use_lns else None),
+            upbringing_choices=(
+                self._background_choices_for(
+                    "upbringing", self.upbringing_combo.currentData()
+                )
+                if not use_lns
+                else None
+            ),
+            environment_choices=(
+                self._background_choices_for(
+                    "environment", self.environment_combo.currentData()
+                )
+                if not use_lns
+                else None
+            ),
             lifestyles=(
                 [combo.currentData() for combo in self.lifestyle_combos if combo.currentData()]
                 if not use_lns

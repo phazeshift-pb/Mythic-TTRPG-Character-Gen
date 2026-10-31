@@ -19,6 +19,8 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
 from src.data_loader import DataLoader  # noqa: E402
+from src.models.background_choices import SECTIONS, is_choice, option_modifiers  # noqa: E402
+from src.models.character import CHARACTERISTIC_NAME_TO_CODE  # noqa: E402
 
 DATA_ROOT = REPO_ROOT / "data"
 CHARACTERS_ROOT = REPO_ROOT / "characters"
@@ -107,6 +109,45 @@ def check_grenades(game_data, errors):
                         )
 
 
+_MODIFIER = re.compile(r"^\s*[+-]\d+\s+(.+?)\s*$")
+
+
+def _modifier_target_ok(text):
+    match = _MODIFIER.match(str(text))
+    if not match:
+        return False
+    target = match.group(1).casefold()
+    return target == "wounds" or target in CHARACTERISTIC_NAME_TO_CODE
+
+
+def check_background_modifiers(game_data, errors, warnings):
+    """Choice groups must be well formed; every modifier must be one the app applies."""
+    for family in ("upbringing", "environment", "lifestyle"):
+        for doc in game_data.families.get(family, {}).values():
+            source = doc.get("source_path", family)
+            for record in doc.get(family, []):
+                holders = record.get("outcomes") or [record]
+                for holder in holders:
+                    for section in SECTIONS:
+                        for entry in holder.get(section, []) or []:
+                            if isinstance(entry, dict):
+                                if not is_choice(entry) or len(entry["choose_one"]) < 2:
+                                    errors.append(
+                                        f"{source}: {record.get('name')} has a malformed choice "
+                                        f"group in {section} (need choose_one with 2+ options)"
+                                    )
+                                    continue
+                                texts = [m for o in entry["choose_one"] for m in option_modifiers(o)]
+                            else:
+                                texts = [entry]
+                            for text in texts:
+                                if not _modifier_target_ok(text):
+                                    warnings.append(
+                                        f"{source}: {record.get('name')} modifier '{text}' "
+                                        "is not applied automatically"
+                                    )
+
+
 def check_saved_characters(known_skills, known_abilities, warnings):
     for path in sorted(CHARACTERS_ROOT.glob("*.json")):
         rel = path.relative_to(REPO_ROOT).as_posix()
@@ -150,6 +191,7 @@ def main(argv=None):
             known_abilities |= _names(doc, "abilities")
         check_specialization_packs(game_data, known_skills, known_abilities, errors)
         check_lifestyle_rolls(game_data, errors)
+        check_background_modifiers(game_data, errors, warnings)
         check_grenades(game_data, errors)
 
     check_saved_characters(known_skills, known_abilities, warnings)
@@ -166,6 +208,7 @@ def main(argv=None):
         print()
 
     errors = list(dict.fromkeys(errors))  # same issue can appear in both modes
+    warnings = list(dict.fromkeys(warnings))
     for message in warnings:
         print(f"WARNING: {message}")
     for message in errors:

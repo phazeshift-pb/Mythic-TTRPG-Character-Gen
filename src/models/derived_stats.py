@@ -39,13 +39,18 @@ def max_wounds(
     toughness_multiplier: int = WOUNDS_PER_TOUGHNESS_MODIFIER,
     mythic_multiplier: int = WOUNDS_PER_MYTHIC_TOUGHNESS,
     robust_bonus: int = ROBUST_WOUNDS,
+    flat_bonus: int = 0,
 ) -> int:
-    """Wounds = 40 + (TOU modifier x 2) + (Mythic TOU x 2) + 18 per Robust."""
+    """Wounds = 40 + (TOU modifier x 2) + (Mythic TOU x 2) + 18 per Robust.
+
+    flat_bonus covers background modifiers such as Street Urchin's +2 Wounds.
+    """
     return (
         base
         + characteristic_modifier(toughness) * toughness_multiplier
         + mythic_value(mythic_toughness) * mythic_multiplier
         + max(0, int(robust_count)) * robust_bonus
+        + int(flat_bonus)
     )
 
 
