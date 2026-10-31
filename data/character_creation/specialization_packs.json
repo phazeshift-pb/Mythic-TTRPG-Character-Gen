@@ -38,7 +38,7 @@
       {
         "name": "Demolitions",
         "abilities": ["Gather Senses", "Mind Timer", "Under Control"],
-        "skills": ["Demolitions (Trained)", "Technology (Trained)", "Investigation (Trained)"]
+        "skills": ["Demolition (Trained)", "Technology (Trained)", "Investigation (Trained)"]
       },
       {
         "name": "Marksman",

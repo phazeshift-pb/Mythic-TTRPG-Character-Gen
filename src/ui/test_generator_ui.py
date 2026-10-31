@@ -2518,6 +2518,26 @@ class TestGeneratorUI(QWidget):
             char.mythic_characteristics.copy()
         )
         self._outlier_characteristics.clear()
+
+        # Reset per-character creation state so a regenerated character
+        # never inherits selections from the previous one.
+        for attr in ("_pre_specialization_skills", "_pre_specialization_abilities"):
+            if hasattr(self, attr):
+                delattr(self, attr)
+        self._light_xp_spent = 0
+        self._selected_light_category = None
+        self._selected_light_aspects = {}
+        self._selected_light_powers = {}
+        self._selected_light_supers = {}
+        for tile, _, _ in self.outlier_tiles:
+            tile.blockSignals(True)
+            tile.setChecked(False)
+            tile.blockSignals(False)
+        for button, _ in self.specialization_tiles:
+            button.blockSignals(True)
+            button.setChecked(False)
+            button.blockSignals(False)
+
         if use_lns:
             self._build_light_power_tiles()
         else:
