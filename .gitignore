@@ -4,3 +4,17 @@ __pycache__/
 src/models/__pycache__/character.cpython-314.pyc
 src/ui/__pycache__/interactive_character_sheet.cpython-314.pyc
 src/ui/__pycache__/test_generator_ui.cpython-314.pyc
+src/models/__pycache__/character.cpython-314.pyc
+src/ui/__pycache__/__init__.cpython-314.pyc
+src/ui/__pycache__/character_setup_home.cpython-314.pyc
+src/ui/__pycache__/debug_page.cpython-314.pyc
+src/ui/__pycache__/equipment_page.cpython-314.pyc
+src/ui/__pycache__/initial_character_setup.cpython-314.pyc
+src/ui/__pycache__/interactive_character_sheet.cpython-314.pyc
+src/ui/__pycache__/landing_page.cpython-314.pyc
+src/ui/__pycache__/outlier_page.cpython-314.pyc
+src/ui/__pycache__/skill_test_dialog.cpython-314.pyc
+src/ui/__pycache__/skill_training_dialog.cpython-314.pyc
+src/ui/__pycache__/specialization_page.cpython-314.pyc
+src/ui/__pycache__/stat_allocation.cpython-314.pyc
+src/ui/__pycache__/version_and_expansions.cpython-314.pyc
