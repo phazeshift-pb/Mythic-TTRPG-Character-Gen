@@ -57,9 +57,14 @@ class CharacterFilesMixin:
                 use_light_and_sky=ruleset == "Light & Sky"
             ).load_all()
 
-        self.character_sheet.set_character(
-            export_data["character"], ruleset, character_game_data
-        )
+        character = export_data["character"]
+        if character.get("creation_experience") is None:
+            # Files saved before the XP Shop: creation XP is in the selections.
+            selections = export_data.get("selections") or {}
+            starting_xp = selections.get("starting_xp")
+            if isinstance(starting_xp, int):
+                character["creation_experience"] = starting_xp
+        self.character_sheet.set_character(character, ruleset, character_game_data)
         self._loaded_character_path = Path(file_path)
         self.character_sheet.set_save_available(True)
         self.pages.setCurrentWidget(self.character_sheet)

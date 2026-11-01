@@ -1,0 +1,105 @@
+{
+  "xp_shop": {
+    "source": "Mythic 7.0 CU1 - Spending Experience (p. 51), Languages (p. 10), Skills (p. 90), Abilities (p. 97), Educations (p. 105), ORION Soldier (p. 59)",
+    "notes": [
+      "Experience should only be spent during downtime between Missions or at a checkpoint chosen by the GM.",
+      "Everything in this file is available to both Core and Light & Sky characters."
+    ],
+    "characteristic_advancements": {
+      "bonus_per_advancement": 5,
+      "max_advancements": 5,
+      "rule": "Characteristic Advancements are +5 upgrades that can be taken up to 5 times for each Characteristic. The previous Advancement must always be taken first. Advancements unlocked through Character Creation don't need to be purchased.",
+      "tiers": [
+        { "tier": 1, "name": "Simple", "experience_cost": 200 },
+        { "tier": 2, "name": "Rookie", "experience_cost": 400 },
+        { "tier": 3, "name": "Intermediate", "experience_cost": 800 },
+        { "tier": 4, "name": "Proficient", "experience_cost": 1200 },
+        { "tier": 5, "name": "Mastery", "experience_cost": 1600 }
+      ]
+    },
+    "luck": {
+      "experience_cost": 1500,
+      "maximum_luck": 13,
+      "rule": "Players can gain +1 Luck by spending 1,500 Experience, up to a maximum of 13 Luck."
+    },
+    "wound_upgrades": {
+      "wounds_per_upgrade": 10,
+      "rule": "Each Wound Upgrade gives +10 Wounds. The previous Wound Upgrade Tier must be purchased before the next can be taken.",
+      "tiers": [
+        { "name": "Iron", "experience_cost": 500 },
+        { "name": "Copper", "experience_cost": 750 },
+        { "name": "Bronze", "experience_cost": 1250 },
+        { "name": "Steel", "experience_cost": 2000 },
+        { "name": "Titanium", "experience_cost": 3000 }
+      ]
+    },
+    "faction_training": {
+      "experience_cost": 300,
+      "rule": "Faction Training costs 300 Experience regardless of the Faction. Covenant Faction Training also covers Banished weapons. The GM should only allow Forerunner Faction Training with good reason.",
+      "factions": [
+        { "name": "UNSC", "gm_approval": false },
+        { "name": "Covenant", "gm_approval": false },
+        { "name": "Forerunner", "gm_approval": true }
+      ],
+      "starting_faction": { "Core": "UNSC", "Light & Sky": "UNSC" }
+    },
+    "languages": {
+      "experience_cost": 150,
+      "rule": "All Characters begin with one Language for free. Characters can learn up to their Intellect Modifier in Languages; each costs 150 Experience.",
+      "examples": [
+        "English", "Spanish", "Chinese", "Russian", "German", "Japanese", "NuNordic",
+        "French", "Swahili", "Latin", "Hungarian", "Portuguese", "Arabic", "Bengali",
+        "Hindi", "Italian", "Sangheili", "Kig-Yar", "San'Shyuum", "Jiralhanae",
+        "Huragok", "Lekgolo", "Unggoy", "Yonhetian", "Yanme'e", "Forerunner Symbol",
+        "Digon", "Jagon", "3D Script", "Sign Language", "Braille", "Morse Code",
+        "Program Language"
+      ]
+    },
+    "educations": {
+      "rule": "Spend the +5 cost to learn an Education, then the +10 cost to improve it. Characters can learn up to double their Intellect Modifier in Educations; the +10 version does not count against the limit.",
+      "limit_intellect_modifier_multiplier": 2,
+      "restricted_marker": "*",
+      "restricted_cost_multiplier": 3,
+      "restricted_rule": "Restricted Educations (marked *) need GM permission. A Character who isn't supposed to know about one must spend 3 times the listed Experience cost.",
+      "choice_markers": ["Faction", "(Chosen Instrument)"]
+    },
+    "skills": {
+      "rule": "A Skill is first bought at Trained, then upgraded to +10 and +20. You can't upgrade a Skill you do not own."
+    },
+    "abilities": {
+      "rule": "Abilities are bought with Experience once their Prerequisites are met. The Prerequisite is only needed to acquire the Ability."
+    },
+    "soldier_type_upgrades": [
+      {
+        "name": "ORION Augmentation",
+        "experience_cost": 4000,
+        "eligible_soldier_types": [
+          "army", "marine", "air_force", "navy_technician", "militiaman", "odst", "oni_section_i"
+        ],
+        "characteristic_bonuses": { "STR": 10, "AGI": 10, "TOU": 15, "PER": 15 },
+        "mythic_characteristics_from": "orion",
+        "gm_approval": true,
+        "time": "1 month of augmentation and 1 month of recovery",
+        "rule": "Any regular Human can become an ORION Soldier. They gain +10 Strength and Agility and +15 Toughness and Perception (these don't use Characteristic Advancements), the ORION Mythic Characteristics, and +20 to Toughness Tests against the Flood."
+      }
+    ]
+  },
+  "light_and_sky_xp_shop": {
+    "source": "Light and Sky - Connections, Light Aspects, Light Abilities, Supers (pp. 4-5)",
+    "notes": [
+      "Light & Sky purchases are only available to Light & Sky characters.",
+      "Connection, Aspect Slot, Ability Slot and Super costs come from data/light_and_sky."
+    ],
+    "connections": {
+      "earned_experience_required": 2000,
+      "rule": "Once the Character has earned at least 2,000 Experience they can purchase up to 4 additional Connections, including Darkness and Specialized Connections. Specialized Connections need a Light and a Darkness Connection, and the GM decides whether the Character has met the remaining conditions."
+    },
+    "prismatic": {
+      "connection": "Prismatic",
+      "rule": "With Prismatic, the Character no longer pays extra Experience for Light Aspects that don't match their Connection, and all extra Experience already spent that way is refunded."
+    },
+    "light_weapon": {
+      "rule": "Light Weapon is a universal Light Ability; its Super version costs +50% Experience like any other Super. Weapon effects are chosen with the GM when the weapon is formed."
+    }
+  }
+}

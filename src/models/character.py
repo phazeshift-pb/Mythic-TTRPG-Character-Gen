@@ -86,6 +86,19 @@ class Character:
     light_grenades: List[str] = field(default_factory=list)
     supers: List[str] = field(default_factory=list)
 
+    # Post-creation XP purchases (see src/models/xp_shop.py)
+    creation_experience: Optional[int] = None  # XP the character was created with
+    characteristic_advancements: Dict[str, int] = field(default_factory=dict)  # bought tiers
+    educations: Dict[str, int] = field(default_factory=dict)  # name -> 5 or 10
+    languages: List[str] = field(default_factory=list)  # learned beyond the starting language
+    weapon_training: List[str] = field(default_factory=list)  # bought beyond the Soldier Type's
+    faction_training: List[str] = field(default_factory=list)
+    wound_upgrades: int = 0  # Iron, Copper, Bronze, Steel, Titanium bought (in order)
+    augmentations: List[str] = field(default_factory=list)  # e.g. ORION Augmentation
+    light_aspect_slots_purchased: int = 0
+    light_ability_slots_purchased: int = 0
+    xp_purchases: List[Dict[str, Any]] = field(default_factory=list)  # purchase log
+
     # Internal debug log
     debug_log: List[str] = field(default_factory=list)
 

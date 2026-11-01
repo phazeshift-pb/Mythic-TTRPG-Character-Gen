@@ -154,3 +154,41 @@ def test_loot_dialog_rolls_and_adds_to_sheet(qt_app):
 
     sheet.set_character(saved, "Core", data)
     assert sheet.loot_button.isHidden()
+
+
+def test_xp_shop_page_buy_undo_and_apply(qt_app):
+    from dataclasses import asdict
+
+    from src.data_loader import DataLoader
+    from src.generator.character_generator import CharacterGenerator
+    from src.ui.main_window import MainWindow
+
+    data = DataLoader().load_all()
+    character = asdict(
+        CharacterGenerator(data).generate(
+            "t", "marine", starting_experience=6000, auto_assign_skills=False
+        )
+    )
+    character.pop("debug_log")
+
+    window = MainWindow()
+    window.character_sheet.set_character(character, "Core", data)
+    window.open_xp_shop()
+    page = window.xp_shop_page
+    assert window.pages.currentWidget() is page
+    assert page.shop.categories()[0] == "Characteristics"
+    assert "Connections" not in page.shop.categories()
+
+    xp = page.shop.available_xp
+    toughness = page.shop.find("characteristic:TOU")
+    page.buy(toughness)
+    assert page.shop.available_xp == xp - toughness.cost
+    page.undo()
+    assert page.shop.available_xp == xp
+
+    page.buy(page.shop.find("skill:Appeal"))
+    page.applied.emit(page.character)
+    assert window.pages.currentWidget() is window.character_sheet
+    assert window.character_sheet.character_data["skills"]["Appeal"] == 0
+    assert window.character_sheet.character_data["experience"] == xp - 200
+    window.close()

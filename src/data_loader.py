@@ -71,6 +71,9 @@ class DataLoader:
         "turn_structure": "turn_structure",
         "attack_limits": "attack_limits",
         "attack_sequence": "attack_sequence",
+        # XP Shop rules and Educations (both rulesets)
+        "xp_shop": "xp_shop",
+        "general_education": "educations",
         # Light & Sky equipment and weapon abilities
         "armor_perks": "lns_armor_perks",
         "perks": "lns_weapon_perks",
@@ -106,6 +109,8 @@ class DataLoader:
         self._load_folder(data / "characteristics.json", game_data, validator)
         self._load_folder(data / "abilities.json", game_data, validator)
         self._load_folder(data / "skills.json", game_data, validator)
+        self._load_folder(data / "educations.json", game_data, validator)
+        self._load_folder(data / "xp_shop.json", game_data, validator)
         self._load_folder(
             data / "movement/movement_speeds.json", game_data, validator
         )

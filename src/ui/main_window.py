@@ -28,6 +28,7 @@ from src.ui.outlier_page import OutlierPage
 from src.ui.specialization_page import SpecializationPage
 from src.ui.stat_allocation import StatAllocationPage
 from src.ui.version_and_expansions import VersionAndExpansionsPage
+from src.ui.xp_shop_page import XpShopPage
 from src.ui.creator.character_files import CharacterFilesMixin
 from src.ui.creator.debug_report import DebugReportMixin
 from src.ui.creator.initial_setup import CreationCancelled, InitialSetupMixin
@@ -69,6 +70,7 @@ class MainWindow(
         self.equipment_page = EquipmentPage()
         self.debug_page = DebugPage()
         self.character_sheet = InteractiveCharacterSheet()
+        self.xp_shop_page = XpShopPage()
         self.page_widgets = (
             self.landing_page,
             self.character_setup_home,
@@ -80,6 +82,7 @@ class MainWindow(
             self.equipment_page,
             self.debug_page,
             self.character_sheet,
+            self.xp_shop_page,
         )
         for page in self.page_widgets:
             self.pages.addWidget(page)
@@ -92,6 +95,11 @@ class MainWindow(
             lambda: self.pages.setCurrentWidget(self.landing_page)
         )
         self.character_sheet.save_requested.connect(self.save_loaded_character)
+        self.character_sheet.spend_xp_button.clicked.connect(self.open_xp_shop)
+        self.xp_shop_page.applied.connect(self.apply_xp_shop)
+        self.xp_shop_page.cancelled.connect(
+            lambda: self.pages.setCurrentWidget(self.character_sheet)
+        )
         self.character_setup_home.finish_character_button.clicked.connect(
             self.finish_and_name_character
         )
@@ -259,6 +267,18 @@ class MainWindow(
         self._build_outlier_tiles()
         self._build_equipment_tiles()
         self._refresh_initial_setup_options()
+
+    def open_xp_shop(self):
+        sheet = self.character_sheet
+        self.xp_shop_page.set_character(
+            sheet.character_data_for_save(), sheet.ruleset, sheet.game_data
+        )
+        self.pages.setCurrentWidget(self.xp_shop_page)
+
+    def apply_xp_shop(self, character):
+        sheet = self.character_sheet
+        sheet.set_character(character, sheet.ruleset, sheet.game_data)
+        self.pages.setCurrentWidget(sheet)
 
     def open_initial_setup_from_home(self):
         self.pages.setCurrentWidget(self.initial_character_setup_page)

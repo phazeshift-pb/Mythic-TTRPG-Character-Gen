@@ -55,6 +55,7 @@ class CharacterGenerator:
         char = Character(name=name)
         char.starting_experience = max(0, int(starting_experience))
         char.experience = char.starting_experience
+        char.creation_experience = char.starting_experience
         char.experience_tier = self._get_experience_tier(char.starting_experience)
         char.luck_total = self._get_tier_luck(char.experience_tier)
         char.luck_available = char.luck_total

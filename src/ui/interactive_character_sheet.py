@@ -25,6 +25,7 @@ from src.game_data import GameData
 from src.models import worn_armor
 from src.models.derived_stats import max_wounds
 from src.models.starting_armor import format_bonus
+from src.models.xp_shop import XpShop
 from src.models.equipment_packs import (
     armor_index,
     armor_summary,
@@ -99,6 +100,10 @@ class InteractiveCharacterSheet(QWidget):
             experience_controls, "Experience", ("Current", "Spent", "Total")
         )
         self.spend_xp_button = QPushButton("Spend XP")
+        self.spend_xp_button.setToolTip(
+            "Open the XP Shop to buy Characteristics, Skills, Abilities, "
+            "Educations, Training, Luck, Wounds and (Light & Sky) Light powers."
+        )
         experience_controls.addWidget(self.spend_xp_button)
         header.addLayout(experience_controls, 0, 1, Qt.AlignmentFlag.AlignCenter)
 
@@ -181,6 +186,7 @@ class InteractiveCharacterSheet(QWidget):
 
         self._set_skill_rows(character.get("skills"), game_data)
         self._set_ability_labels(character.get("abilities"), game_data)
+        self._add_learned_labels(character)
         self.equipment_pack_label.setText(
             self._display_value(character.get("equipment_pack"))
         )
@@ -385,9 +391,11 @@ class InteractiveCharacterSheet(QWidget):
             "Light & Sky Powers"
         )
         light_power_fields = (
+            ("Connections", "light_connections_label"),
             ("Light Aspects", "light_aspects_label"),
             ("Light Abilities", "light_abilities_label"),
             ("Light Grenades", "light_grenades_label"),
+            ("Supers", "light_supers_label"),
         )
         for column, (title, label_attribute) in enumerate(light_power_fields):
             section, body = self._new_section(title)
@@ -415,6 +423,17 @@ class InteractiveCharacterSheet(QWidget):
         )
         self.light_grenades_label.setText(
             self._format_items(character.get("light_grenades"))
+        )
+        self.light_connections_label.setText(
+            self._format_items(character.get("connections"))
+        )
+        self.light_supers_label.setText(
+            self._format_items(character.get("supers"))
+        )
+        shop = XpShop(character, getattr(self, "game_data", None), ruleset)
+        self.light_aspects_label.setToolTip(f"Aspect Slots: {shop.aspect_slots()}")
+        self.light_abilities_label.setToolTip(
+            f"Light Ability Slots: {shop.ability_slots()}"
         )
 
     def _create_scrollable_tab(self):
@@ -641,6 +660,37 @@ class InteractiveCharacterSheet(QWidget):
                 name,
                 descriptions.get(name.casefold(), ""),
             )
+            label.setWordWrap(True)
+            self.ability_layout.addWidget(label)
+
+    def _add_learned_labels(self, character):
+        """Educations, Languages, Training and augmentations from the XP Shop."""
+        groups = [
+            (
+                "Educations",
+                [
+                    f"{name} +{level}"
+                    for name, level in (character.get("educations") or {}).items()
+                ],
+            ),
+            ("Languages", self._as_list(character.get("languages"))),
+            (
+                "Weapon Training",
+                self._as_list(character.get("weapon_training")),
+            ),
+            (
+                "Faction Training",
+                self._as_list(character.get("faction_training")),
+            ),
+            ("Augmentations", self._as_list(character.get("augmentations"))),
+        ]
+        wound_upgrades = self._integer_value(character.get("wound_upgrades"))
+        if wound_upgrades:
+            groups.append(("Wound Upgrades", [f"{wound_upgrades} (+{wound_upgrades * 10} Wounds)"]))
+        for title, values in groups:
+            if not values:
+                continue
+            label = QLabel(f"<b>{title}:</b> " + ", ".join(str(value) for value in values))
             label.setWordWrap(True)
             self.ability_layout.addWidget(label)
 
