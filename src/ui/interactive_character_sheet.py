@@ -4,6 +4,8 @@ from typing import Any
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QCheckBox,
+    QComboBox,
+    QDoubleSpinBox,
     QFrame,
     QGridLayout,
     QHBoxLayout,
@@ -25,6 +27,7 @@ from src.game_data import GameData
 from src.models import worn_armor
 from src.models.derived_stats import max_wounds
 from src.models.starting_armor import format_bonus
+from src.models import throwing
 from src.models.xp_shop import XpShop
 from src.models.equipment_packs import (
     armor_index,
@@ -382,7 +385,11 @@ class InteractiveCharacterSheet(QWidget):
             note = QPlainTextEdit()
             note.setPlaceholderText(f"Add {title.lower()}...")
             note.setMinimumHeight(130)
-            body.addWidget(note, 0, 0)
+            if key == "combat_notes":
+                body.addWidget(self._build_throwing_panel(), 0, 0)
+                body.addWidget(note, 1, 0)
+            else:
+                body.addWidget(note, 0, 0)
             self.note_fields[key] = note
             notes_row.addWidget(section)
         layout.addLayout(notes_row)
@@ -536,6 +543,8 @@ class InteractiveCharacterSheet(QWidget):
         self._set_perceptive_range(effective, game_data)
         self._set_carrying_capacity(effective, game_data)
         self._set_max_wounds(character, effective)
+        self._throwing_character = effective
+        self._refresh_throwing()
 
         armor = character.get("armor")
         if not armor:
@@ -875,10 +884,161 @@ class InteractiveCharacterSheet(QWidget):
         }
         for key, value in values.items():
             self.carrying_capacity_labels[key].setText(f"{value:g}")
+        self._carry_weight = values["carry"]
 
     def _display_unavailable_carrying_capacity(self, message: str):
+        self._carry_weight = None
         for label in self.carrying_capacity_labels.values():
             label.setText(message)
+
+    # ---------------------------------------------------------
+    # Throwing distance
+    # ---------------------------------------------------------
+    def _build_throwing_panel(self):
+        panel = QWidget()
+        grid = QGridLayout(panel)
+        grid.setContentsMargins(0, 0, 0, 8)
+
+        heading = QLabel("Throwing Distance")
+        heading.setStyleSheet("font-weight: bold; border: none;")
+        grid.addWidget(heading, 0, 0, 1, 4)
+        self.throw_max_label = QLabel("Not available")
+        self.throw_max_label.setStyleSheet(
+            f"font-size: 22px; font-weight: bold; color: {theme.HIGHLIGHT}; border: none;"
+        )
+        self.throw_max_label.setToolTip(
+            "Furthest a weightless object can go on a successful Warfare Melee "
+            "Test: (Strength Modifier + Mythic Strength) x 15 Meters."
+        )
+        grid.addWidget(self.throw_max_label, 1, 0, 1, 4)
+        self.throw_formula_label = QLabel("")
+        self.throw_formula_label.setWordWrap(True)
+        self.throw_formula_label.setStyleSheet(f"color: {theme.TEXT_MUTED}; border: none;")
+        grid.addWidget(self.throw_formula_label, 2, 0, 1, 4)
+
+        dof_label = QLabel("Degrees of Failure")
+        self.throw_dof_input = QSpinBox()
+        self.throw_dof_input.setRange(0, 30)
+        self.throw_dof_input.setToolTip(
+            "Each Degree of Failure on the Warfare Melee Test lowers the Multiplier by 1."
+        )
+        grip_label = QLabel("Grip")
+        self.throw_grip_input = QComboBox()
+        for name, (_, _, _, description) in throwing.GRIPS.items():
+            self.throw_grip_input.addItem(name)
+            self.throw_grip_input.setItemData(
+                self.throw_grip_input.count() - 1, description, Qt.ItemDataRole.ToolTipRole
+            )
+        grid.addWidget(dof_label, 3, 0)
+        grid.addWidget(self.throw_dof_input, 3, 1)
+        grid.addWidget(grip_label, 3, 2)
+        grid.addWidget(self.throw_grip_input, 3, 3)
+
+        self.throw_table = QTableWidget(0, 3)
+        self.throw_table.setHorizontalHeaderLabels(("Item", "Weight", "Range"))
+        self.throw_table.verticalHeader().setVisible(False)
+        self.throw_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
+        self.throw_table.setSelectionMode(QTableWidget.SelectionMode.NoSelection)
+        header = self.throw_table.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
+        grid.addWidget(self.throw_table, 4, 0, 1, 4)
+
+        custom_label = QLabel("Other object (kg)")
+        self.throw_weight_input = QDoubleSpinBox()
+        self.throw_weight_input.setRange(0, 10_000)
+        self.throw_weight_input.setDecimals(2)
+        self.throw_weight_input.setSingleStep(0.1)
+        self.throw_custom_label = QLabel("—")
+        self.throw_custom_label.setStyleSheet("font-weight: bold; border: none;")
+        grid.addWidget(custom_label, 5, 0)
+        grid.addWidget(self.throw_weight_input, 5, 1)
+        grid.addWidget(self.throw_custom_label, 5, 2, 1, 2)
+        grid.setColumnStretch(3, 1)
+
+        self.throw_dof_input.valueChanged.connect(self._refresh_throwing)
+        self.throw_grip_input.currentIndexChanged.connect(self._refresh_throwing)
+        self.throw_weight_input.valueChanged.connect(self._refresh_throwing)
+        return panel
+
+    def _throwing_items(self):
+        """(name, weight kg) for each carried weapon with a known weight, lightest first."""
+        game_data = getattr(self, "game_data", None)
+        armory = armory_index(game_data) if game_data else {}
+        items = []
+        for weapon in self._as_list(self.character_data.get("weapons")):
+            name = weapon.get("name") if isinstance(weapon, dict) else weapon
+            if not isinstance(name, str):
+                continue
+            weight = weapon.get("weight_kg") if isinstance(weapon, dict) else None
+            if weight is None:
+                weight = (armory.get(name) or {}).get("weight_kg")
+            try:
+                weight = float(weight)
+            except (TypeError, ValueError):
+                continue
+            label = weapon.get("nickname") if isinstance(weapon, dict) else None
+            items.append((f"{name} ({label})" if label else name, weight))
+        return sorted(items, key=lambda item: item[1])
+
+    def _refresh_throwing(self, *_):
+        character = getattr(self, "_throwing_character", None) or {}
+        strength = self._parse_integer((character.get("characteristics") or {}).get("STR"))
+        self.throw_table.setRowCount(0)
+        if strength is None:
+            self.throw_max_label.setText("Not available")
+            self.throw_formula_label.setText("")
+            self.throw_custom_label.setText("—")
+            return
+
+        mythic = (character.get("mythic_characteristics") or {}).get("STR", 0)
+        modifier = strength // 10
+        total = throwing.throw_strength(strength, mythic)
+        carry = getattr(self, "_carry_weight", None)
+        grip = self.throw_grip_input.currentText()
+        dof = self.throw_dof_input.value()
+
+        def result(weight=0.0, **overrides):
+            options = {"grip": grip, "degrees_of_failure": dof, "carry_weight": carry}
+            options.update(overrides)
+            return throwing.throw_distance(strength, mythic, weight, **options)
+
+        best = result(grip="Solid", degrees_of_failure=0)
+        self.throw_max_label.setText(f"Max {best.range_text()}")
+        step_kg, per_step = throwing.weight_step(total)
+        lines = [
+            f"(STR Mod {modifier} + Mythic STR {throwing.mythic_value(mythic)}) x 15. "
+            f"-{total} m per Degree of Failure.",
+            f"Weight: every {step_kg:g} kg lowers the x15 by {per_step}.",
+        ]
+        if carry is not None:
+            lines.append(f"Can't throw anything over Carry Weight ({carry:g} kg).")
+        self.throw_formula_label.setText("\n".join(lines))
+
+        items = self._throwing_items()
+        self.throw_table.setVisible(bool(items))
+        for row, (name, weight) in enumerate(items):
+            throw = result(weight)
+            self.throw_table.insertRow(row)
+            cells = (name, f"{weight:g} kg", throw.range_text())
+            for column, text in enumerate(cells):
+                cell = QTableWidgetItem(text)
+                cell.setToolTip(throw.explanation)
+                if column == 2:
+                    cell.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+                self.throw_table.setItem(row, column, cell)
+        if items:
+            height = self.throw_table.horizontalHeader().height() + 4
+            height += sum(self.throw_table.rowHeight(r) for r in range(len(items)))
+            self.throw_table.setFixedHeight(min(height, 220))
+
+        custom = result(self.throw_weight_input.value())
+        text = custom.range_text()
+        if custom.can_throw and custom.to_hit:
+            text += f" ({custom.to_hit} To Hit)"
+        self.throw_custom_label.setText(text)
+        self.throw_custom_label.setToolTip(custom.explanation)
 
     @staticmethod
     def _formula_multiplier(formula, subject):

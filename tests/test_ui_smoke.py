@@ -192,3 +192,35 @@ def test_xp_shop_page_buy_undo_and_apply(qt_app):
     assert window.character_sheet.character_data["skills"]["Appeal"] == 0
     assert window.character_sheet.character_data["experience"] == xp - 200
     window.close()
+
+
+def test_sheet_shows_throwing_distance(qt_app):
+    from dataclasses import asdict
+
+    from src.data_loader import DataLoader
+    from src.generator.character_generator import CharacterGenerator
+    from src.models import throwing
+    from src.ui.interactive_character_sheet import InteractiveCharacterSheet
+
+    data = DataLoader().load_all()
+    export = asdict(CharacterGenerator(data).generate("t", "marine", auto_assign_skills=False))
+    export.pop("debug_log")
+    export["weapons"] = [{"name": "M9 High-Explosive Dual-Purpose Grenade", "quantity": 1}]
+
+    sheet = InteractiveCharacterSheet()
+    sheet.set_character(export, "Core", data)
+    stats = sheet._throwing_character
+    strength = stats["characteristics"]["STR"]
+    mythic = stats["mythic_characteristics"].get("STR", 0)
+
+    best = throwing.throw_distance(strength, mythic)
+    assert sheet.throw_max_label.text() == f"Max {best.range_text()}"
+    assert sheet.throw_table.rowCount() == 1
+    grenade = throwing.throw_distance(strength, mythic, 0.4, carry_weight=sheet._carry_weight)
+    assert sheet.throw_table.item(0, 2).text() == grenade.range_text()
+
+    sheet.throw_dof_input.setValue(2)
+    worse = throwing.throw_distance(
+        strength, mythic, 0.4, degrees_of_failure=2, carry_weight=sheet._carry_weight
+    )
+    assert sheet.throw_table.item(0, 2).text() == worse.range_text()
