@@ -93,7 +93,14 @@
       "Holographic Tactical Eyepiece",
       "Two Tactical Hard Cases",
       "Utility Webbing",
-      "M50B, M52B, or M53 BDU (time period dependent)"
+      {
+        "label": "M50B, M52B, or M53 BDU (time period dependent)",
+        "choose_one": [
+          {"armor": "M50B Standard"},
+          {"armor": "M52B Standard"},
+          {"armor": "M53 Standard"}
+        ]
+      }
     ],
     "point_man": [
       {"weapon": "MA37 Assault Rifle", "label": "MA37 Assault Rifle"},
@@ -127,7 +134,14 @@
       "Holographic Tactical Eyepiece",
       "Two Tactical Hard Cases",
       "Utility Webbing",
-      "M50B, M52B, or M53 BDU (time period dependent)"
+      {
+        "label": "M50B, M52B, or M53 BDU (time period dependent)",
+        "choose_one": [
+          {"armor": "M50B Standard"},
+          {"armor": "M52B Standard"},
+          {"armor": "M53 Standard"}
+        ]
+      }
     ],
     "close_quarters": [
       {"weapon": "M90 Series Close Assault Weapon System", "label": "M90 SCAWS Shotgun"},
@@ -161,7 +175,14 @@
       "Holographic Tactical Eyepiece",
       "Two Tactical Hard Cases",
       "Utility Webbing",
-      "M50B, M52B, or M53 BDU (time period dependent)"
+      {
+        "label": "M50B, M52B, or M53 BDU (time period dependent)",
+        "choose_one": [
+          {"armor": "M50B Standard"},
+          {"armor": "M52B Standard"},
+          {"armor": "M53 Standard"}
+        ]
+      }
     ],
     "assault": [
       {"weapon": "M7 Caseless Submachine Gun", "label": "M7 Caseless SMG"},
@@ -195,7 +216,14 @@
       "Holographic Tactical Eyepiece",
       "Two Tactical Softcases",
       "Utility Webbing",
-      "M50B, M52B, or M53 BDU (time period dependent)"
+      {
+        "label": "M50B, M52B, or M53 BDU (time period dependent)",
+        "choose_one": [
+          {"armor": "M50B Standard"},
+          {"armor": "M52B Standard"},
+          {"armor": "M53 Standard"}
+        ]
+      }
     ]
   }
 }

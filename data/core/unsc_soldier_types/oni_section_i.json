@@ -120,7 +120,14 @@
       "Holographic Tactical Eyepiece",
       "Two Tactical Softcases",
       "Utility Webbing",
-      "M50B, M52B, or M53 BDU (time period dependent)"
+      {
+        "label": "M50B, M52B, or M53 BDU (time period dependent)",
+        "choose_one": [
+          {"armor": "M50B Standard"},
+          {"armor": "M52B Standard"},
+          {"armor": "M53 Standard"}
+        ]
+      }
     ],
     "marksman": [
       {
@@ -145,7 +152,14 @@
       "Holographic Tactical Eyepiece",
       "Tactical Softcase",
       "Utility Webbing",
-      "M50B, M52B, or M53 BDU (time period dependent)"
+      {
+        "label": "M50B, M52B, or M53 BDU (time period dependent)",
+        "choose_one": [
+          {"armor": "M50B Standard"},
+          {"armor": "M52B Standard"},
+          {"armor": "M53 Standard"}
+        ]
+      }
     ],
     "close_quarters": [
       {"weapon": "M45 Tactical Shotgun", "label": "M45 Tactical Shotgun"},
@@ -164,7 +178,14 @@
       "Holographic Tactical Eyepiece",
       "Two Tactical Softcases",
       "Utility Webbing",
-      "M50B, M52B, or M53 BDU (time period dependent)"
+      {
+        "label": "M50B, M52B, or M53 BDU (time period dependent)",
+        "choose_one": [
+          {"armor": "M50B Standard"},
+          {"armor": "M52B Standard"},
+          {"armor": "M53 Standard"}
+        ]
+      }
     ]
   }
 }

@@ -116,7 +116,7 @@
       "Holographic Tactical Eyepiece",
       "Two Tactical Hard Cases",
       "Utility Webbing",
-      "Standard ODST Battle Dress Uniform"
+      {"armor": "Standard ODST Battle Dress Uniform", "label": "Standard ODST Battle Dress Uniform"}
     ],
     "assault_and_ambush": [
       {"weapon": "M7 Caseless Submachine Gun", "label": "M7 Caseless Submachine Gun"},
@@ -135,7 +135,7 @@
       "Holographic Tactical Eyepiece",
       "Two Tactical Hard Cases",
       "Utility Webbing",
-      "Standard ODST Battle Dress Uniform"
+      {"armor": "Standard ODST Battle Dress Uniform", "label": "Standard ODST Battle Dress Uniform"}
     ],
     "close_quarters": [
       {"weapon": "M45 Tactical Shotgun", "label": "M45 Tactical Shotgun"},
@@ -170,7 +170,7 @@
       "Holographic Tactical Eyepiece",
       "Two Tactical Hard Cases",
       "Utility Webbing",
-      "Standard ODST Battle Dress Uniform"
+      {"armor": "Standard ODST Battle Dress Uniform", "label": "Standard ODST Battle Dress Uniform"}
     ],
     "general_purpose_gunnery": [
       {"weapon": "M247 General Purpose Machine Gun", "label": "M247 Machine Gun"},
@@ -204,7 +204,7 @@
       "Holographic Tactical Eyepiece",
       "Tactical Softcase",
       "Utility Webbing",
-      "Standard ODST Battle Dress Uniform"
+      {"armor": "Standard ODST Battle Dress Uniform", "label": "Standard ODST Battle Dress Uniform"}
     ],
     "long_range_specialist": [
       {"weapon": "Sniper Rifle System 99 Anti-Materiel", "label": "Sniper Rifle System 99 Rifle"},
@@ -238,7 +238,7 @@
       "Holographic Tactical Eyepiece",
       "Two Tactical Softcases",
       "Utility Webbing",
-      "Standard ODST Battle Dress Uniform"
+      {"armor": "Standard ODST Battle Dress Uniform", "label": "Standard ODST Battle Dress Uniform"}
     ],
     "anti_armor": [
       {"weapon": "M41 Surface-to-Surface Rocket Launcher", "label": "M41 Rocket Launcher"},
@@ -272,7 +272,7 @@
       "Holographic Tactical Eyepiece",
       "Tactical Softcase",
       "Utility Webbing",
-      "Standard ODST Battle Dress Uniform"
+      {"armor": "Standard ODST Battle Dress Uniform", "label": "Standard ODST Battle Dress Uniform"}
     ],
     "marksman": [
       {
@@ -298,7 +298,7 @@
       "Holographic Tactical Eyepiece",
       "Two Tactical Hard Cases",
       "Utility Webbing",
-      "Standard ODST Battle Dress Uniform"
+      {"armor": "Standard ODST Battle Dress Uniform", "label": "Standard ODST Battle Dress Uniform"}
     ]
   }
 }

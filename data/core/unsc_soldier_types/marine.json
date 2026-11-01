@@ -100,7 +100,14 @@
       "Holographic Tactical Eyepiece",
       "Two Tactical Softcases",
       "Utility Webbing",
-      "M50B, M52B, or M53 BDU (time period dependent)"
+      {
+        "label": "M50B, M52B, or M53 BDU (time period dependent)",
+        "choose_one": [
+          {"armor": "M50B Standard"},
+          {"armor": "M52B Standard"},
+          {"armor": "M53 Standard"}
+        ]
+      }
     ],
     "marksman": [
       {
@@ -142,7 +149,14 @@
       "Holographic Tactical Eyepiece",
       "Two Tactical Hard Cases",
       "Utility Webbing",
-      "M50B, M52B, or M53 BDU (time period dependent)"
+      {
+        "label": "M50B, M52B, or M53 BDU (time period dependent)",
+        "choose_one": [
+          {"armor": "M50B Standard"},
+          {"armor": "M52B Standard"},
+          {"armor": "M53 Standard"}
+        ]
+      }
     ],
     "close_quarters": [
       {"weapon": "M90 Series Close Assault Weapon System", "label": "M90 Close Assault Weapon System Shotgun"},
@@ -176,8 +190,22 @@
       {"weapon": "Flashbang Grenade", "quantity": 2, "label": "Two Flashbang Grenades"},
       "Holographic Tactical Eyepiece",
       "Two Tactical Hard Cases",
-      "M50B, M52B, or M53 Standard BDU",
-      "M50B, M52B, or M53 BDU (time period dependent)"
+      {
+        "label": "M50B, M52B, or M53 Standard BDU",
+        "choose_one": [
+          {"armor": "M50B Standard"},
+          {"armor": "M52B Standard"},
+          {"armor": "M53 Standard"}
+        ]
+      },
+      {
+        "label": "M50B, M52B, or M53 BDU (time period dependent)",
+        "choose_one": [
+          {"armor": "M50B Standard"},
+          {"armor": "M52B Standard"},
+          {"armor": "M53 Standard"}
+        ]
+      }
     ],
     "heavy_support": [
       {"weapon": "AIE-486H Heavy Machine Gun", "label": "AIE-486H Heavy Machine Gun"},
@@ -211,7 +239,14 @@
       "Holographic Tactical Eyepiece",
       "Two Tactical Hard Cases",
       "Utility Webbing",
-      "M50B, M52B, or M53 BDU (time period dependent)"
+      {
+        "label": "M50B, M52B, or M53 BDU (time period dependent)",
+        "choose_one": [
+          {"armor": "M50B Standard"},
+          {"armor": "M52B Standard"},
+          {"armor": "M53 Standard"}
+        ]
+      }
     ],
     "heavy_squad_support": [
       {
@@ -251,7 +286,14 @@
       "Holographic Tactical Eyepiece",
       "Tactical Softcase",
       "Utility Webbing",
-      "M50B, M52B, or M53 BDU (time period dependent)"
+      {
+        "label": "M50B, M52B, or M53 BDU (time period dependent)",
+        "choose_one": [
+          {"armor": "M50B Standard"},
+          {"armor": "M52B Standard"},
+          {"armor": "M53 Standard"}
+        ]
+      }
     ],
     "long_range_specialist": [
       {"weapon": "Sniper Rifle System 99 Anti-Materiel", "label": "Sniper Rifle System 99 Rifle"},
@@ -285,7 +327,14 @@
       "Holographic Tactical Eyepiece",
       "Tactical Softcase",
       "Utility Webbing",
-      "M50B, M52B, or M53 BDU (time period dependent)"
+      {
+        "label": "M50B, M52B, or M53 BDU (time period dependent)",
+        "choose_one": [
+          {"armor": "M50B Standard"},
+          {"armor": "M52B Standard"},
+          {"armor": "M53 Standard"}
+        ]
+      }
     ],
     "anti_armor": [
       {"weapon": "M41 Surface-to-Surface Rocket Launcher", "label": "M41 Rocket Launcher"},
@@ -319,7 +368,14 @@
       "Holographic Tactical Eyepiece",
       "Tactical Softcase",
       "Utility Webbing Permutation",
-      "M50B, M52B, or M53 BDU (time period dependent)"
+      {
+        "label": "M50B, M52B, or M53 BDU (time period dependent)",
+        "choose_one": [
+          {"armor": "M50B Standard"},
+          {"armor": "M52B Standard"},
+          {"armor": "M53 Standard"}
+        ]
+      }
     ]
   }
 }

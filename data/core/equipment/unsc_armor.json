@@ -1,0 +1,1923 @@
+{
+  "unsc_armor": {
+    "pre_war_bdus": [
+      {
+        "name": "M50B Standard",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 11.9,
+        "price": 36,
+        "armor_rating": {
+          "head": 17,
+          "arms": 18,
+          "chest": 19,
+          "legs": 18
+        },
+        "special_rules": [],
+        "description": "",
+        "era": "Pre-War"
+      },
+      {
+        "name": "Vacuum (Pre-War)",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 11.1,
+        "price": 64,
+        "armor_rating": {
+          "head": 16,
+          "arms": 17,
+          "chest": 18,
+          "legs": 17
+        },
+        "special_rules": [
+          "Vacuum Sealed"
+        ],
+        "description": "Vacuum Sealed Special Rule.",
+        "era": "Pre-War"
+      },
+      {
+        "name": "LV Lightweight Mobility",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 17.7,
+        "price": 49,
+        "armor_rating": {
+          "head": 16,
+          "arms": 17,
+          "chest": 18,
+          "legs": 17
+        },
+        "special_rules": [
+          "Mobility-boosting Exo-lining"
+        ],
+        "description": "Mobility-boosting Exo-lining Special Rule.",
+        "era": "Pre-War"
+      },
+      {
+        "name": "EDB2 E.O.D",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 29.0,
+        "price": 59,
+        "armor_rating": {
+          "head": 17,
+          "arms": 18,
+          "chest": 19,
+          "legs": 17
+        },
+        "special_rules": [],
+        "description": "-10 Agility. Ignores Kill Radius damage increase and ignores 10 Pierce from Explosive weaponry.",
+        "era": "Pre-War"
+      },
+      {
+        "name": "M48M Medic",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 12.1,
+        "price": 60,
+        "armor_rating": {
+          "head": 18,
+          "arms": 19,
+          "chest": 20,
+          "legs": 18
+        },
+        "special_rules": [],
+        "description": "Comes with 1 Softcase, one Medical Kit, and one Sterile Field Generator. -5 to Evasion.",
+        "era": "Pre-War"
+      },
+      {
+        "name": "EFFU-B Fire Rescue Armor",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 31.8,
+        "price": 45,
+        "armor_rating": {
+          "head": 20,
+          "arms": 19,
+          "chest": 20,
+          "legs": 18
+        },
+        "special_rules": [
+          "Vacuum Sealed",
+          "Fire-Rescue",
+          "Bulky"
+        ],
+        "description": "Vacuum Sealed, Fire-Rescue, and Bulky Special Rule.",
+        "era": "Pre-War"
+      },
+      {
+        "name": "EXO/Atmospheric (Pre-War)",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 17.5,
+        "price": 97,
+        "armor_rating": {
+          "head": 18,
+          "arms": 18,
+          "chest": 19,
+          "legs": 19
+        },
+        "special_rules": [
+          "Temperature Regulator",
+          "Vacuum Sealed (120)"
+        ],
+        "description": "Temperature Regulator and Vacuum Sealed (120) Special Rule.",
+        "era": "Pre-War"
+      },
+      {
+        "name": "Military Police (Pre-War)",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 5.2,
+        "price": 33,
+        "armor_rating": {
+          "head": 16,
+          "arms": 16,
+          "chest": 18,
+          "legs": 16
+        },
+        "special_rules": [],
+        "description": "",
+        "era": "Pre-War"
+      },
+      {
+        "name": "EFFU-C Cryonics",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 31.7,
+        "price": 60,
+        "armor_rating": {
+          "head": 18,
+          "arms": 19,
+          "chest": 20,
+          "legs": 18
+        },
+        "special_rules": [
+          "Vacuum Sealed",
+          "Cryo-Resistant",
+          "Bulky"
+        ],
+        "description": "Vacuum Sealed, Cryo-Resistant, and Bulky Special Rule.",
+        "era": "Pre-War"
+      }
+    ],
+    "covenant_war_bdus": [
+      {
+        "name": "M52B Standard",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 11.9,
+        "price": 38,
+        "armor_rating": {
+          "head": 18,
+          "arms": 19,
+          "chest": 20,
+          "legs": 19
+        },
+        "special_rules": [],
+        "description": "",
+        "era": "Covenant War"
+      },
+      {
+        "name": "Vacuum (Covenant War)",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 11.2,
+        "price": 65,
+        "armor_rating": {
+          "head": 17,
+          "arms": 17,
+          "chest": 19,
+          "legs": 17
+        },
+        "special_rules": [
+          "Vacuum Sealed"
+        ],
+        "description": "Vacuum Sealed Special Rule.",
+        "era": "Covenant War"
+      },
+      {
+        "name": "LV-45 Lightweight Mobility",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 17.7,
+        "price": 50,
+        "armor_rating": {
+          "head": 17,
+          "arms": 17,
+          "chest": 19,
+          "legs": 17
+        },
+        "special_rules": [
+          "Mobility-boosting Exo-lining"
+        ],
+        "description": "Mobility-boosting Exo-lining Special Rule.",
+        "era": "Covenant War"
+      },
+      {
+        "name": "ED4 E.O.D",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 29.0,
+        "price": 60,
+        "armor_rating": {
+          "head": 17,
+          "arms": 19,
+          "chest": 19,
+          "legs": 18
+        },
+        "special_rules": [],
+        "description": "-10 Agility. Ignores Kill Radius damage increase and ignores 10 Pierce from Explosive weaponry.",
+        "era": "Covenant War"
+      },
+      {
+        "name": "M52M Medic",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 12.1,
+        "price": 68,
+        "armor_rating": {
+          "head": 18,
+          "arms": 19,
+          "chest": 20,
+          "legs": 20
+        },
+        "special_rules": [],
+        "description": "Comes with 1 Softcase, one Medical Kit, and one Sterile Field Generator.",
+        "era": "Covenant War"
+      },
+      {
+        "name": "EUG-FFB Fire Rescue Armor",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 31.8,
+        "price": 42,
+        "armor_rating": {
+          "head": 19,
+          "arms": 19,
+          "chest": 20,
+          "legs": 19
+        },
+        "special_rules": [
+          "Vacuum Sealed",
+          "Fire-Rescue",
+          "Bulky"
+        ],
+        "description": "Vacuum Sealed, Fire-Rescue, and Bulky Special Rule.",
+        "era": "Covenant War"
+      },
+      {
+        "name": "CBE Cross-Branch (Covenant War)",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 12.0,
+        "price": 39,
+        "armor_rating": {
+          "head": 19,
+          "arms": 20,
+          "chest": 20,
+          "legs": 20
+        },
+        "special_rules": [],
+        "description": "",
+        "era": "Covenant War"
+      },
+      {
+        "name": "EXO/Atmospheric (Covenant War)",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 17.5,
+        "price": 98,
+        "armor_rating": {
+          "head": 18,
+          "arms": 19,
+          "chest": 20,
+          "legs": 19
+        },
+        "special_rules": [
+          "Temperature Regulator",
+          "Vacuum Sealed (120)"
+        ],
+        "description": "Temperature Regulator and Vacuum Sealed (120) Special Rule.",
+        "era": "Covenant War"
+      },
+      {
+        "name": "Military Police (Covenant War)",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 5.2,
+        "price": 34,
+        "armor_rating": {
+          "head": 17,
+          "arms": 17,
+          "chest": 18,
+          "legs": 17
+        },
+        "special_rules": [],
+        "description": "",
+        "era": "Covenant War"
+      },
+      {
+        "name": "LR/Sniper (Covenant War)",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 12.2,
+        "price": 76,
+        "armor_rating": {
+          "head": 18,
+          "arms": 18,
+          "chest": 19,
+          "legs": 17
+        },
+        "special_rules": [],
+        "description": "Has a specialized built-in Spotting System for Snipers. User gains +10 when taking Aim Actions against Targets beyond 500 Meters.",
+        "era": "Covenant War"
+      },
+      {
+        "name": "Multilayer Heavy Armor (Covenant War)",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 24.9,
+        "price": 35,
+        "armor_rating": {
+          "head": 21,
+          "arms": 19,
+          "chest": 24,
+          "legs": 19
+        },
+        "special_rules": [
+          "Bulky"
+        ],
+        "description": "Bulky Special Rule and gives a -10 Penalty to Evasion Tests.",
+        "era": "Covenant War"
+      },
+      {
+        "name": "EUG-FC Cryonics Armor",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 31.7,
+        "price": 62,
+        "armor_rating": {
+          "head": 19,
+          "arms": 19,
+          "chest": 20,
+          "legs": 19
+        },
+        "special_rules": [
+          "Vacuum Sealed",
+          "Cryo-Resistant",
+          "Bulky"
+        ],
+        "description": "Vacuum Sealed, Cryo-Resistant, and Bulky Special Rule.",
+        "era": "Covenant War"
+      }
+    ],
+    "post_war_bdus": [
+      {
+        "name": "M53 Standard",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 12.2,
+        "price": 39,
+        "armor_rating": {
+          "head": 19,
+          "arms": 19,
+          "chest": 20,
+          "legs": 20
+        },
+        "special_rules": [],
+        "description": "",
+        "era": "Post-War"
+      },
+      {
+        "name": "Vacuum (Post-War)",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 11.7,
+        "price": 68,
+        "armor_rating": {
+          "head": 18,
+          "arms": 19,
+          "chest": 20,
+          "legs": 19
+        },
+        "special_rules": [
+          "Vacuum Sealed"
+        ],
+        "description": "Vacuum Sealed Special Rule.",
+        "era": "Post-War"
+      },
+      {
+        "name": "LV-50 Lightweight Mobility",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 17.1,
+        "price": 54,
+        "armor_rating": {
+          "head": 19,
+          "arms": 19,
+          "chest": 20,
+          "legs": 20
+        },
+        "special_rules": [
+          "Mobility-boosting Exo-lining"
+        ],
+        "description": "Mobility-boosting Exo-lining Special Rule.",
+        "era": "Post-War"
+      },
+      {
+        "name": "EDE1 E.O.D",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 29.0,
+        "price": 61,
+        "armor_rating": {
+          "head": 18,
+          "arms": 19,
+          "chest": 19,
+          "legs": 18
+        },
+        "special_rules": [],
+        "description": "-10 Agility. Ignores Kill Radius damage increase and ignores 10 Pierce from Explosive weaponry.",
+        "era": "Post-War"
+      },
+      {
+        "name": "M53M1 Medic",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 16.1,
+        "price": 69,
+        "armor_rating": {
+          "head": 19,
+          "arms": 19,
+          "chest": 21,
+          "legs": 20
+        },
+        "special_rules": [],
+        "description": "Comes with 1 Softcase, one Medical Kit, and one Sterile Field Generator.",
+        "era": "Post-War"
+      },
+      {
+        "name": "EUG-FRB2 Fire Rescue Armor",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 31.8,
+        "price": 42,
+        "armor_rating": {
+          "head": 20,
+          "arms": 19,
+          "chest": 21,
+          "legs": 20
+        },
+        "special_rules": [
+          "Vacuum Sealed",
+          "Fire-Rescue",
+          "Bulky"
+        ],
+        "description": "Vacuum Sealed, Fire-Rescue, and Bulky Special Rule.",
+        "era": "Post-War"
+      },
+      {
+        "name": "CBE Cross-Branch (Post-War)",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 12.7,
+        "price": 40,
+        "armor_rating": {
+          "head": 19,
+          "arms": 20,
+          "chest": 21,
+          "legs": 20
+        },
+        "special_rules": [],
+        "description": "",
+        "era": "Post-War"
+      },
+      {
+        "name": "EXO/Atmospheric (Post-War)",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 18.1,
+        "price": 99,
+        "armor_rating": {
+          "head": 19,
+          "arms": 20,
+          "chest": 20,
+          "legs": 19
+        },
+        "special_rules": [
+          "Temperature Regulator",
+          "Vacuum Sealed (120)"
+        ],
+        "description": "Temperature Regulator and Vacuum Sealed (120) Special Rule.",
+        "era": "Post-War"
+      },
+      {
+        "name": "Officer’s Upgraded",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 11.8,
+        "price": 40,
+        "armor_rating": {
+          "head": 20,
+          "arms": 20,
+          "chest": 21,
+          "legs": 20
+        },
+        "special_rules": [],
+        "description": "",
+        "era": "Post-War"
+      },
+      {
+        "name": "Communications",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 12.1,
+        "price": 79,
+        "armor_rating": {
+          "head": 19,
+          "arms": 20,
+          "chest": 20,
+          "legs": 20
+        },
+        "special_rules": [],
+        "description": "Built in Radio Backpack with Covenant Translation Software",
+        "era": "Post-War"
+      },
+      {
+        "name": "Military Police (Post-War)",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 5.2,
+        "price": 36,
+        "armor_rating": {
+          "head": 18,
+          "arms": 18,
+          "chest": 18,
+          "legs": 18
+        },
+        "special_rules": [],
+        "description": "",
+        "era": "Post-War"
+      },
+      {
+        "name": "LR/Sniper (Post-War)",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 12.2,
+        "price": 77,
+        "armor_rating": {
+          "head": 18,
+          "arms": 19,
+          "chest": 19,
+          "legs": 18
+        },
+        "special_rules": [],
+        "description": "Built-in Spotting System. User gains +10 when taking Aim Actions against Targets beyond 500 Meters.",
+        "era": "Post-War"
+      },
+      {
+        "name": "Multilayer Heavy Armor (Post-War)",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 24.9,
+        "price": 37,
+        "armor_rating": {
+          "head": 22,
+          "arms": 19,
+          "chest": 25,
+          "legs": 20
+        },
+        "special_rules": [
+          "Bulky"
+        ],
+        "description": "Bulky Special Rule and gives a -10 Penalty to Evasion Tests.",
+        "era": "Post-War"
+      },
+      {
+        "name": "EUG-FRC Cryonics Armor",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 31.7,
+        "price": 42,
+        "armor_rating": {
+          "head": 20,
+          "arms": 19,
+          "chest": 21,
+          "legs": 19
+        },
+        "special_rules": [
+          "Vacuum Sealed",
+          "Cryo-Resistant",
+          "Bulky"
+        ],
+        "description": "Vacuum Sealed, Cryo-Resistant, and Bulky Special Rule.",
+        "era": "Post-War"
+      },
+      {
+        "name": "SPECOPS Armor",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 18.5,
+        "price": 80,
+        "armor_rating": {
+          "head": 20,
+          "arms": 20,
+          "chest": 22,
+          "legs": 19
+        },
+        "special_rules": [
+          "Vacuum Sealed (120)"
+        ],
+        "description": "Vacuum Sealed (120). Only available to ONI and ONI-funded personnel.",
+        "era": "Post-War"
+      }
+    ],
+    "police_armor": [
+      {
+        "name": "Standard Police Battle Dress Uniform",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 7.7,
+        "price": 26,
+        "armor_rating": {
+          "head": 17,
+          "arms": 16,
+          "chest": 18,
+          "legs": 16
+        },
+        "special_rules": [],
+        "description": "-5 Penalty to Evasion. No Police and Civilian upcharge."
+      },
+      {
+        "name": "Riot Suppression Armor",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 11.0,
+        "price": 62,
+        "armor_rating": {
+          "head": 19,
+          "arms": 19,
+          "chest": 20,
+          "legs": 19
+        },
+        "special_rules": [],
+        "description": "-10 Penalty to Evasion. Ignores half of Base Damage from melee Attacks. No Police and Civilian upcharge."
+      },
+      {
+        "name": "Police Rapid Response Armor",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 8.4,
+        "price": 30,
+        "armor_rating": {
+          "head": 19,
+          "arms": 18,
+          "chest": 19,
+          "legs": 18
+        },
+        "special_rules": [],
+        "description": "-5 Penalty to Evasion. No Police and Civilian upcharge."
+      }
+    ],
+    "odst_bdus": [
+      {
+        "name": "Standard ODST Battle Dress Uniform",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 26.0,
+        "price": 139,
+        "armor_rating": {
+          "head": 20,
+          "arms": 19,
+          "chest": 20,
+          "legs": 19
+        },
+        "special_rules": [
+          "VISR",
+          "Kevlar Undersuit",
+          "Temperature Regulator",
+          "VR/Oxygen Recycler",
+          "Rucksack",
+          "Thermal Cooling",
+          "Timeline"
+        ],
+        "description": "VISR, Kevlar Undersuit, Temperature Regulator, VR/Oxygen Recycler, Rucksack, Thermal Cooling, and Timeline Special Rule."
+      },
+      {
+        "name": "ODST/TAC",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 28.0,
+        "price": 139,
+        "armor_rating": {
+          "head": 20,
+          "arms": 18,
+          "chest": 19,
+          "legs": 18
+        },
+        "special_rules": [
+          "Vacuum Sealed"
+        ],
+        "description": "Vacuum Sealed Special Rule.",
+        "variant_of": "Standard ODST Battle Dress Uniform"
+      },
+      {
+        "name": "ODST Sharpshooter",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 27.0,
+        "price": 139,
+        "armor_rating": {
+          "head": 21,
+          "arms": 20,
+          "chest": 19,
+          "legs": 18
+        },
+        "special_rules": [],
+        "description": "Built-in Infrared Goggles.",
+        "variant_of": "Standard ODST Battle Dress Uniform"
+      },
+      {
+        "name": "ODST ONI/S-1 Recon",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 18.0,
+        "price": 152,
+        "armor_rating": {
+          "head": 20,
+          "arms": 18,
+          "chest": 19,
+          "legs": 18
+        },
+        "special_rules": [],
+        "description": "A lightweight anti-reflective coating system that removes reflecting lights and IR, giving the user a +10 Bonus to Camouflage.",
+        "variant_of": "Standard ODST Battle Dress Uniform"
+      },
+      {
+        "name": "ODST Personal Protection",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 31.0,
+        "price": 157,
+        "armor_rating": {
+          "head": 21,
+          "arms": 22,
+          "chest": 22,
+          "legs": 21
+        },
+        "special_rules": [],
+        "description": "-5 Penalty to Reaction Tests and -10 Penalty to Character’s Agility when worn. Ignores Kill Radius and ignores 10 Pierce from Explosives.",
+        "variant_of": "Standard ODST Battle Dress Uniform"
+      },
+      {
+        "name": "ODST UVH-BA Recon",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 26.0,
+        "price": 145,
+        "armor_rating": {
+          "head": 20,
+          "arms": 19,
+          "chest": 20,
+          "legs": 19
+        },
+        "special_rules": [
+          "UVH-BA"
+        ],
+        "description": "UVH-BA Special Rule.",
+        "variant_of": "Standard ODST Battle Dress Uniform"
+      },
+      {
+        "name": "ODST Nightfall",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 29.0,
+        "price": 170,
+        "armor_rating": {
+          "head": 20,
+          "arms": 20,
+          "chest": 20,
+          "legs": 20
+        },
+        "special_rules": [
+          "Vacuum Sealed",
+          "Freefall Assistance Microskeleton"
+        ],
+        "description": "Vacuum Sealed, Freefall Assistance Microskeleton Special Rule.",
+        "variant_of": "Standard ODST Battle Dress Uniform"
+      },
+      {
+        "name": "ODST Heavy",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 42.0,
+        "price": 120,
+        "armor_rating": {
+          "head": 24,
+          "arms": 24,
+          "chest": 26,
+          "legs": 25
+        },
+        "special_rules": [
+          "Bulky"
+        ],
+        "description": "Bulky Special Rule.",
+        "variant_of": "Standard ODST Battle Dress Uniform"
+      },
+      {
+        "name": "ODST Demolitions",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 30.0,
+        "price": 153,
+        "armor_rating": {
+          "head": 20,
+          "arms": 19,
+          "chest": 20,
+          "legs": 19
+        },
+        "special_rules": [
+          "Demolitions",
+          "Bulky"
+        ],
+        "description": "Demolitions, Bulky Special Rule.",
+        "variant_of": "Standard ODST Battle Dress Uniform"
+      },
+      {
+        "name": "ODST COMMS",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 28.0,
+        "price": 159,
+        "armor_rating": {
+          "head": 20,
+          "arms": 19,
+          "chest": 20,
+          "legs": 19
+        },
+        "special_rules": [
+          "Communications unit"
+        ],
+        "description": "Communications unit Special Rule.",
+        "variant_of": "Standard ODST Battle Dress Uniform"
+      },
+      {
+        "name": "ODST SPI BDU",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 29.0,
+        "price": 220,
+        "armor_rating": {
+          "head": 19,
+          "arms": 18,
+          "chest": 20,
+          "legs": 18
+        },
+        "special_rules": [
+          "Photo-Reactive Panels (40)"
+        ],
+        "description": "Photo-Reactive Panels (40) Special Rule.",
+        "variant_of": "Standard ODST Battle Dress Uniform"
+      },
+      {
+        "name": "ODST Medical",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 27.0,
+        "price": 168,
+        "armor_rating": {
+          "head": 21,
+          "arms": 18,
+          "chest": 20,
+          "legs": 18
+        },
+        "special_rules": [
+          "Rucksack Medical Extension"
+        ],
+        "description": "Rucksack Medical Extension Special Rule.",
+        "variant_of": "Standard ODST Battle Dress Uniform"
+      },
+      {
+        "name": "ODST Hellbringer",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 34.0,
+        "price": 179,
+        "armor_rating": {
+          "head": 20,
+          "arms": 20,
+          "chest": 22,
+          "legs": 18
+        },
+        "special_rules": [
+          "Rucksack Medical Extension",
+          "Fire-Rescue",
+          "Bulky"
+        ],
+        "description": "Rucksack Medical Extension, Fire-Rescue, and Bulky Special Rule.",
+        "variant_of": "Standard ODST Battle Dress Uniform"
+      },
+      {
+        "name": "ODST Cryo-Trooper",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 34.0,
+        "price": 179,
+        "armor_rating": {
+          "head": 20,
+          "arms": 20,
+          "chest": 22,
+          "legs": 18
+        },
+        "special_rules": [
+          "Rucksack Medical Extension",
+          "Cryo-Resistant",
+          "Bulky"
+        ],
+        "description": "Rucksack Medical Extension, Cryo-Resistant, and Bulky Special Rule.",
+        "variant_of": "Standard ODST Battle Dress Uniform"
+      },
+      {
+        "name": "ODST Space-Assault",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 31.0,
+        "price": 199,
+        "armor_rating": {
+          "head": 20,
+          "arms": 19,
+          "chest": 20,
+          "legs": 19
+        },
+        "special_rules": [
+          "Vacuum Sealed"
+        ],
+        "description": "Ignores Radiation Effects and halves the effects of EMP Special Rule. Vacuum Sealed Special Rule.",
+        "variant_of": "Standard ODST Battle Dress Uniform"
+      },
+      {
+        "name": "ODST UNSC Black Body Suit",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 12.0,
+        "price": 148,
+        "armor_rating": {
+          "head": 16,
+          "arms": 17,
+          "chest": 16,
+          "legs": 17
+        },
+        "special_rules": [
+          "Hybrid Black-Surface Paneling",
+          "Biofoam Injection Port"
+        ],
+        "description": "Hybrid Black-Surface Paneling, Biofoam Injection Port Special Rule.",
+        "variant_of": "Standard ODST Battle Dress Uniform"
+      },
+      {
+        "name": "ODST UA Personal Protective Equipment",
+        "faction": "UNSC",
+        "armor_type": "Standard",
+        "weight_kg": 39.0,
+        "price": 181,
+        "armor_rating": {
+          "head": 21,
+          "arms": 21,
+          "chest": 22,
+          "legs": 19
+        },
+        "special_rules": [],
+        "description": "Reduces Damage from weapons with Cauterize Special Rules by 2.",
+        "variant_of": "Standard ODST Battle Dress Uniform"
+      }
+    ],
+    "semi_powered_infiltration": [
+      {
+        "name": "Mark I Semi-Powered Infiltration Armor",
+        "faction": "UNSC",
+        "armor_type": "Semi-Powered",
+        "weight_kg": 57.0,
+        "price": 321,
+        "armor_rating": {
+          "head": 19,
+          "arms": 19,
+          "chest": 20,
+          "legs": 19
+        },
+        "special_rules": [
+          "VISR",
+          "Liquid Nanocrystals",
+          "Temperature Regulator",
+          "Rucksack",
+          "Thermal Cooling",
+          "Photo-Reactive Panels (40)",
+          "VR/Oxygen Recycler",
+          "Biofoam Injector Port"
+        ],
+        "comes_with": [
+          "Tactile Bracers",
+          "Rift-Class Gauntlets"
+        ],
+        "description": "VISR, Liquid Nanocrystals, Temperature Regulator, Rucksack, Thermal Cooling, Photo-Reactive Panels (40), VR/Oxygen Recycler, and Biofoam Injector Port. Built-in Tactile Bracers and Rift-Class Gauntlets.",
+        "traits": [
+          {
+            "name": "SPI Shield Power Consumption",
+            "description": "This is only used if the SPI Armor has Energy Shields. If the Photo-Reactive Panels are active, the Energy Shield Recharge Rate is halved and Recharge Delay is doubled."
+          }
+        ]
+      },
+      {
+        "name": "Mark II Semi-Powered Infiltration Armor",
+        "faction": "UNSC",
+        "armor_type": "Semi-Powered",
+        "weight_kg": 58.0,
+        "price": 348,
+        "armor_rating": {
+          "head": 20,
+          "arms": 20,
+          "chest": 21,
+          "legs": 18
+        },
+        "special_rules": [
+          "VISR",
+          "Liquid Nanocrystals",
+          "Temperature Regulator",
+          "Rucksack",
+          "Thermal Cooling",
+          "Photo-Reactive Panels (50)",
+          "VR/Oxygen Recycler",
+          "Biofoam Injector Port"
+        ],
+        "comes_with": [
+          "Tactile Bracers",
+          "Rift-Class Gauntlets"
+        ],
+        "description": "VISR, Liquid Nanocrystals, Temperature Regulator, Rucksack, Thermal Cooling, Photo-Reactive Panels (50), VR/Oxygen Recycler, and Biofoam Injector Port. Built-in Tactile Bracers and Rift-Class Gauntlets.",
+        "traits": [
+          {
+            "name": "SPI Shield Power Consumption",
+            "description": "This is only used if the SPI Armor has Energy Shields. If the Photo-Reactive Panels are active, the Energy Shield Recharge Rate is halved and Recharge Delay is doubled."
+          }
+        ]
+      },
+      {
+        "name": "Headhunter Variant Mark II Semi-Powered Infiltration Armor",
+        "faction": "UNSC",
+        "armor_type": "Semi-Powered",
+        "weight_kg": 61.0,
+        "price": 371,
+        "armor_rating": {
+          "head": 20,
+          "arms": 20,
+          "chest": 21,
+          "legs": 18
+        },
+        "special_rules": [
+          "VISR",
+          "Liquid Nanocrystals",
+          "Temperature Regulator",
+          "Rucksack",
+          "Thermal Cooling",
+          "Photo-Reactive Panels (50)",
+          "VR/Oxygen Recycler",
+          "Biofoam Injector Port"
+        ],
+        "comes_with": [
+          "Tactile Bracers",
+          "Rift-Class Gauntlets"
+        ],
+        "description": "VISR, Liquid Nanocrystals, Temperature Regulator, Rucksack, Thermal Cooling, Photo-Reactive Panels (50), VR/Oxygen Recycler, and Biofoam Injector Port. Built-in Tactile Bracers and Rift-Class Gauntlets.",
+        "energy_shields": {
+          "integrity": 75,
+          "delay": 3,
+          "recharge": 25
+        },
+        "traits": [
+          {
+            "name": "SPI Shield Power Consumption",
+            "description": "This is only used if the SPI Armor has Energy Shields. If the Photo-Reactive Panels are active, the Energy Shield Recharge Rate is halved and Recharge Delay is doubled."
+          }
+        ]
+      }
+    ],
+    "orcus": [
+      {
+        "name": "ORCUS EXO-X/O",
+        "faction": "UNSC",
+        "armor_type": "Semi-Powered",
+        "weight_kg": 106.0,
+        "price": 319,
+        "armor_rating": {
+          "head": 23,
+          "arms": 24,
+          "chest": 25,
+          "legs": 24
+        },
+        "characteristic_bonus": {
+          "STR": 10,
+          "mythic_STR": 1,
+          "AGI": 10,
+          "mythic_AGI": 1
+        },
+        "traits": [
+          {
+            "name": "Temperature Regulator",
+            "description": "Protects the user from extreme temperatures by increasing or reducing the internal temperature of the suit by 30 degrees Celsius."
+          },
+          {
+            "name": "Onboard Computer",
+            "description": "An onboard computer that allowed information trading amongst the battlefield at high speeds. Allows for Smart and Dumb AI to be stored and have access to the Armor’s systems. Allows the AI to boost the ORCUS Mythic Agility by +2 for three Rounds. This feature has a Recharge of 7 minutes."
+          },
+          {
+            "name": "Liquid Nanocrystals",
+            "description": "Offers protection from attacks that lower armor or attack unarmored locations. Any Attacks that reduce Armor or attack unarmored locations count as having 17 Armor."
+          },
+          {
+            "name": "Vacuum Regulator and Oxygen Recycler",
+            "description": "Allows the user to be in a vacuum and without oxygen for extended periods of time and is able to recycle oxygen as the user breathes. Has enough Oxygen to last 120 Minutes."
+          },
+          {
+            "name": "Heads-up Display",
+            "description": "Allows the users to see important battle statistics and information on the allies and enemies nearby. Includes the Motion Tracker."
+          },
+          {
+            "name": "VISR",
+            "description": "Equips the Character with VISR and Motion Tracker. Able to communicate with UEG, CAA, and UNSC infrastructures and communication options."
+          },
+          {
+            "name": "Biofoam Injector Port",
+            "description": "The suit allows for the insertion of Biofoam using Biofoam Injection Modules. These Modules are ports in the armor that a Biofoam canister can attach to so the Character may apply Biofoam. Biofoam Auto-InjectorThe suit will automatically apply Biofoam as a Free Action. Has 5 uses and counts as having an Intellect Modifier of 5 for application. Each Biofoam use can be recharged with a Biofoam canister as a Full Action."
+          },
+          {
+            "name": "EVA System",
+            "description": "Thrusters that allow the User to control their movements in zero gravity. Allows the User to turn 360 degrees in zero gravity in a Full Action. This removes any basic Penalties given from zero gravity scenarios. Has a Full Move speed of 12 Meters. Has Magnetized Boots for improved movement and the capability of walking on metallic surfaces."
+          },
+          {
+            "name": "Improved Motion Tracker",
+            "description": "An upgraded Motion Tracker that doubles the distance of the Radar. Includes a Thermal Sensor for Thermal Imaging Special Rule, giving a +20 Bonus to Opposed Tests involving an Opponent’s Camouflage."
+          },
+          {
+            "name": "Nano Technology",
+            "description": "When the suit is damaged, the suit will automatically begin a repair process. The suit will heal 1 point of damage against it or the user, once per day. The suit can do this 10 times before needing recharged between missions."
+          },
+          {
+            "name": "Reactive Metal Liquid Crystals",
+            "description": "This offers the Spartans the Strength and Agility multipliers given by the suit. Reduces 30D10 from the amount of Falling Damage Roll the Character will take. If a Character were to take 25D10 Falling Damage, then no Damage would be rolled."
+          },
+          {
+            "name": "ODST and Spartans Only",
+            "description": "This Armor is only allowed to be used by both ODST and Spartans during 2559 and later."
+          }
+        ],
+        "special_rules": [],
+        "description": "ORCUS Exoskeleton Semi-Powered Shock Trooper Armor."
+      }
+    ],
+    "mjolnir_prototypes": [
+      {
+        "name": "Mark 1 Prototype Exoskeleton",
+        "faction": "UNSC",
+        "armor_type": "Powered",
+        "weight_kg": 1900.0,
+        "price": 731,
+        "armor_rating": {
+          "head": 21,
+          "arms": 22,
+          "chest": 25,
+          "legs": 23
+        },
+        "characteristic_bonus": {
+          "STR": 0,
+          "mythic_STR": 1,
+          "AGI": 5,
+          "mythic_AGI": 0
+        },
+        "traits": [
+          {
+            "name": "Battery Powered",
+            "description": "Mark 1, 2, and 3 Prototypes are battery-operated. There is a 500 cR, 80 kg Broadcast Power Generator that is able to generate power designed for these Prototypes that can recharge the batteries within a 20 meter radius as a Full Action. The Mark 1 Prototype, however, must be directly plugged into the Broadcast Power Generator. The Mark 3 Prototype doubles the radius it can draw power from the Broadcast Power Generator. The Batteries used for these Prototypes weigh 20 kg and cost 15 cR to replace or purchase new versions."
+          },
+          {
+            "name": "Temperature Regulator",
+            "description": "Protects the user from extreme temperatures by increasing or reducing the internal temperature of the suit by 30 degrees Celsius."
+          },
+          {
+            "name": "Onboard Computer",
+            "description": "An onboard computer that allowed information trading amongst the battlefield at high speeds."
+          },
+          {
+            "name": "Vacuum Regulator and Oxygen Recycler",
+            "description": "Allows the user to be in a vacuum and without oxygen for extended periods of time and is able to recycle oxygen as the user breathes. Has enough Oxygen to last 120 Minutes."
+          },
+          {
+            "name": "Artificial Muscle Suite",
+            "description": "This offers the Spartans the Strength and Agility multipliers given by the suit. Reduces 7D10 from the amount of Falling Damage Roll the Character will take. If a Character were to take 7D10 Falling Damage, then no Damage would be rolled."
+          },
+          {
+            "name": "Heads-up Display",
+            "description": "Allows the users to see important battle statistics and information on the allies and enemies nearby. Includes the Motion Tracker radar."
+          },
+          {
+            "name": "Biofoam Injector Port",
+            "description": "The suit allows for the insertion of Biofoam using Biofoam Injection Modules. These Modules are ports in the armor that a Biofoam canister can attach to so the Character may apply Biofoam."
+          },
+          {
+            "name": "Mark 1 Penalties",
+            "description": "All Movement Actions and To Hit Actions made with this Exoskeleton are at a -10 Penalty. The suit needs to be directly tethered to a battery with a large, reinforced 10 meter long cable. Capable of making 200 Turns of Actions before the battery needs to be replaced."
+          }
+        ],
+        "special_rules": [],
+        "description": "Early Mjolnir exoskeleton prototype."
+      },
+      {
+        "name": "Mark 2 Prototype Exoskeleton",
+        "faction": "UNSC",
+        "armor_type": "Powered",
+        "weight_kg": 1600.0,
+        "price": 833,
+        "armor_rating": {
+          "head": 22,
+          "arms": 23,
+          "chest": 26,
+          "legs": 23
+        },
+        "characteristic_bonus": {
+          "STR": 0,
+          "mythic_STR": 1,
+          "AGI": 5,
+          "mythic_AGI": 0
+        },
+        "traits": [
+          {
+            "name": "Battery Powered",
+            "description": "Mark 1, 2, and 3 Prototypes are battery-operated. There is a 500 cR, 80 kg Broadcast Power Generator that is able to generate power designed for these Prototypes that can recharge the batteries within a 20 meter radius as a Full Action. The Mark 1 Prototype, however, must be directly plugged into the Broadcast Power Generator. The Mark 3 Prototype doubles the radius it can draw power from the Broadcast Power Generator. The Batteries used for these Prototypes weigh 20 kg and cost 15 cR to replace or purchase new versions."
+          },
+          {
+            "name": "Temperature Regulator",
+            "description": "Protects the user from extreme temperatures by increasing or reducing the internal temperature of the suit by 30 degrees Celsius."
+          },
+          {
+            "name": "Onboard Computer",
+            "description": "An onboard computer that allowed information trading amongst the battlefield at high speeds."
+          },
+          {
+            "name": "Vacuum Regulator and Oxygen Recycler",
+            "description": "Allows the user to be in a vacuum and without oxygen for extended periods of time and is able to recycle oxygen as the user breathes. Has enough Oxygen to last 120 Minutes."
+          },
+          {
+            "name": "Artificial Muscle Suite",
+            "description": "This offers the Spartans the Strength and Agility multipliers given by the suit. Reduces 7D10 from the amount of Falling Damage Roll the Character will take. If a Character were to take 7D10 Falling Damage, then no Damage would be rolled."
+          },
+          {
+            "name": "Heads-up Display",
+            "description": "Allows the users to see important battle statistics and information on the allies and enemies nearby. Includes the Motion Tracker radar."
+          },
+          {
+            "name": "Biofoam Injector Port",
+            "description": "The suit allows for the insertion of Biofoam using Biofoam Injection Modules. These Modules are ports in the armor that a Biofoam canister can attach to so the Character may apply Biofoam."
+          },
+          {
+            "name": "Mark 2 Penalties",
+            "description": "All Movement Actions and To Hit Actions made with this Exoskeleton are at a -5 Penalty. The suit needs to be directly tethered to a battery with a large, reinforced 10 meter long cable. Capable of making 400 Turns of Actions before the battery needs to be replaced. The Mark 2 is able to mount its battery onto the back of the Armor and retract the cable."
+          }
+        ],
+        "special_rules": [],
+        "description": "Early Mjolnir exoskeleton prototype."
+      },
+      {
+        "name": "Mark 3 Prototype Exoskeleton",
+        "faction": "UNSC",
+        "armor_type": "Powered",
+        "weight_kg": 1300.0,
+        "price": 934,
+        "armor_rating": {
+          "head": 23,
+          "arms": 23,
+          "chest": 27,
+          "legs": 23
+        },
+        "characteristic_bonus": {
+          "STR": 5,
+          "mythic_STR": 1,
+          "AGI": 10,
+          "mythic_AGI": 1
+        },
+        "traits": [
+          {
+            "name": "Battery Powered",
+            "description": "Mark 1, 2, and 3 Prototypes are battery-operated. There is a 500 cR, 80 kg Broadcast Power Generator that is able to generate power designed for these Prototypes that can recharge the batteries within a 20 meter radius as a Full Action. The Mark 1 Prototype, however, must be directly plugged into the Broadcast Power Generator. The Mark 3 Prototype doubles the radius it can draw power from the Broadcast Power Generator. The Batteries used for these Prototypes weigh 20 kg and cost 15 cR to replace or purchase new versions."
+          },
+          {
+            "name": "Temperature Regulator",
+            "description": "Protects the user from extreme temperatures by increasing or reducing the internal temperature of the suit by 30 degrees Celsius."
+          },
+          {
+            "name": "Onboard Computer",
+            "description": "An onboard computer that allowed information trading amongst the battlefield at high speeds."
+          },
+          {
+            "name": "Vacuum Regulator and Oxygen Recycler",
+            "description": "Allows the user to be in a vacuum and without oxygen for extended periods of time and is able to recycle oxygen as the user breathes. Has enough Oxygen to last 120 Minutes."
+          },
+          {
+            "name": "Artificial Muscle Suite",
+            "description": "This offers the Spartans the Strength and Agility multipliers given by the suit. Reduces 7D10 from the amount of Falling Damage Roll the Character will take. If a Character were to take 7D10 Falling Damage, then no Damage would be rolled."
+          },
+          {
+            "name": "Heads-up Display",
+            "description": "Allows the users to see important battle statistics and information on the allies and enemies nearby. Includes the Motion Tracker radar."
+          },
+          {
+            "name": "Biofoam Injector Port",
+            "description": "The suit allows for the insertion of Biofoam using Biofoam Injection Modules. These Modules are ports in the armor that a Biofoam canister can attach to so the Character may apply Biofoam."
+          },
+          {
+            "name": "Mark 3 Penalties",
+            "description": "The battery, itself, is now capable of Broadcast Power. This means that if the Mark 3 Exoskeleton is within 30 meters of their battery, they are able to freely move as if it was fully tethered. The Mark 3 may still be tethered to the battery via the 10 meter long reinforced cable, but it can also mount its battery into the Armor, itself, keeping it fully protected. This becomes an integrated power source, but comes with the drawback of still needing to be within 40 meters of a Broadcast Power Generator. Capable of making 600 Turns of Actions before the battery needs to be replaced. The Mark 2 is able to mount its battery onto the back of the Armor and retract the cable."
+          }
+        ],
+        "special_rules": [],
+        "description": "Early Mjolnir exoskeleton prototype."
+      }
+    ],
+    "mjolnir": [
+      {
+        "name": "Mark IV Powered Assault Armor",
+        "faction": "UNSC",
+        "armor_type": "Powered",
+        "generation": "GEN I",
+        "weight_kg": 453.0,
+        "size": "Large",
+        "price": null,
+        "armor_rating": {
+          "head": 23,
+          "arms": 24,
+          "chest": 27,
+          "legs": 24
+        },
+        "characteristic_bonus": {
+          "STR": 10,
+          "mythic_STR": 2,
+          "AGI": 5,
+          "mythic_AGI": 2
+        },
+        "variant_generations": [
+          "GEN I"
+        ],
+        "restrictions": "Spartans only",
+        "traits": [
+          {
+            "name": "Temperature Regulator",
+            "description": "Protects the user from extreme temperatures by increasing or reducing the internal temperature of the suit by 30 degrees Celsius."
+          },
+          {
+            "name": "Onboard Computer",
+            "description": "An onboard computer that allowed information trading amongst the battlefield at high speeds."
+          },
+          {
+            "name": "Liquid Nanocrystals",
+            "description": "Offers protection from attacks that lower armor or attack unarmored locations. Any Attacks that reduce Armor or attack unarmored locations count as having 17 Armor."
+          },
+          {
+            "name": "Vacuum Regulator and Oxygen Recycler",
+            "description": "Allows the user to be in a vacuum and without oxygen for extended periods of time and is able to recycle oxygen as the user breathes. Has enough Oxygen to last 120 Minutes."
+          },
+          {
+            "name": "Reactive Metal Liquid Crystals",
+            "description": "This offers the Spartans the Strength and Agility multipliers given by the suit. Reduces 15D10 from the amount of Falling Damage Roll the Character will take. If a Character were to take 10D10 Falling Damage, then no Damage would be rolled."
+          },
+          {
+            "name": "Heads-up Display",
+            "description": "Allows the users to see important battle statistics and information on the allies and enemies nearby. Includes the Motion Tracker radar."
+          },
+          {
+            "name": "VISR",
+            "description": "Equips the Character with VISR and Motion Tracker. Able to communicate with UEG, CAA, and UNSC infrastructures and communication options."
+          },
+          {
+            "name": "Biofoam Injector Port",
+            "description": "The suit allows for the insertion of Biofoam using Biofoam Injection Modules. These Modules are ports in the armor that a Biofoam canister can attach to so the Character may apply Biofoam."
+          },
+          {
+            "name": "EVA System",
+            "description": "Thrusters that allow the User to control their movements in zero gravity. Allows the User to turn 360 degrees in zero gravity in a Full Action. This removes any basic Penalties given from zero gravity scenarios. Has a Full Move speed of 12 Meters. Has Magnetized Boots for improved movement and the capability of walking on metallic surfaces."
+          },
+          {
+            "name": "GEN I Variants",
+            "description": "Mjolnir armor have specialized variants that can be chosen from. These variants can augment Special Abilities, Characteristics, and even Skills, while some can come with Equipment and Attachments."
+          },
+          {
+            "name": "Spartans Only",
+            "description": "This armor can only be worn by Spartans due to the demand it puts on the body. If the Character wearing this armor is not a Spartan, every physical Action they take will deal 8D10 Special Damage to all body locations. INFORMATION ARMOR CHARACTERISTIC BONUS ENERGY SHIELDS NAME WEIGHT SIZE HEAD ARMS CHEST LEG STRENGTH AGILITY INTEGRITY DELAY RECHARGE"
+          }
+        ],
+        "special_rules": [],
+        "description": ""
+      },
+      {
+        "name": "Mark V Powered Assault Armor",
+        "faction": "UNSC",
+        "armor_type": "Powered",
+        "generation": "GEN I",
+        "weight_kg": 321.0,
+        "size": "Large",
+        "price": null,
+        "armor_rating": {
+          "head": 26,
+          "arms": 26,
+          "chest": 27,
+          "legs": 26
+        },
+        "characteristic_bonus": {
+          "STR": 15,
+          "mythic_STR": 2,
+          "AGI": 5,
+          "mythic_AGI": 2
+        },
+        "variant_generations": [
+          "GEN I"
+        ],
+        "restrictions": "Spartans only",
+        "traits": [
+          {
+            "name": "Temperature Regulator",
+            "description": "Protects the user from extreme temperatures by increasing or reducing the internal temperature of the suit by 30 degrees Celsius."
+          },
+          {
+            "name": "Onboard Computer",
+            "description": "An onboard computer that allowed information trading amongst the battlefield at high speeds. Allows for Smart and Dumb AI to be stored and have access to the Armor’s systems. Allows the AI to boost the Mjolnir’s Mythic Agility by +2 for three Rounds. This feature has a Recharge of 10 minutes."
+          },
+          {
+            "name": "Liquid Nanocrystals",
+            "description": "Offers protection from attacks that lower armor or attack unarmored locations. Any Attacks that reduce Armor or attack unarmored locations count as having 17 Armor."
+          },
+          {
+            "name": "Vacuum Regulator and Oxygen Recycler",
+            "description": "Allows the user to be in a vacuum and without oxygen for extended periods of time and is able to recycle oxygen as the user breathes. Has enough Oxygen to last 120 Minutes."
+          },
+          {
+            "name": "Reactive Metal Liquid Crystals",
+            "description": "This offers the Spartans the Strength and Agility multipliers given by the suit. Reduces 15 D10s from the amount of Falling Damage Roll the Character will take. If a Character were to take 10D10 Falling Damage, then no Damage would be rolled."
+          },
+          {
+            "name": "Heads-up Display",
+            "description": "Allows the users to see important battle statistics and information on the allies and enemies nearby. Includes the Motion Tracker."
+          },
+          {
+            "name": "VISR",
+            "description": "Equips the Character with VISR and Motion Tracker. Able to communicate with UEG, CAA, and UNSC infrastructures and communication options."
+          },
+          {
+            "name": "Biofoam Injector Port",
+            "description": "The suit allows for the insertion of Biofoam using Biofoam Injection Modules. These Modules are ports in the armor that a Biofoam canister can attach to so the Character may apply Biofoam."
+          },
+          {
+            "name": "EVA System",
+            "description": "Thrusters that allow the User to control their movements in zero gravity. Allows the User to turn 360 degrees in zero gravity in a Full Action. This removes any basic Penalties given from zero gravity scenarios. Has a Full Move speed of 12 Meters. Has Magnetized Boots for improved movement and the capability of walking on metallic surfaces."
+          },
+          {
+            "name": "GEN I Variants",
+            "description": "Mjolnir armor have specialized variants that can be chosen from. These variants can augment Special Abilities, Characteristics, and even Skills, while some can come with Equipment and Attachments."
+          },
+          {
+            "name": "Self-Destruct",
+            "description": "The armor is able to have its Self-Destruct activated when the user is confirmed to be deceased. Anything within Blast (10) is instantly killed with no possibility of survival unless a Luck point is burnt. Everything within a Blast (30) radius takes 4D10 + 12 Damage with a Pierce of 40."
+          },
+          {
+            "name": "Spartans Only",
+            "description": "This armor can only be worn by Spartans due to the demand it puts on the body. If the Character wearing this armor is not a Spartan, every physical Action they take will deal 8D10 Special Damage to all body locations. INFORMATION ARMOR CHARACTERISTIC BONUS ENERGY SHIELDS NAME WEIGHT SIZE HEAD ARMS CHEST LEG STRENGTH AGILITY INTEGRITY DELAY RECHARGE"
+          }
+        ],
+        "special_rules": [],
+        "description": "",
+        "energy_shields": {
+          "integrity": 125,
+          "delay": 3,
+          "recharge": 25
+        }
+      },
+      {
+        "name": "Mark VI Powered Assault Armor",
+        "faction": "UNSC",
+        "armor_type": "Powered",
+        "generation": "GEN I",
+        "weight_kg": 220.0,
+        "size": "Large",
+        "price": null,
+        "armor_rating": {
+          "head": 27,
+          "arms": 28,
+          "chest": 28,
+          "legs": 26
+        },
+        "characteristic_bonus": {
+          "STR": 20,
+          "mythic_STR": 2,
+          "AGI": 10,
+          "mythic_AGI": 2
+        },
+        "variant_generations": [
+          "GEN I"
+        ],
+        "restrictions": "Spartans only",
+        "traits": [
+          {
+            "name": "Temperature Regulator",
+            "description": "Protects the user from extreme temperatures by increasing or reducing the internal temperature of the suit by 30 degrees Celsius."
+          },
+          {
+            "name": "Onboard Computer",
+            "description": "Allows for Smart and Dumb AI to be stored and have access to the Armor’s systems. Allows the AI to boost the Mjolnir’s Mythic Agility by +2 for three Rounds. This feature has a Recharge of 8 minutes."
+          },
+          {
+            "name": "Liquid Nanocrystals",
+            "description": "Offers protection from attacks that lower armor or attack unarmored locations. Any Attacks that reduce Armor or attack unarmored locations count as having 17 Armor."
+          },
+          {
+            "name": "Vacuum Regulator and Oxygen Recycler",
+            "description": "Allows the user to be in a vacuum and without oxygen for extended periods of time and can recycle oxygen as the user breathes. Has enough Oxygen to last 120 Minutes."
+          },
+          {
+            "name": "Reactive Metal Liquid Crystals",
+            "description": "This offers the Spartans the Strength and Agility multipliers given by the suit. Reduces 20D10 from the amount of Falling Damage Roll the Character will take. If a Character were to take 10D10 Falling Damage, then no Damage would be rolled."
+          },
+          {
+            "name": "Heads-up Display",
+            "description": "Allows the users to see important battle statistics and information on the allies and enemies nearby. Includes the Motion Tracker."
+          },
+          {
+            "name": "VISR",
+            "description": "Equips the Character with VISR and Motion Tracker. Able to communicate with UEG, CAA, and UNSC infrastructures and communication options."
+          },
+          {
+            "name": "Biofoam Injector Port",
+            "description": "The suit allows for the insertion of Biofoam using Biofoam Injection Modules. These Modules are ports in the armor that a Biofoam canister can attach to so the Character may apply Biofoam. Biofoam Auto-InjectorThe suit will automatically apply Biofoam as a Free Action. Has 5 uses and counts as having an Intellect Modifier of 5 for application. Each Biofoam use can be recharged with a Biofoam canister as a Full Action."
+          },
+          {
+            "name": "EVA System",
+            "description": "Thrusters that allow the User to control their movements in zero gravity. Allows the User to turn 360 degrees in zero gravity in a Full Action. This removes any basic Penalties given from zero gravity scenarios. Has a Full Move speed of 12 Meters. Has Magnetized Boots for improved movement and the capability of walking on metallic surfaces."
+          },
+          {
+            "name": "Improved Motion Tracker",
+            "description": "An upgraded Motion Tracker that doubles the distance of the Radar. Includes a Thermal Sensor for finding hidden targets, giving a +20 Bonus to Opposed Tests involving an Opponent’s Camouflage."
+          },
+          {
+            "name": "GEN I Variants",
+            "description": "Mjolnir armor have specialized variants that can be chosen from. These variants can augment Special Abilities, Characteristics, and even Skills, while some can come with Equipment and Attachments."
+          },
+          {
+            "name": "Self-Destruct",
+            "description": "The armor is able to have its Self-Destruct activated when the user is confirmed to be deceased. Anything within Blast (10) is instantly killed with no possibility of survival unless a Luck point is burnt. Everything within a Blast (30) radius takes 4D10 + 12 Damage with a Pierce of 40."
+          },
+          {
+            "name": "Spartans Only",
+            "description": "This armor can only be worn by Spartans due to the demand it puts on the body. If the Character wearing this armor is not a Spartan, every physical Action they take will deal 8D10 Special Damage to all body locations. INFORMATION ARMOR CHARACTERISTIC BONUS ENERGY SHIELDS NAME WEIGHT SIZE HEAD ARMS CHEST LEG STRENGTH AGILITY INTEGRITY DELAY RECHARGE"
+          }
+        ],
+        "special_rules": [],
+        "description": "",
+        "energy_shields": {
+          "integrity": 125,
+          "delay": 2,
+          "recharge": 50
+        }
+      },
+      {
+        "name": "Mark VII Assault Armor",
+        "faction": "UNSC",
+        "armor_type": "Powered",
+        "generation": "GEN I",
+        "weight_kg": 325.0,
+        "size": "Large",
+        "price": null,
+        "armor_rating": {
+          "head": 27,
+          "arms": 26,
+          "chest": 27,
+          "legs": 26
+        },
+        "characteristic_bonus": {
+          "STR": 15,
+          "mythic_STR": 3,
+          "AGI": 10,
+          "mythic_AGI": 2
+        },
+        "variant_generations": [
+          "GEN I",
+          "GEN II"
+        ],
+        "restrictions": "Spartans only",
+        "traits": [
+          {
+            "name": "Prototype",
+            "description": "The Mark VII Powered Assault Armor is a limited Prototype with very little versions of them built."
+          },
+          {
+            "name": "Temperature Regulator",
+            "description": "Protects the user from extreme temperatures by increasing or reducing the internal temperature of the suit by 30 degrees Celsius."
+          },
+          {
+            "name": "Onboard Computer",
+            "description": "An onboard computer that allowed information trading amongst the battlefield at high speeds. Allows for Smart and Dumb AI to be stored and have access to the Armor’s systems. Allows the AI to boost the Mjolnir’s Mythic Agility by +2 for three Rounds. This feature has a Recharge of 7 minutes."
+          },
+          {
+            "name": "Liquid Nanocrystals",
+            "description": "Offers protection from attacks that lower armor or attack unarmored locations. Any Attacks that reduce Armor or attack unarmored locations count as having 17 Armor."
+          },
+          {
+            "name": "Vacuum Regulator and Oxygen Recycler",
+            "description": "Allows the user to be in a vacuum and without oxygen for extended periods of time and is able to recycle oxygen as the user breathes. Has enough Oxygen to last 120 Minutes."
+          },
+          {
+            "name": "Reactive Metal Liquid Crystals",
+            "description": "This offers the Spartans the Strength and Agility multipliers given by the suit. Reduces 25D10 from the amount of Falling Damage Roll the Character will take. If a Character were to take 15D10 Falling Damage, then no Damage would be rolled."
+          },
+          {
+            "name": "Heads-up Display",
+            "description": "Allows the users to see important battle statistics and information on the allies and enemies nearby. Includes the Motion Tracker."
+          },
+          {
+            "name": "VISR",
+            "description": "Equips the Character with VISR and Motion Tracker. Able to communicate with UEG, CAA, and UNSC infrastructures and communication options."
+          },
+          {
+            "name": "Biofoam Injector Port",
+            "description": "The suit allows for the insertion of Biofoam using Biofoam Injection Modules. These Modules are ports in the armor that a Biofoam canister can attach to so the Character may apply Biofoam. Biofoam Auto-InjectorThe suit will automatically apply Biofoam as a Free Action. Has 5 uses and counts as having an Intellect Modifier of 5 for application. Each Biofoam use can be recharged with a Biofoam canister as a Full Action."
+          },
+          {
+            "name": "EVA System",
+            "description": "Thrusters that allow the User to control their movements in zero gravity. Allows the User to turn 360 degrees in zero gravity in a Full Action. This removes any basic Penalties given from zero gravity scenarios. Has a Full Move speed of 12 Meters. Has Magnetized Boots for improved movement and the capability of walking on metallic surfaces."
+          },
+          {
+            "name": "Improved Motion Tracker",
+            "description": "An upgraded Motion Tracker that doubles the distance of the Radar. Includes a Thermal Sensor for Thermal Imaging Special Rule, giving a +20 Bonus to Opposed Tests involving an Opponent’s Camouflage."
+          },
+          {
+            "name": "Nano Technology",
+            "description": "When the suit is damaged, the suit will automatically begin a repair process. The suit will heal 1 point of damage against it or the user, once per day. The suit can do this 10 times before needing recharged between missions."
+          },
+          {
+            "name": "GEN I and II Variants",
+            "description": "Mark VII Prototype is capable of using Variants from both GEN I and GEN II Mjolnir Armor."
+          },
+          {
+            "name": "Self-Destruct",
+            "description": "The Armor is able to Self-Destruct and can only be activated by another Character if the user inside is confirmed to be deceased. Anything within Blast (20) is instantly killed unless a Luck is burnt. Everything within Blast (40) takes 5D10 +12 Damage with a Pierce of 35."
+          },
+          {
+            "name": "Spartans Only",
+            "description": "This armor can only be worn by Spartans due to the demand it puts on the body. If the Character wearing this armor is not a Spartan, every physical Action they take will deal 8D10 Special Damage to all body locations. INFORMATION ARMOR CHARACTERISTIC BONUS ENERGY SHIELDS NAME WEIGHT SIZE HEAD ARMS CHEST LEG STRENGTH AGILITY INTEGRITY DELAY RECHARGE"
+          }
+        ],
+        "special_rules": [],
+        "description": "",
+        "energy_shields": {
+          "integrity": 150,
+          "delay": 2,
+          "recharge": 50
+        }
+      },
+      {
+        "name": "GEN II Powered Armor",
+        "faction": "UNSC",
+        "armor_type": "Powered",
+        "generation": "GEN II",
+        "weight_kg": 220.0,
+        "size": "Large",
+        "price": null,
+        "armor_rating": {
+          "head": 25,
+          "arms": 25,
+          "chest": 27,
+          "legs": 25
+        },
+        "characteristic_bonus": {
+          "STR": 20,
+          "mythic_STR": 4,
+          "AGI": 15,
+          "mythic_AGI": 4
+        },
+        "variant_generations": [
+          "GEN I",
+          "GEN II"
+        ],
+        "restrictions": "Spartans only",
+        "traits": [
+          {
+            "name": "Temperature Regulator",
+            "description": "Protects the user from extreme temperatures by increasing or reducing the internal temperature of the suit by 30 degrees Celsius."
+          },
+          {
+            "name": "Onboard Computer",
+            "description": "An onboard computer that allowed information trading amongst the battlefield at high speeds. Allows for Smart and Dumb AI to be stored and have access to the Armor’s systems. Allows the AI to boost the Mjolnir’s Mythic Agility by +2 for three Rounds. This feature has a Recharge of 7 minutes."
+          },
+          {
+            "name": "Liquid Nanocrystals",
+            "description": "Offers protection from attacks that lower armor or attack unarmored locations. Any Attacks that reduce Armor or attack unarmored locations count as having 18 Armor."
+          },
+          {
+            "name": "Vacuum Regulator and Oxygen Recycler",
+            "description": "Allows the user to be in a vacuum and without oxygen for extended periods of time and is able to recycle oxygen as the user breathes. Has enough Oxygen to last 120 Minutes."
+          },
+          {
+            "name": "Reactive Metal Liquid Crystals",
+            "description": "This offers the Spartans the Strength and Agility multipliers given by the suit. Reduces 30D10 from the amount of Falling Damage Roll the Character will take. If a Character were to take 25D10 Falling Damage, then no Damage would be rolled."
+          },
+          {
+            "name": "Heads-up Display",
+            "description": "Allows the users to see important battle statistics and information on the allies and enemies nearby. Includes the Motion Tracker."
+          },
+          {
+            "name": "VISR",
+            "description": "Equips the Character with VISR and Motion Tracker. Able to communicate with UEG, CAA, and UNSC infrastructures and communication options."
+          },
+          {
+            "name": "Biofoam Injector Port",
+            "description": "The suit allows for the insertion of Biofoam using Biofoam Injection Modules. These Modules are ports in the armor that a Biofoam canister can attach to so the Character may apply Biofoam. Biofoam Auto-InjectorThe suit will automatically apply Biofoam as a Free Action. Has 5 uses and counts as having an Intellect Modifier of 5 for application. Each Biofoam use can be recharged with a Biofoam canister as a Full Action."
+          },
+          {
+            "name": "EVA System",
+            "description": "Thrusters that allow the User to control their movements in zero gravity. Allows the User to turn 360 degrees in zero gravity in a Full Action. This removes any basic Penalties given from zero gravity scenarios. Has a Full Move speed of 16 Meters. Has Magnetized Boots for improved movement and the capability of walking on metallic surfaces."
+          },
+          {
+            "name": "Improved Motion Tracker",
+            "description": "An upgraded Motion Tracker that doubles the distance of the Radar. Includes a Thermal Sensor for Thermal Imaging Special Rule, giving a +20 Bonus to Opposed Tests involving an Opponent’s Camouflage."
+          },
+          {
+            "name": "Nano Technology",
+            "description": "When the suit is damaged, the suit will automatically begin a repair process. The suit will heal 1 point of damage against it or the user, once per day. The suit can do this 10 times before needing recharged between missions."
+          },
+          {
+            "name": "GEN I and II Variants",
+            "description": "Mjolnir armor have specialized variants that can be chosen from. These variants can augment Special Abilities, Characteristics, and even Skills, while some can come with Equipment and Attachments. There are some GEN III Variants that can be used alongside GEN II Armor, but you can’t take them until 2559 and later."
+          },
+          {
+            "name": "Self-Destruct",
+            "description": "The Armor is able to Self-Destruct and can only be activated by another Character if the user inside is confirmed to be deceased. Anything within Blast (20) is instantly killed unless a Luck is burnt. Everything within Blast (40) takes 6D10 +15 Damage with a Pierce of 35."
+          },
+          {
+            "name": "Spartan IV Attuning",
+            "description": "When used alongside a Spartan IV and their unique augmentation process, the Character is able to have the GEN II Mjolnir to give them either a +1 Mythic Strength or +1 Mythic Agility of their choosing. This can be changed between missions but takes 2 days to perform."
+          },
+          {
+            "name": "Spartans Only",
+            "description": "This armor can only be worn by Spartans due to the demand it puts on the body. If the Character wearing this armor is not a Spartan, every physical Action they take will deal 8D10 Special Damage to all body locations."
+          }
+        ],
+        "spartan_abilities": [
+          {
+            "name": "Thruster Pack",
+            "description": "The Mjolnir Generation II suits have a built-in Thrust package. Doubles the user’s Half Move for a single Half Action. This takes 4 Half Actions to recharge."
+          },
+          {
+            "name": "Ground Pound",
+            "description": "Using the thrusters to force the Spartan downward, Ground Pound causes a Blast (4) of the Spartan’s Punch Melee Attack, giving the attack a Pierce of the Spartan’s total Strength Modifier and Mythic Strength."
+          },
+          {
+            "name": "Spartan Charge Thrust Package",
+            "description": "Modifying the Thrusters, the Character may Double the damage made with Charge Attacks. This takes four Half Actions to recharge."
+          },
+          {
+            "name": "Hover Stabilization",
+            "description": "The suit will allow the user to Hover in the air for 2 Half Actions, as long as the Character is not in a free fall. The Hover Stabilization must then charge for 1 Half Action before being used again."
+          },
+          {
+            "name": "Sprint",
+            "description": "Using the Mjolnir suit’s Overclocking system, the user’s movement is increased, allowing a character to gain +2 Mythic Agility for two Rounds. If used twice within 4 Rounds, the user takes a level of Fatigue. INFORMATION ARMOR CHARACTERISTIC BONUS ENERGY SHIELDS NAME WEIGHT SIZE HEAD ARMS CHEST LEG STRENGTH AGILITY INTEGRITY DELAY RECHARGE"
+          }
+        ],
+        "special_rules": [],
+        "description": "",
+        "energy_shields": {
+          "integrity": 150,
+          "delay": 2,
+          "recharge": 50
+        }
+      },
+      {
+        "name": "GEN III Powered Armor",
+        "faction": "UNSC",
+        "armor_type": "Powered",
+        "generation": "GEN III",
+        "weight_kg": 400.0,
+        "size": "Large",
+        "price": null,
+        "armor_rating": {
+          "head": 27,
+          "arms": 26,
+          "chest": 28,
+          "legs": 27
+        },
+        "characteristic_bonus": {
+          "STR": 20,
+          "mythic_STR": 3,
+          "AGI": 15,
+          "mythic_AGI": 3
+        },
+        "variant_generations": [
+          "GEN I",
+          "GEN II",
+          "GEN III"
+        ],
+        "restrictions": "Spartans only",
+        "traits": [
+          {
+            "name": "Temperature Regulator",
+            "description": "Protects the user from extreme temperatures by increasing or reducing the internal temperature of the suit by 30 degrees Celsius."
+          },
+          {
+            "name": "Onboard Computer",
+            "description": "An onboard computer that allowed information trading amongst the battlefield at high speeds. Allows for Smart and Dumb AI to be stored and have access to the Armor’s systems. Allows the AI to boost the Mjolnir’s Mythic Agility by +2 for three Rounds. This feature has a Recharge of 7 minutes."
+          },
+          {
+            "name": "Liquid Nanocrystals",
+            "description": "Offers protection from attacks that lower armor or attack unarmored locations. Any Attacks that reduce Armor or attack unarmored locations count as having 18 Armor."
+          },
+          {
+            "name": "Vacuum Regulator and Oxygen Recycler",
+            "description": "Allows the user to be in a vacuum and without oxygen for extended periods of time and is able to recycle oxygen as the user breathes. Has enough Oxygen to last 120 Minutes."
+          },
+          {
+            "name": "Reactive Metal Liquid Crystals",
+            "description": "This offers the Spartans the Strength and Agility multipliers given by the suit. Reduces 30D10 from the amount of Falling Damage Roll the Character will take. If a Character were to take 25D10 Falling Damage, then no Damage would be rolled."
+          },
+          {
+            "name": "Heads-up Display",
+            "description": "Allows the users to see important battle statistics and information on the allies and enemies nearby. Includes the Motion Tracker."
+          },
+          {
+            "name": "VISR",
+            "description": "Equips the Character with VISR and Motion Tracker. Able to communicate with UEG, CAA, and UNSC infrastructures and communication options."
+          },
+          {
+            "name": "Biofoam Injector Port",
+            "description": "The suit allows for the insertion of Biofoam using Biofoam Injection Modules. These Modules are ports in the armor that a Biofoam canister can attach to so the Character may apply Biofoam. Biofoam Auto-InjectorThe suit will automatically apply Biofoam as a Free Action. Has 5 uses and counts as having an Intellect Modifier of 5 for application. Each Biofoam use can be recharged with a Biofoam canister as a Full Action."
+          },
+          {
+            "name": "EVA System",
+            "description": "Thrusters that allow the User to control their movements in zero gravity. Allows the User to turn 360 degrees in zero gravity in a Full Action. This removes any basic Penalties given from zero gravity scenarios. Has a Full Move speed of 16 Meters. Has Magnetized Boots for improved movement and the capability of walking on metallic surfaces."
+          },
+          {
+            "name": "Improved Motion Tracker",
+            "description": "An upgraded Motion Tracker that doubles the distance of the Radar. Includes a Thermal Sensor for Thermal Imaging Special Rule, giving a +20 Bonus to Opposed Tests involving an Opponent’s Camouflage."
+          },
+          {
+            "name": "Nano Technology",
+            "description": "When the suit is damaged, the suit will automatically begin a repair process. The suit will heal 1 point of damage against it or the user, once per day. The suit can do this 10 times before needing recharged between missions."
+          },
+          {
+            "name": "GEN I, II, III Variants",
+            "description": "Mjolnir armor have specialized variants that can be chosen from. These variants can augment Special Abilities, Characteristics, and even Skills, while some can come with Equipment and Attachments."
+          },
+          {
+            "name": "Self-Destruct",
+            "description": "The Armor is able to Self-Destruct and can only be activated by another Character if the user inside is confirmed to be deceased. Anything within Blast (20) is instantly killed unless a Luck is burnt. Everything within Blast (40) takes 6D10 +15 Damage with a Pierce of 35."
+          },
+          {
+            "name": "System Peril Distributed Reflex (SPDR)",
+            "description": "An automated AI assistance and containment system built into all GEN III Mjolnir Armor. When an AI is placed into the Mjolnir Suit, it will be healed 1D10 Damage once an hour. The Mjolnir User may also use the SPDR to contain and imprison AI Characters. Imprisoned AI can’t make any type of Cyber Attack attempt or any other type of Action until released."
+          },
+          {
+            "name": "Spartan IV Attuning",
+            "description": "When used alongside a Spartan IV and their unique augmentation process, the Character is able to have the GEN II Mjolnir to give them either a +1 Mythic Strength or +1 Mythic Agility of their choosing. This can be changed between missions but takes 2 days to perform."
+          },
+          {
+            "name": "Spartans Only",
+            "description": "This armor can only be worn by Spartans due to the demand it puts on the body. If the Character wearing this armor is not a Spartan, every physical Action they take will deal 8D10 Special Damage to all body locations."
+          }
+        ],
+        "spartan_abilities": [
+          {
+            "name": "Thruster Pack",
+            "description": "The Mjolnir Generation III suits have a built-in Thrust package. Doubles the user’s Half Move for a single Half Action. This takes 5 Half Actions to recharge."
+          },
+          {
+            "name": "Ground Pound",
+            "description": "Using the thrusters to force the Spartan downward, Ground Pound causes a Blast (4) of the Spartan’s Punch Melee Attack, giving the attack a Pierce of the Spartan’s total Strength Modifier and Mythic Strength."
+          },
+          {
+            "name": "Spartan Charge Thrust Package",
+            "description": "Modifying the Thrusters, the Character may Double the damage made with Charge Attacks. This takes four Half Actions to recharge."
+          },
+          {
+            "name": "Hover Stabilization",
+            "description": "The suit will allow the user to Hover in the air for 2 Half Actions, as long as the Character is not in a free fall. The Hover Stabilization must then charge for 1 Half Action before being used again."
+          },
+          {
+            "name": "Sprint",
+            "description": "Using the Mjolnir suit’s Overclocking system, the user’s movement is increased, allowing a character to gain +2 Mythic Agility for two Rounds. If used twice within 5 Rounds, the user takes a level of Fatigue."
+          }
+        ],
+        "special_rules": [],
+        "description": "",
+        "energy_shields": {
+          "integrity": 175,
+          "delay": 2,
+          "recharge": 50
+        }
+      }
+    ]
+  },
+  "citation": "Mythic 7.0 CU1, Armors and Battle Dress Uniforms, pp. 161-169"
+}

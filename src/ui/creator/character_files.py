@@ -203,6 +203,8 @@ class CharacterFilesMixin:
                 if pack and stored.get("name") == pack
                 else [],
             }
+            if stored.get("starting_armor"):
+                equipment["starting_armor"] = dict(stored["starting_armor"])
 
         return {
             "format_version": 1,

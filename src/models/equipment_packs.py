@@ -7,30 +7,40 @@ An ``equipment_sets`` pack is a list whose entries are one of:
   "note": "Silenced", "label": "Two M7 Silenced Submachine Guns"}``.
   ``quantity`` defaults to 1; ``note`` and ``label`` (the book's wording)
   are optional;
-* a choice group - ``{"label": ..., "choose_one": [weapon reference, ...]}``.
+* an armor reference - ``{"armor": <unsc_armor record name>, "label": ...}``;
+* a choice group - ``{"label": ..., "choose_one": [reference, ...]}``.
   The player picks one option, the same way upbringing choices work.
 
-A player's picks are stored as option labels (the weapon names), one per
-choice group, in pack order.
+A player's picks are stored as option labels (the weapon or armor names),
+one per choice group, in pack order. A character wears one armor: if a pack
+yields more than one, the first is worn and the rest are carried as gear.
 """
 
-from typing import Dict, List, Optional, Sequence, Tuple
+from typing import Dict, List, NamedTuple, Optional, Sequence
 
 ARMORY_FAMILIES = {"unsc_weapons": "unsc_weapons", "unsc_explosives": "unsc_explosives"}
+ARMOR_FAMILIES = {"unsc_armor": "unsc_armor"}
 
 
 def is_weapon_ref(entry) -> bool:
     return isinstance(entry, dict) and isinstance(entry.get("weapon"), str)
 
 
+def is_armor_ref(entry) -> bool:
+    return isinstance(entry, dict) and isinstance(entry.get("armor"), str)
+
+
+def is_item_ref(entry) -> bool:
+    return is_weapon_ref(entry) or is_armor_ref(entry)
+
+
 def is_choice(entry) -> bool:
     return isinstance(entry, dict) and isinstance(entry.get("choose_one"), list)
 
 
-def armory_index(game_data) -> Dict[str, dict]:
-    """Every armory record by name, tagged with where it came from."""
+def _index(game_data, families) -> Dict[str, dict]:
     index = {}
-    for family, key in ARMORY_FAMILIES.items():
+    for family, key in families.items():
         for doc in (getattr(game_data, "families", {}) or {}).get(family, {}).values():
             for group, records in (doc.get(key) or {}).items():
                 for record in records:
@@ -39,8 +49,18 @@ def armory_index(game_data) -> Dict[str, dict]:
     return index
 
 
+def armory_index(game_data) -> Dict[str, dict]:
+    """Every weapon and explosive record by name, tagged with where it came from."""
+    return _index(game_data, ARMORY_FAMILIES)
+
+
+def armor_index(game_data) -> Dict[str, dict]:
+    """Every UNSC armor record by name."""
+    return _index(game_data, ARMOR_FAMILIES)
+
+
 def option_label(ref: dict) -> str:
-    return ref["weapon"]
+    return ref["weapon"] if is_weapon_ref(ref) else ref["armor"]
 
 
 def weapon_display(ref: dict) -> str:
@@ -60,6 +80,8 @@ def describe(entry) -> str:
         return " or ".join(weapon_display(o) for o in entry["choose_one"])
     if is_weapon_ref(entry):
         return weapon_display(entry)
+    if is_armor_ref(entry):
+        return entry["armor"]
     return str(entry)
 
 
@@ -67,7 +89,7 @@ def choice_groups(items: Sequence) -> List[dict]:
     """Choice groups in a pack, shaped for BackgroundChoiceDialog."""
     return [
         {
-            "section": "weapons",
+            "section": "armor" if all(is_armor_ref(o) for o in entry["choose_one"]) else "weapons",
             "row_label": describe(entry),
             "labels": [option_label(o) for o in entry["choose_one"]],
         }
@@ -88,20 +110,31 @@ def _weapon_entry(ref: dict, index: Dict[str, dict]) -> dict:
     return entry
 
 
+class PackContents(NamedTuple):
+    weapons: List[dict]
+    armor: Optional[str]
+    equipment: List[str]
+    problems: List[str]
+
+
 def resolve_pack(
     items: Sequence,
     choices: Optional[Sequence[str]] = None,
     index: Optional[Dict[str, dict]] = None,
-) -> Tuple[List[dict], List[str], List[str]]:
-    """Split a pack into (weapons, equipment, problems).
+    armors: Optional[Dict[str, dict]] = None,
+) -> PackContents:
+    """Split a pack into weapons, worn armor, carried gear and problems.
 
     ``weapons`` are ``{"name", "quantity", "nickname", "note", "category"}``
-    dicts naming armory records. A choice group without a valid pick adds
-    nothing and is reported, rather than silently choosing for the player.
+    dicts naming armory records; ``armor`` is a unsc_armor record name. A
+    choice group without a valid pick adds nothing and is reported, rather
+    than silently choosing for the player.
     """
     index = index or {}
+    armors = armors or {}
     picks = list(choices or [])
     weapons, equipment, problems = [], [], []
+    worn = None
     group_index = 0
     for entry in items or []:
         if isinstance(entry, str):
@@ -117,26 +150,59 @@ def resolve_pack(
             else:
                 problems.append(f"No valid choice for {describe(entry)} (got {pick!r}); not added")
                 continue
-        elif is_weapon_ref(entry):
+        elif is_item_ref(entry):
             ref = entry
         else:
             problems.append(f"Unrecognized pack entry {entry!r}; not added")
             continue
+        if is_armor_ref(ref):
+            if armors and ref["armor"] not in armors:
+                problems.append(f"Unknown armor '{ref['armor']}'")
+            if worn is None:
+                worn = ref["armor"]
+            else:
+                equipment.append(f"{ref['armor']} (spare armor)")
+            continue
         if index and ref["weapon"] not in index:
             problems.append(f"Unknown armory weapon '{ref['weapon']}'")
         weapons.append(_weapon_entry(ref, index))
-    return weapons, equipment, problems
+    return PackContents(weapons, worn, equipment, problems)
+
+
+def item_references(items: Sequence) -> List[dict]:
+    """Every weapon and armor reference in a pack, including each choice option."""
+    refs = []
+    for entry in items or []:
+        if is_item_ref(entry):
+            refs.append(entry)
+        elif is_choice(entry):
+            refs.extend(o for o in entry["choose_one"] if is_item_ref(o))
+    return refs
 
 
 def weapon_references(items: Sequence) -> List[dict]:
     """Every weapon reference in a pack, including each choice option."""
-    refs = []
-    for entry in items or []:
-        if is_weapon_ref(entry):
-            refs.append(entry)
-        elif is_choice(entry):
-            refs.extend(o for o in entry["choose_one"] if is_weapon_ref(o))
-    return refs
+    return [ref for ref in item_references(items) if is_weapon_ref(ref)]
+
+
+def armor_summary(name, armors: Optional[Dict[str, dict]] = None) -> str:
+    """Sheet line for worn armor: name plus per-location Armor Rating and shields."""
+    if not name:
+        return ""
+    record = (armors or {}).get(name)
+    if not record:
+        return str(name)
+    rating = record.get("armor_rating") or {}
+    text = name
+    if rating:
+        text += " - " + ", ".join(
+            f"{loc.title()} {rating[loc]}" for loc in ("head", "arms", "chest", "legs") if loc in rating
+        )
+    shields = record.get("energy_shields")
+    if shields:
+        text += (f"; Shields {shields.get('integrity')} "
+                 f"(Delay {shields.get('delay')}, Recharge {shields.get('recharge')})")
+    return text
 
 
 def weapon_summary(entry, index: Optional[Dict[str, dict]] = None) -> str:

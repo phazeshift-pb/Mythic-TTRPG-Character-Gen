@@ -113,10 +113,57 @@ def test_equipment_pack_links_armory_weapons(window, monkeypatch):
     assert names[0] == "MA5B Individual Combat Weapon System"
     assert "M9 High-Explosive Dual-Purpose Grenade" in names
     assert "Flashlight" in character.equipment
+    assert character.armor == "M50B Standard"
     assert not any("Grenade" in item for item in character.equipment)
     export = window._character_export_data()
     assert export["selections"]["equipment"]["pack"] == "point_man"
     assert len(export["selections"]["equipment"]["choices"]) == 3
+
+
+def test_spartan_picks_mjolnir_and_variant(qt_app, project_root, monkeypatch):
+    from PySide6.QtWidgets import QDialog
+
+    from src.ui.creator import equipment as equipment_module
+    from src.ui.main_window import MainWindow
+
+    class PickFirst:
+        def __init__(self, title, groups, selected=(), parent=None):
+            self.selected_choices = [group["labels"][0] for group in groups]
+
+        def exec(self):
+            return QDialog.DialogCode.Accepted
+
+    class PickGen2Recon:
+        def __init__(self, soldier_data, armors, game_data, selected=None, parent=None):
+            from src.models import starting_armor
+
+            self.selected_armor = "GEN II Powered Armor"
+            self.selected_variant = starting_armor.find_variant(game_data, "GEN II", "Recon")
+
+        def exec(self):
+            return QDialog.DialogCode.Accepted
+
+    monkeypatch.setattr(equipment_module, "BackgroundChoiceDialog", PickFirst)
+    monkeypatch.setattr(equipment_module, "StartingArmorDialog", PickGen2Recon)
+    ui = MainWindow()
+    ui.version_and_expansions_page._select_mode("Core", True)
+    ui.soldier_combo.clear()
+    ui.soldier_combo.addItem("Spartan IV", "spartan_iv")
+    ui.soldier_combo.setCurrentIndex(0)
+    ui.generate_character()
+    ui.open_equipment_page()
+    tile = next(button for button, name, _ in ui.equipment_tiles if name == "point_man")
+    tile.setChecked(True)
+    ui.equipment_done_button.click()
+
+    character = ui.generated_character
+    assert character.armor == "GEN II Powered Armor"
+    assert character.armor_variant["name"] == "Recon"
+    assert character.armor_bonus["TOU"] == 5  # Spartan IV GEN II bonus
+    assert character.weapons and character.weapons[0]["name"] == "MA5K Carbine"
+    export = ui._character_export_data()["selections"]["equipment"]
+    assert export["starting_armor"]["variant"]["name"] == "Recon"
+    ui.close()
 
 
 def test_core_forte_does_not_change_game_data():

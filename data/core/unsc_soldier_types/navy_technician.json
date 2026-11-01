@@ -98,7 +98,14 @@
       "Holographic Tactical Eyepiece",
       "Six Tactical Softcases",
       "Utility Webbing",
-      "M50B, M52B, or M53 BDU (time period dependent)"
+      {
+        "label": "M50B, M52B, or M53 BDU (time period dependent)",
+        "choose_one": [
+          {"armor": "M50B Standard"},
+          {"armor": "M52B Standard"},
+          {"armor": "M53 Standard"}
+        ]
+      }
     ],
     "guard": [
       {
@@ -140,7 +147,14 @@
       "Holographic Tactical Eyepiece",
       "Three Tactical Hard Cases",
       "Utility Webbing",
-      "M50B, M52B, or M53 BDU (time period dependent)"
+      {
+        "label": "M50B, M52B, or M53 BDU (time period dependent)",
+        "choose_one": [
+          {"armor": "M50B Standard"},
+          {"armor": "M52B Standard"},
+          {"armor": "M53 Standard"}
+        ]
+      }
     ]
   }
 }

@@ -21,7 +21,13 @@ from PySide6.QtWidgets import (
 )
 
 from src.game_data import GameData
-from src.models.equipment_packs import armory_index, weapon_summary
+from src.models.starting_armor import format_bonus
+from src.models.equipment_packs import (
+    armor_index,
+    armor_summary,
+    armory_index,
+    weapon_summary,
+)
 from src.ui.specialization_page import DelayedTooltipLabel
 from src.ui.skill_test_dialog import SkillTestDialog
 from src.ui import theme
@@ -179,7 +185,19 @@ class InteractiveCharacterSheet(QWidget):
                 [weapon_summary(weapon, armory) for weapon in self._as_list(character.get("weapons"))]
             )
         )
-        self.armor_label.setText(self._display_value(character.get("armor")))
+        armors = armor_index(game_data) if game_data else {}
+        armor_lines = [armor_summary(character.get("armor"), armors)]
+        variant = character.get("armor_variant")
+        if isinstance(variant, dict) and variant.get("name"):
+            armor_lines.append(
+                f"Variant: {variant['name']} ({variant.get('generation', '')})"
+            )
+        bonus = format_bonus(character.get("armor_bonus"))
+        if bonus:
+            armor_lines.append(f"While worn: {bonus}")
+        self.armor_label.setText(
+            self._display_value("\n".join(line for line in armor_lines if line))
+        )
         self.shield_label.setText("Not provided")
         self._set_light_and_sky_powers(character, ruleset)
 

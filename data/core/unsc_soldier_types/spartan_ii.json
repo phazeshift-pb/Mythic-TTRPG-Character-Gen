@@ -84,15 +84,15 @@
     "mjolnir_armor": {
       "description": "Spartans begin with a set of Mjolnir or SPI armor appropriate to the timeline. They may swap armor between missions.",
       "armor_options": [
-        "SPI Mark I (2531–2537)",
-        "SPI Mark II (2537+)",
-        "SPI Headhunter (2537+)",
-        "Black Body Suit (2500–2525)",
-        "Mjolnir Mark IV (2525–2551)",
-        "Mjolnir Mark V (2551–2552)",
-        "Mjolnir Mark VI (2552–2553)",
-        "GEN II Mjolnir (2553–2559)",
-        "GEN III Mjolnir (2559+)"
+        {"armor": "Mark I Semi-Powered Infiltration Armor", "years": "2531–2537", "label": "SPI Mark I (2531–2537)"},
+        {"armor": "Mark II Semi-Powered Infiltration Armor", "years": "2537+", "label": "SPI Mark II (2537+)"},
+        {"armor": "Headhunter Variant Mark II Semi-Powered Infiltration Armor", "years": "2537+", "label": "SPI Headhunter (2537+)"},
+        {"armor": "ODST UNSC Black Body Suit", "years": "2500–2525", "label": "Black Body Suit (2500–2525)"},
+        {"armor": "Mark IV Powered Assault Armor", "years": "2525–2551", "label": "Mjolnir Mark IV (2525–2551)"},
+        {"armor": "Mark V Powered Assault Armor", "years": "2551–2552", "label": "Mjolnir Mark V (2551–2552)"},
+        {"armor": "Mark VI Powered Assault Armor", "years": "2552–2553", "label": "Mjolnir Mark VI (2552–2553)"},
+        {"armor": "GEN II Powered Armor", "years": "2553–2559", "label": "GEN II Mjolnir (2553–2559)"},
+        {"armor": "GEN III Powered Armor", "years": "2559+", "label": "GEN III Mjolnir (2559+)"}
       ]
     }
   },

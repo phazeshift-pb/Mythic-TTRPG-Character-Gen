@@ -47,3 +47,21 @@ def test_background_choice_dialog(qt_app):
     ]
     dialog = BackgroundChoiceDialog("City", groups, selected=["+5 Courage"])
     assert dialog.selected_choices == ["+5 Courage", "-5 Strength"]
+
+
+def test_starting_armor_dialog(qt_app):
+    from src.data_loader import DataLoader
+    from src.models.equipment_packs import armor_index
+    from src.ui.starting_armor_dialog import StartingArmorDialog
+
+    data = DataLoader().load_all()
+    armors = armor_index(data)
+    soldier = data.get("soldier_type", "spartan_ii")
+    dialog = StartingArmorDialog(soldier, armors, data, selected={
+        "armor": "Mark VI Powered Assault Armor",
+        "variant": {"name": "Recon", "generation": "GEN I"},
+    })
+    assert dialog.selected_armor == "Mark VI Powered Assault Armor"
+    assert dialog.selected_variant["name"] == "Recon"
+    dialog.armor_combo.setCurrentIndex(0)  # SPI Mark I takes no variants
+    assert not dialog.variant_combo.isEnabled() and dialog.selected_variant is None

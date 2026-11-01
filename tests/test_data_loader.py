@@ -146,3 +146,30 @@ def test_lifestyle_and_grenade_checks():
     validate_all.check_lifestyle_rolls(bad, errors)
     validate_all.check_grenades(bad, errors)
     assert len(errors) == 2
+
+
+def test_unsc_armor_loads_and_matches_the_book():
+    core = DataLoader().load_all()
+    armor = core.get("unsc_armor", "unsc_armor")["unsc_armor"]
+    by_name = {r["name"]: r for group in armor.values() for r in group}
+    assert len(by_name) == 69
+    m52b = by_name["M52B Standard"]
+    assert (m52b["weight_kg"], m52b["price"], m52b["armor_rating"]) == (
+        11.9, 38, {"head": 18, "arms": 19, "chest": 20, "legs": 19})
+    odst = by_name["Standard ODST Battle Dress Uniform"]
+    assert "Timeline" in odst["special_rules"] and odst["price"] == 139
+    gen3 = by_name["GEN III Powered Armor"]
+    assert gen3["energy_shields"] == {"integrity": 175, "delay": 2, "recharge": 50}
+    assert gen3["characteristic_bonus"] == {"STR": 20, "mythic_STR": 3, "AGI": 15, "mythic_AGI": 3}
+    assert [a["name"] for a in gen3["spartan_abilities"]][:2] == ["Thruster Pack", "Ground Pound"]
+
+    variants = core.get("unsc_armor_variants", "unsc_armor_variants")["mjolnir_variants"]
+    assert {g: len(v) for g, v in variants.items()} == {"gen_i": 32, "gen_ii": 73, "gen_iii": 28}
+    perms = core.get("unsc_armor_permutations", "unsc_armor_permutations")["armor_permutations"]
+    assert sum(map(len, perms.values())) == 95
+    cbrn = perms["universal"][0]
+    assert (cbrn["name"], cbrn["hardpoints"], cbrn["location"], cbrn["price"]) == ("CBRN", 1, "Universal", 25)
+
+    errors = []
+    validate_all.check_unsc_armor(core, errors)
+    assert errors == []

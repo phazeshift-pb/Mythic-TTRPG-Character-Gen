@@ -21,7 +21,8 @@ sys.path.insert(0, str(REPO_ROOT))
 from src.data_loader import DataLoader  # noqa: E402
 from src.models.background_choices import SECTIONS, is_choice, option_modifiers  # noqa: E402
 from src.models.character import CHARACTERISTIC_NAME_TO_CODE  # noqa: E402
-from src.models import equipment_packs  # noqa: E402
+from src.models import equipment_packs, starting_armor  # noqa: E402
+from src.validators.base_validator import BaseValidator  # noqa: E402
 
 DATA_ROOT = REPO_ROOT / "data"
 CHARACTERS_ROOT = REPO_ROOT / "characters"
@@ -148,9 +149,80 @@ def check_unsc_armory(game_data, errors):
                         errors.append(f"{source}: '{name}' pierce must be a number or formula text")
 
 
+ARMOR_LOCATIONS = ("head", "arms", "chest", "legs")
+CHARACTERISTIC_CODES = BaseValidator.CHARACTERISTIC_CODES
+PERMUTATION_LOCATIONS = {"Universal", "Head", "Chest", "Arm", "Each Arm", "Leg", "Each Leg", "All"}
+
+
+def check_unsc_armor(game_data, errors):
+    """Armor ratings, prices, unique names; variants and permutations well formed."""
+    for doc in game_data.families.get("unsc_armor", {}).values():
+        source = doc.get("source_path", "unsc_armor")
+        seen = set()
+        for group, records in doc.get("unsc_armor", {}).items():
+            for record in records:
+                name = record.get("name")
+                if name in seen:
+                    errors.append(f"{source}: duplicate armor name '{name}'")
+                seen.add(name)
+                rating = record.get("armor_rating") or {}
+                if set(rating) != set(ARMOR_LOCATIONS) or not all(
+                    isinstance(v, int) and v >= 0 for v in rating.values()
+                ):
+                    errors.append(f"{source}: '{name}' needs a whole-number armor_rating for {ARMOR_LOCATIONS}")
+                price = record.get("price")
+                if price is not None and (not isinstance(price, int) or price < 0):
+                    errors.append(f"{source}: '{name}' price must be a non-negative whole number or null")
+                if not isinstance(record.get("weight_kg"), (int, float)):
+                    errors.append(f"{source}: '{name}' weight_kg must be a number")
+                if record.get("armor_type") not in ("Standard", "Semi-Powered", "Powered"):
+                    errors.append(f"{source}: '{name}' has unknown armor_type {record.get('armor_type')!r}")
+    for doc in game_data.families.get("unsc_armor_variants", {}).values():
+        source = doc.get("source_path", "unsc_armor_variants")
+        for generation, records in doc.get("mjolnir_variants", {}).items():
+            names = [r.get("name") for r in records]
+            for name in {n for n in names if names.count(n) > 1}:
+                errors.append(f"{source}: duplicate {generation} variant '{name}'")
+            for record in records:
+                if not isinstance(record.get("price"), int) or record["price"] < 0:
+                    errors.append(f"{source}: variant '{record.get('name')}' price must be a non-negative whole number")
+    for doc in game_data.families.get("unsc_armor_permutations", {}).values():
+        source = doc.get("source_path", "unsc_armor_permutations")
+        for section, records in doc.get("armor_permutations", {}).items():
+            names = [r.get("name") for r in records]
+            for name in {n for n in names if names.count(n) > 1}:
+                errors.append(f"{source}: duplicate {section} permutation '{name}'")
+            for record in records:
+                if record.get("location") not in PERMUTATION_LOCATIONS:
+                    errors.append(f"{source}: permutation '{record.get('name')}' has unknown location")
+                if not isinstance(record.get("hardpoints"), int) or record["hardpoints"] < 0:
+                    errors.append(f"{source}: permutation '{record.get('name')}' hardpoints must be a whole number")
+
+
+def check_starting_armor_options(game_data, errors):
+    """Spartan starting-armor options and worn bonuses must name real armor."""
+    armors = equipment_packs.armor_index(game_data)
+    if not armors:
+        return
+    for name, doc in game_data.families.get("soldier_type", {}).items():
+        source = doc.get("source_path", name)
+        rules = starting_armor.armor_rules(doc)
+        for option in rules.get("armor_options", []):
+            if not isinstance(option, dict) or option.get("armor") not in armors:
+                errors.append(f"{source}: starting armor option {option!r} does not name a unsc_armor record")
+        extra = rules.get("bonus_while_worn") or {}
+        for armor in extra.get("armor", []):
+            if armor not in armors:
+                errors.append(f"{source}: bonus_while_worn names unknown armor '{armor}'")
+        for code in (extra.get("characteristics") or {}):
+            if code not in CHARACTERISTIC_CODES:
+                errors.append(f"{source}: bonus_while_worn has unknown characteristic '{code}'")
+
+
 def check_equipment_packs(game_data, errors):
-    """Pack weapon references must name armory records; choices need 2+ options."""
+    """Pack references must name armory/armor records; choices need 2+ options."""
     index = equipment_packs.armory_index(game_data)
+    armors = equipment_packs.armor_index(game_data)
     if not index:
         return  # this ruleset has no armory (Light & Sky packs are plain text)
     for name, doc in game_data.families.get("soldier_type", {}).items():
@@ -161,16 +233,22 @@ def check_equipment_packs(game_data, errors):
                     continue
                 if equipment_packs.is_choice(entry):
                     options = entry["choose_one"]
-                    if len(options) < 2 or not all(equipment_packs.is_weapon_ref(o) for o in options):
+                    if len(options) < 2 or not all(equipment_packs.is_item_ref(o) for o in options):
                         errors.append(
                             f"{source}: pack '{pack}' has a malformed choice group "
-                            f"'{equipment_packs.describe(entry)}' (need 2+ weapon options)"
+                            f"'{equipment_packs.describe(entry)}' (need 2+ weapon or armor options)"
                         )
                         continue
-                elif not equipment_packs.is_weapon_ref(entry):
+                elif not equipment_packs.is_item_ref(entry):
                     errors.append(f"{source}: pack '{pack}' has an unrecognized entry {entry!r}")
                     continue
-                for ref in equipment_packs.weapon_references([entry]):
+                for ref in equipment_packs.item_references([entry]):
+                    if equipment_packs.is_armor_ref(ref):
+                        if ref["armor"] not in armors:
+                            errors.append(
+                                f"{source}: pack '{pack}' references unknown armor '{ref['armor']}'"
+                            )
+                        continue
                     if ref["weapon"] not in index:
                         errors.append(
                             f"{source}: pack '{pack}' references unknown weapon '{ref['weapon']}'"
@@ -267,7 +345,9 @@ def main(argv=None):
         check_background_modifiers(game_data, errors, warnings)
         check_grenades(game_data, errors)
         check_unsc_armory(game_data, errors)
+        check_unsc_armor(game_data, errors)
         check_equipment_packs(game_data, errors)
+        check_starting_armor_options(game_data, errors)
 
     check_saved_characters(known_skills, known_abilities, warnings)
 

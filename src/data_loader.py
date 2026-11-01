@@ -81,6 +81,9 @@ class DataLoader:
         # Core UNSC Armory
         "unsc_weapons": "unsc_weapons",
         "unsc_explosives": "unsc_explosives",
+        "unsc_armor": "unsc_armor",
+        "mjolnir_variants": "unsc_armor_variants",
+        "armor_permutations": "unsc_armor_permutations",
     }
 
     def __init__(self, use_light_and_sky: bool = False, data_root=None):

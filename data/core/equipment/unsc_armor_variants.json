@@ -1,0 +1,809 @@
+{
+  "mjolnir_variants": {
+    "gen_i": [
+      {
+        "name": "Air Assault",
+        "generation": "GEN I",
+        "price": 50,
+        "description": "Air Assault offers the Character a wrist-mounted uplink module that is able to connect to overhead planetary satellites in order to transmit real-time satellite imagery. The wrist-mounted uplink module has 100 Breakpoints, which can’t be damaged unless the attack completely Pierced the Armor. The helmet can display and send these images to Allies within 100KM of each other."
+      },
+      {
+        "name": "Aviator",
+        "generation": "GEN I",
+        "price": 82,
+        "description": "Aviator is a specialized prototype variant that possesses internal Gravity Compensators within the Chest and Pauldrons, giving -1 Armor to the Chest location and Head location. The internal Gravity Compensators, alongside the advanced targeting and imaging calculation within the helmet, give the Character a +10 Bonus to Pilot (Air), Pilot (Space), Navigation (Air), and Navigation (Space)."
+      },
+      {
+        "name": "Black",
+        "generation": "GEN I",
+        "price": 95,
+        "description": "A skunkworks prototype of Mjolnir. This variant offers a Heads-Up-Display that has a field of view of 5,000 Meters (5 Kilometers), allowing for extreme-range reconnaissance. This variant also gives a +10 Bonus when using Camouflage in shadowed and dark areas."
+      },
+      {
+        "name": "Centurion",
+        "generation": "GEN I",
+        "price": 200,
+        "description": "The experimental GEN I testbed for GEN II armor. Implements experimental version of the Universal Spartan Ability Implementation, or USAI, a modification to all second-generation Mjolnir suits. This modification installs thrusters into the suit, itself. These thrusters are weaker than the Thruster Armor Ability but are inclusive to all Gen II armors. These options can be used with externally installed Spartan Abilities, as they’re a part of the armor. USAI has a weaker Thruster Armor Ability that moves only half the distance, the Sprint Armor Ability, and Stabilizer. The Stabilizer acts as if the Series 8 Jetpack was in Hover Mode."
+      },
+      {
+        "name": "Commando",
+        "generation": "GEN I",
+        "price": 31,
+        "description": "The prototype Commando Variant is very similar to the basic Mjolnir and Recruit armors but offers the Character a +1 Armor to Chest and a built-in CNM Permutation and a +5 to Perception Tests."
+      },
+      {
+        "name": "Compass",
+        "generation": "GEN I",
+        "price": 71,
+        "description": "A prototype variant that contains updated Multi-Band sensory receptors. This variant gives +25 to any Test using Perception Characteristic. Also gives a +10 to any Skill Test using Investigation if Perception is not the Characteristic being used for the Test."
+      },
+      {
+        "name": "COS",
+        "generation": "GEN I",
+        "price": 193,
+        "description": "Specialized Variant that boosts counter-intrusion modules, giving a +50 Bonus to fighting off Cyber Attacks, Cryptography Skill use, and any non-physical attacks from an AI. This variant also gives a +20 to any Cryptography Skill use."
+      },
+      {
+        "name": "CQB/CQC",
+        "generation": "GEN I",
+        "price": 337,
+        "description": "A specialized variant of Mjolnir built to withstand small-arms fire and melee combat. CQB/CQC gains +10 Armor against Melee Attacks and gains +3 Armor against projectile and explosive attacks. The suit’s plating gives the Character a -1 Mythic Agility."
+      },
+      {
+        "name": "Deadeye",
+        "generation": "GEN I",
+        "price": 71,
+        "description": "This prototype is a low-emissions, extreme-distance armor set. It contains range calculation systems that halve all Long Range and Extreme Range Penalties and emission-blockers that reduce the distance a Radar can pick up the armor by half of the Radar’s default range. The suit also has specialized prototype rebreathers that offer 25 hours of Oxygen for the user. Due to the amount of electronics, Deadeye has -4 to all Armor Locations."
+      },
+      {
+        "name": "E.O.D",
+        "generation": "GEN I",
+        "price": 308,
+        "description": "E.O.D, Explosive Ordnance Disposal Armor, is a tough and bulky variant of Mjolnir, offering unbridled protection against Explosive damage. The dense, heavy plating allows the Character it ignore an Explosive’s Kill Radius and gives +10 Armor against explosives. The weight of the suit removes the Bonuses given to the Character’s Mythic Agility and gives the user a - 10 Penalty to their Agility."
+      },
+      {
+        "name": "E.V.A",
+        "generation": "GEN I",
+        "price": 54,
+        "description": "The E.V.A, Extra-Vehicular Activity-Armor, offers unparalleled zero-gravity modifications. E.V. A’s helmet offers a wider visual range, alongside extra scanning systems, giving the Character a +10 to all Visual Perception Tests, but gains -2 Armor to the Helmet Location, due to not being heavily armored. The suit has powerful magnets that allow the user to walk on any metallic surface, no matter the direction or how steep. The suit also has improved gel layering, which halves all Damage from explosive decompression and seals suit breaches instantly."
+      },
+      {
+        "name": "Grenadier",
+        "generation": "GEN I",
+        "price": 29,
+        "description": "Designed to be the testbed for Energy Shield integration for Mjolnir, this suit grants the Character +50 to Shield Integrity and +25 to Shield Recharge."
+      },
+      {
+        "name": "GUNGNIR",
+        "generation": "GEN I",
+        "price": 16,
+        "description": "The GUNGNIR variant features an enclosed helmet with no visor. Instead, the Helmet features a camera that streams live feed to the Character. The suit’s up-armored Helmet gains +4 Armor due to being enclosed. Due to using a camera, EMP effects are treated as a Flashbang, visually. The Wrist Gauntlets feature built-in WYRD-III Systems that give the Character a +10 Bonus for To Hit Tests with weaponry using Smart-Link scopes."
+      },
+      {
+        "name": "Hammerhead",
+        "generation": "GEN I",
+        "price": 51,
+        "description": "A Prototype variant that offers a built-in CBRN Permutation and HUL Permutation. Offers full protection from radiation and gives +2 Armor to the Head location."
+      },
+      {
+        "name": "Hayabusa",
+        "generation": "GEN I",
+        "price": 140,
+        "description": "An unofficial variant of Mjolnir created by a third-party company, Hayabusa offers heavy protection to the Head, giving a +5 Bonus to Armor on the Head Location. This suit offers +3 Mythic Strength and -2 Mythic Agility. The price of this variant is increased due to the rarity of the armor."
+      },
+      {
+        "name": "Hazop",
+        "generation": "GEN I",
+        "price": 60,
+        "description": "The HAZOP, Hazard Operability, is the standard for performing under hazardous conditions, such as radiation, acidic chemicals, and exotic atmospheric conditions. The armor protects the user from Radiation, Chemicals, and other outside material. The HAZOP armor comes with improved redundant oxygen filtration systems, modified rebreather caster lines, and the most advanced radiation shielding underarmor mesh. This allows the user to double their Mjolnir’s oxygen supply by filtering out unbreathable chemicals and radiation from the surrounding atmosphere. The Helmet comes with a built-in CBRN Permutation and comes with an external HUL Permutation and Doppler Radar."
+      },
+      {
+        "name": "Hivemind",
+        "generation": "GEN I",
+        "price": 100,
+        "description": "An experimental variant used to combat Flood infestations. This suit will kill Infection Forms that come into contact with the energy shield without damaging the shields or user. Offers complete immunity to all forms of Flood infestation."
+      },
+      {
+        "name": "Hoplite",
+        "generation": "GEN I",
+        "price": 70,
+        "description": "A Mjolnir variant built to assist in the use of paired light-weaponry. Hoplite lacks more sophisticated armor systems that most other armors hold, giving the suit -4 to all Armor Locations. Due to its incredibly lightweight, simplistic armor, the suit gives the Character +3 extra Mythic Agility. When using firearms with the [OH] Dual Wielding Special Rule, the Character gains +10 To Hit when dual wielding."
+      },
+      {
+        "name": "Infiltrator",
+        "generation": "GEN I",
+        "price": 211,
+        "description": "The prototype Infiltrator is a special armor designed to assist the User behind enemy lines, giving them the utilities needed for infiltration missions. Infiltrator Armor gains a -3 Penalty to all Armor Locations. The Helmet holds a built-in ECM Device, which can be activated once every 3 Rounds. The chosen Wrist Gauntlet holds a 5 Meter Fiber-Optic Probe, while the Chest Piece holds specialized electronics that assist with Camouflage with weak Active Camo, giving the user +10 to all Camouflage Tests."
+      },
+      {
+        "name": "JFO",
+        "generation": "GEN I",
+        "price": 60,
+        "description": "Built to coordinate fire support, the JFO suit offers specialized Scanning and firearm algorithm systems to give the Character to halve the Indirect Fire Penalty. This variant also halves the Scatter distance of anything called in by using targeting sensors."
+      },
+      {
+        "name": "MIRAGE",
+        "generation": "GEN I",
+        "price": 109,
+        "description": "A prototype variant, MIRAGE-Class offers Photo-Reactive Panels (50) without sacrificing energy shielding."
+      },
+      {
+        "name": "ODST",
+        "generation": "GEN I",
+        "price": 30,
+        "description": "Comes with the M/LBE Hard Case Backpack. The Chest Piece is also enlarged, covering more of the torso and stomach regions, giving +1 to Armor in the Chest Location."
+      },
+      {
+        "name": "Operator",
+        "generation": "GEN I",
+        "price": 80,
+        "description": "This variant of Mjolnir gives the Character a built-in HUL and CNM. This suit gives +1 Armor to the Head Location and is also able to bypass Covenant Security Networks to remain from being Spotted aboard Covenant ships and bases by ship sensors."
+      },
+      {
+        "name": "Pilot",
+        "generation": "GEN I",
+        "price": 35,
+        "description": "The Pilot Class helmet variant specializes in aero-space tactical software and advanced algorithms. These special assistance-programs, alongside the increased field-of-view and widened visor give the Character a +10 to Visual Perception Tests and Pilot (Air) and (Space) Tests. Due to the helmet’s all-visor nature, armor on the Helmet Location is reduced by 2."
+      },
+      {
+        "name": "Pioneer",
+        "generation": "GEN I",
+        "price": 79,
+        "description": "A prototype Variant built for unknown territory and exploration; Pioneer comes equipped with tech that allows for easier exploration. The suit suffers a -2 to armor in the Arms, Torso, and Legs Locations, due to making room for equipment. Equipped with a specialized Rebreather Unit that offers 120 minutes of oxygen. Also comes with Visual Sensor Units that can be used as an Extended Action (2 Full Actions) to scan the surroundings of the User to form a usable map that can be sent to others. This map is made in a 100 Meter radius when used, and the map may be extended with each use. Does not show location of Characters or equipment."
+      },
+      {
+        "name": "Recon",
+        "generation": "GEN I",
+        "price": 18,
+        "description": "Recon, built for Stealth Operations, is a deep-field reconnaissance variant for GEN I armors. The suit offers +10 to Camouflage Tests due to its lower-profile design. The Recon Suit’s lower-profile design and increased Shields of +20 Shield Integrity also gives the suit a -2 Penalty to Armor on all Locations."
+      },
+      {
+        "name": "Scout",
+        "generation": "GEN I",
+        "price": 15,
+        "description": "The Scout variant is used as the most popular armor for Scouting Missions. The suit offers anti-tracking systems and shroud-induction packages, giving the Character +10 to Camouflage. The Scout armor is more lightweight, giving +2 to Mythic Agility and -4 Armor on all Armor Locations. The helmet of the Scout armor counts as having a Target Designator."
+      },
+      {
+        "name": "Security",
+        "generation": "GEN I",
+        "price": 48,
+        "description": "The Security Variant of Mjolnir specializes in Ship and Station Defense. This suit grants the Character a +10 to Visual Perception Tests and +20 to all Cryptography Skill Tests. Reduces the Armor of the Helmet Location by 2. The Arms, Legs, and Chest Armor Location gains a +3 Bonus."
+      },
+      {
+        "name": "Soldier",
+        "generation": "GEN I",
+        "price": 65,
+        "description": "The prototype Soldier is designed to carry equipment. The Chest Piece has a built-in Hard Case with the armor of the Chest Piece. The suit comes with two external Biofoam Canisters on each thigh. The suit is tuned to have improved carry weight, giving the Character +200 KG to their Carrying Weight."
+      },
+      {
+        "name": "Suture",
+        "generation": "GEN I",
+        "price": 35,
+        "description": "A prototype variant built for field medics. This variant gives +1D5 total to recovered Wounds from Biofoam and Medigel if the User is administering it with the Suture variant. Does not extend the amount of uses Biofoam will give a Character. Once the Biofoam would normally not heal a Character any further, this Bonus is lost. Also gives a +10 to all Medical Tests and ignores any Penalties for untrained Medical Skill Tests."
+      },
+      {
+        "name": "TANKER",
+        "generation": "GEN I",
+        "price": 350,
+        "description": "The prototype TANKER variant of Mjolnir is built with incredibly dense plating for super-heavy defensive options. TANKER is triple the weight of GEN-I Mjolnir and gives +9 to Armor on all Locations. This variant reduces Mythic Agility by 3 and the Agility Characteristic by 10."
+      },
+      {
+        "name": "Warrior",
+        "generation": "GEN I",
+        "price": 17,
+        "description": "The prototype Warrior variant is the outcome of attempted armor streamline and mobility enhancement. The suit gives the user +2 Mythic Agility, while suffering a Penalty of -2 Armor to all Locations. The increased mobility offers enhanced terrain tracking and assisted movement, which allows the Character to halve any Penalty from Difficult Terrain."
+      }
+    ],
+    "gen_ii": [
+      {
+        "name": "Default Armors",
+        "generation": "GEN II",
+        "price": 0,
+        "description": "These are standard models that come at no extra cost but gain no extra Bonuses and Penalties. All armor not available in this list is considered a Default Armor. Some include Recruit, Enforcer, Mark V and VI, Raider, Freebooter, Legionnaire, etc."
+      },
+      {
+        "name": "Air Assault",
+        "generation": "GEN II",
+        "price": 50,
+        "description": "Air Assault offers the Character a wrist-mounted uplink module that can connect to overhead planetary satellites in order to transmit real-time satellite imagery. The wrist-mounted uplink module has 100 Breakpoints, which can’t be damaged unless the attack completely Pierced the Armor. The helmet can display and send these images to Allies within 100KM of each other."
+      },
+      {
+        "name": "Anubis",
+        "generation": "GEN II",
+        "price": 165,
+        "description": "A technological demo for new Generation II upgrades, Anubis brings a stronger thruster pack system and an improved Motion Tracker. The GEN II Thrusters for Anubis suits double the maximum amount of distance that can be traveled in a Round. The suit gives the user a +10 to any Stunts or Agility Tests made while using the Thrusters. The Motion Tracker is able to scan out to double the distance."
+      },
+      {
+        "name": "Argonaut",
+        "generation": "GEN II",
+        "price": 90,
+        "description": "A super-lightweight variant of the Mjolnir armor, Argonaut offers the user the most out of their Agility and the suit’s modifications, with massive hindrance to armor. The suit gains a -4 Penalty to Armor on all Locations, while gaining +20 Agility and +3 Mythic Agility."
+      },
+      {
+        "name": "Argus",
+        "generation": "GEN II",
+        "price": 350,
+        "description": "A sniper/spotter variant that offers the user the most when using long and extreme-range weaponry. Argus takes no Penalties from Long Range Attacks while also halving the Penalties from Extreme Range Attacks. Argus has a built-in Spotter Assist Target System, while the Chest has specialized spotter-tracker mechanics that not only target and track users out to 3,000 Meters, but also gives the user +5 to any Spotting and Long or Extreme Range Attacks."
+      },
+      {
+        "name": "ATHLON",
+        "generation": "GEN II",
+        "price": 80,
+        "description": "The Athlon suit was designed to be a safety protocol suit, used usually for Training or Warzone, but can be requested anyway. The suit does not allow the user to harm an Ally in any way. The suit will not let any harm come against allies or Civilians from any type of Damage. Any damage taken from Falls, Wrecks, Rolls, or being hit by Vehicles is halved."
+      },
+      {
+        "name": "Atlas",
+        "generation": "GEN II",
+        "price": 277,
+        "description": "The Atlas variant of Mjolnir is a super-rugged, heavy variant of Mjolnir used for close-combat and survival. The Atlas Armor is a total of 866 KG. On top of this, the Atlas variant gives a +8 to Armor on all Locations and removes the Mythic Agility benefits given by the armor."
+      },
+      {
+        "name": "Aviator",
+        "generation": "GEN II",
+        "price": 57,
+        "description": "Aviator is a specialized variant that possesses internal Gravity Compensators within the Chest and Pauldrons, giving -1 Armor to the Chest location, Head location, and the Shoulders sub-location. The internal Gravity Compensators, alongside the advanced targeting and imaging calculation within the helmet, give the Character a +10 Bonus to all Pilot Tests, including Warfare Range Test made when in a Vehicle."
+      },
+      {
+        "name": "Breaker",
+        "generation": "GEN II",
+        "price": 57,
+        "description": "Breaker is for use in compromised environments, including space. Breaker’s Helmet is enclosed, giving it a +2 to Armor to the Helmet Location. Due to using a camera, EMP effects are treated as a Flashbang, visually. The suit has powerful magnets that allow the user to walk on any metallic surface, no matter the direction or how steep. The suit has improved gel layering, which halves all Damage from explosive decompression and seals suit breaches instantly. Protects the Character from all forms of radiation and can alter the inner temperature up to 50 degrees Celsius to keep the user safe in extreme conditions."
+      },
+      {
+        "name": "Buccaneer",
+        "generation": "GEN II",
+        "price": 110,
+        "description": "The Buccaneer variant is a more “crude functional” armor that is less protective but can also be used by non-Spartan characters. The suit has a -4 to Armor on all Locations, has a -15 Penalty to Agility, and a -1 Penalty to Mythic Strength. The cost of this armor, for non-Spartan Characters, is 2,400 cR. -- C.I.O The C.I.O Mjolnir Variant’s Chest Piece offers specialized transmission beacons only traceable by UNSC and Forerunner equipment. These beacons can send untraceable information up to 150 KM of the suit. The Helmet offers a computational algorithm that gives the Character +5 to all Cryptography Tests. Due to the amount of electronic equipment within the suit, the suit has -1 Armor to all Locations."
+      },
+      {
+        "name": "Centurion",
+        "generation": "GEN II",
+        "price": 36,
+        "description": "The eventual evolution of the GEN I Centurion variant testbed. GEN II Centurion features improved management Software known as C41-SR. This improves the neural interlinks and the Situational Awareness TacSofts. This gives the user +1 to Mythic Agility and +10 Bonus to all Perception Tests."
+      },
+      {
+        "name": "Challenger",
+        "generation": "GEN II",
+        "price": 109,
+        "description": "Built on the Protector variant, Challenger is a Warzone-based high-performance Mjolnir. When maintained, the Challenger variant gives the User a +25 Bonus to Shield Integrity, as well as +10 to Shield Recharge Rate. Alongside the Shield upgrades, this variant gives the User a +1 Mythic Agility. To Maintain the Challenger variant, once per month, the suit must be taken to any UNSC facility to be hard-wired to monitoring computers. This action takes 24 hours. When not maintained, all Actions made within the suit are at a -10 Penalty. At all times, this variant gives the user a +4 to Armor on all Locations and a -15 Penalty to Agility."
+      },
+      {
+        "name": "CINDER",
+        "generation": "GEN II",
+        "price": 189,
+        "description": "Cinder is a variant that offers a special rebreathing unit and HAZMAT filter. This rebreathing unit does not need changed and is constantly cleaned by the suit. This variant also contains a CBRN unit and contains a shock-absorbing systems that remove Falling Damage from the Character, on top of Thermal Superconducting Coating that ignores the Flame Special Rule, as well as reducing Pierce damage from Weapons with the Cauterize Special Rule by 5 points."
+      },
+      {
+        "name": "Commando",
+        "generation": "GEN II",
+        "price": 31,
+        "description": "The Commando Variant is very similar to the basic Mjolnir and Recruit armors but offers the Character a +1 Armor to Chest and a built-in BSD-0 Helmet Permutation and a +5 to Perception Tests."
+      },
+      {
+        "name": "Compass",
+        "generation": "GEN II",
+        "price": 83,
+        "description": "Contains experimental multi-Band sensory receptors, built alongside Swords of Sanghelios artisan-armorers. This variant gives +30 to any Test using Perception Characteristic. Also gives a +10 to any Skill Test using Investigation, if Perception is not the Characteristic being used for the Test."
+      },
+      {
+        "name": "Copperhead",
+        "generation": "GEN II",
+        "price": 65,
+        "description": "Equipped for complex ‘Militarized Anthropology’ which is a Decision Support System. The Decision Support System assists the User with Human and Alien customs and society-based activities. Copperhead gives the User a +20 Bonus to all Charisma Tests. The suit is also lighter and more agile, giving it a -3 Penalty to Armor on all Locations but gives a +30 Bonus to all Athletics Tests."
+      },
+      {
+        "name": "COS",
+        "generation": "GEN II",
+        "price": 192,
+        "description": "Specialized Variant that boosts counter-intrusion modules, giving a +60 Bonus to fighting off Cyber Attacks, Cryptography Skill use, and any non-physical attacks from an AI. This variant also gives a +20 to any Cryptography Skill use."
+      },
+      {
+        "name": "Deadeye",
+        "generation": "GEN II",
+        "price": 200,
+        "description": "The Deadeye variant of GEN II is a low-emissions, extreme-distance armor set. It contains range calculation systems that halve all Long Range and Extreme Range Penalties and emission-blockers that reduce the distance a Radar can pick up the armor by half of the Radar’s range. The suit also has specialized prototype rebreathers that offer 30 hours of Oxygen for the user. Due to the amount of electronics, Deadeye has -2 to all Armor Locations."
+      },
+      {
+        "name": "Decimator",
+        "generation": "GEN II",
+        "price": 500,
+        "description": "Making use of powerful Energy Shield shaping systems, this variant hosts the most sophisticated Energy Shields of the Mjolnir platform. Decimator variant Shields ignore Pierce when figuring any type of Damage."
+      },
+      {
+        "name": "Defender",
+        "generation": "GEN II",
+        "price": 68,
+        "description": "Defender, a heavily plated variation of the GEN II series, is a defense-based deployment suit. Defender gives the wearer +3 to Armor on all Locations and has a built-in HUL Helmet Permutation. The wearer suffers a -10 Penalty to Agility when wearing the suit."
+      },
+      {
+        "name": "Dynast",
+        "generation": "GEN II",
+        "price": 243,
+        "description": "Known as the Brawler Variant, Dynast features the Close-Combat Automatic Interface (CCAI) and a +6 Armor to all Locations. Dynast’s CCAI System gives the User a +10 Bonus to Perception Tests, Warfare Melee Tests, and Warfare Range Tests against any Character within 15 Meters of them."
+      },
+      {
+        "name": "E.O.D",
+        "generation": "GEN II",
+        "price": 268,
+        "description": "E.O.D, Explosive Ordnance Disposal Armor, is a tough and bulky variant of Mjolnir, offering unbridled protection against Explosive damage. The dense, heavy plating allows the Character it ignore an Explosive’s Kill Radius and gives +10 Armor against explosives. The weight of the suit removes the Bonuses given to the Character’s Mythic Agility and gives the user a - 10 Penalty to their Agility."
+      },
+      {
+        "name": "E.V.A",
+        "generation": "GEN II",
+        "price": 54,
+        "description": "The E.V.A, Extra-Vehicular Activity-Armor, offers unparalleled zero-gravity modifications. E.V. A’s helmet offers a wider visual range, alongside extra scanning systems, giving the Character a +10 to all Visual Perception Tests, but gains -2 Armor to the Helmet Location, due to not being heavily armored. The suit has powerful magnets that allow the user to walk on any metallic surface, no matter the direction or how steep. The suit also has improved gel layering, which halves all Damage from explosive decompression and seals suit breaches instantly."
+      },
+      {
+        "name": "Engineer",
+        "generation": "GEN II",
+        "price": 120,
+        "description": "The Engineer GEN II variation is the standard for on-site repair, reconstitution, and subversion. The suit’s Chest Piece comes equipped with a built-in, removable, Multi-Tool Kit and CBRN Sensor Unit. The Helmet, when worn, gives the Character Technology (Covenant), (Human), and (Forerunner) Trained. This Skill is lost if the Helmet is removed or destroyed. The Chest Piece gains a -1 Penalty to Armor. The suit’s Helmet gains +1 Armor due to being enclosed. Due to using a camera, EMP effects are treated as a Flashbang, visually."
+      },
+      {
+        "name": "Fenrir",
+        "generation": "GEN II",
+        "price": 136,
+        "description": "Has a built-in Combat Dumb AI that can’t be removed from the suit. This AI gives a +20 Bonus to any Warfare Melee or Warfare Range Test by assisting in movement of the suit mid-combat. The suit also gives a +5 Bonus to Evasion."
+      },
+      {
+        "name": "Foehammer",
+        "generation": "GEN II",
+        "price": 221,
+        "description": "Foehammer Armor is an advanced piloting system combined into a suit. Foehammer allows the user to enter a paralyzed state, where the user neurally pilots the UNSC vehicle they are in. Tied together with advanced programming, the Character gains +30 to any Pilot Test in UNSC vehicles."
+      },
+      {
+        "name": "FOTUS",
+        "generation": "GEN II",
+        "price": 163,
+        "description": "An experimental armor integrating specialized Forerunner Baffler Systems. FOTUS gives any Opponent a -10 Penalty to see them or hit with ranged attacks when within the Opponent’s Perceptive Range. When outside of the Opponent’s Perceptive Range, this Penalty is increased to -30. When within 20 Meters of the FOTUS User, all Ally IFF tags will be scattered 5 Meters away for any enemy Radar, VISR, etc. The scatter direction changes every 2 Rounds. Headbutt melee Attacks gain an extra +7 Pierce due to the sharp horn."
+      },
+      {
+        "name": "GUNGNIR",
+        "generation": "GEN II",
+        "price": 20,
+        "description": "The GUNGNIR variant features an enclosed helmet with no visor. Instead, the Helmet features a camera that streams live feed to the Character. The suit’s up-armored Helmet gains +4 Armor due to being enclosed. Due to using a camera, EMP effects are treated as a Flashbang, visually. The Wrist Gauntlets feature built-in WYRD-III Systems that give the Character a +10 Bonus for To Hit Tests with weaponry using Smart-Link scopes."
+      },
+      {
+        "name": "Hammerhead",
+        "generation": "GEN II",
+        "price": 51,
+        "description": "A variant that offers a built-in CBRN Permutation and HUL Permutation. Offers full protection from radiation and gives +2 Armor to the Head location."
+      },
+      {
+        "name": "HAZOP",
+        "generation": "GEN II",
+        "price": 90,
+        "description": "The HAZOP, Hazard Operability, is the standard for performing under hazardous conditions, such as radiation, acidic chemicals, and exotic atmospheric conditions. The armor protects the user from Radiation, Chemicals, and other outside material. The HAZOP armor comes with improved redundant oxygen filtration systems, modified rebreather caster lines, and the most advanced radiation shielding underarmor mesh. This allows the user to triple their Mjolnir’s oxygen supply by filtering out unbreathable chemicals and radiation from the surrounding atmosphere. The Helmet comes with a built-in CBRN Permutation and comes with an external HUL Permutation and Doppler Radar."
+      },
+      {
+        "name": "Helioskrill",
+        "generation": "GEN II",
+        "price": 64,
+        "description": "Designed by a Sangheili to test her skill with Spartans, Helioskrill is the first Mjolnir variant not designed or manufactured by humanity. The suit heavily resembles Sangheili Combat Harnesses. The suit comes with a built-in Energy Dagger on the left or right Wrist Gauntlet. The suit also gives +4 to Armor on the Helmet Location."
+      },
+      {
+        "name": "Hellcat",
+        "generation": "GEN II",
+        "price": 235,
+        "description": "This armor is fused with what people used to believe were Forerunner artifacts. Instead, it was later found that it was ancient Humanity-based technology and has since been kept heavily under wraps. The suit is, by far, the most powerful of any Mjolnir or any powered armor to be made at such a small size. The suit gives the Character +10 Strength and Agility and +3 Mythic Agility and Strength. Due to the material used, the Armor has +3 to all Armor Locations."
+      },
+      {
+        "name": "Helljumper",
+        "generation": "GEN II",
+        "price": 51,
+        "description": "A popular GEN II variation for former ODST. The Helljumper variant comes with the ODST standard armored M/LBE Hard Case armored backpack. The suit comes with a pitch-black design that helps the suit blend with darkness, giving +10 to Camouflage when in darkness. The Chest Piece is also enlarged, covering more of the torso and stomach regions, giving +3 to Armor in the Chest Location. The Helmet is fortified with extra plating, giving the Helmet a +2 Bonus to Armor."
+      },
+      {
+        "name": "Hermes",
+        "generation": "GEN II",
+        "price": 155,
+        "description": "A specialized variant of Mjolnir that very few Spartans can handle. The Spartan must have a minimum Strength of 50 and a minimum Agility of 70 or the Character will take 1D10 points of Damage for every Meter traveled, ignoring Damage Resistance. The Character gains -15 to Agility but gain +6 to Mythic Agility."
+      },
+      {
+        "name": "Hivemind",
+        "generation": "GEN II",
+        "price": 75,
+        "description": "A variant used to combat Flood infestations. This suit will kill Infection Forms that come into contact with the energy shield without damaging the shields or user. Offers complete immunity to all forms of Flood infestation, alongside giving a +5 Bonus to damage when making Melee Attacks against any Flood form."
+      },
+      {
+        "name": "Hoplite",
+        "generation": "GEN II",
+        "price": 115,
+        "description": "The Hoplite variant Mjolnir Armor is built with implemented datalink advancement systems that increase the accuracy of weapons that have automated targeting systems such as the SPNKR Rocket Launcher and even the Plasma Pistol. The Hoplite variant also uses a new specialized Upper Back and Arm Lock Device (UBaLD) device that locks the Spartan into place when firing Heavy Weapons. These Datalink Advancement Systems (DAS) give an extra +10 Bonus To Hit with weapons that have the Homing Special Rule and/or Vehicle Lock Special Rule. The UBaLD unit considers the User always Braced, so they no longer should worry about Bracing Actions."
+      },
+      {
+        "name": "Hunter",
+        "generation": "GEN II",
+        "price": 205,
+        "description": "A specialized tracking armor for hunting down dangerous individuals. The Helmet comes with a built-in Spotter Assist Target System. The Hunter tracking systems are able to target and track up to 4 individuals, to 1.2 KM each, as if it were in range. The suit’s low-profile design gives any equipment or Characters attempting to spot it a -10 Penalty. The design of the low-profile suit gives a -1 Penalty to Armor on all Locations. The Helmet has an increased sensory array, allowing a +10 Bonus to all Perception Tests."
+      },
+      {
+        "name": "Infiltrator",
+        "generation": "GEN II",
+        "price": 236,
+        "description": "Infiltrator is a special armor designed to assist the User behind enemy lines, giving them the utilities needed for infiltration missions. Infiltrator Armor gains a -2 Penalty to all Armor Locations. The Helmet holds a built-in Electronic Countermeasure Device, which can be activated once every 3 Rounds. The chosen Wrist Gauntlet holds a 5 Meter Fiber-Optic Probe, while the Chest Piece holds specialized electronics that assist with Camouflage with weak Active Camo, giving the user +15 to all Camouflage Tests."
+      },
+      {
+        "name": "Jumpmaster",
+        "generation": "GEN II",
+        "price": 120,
+        "description": "The Jumpmaster armors feature an innovative Inertial Dampening System that gives the user the ability to stop any free-fall without damaging themselves. Jumpmaster takes no damage from falls, no matter the height, and can hover in the air for 4 Rounds, with a recharge of 1 Round before it can be used again."
+      },
+      {
+        "name": "LOCUS",
+        "generation": "GEN II",
+        "price": 114,
+        "description": "Locus is a suit built for stealth and survival, giving the user a powerful defense against the enemy. The suit boasts dense and powerful plating that gives the user +4 Armor in all Armor Locations, while also hindering the speed of the user. The Character gains no Mythic Agility or Agility Bonuses from their Mjolnir suit. The LOCUS variant also holds a Stealth system, which gives the user +20 to all Camouflage Tests. When the Camouflage Stealth System is active, Shield Recharge Delay is tripled from 2 to 6."
+      },
+      {
+        "name": "Mako",
+        "generation": "GEN II",
+        "price": 82,
+        "description": "Similar to the Operator armors, Mako has become widespread on the field for awareness and navigation. The suit gives the Character +5 to Navigate (Ground) and Pilot (Ground) and contains a built-in UGPS (Left) and Tacpad (Right) on the wrist Gauntlets. The suit offers discreet intelligence secure transmissions that can bypass most Covenant security networks for silent intrusion. This gives a +30 to all Cryptography Tests against Covenant Networks and Equipment. The suit gives -1 Armor to the Arms, Legs, and Chest Locations. The suit’s Helmet gains +1 Armor due to being enclosed. Due to using a camera, EMP effects are treated as a Flashbang, visually."
+      },
+      {
+        "name": "Marauder",
+        "generation": "GEN II",
+        "price": 30,
+        "description": "The first Mjolnir variant to use Situational Tactical Software Modules (TacSoft Mods). These TacSoft Mods are interchangeable system upgrades based on different situations. These TacSoft Mods can be chosen between Missions. The following is a list of all usable Mods. Monitor-Enhancements Systems: This TacSoft gives the User a +10 Bonus to all Perception Tests. Assault-CQC Systems: This tacSoft is built on a simplified version of Venator systems. This TacSoft gives a +10 to all Warfare Melee Tests. Targeting Systems: A simplified Targeting Enhancement suite that gives the User a +10 to all Warfare Range Tests."
+      },
+      {
+        "name": "MIRAGE IIC",
+        "generation": "GEN II",
+        "price": 136,
+        "description": "MIRAGE IIC-Class offers Photo-Reactive Panels (60) without sacrificing energy shielding."
+      },
+      {
+        "name": "Nightfall",
+        "generation": "GEN II",
+        "price": 90,
+        "description": "A lovechild of the ODST and Hazop suits, Nightfall is for special operations into hazardous locations. The Nightfall variant comes with the ODST standard armored M/LBE Hard Case armored backpack. The suit comes with a pitch-black design that helps the suit blend with darkness, giving +10 to Camouflage when in darkness. The suit also comes with improved redundant oxygen filtration systems, modified rebreather caster lines, and radiation shielding underarmor mesh. This allows the user to double their oxygen supply by filtering out unbreathable chemicals and radiation from the surrounding atmosphere. The Helmet comes with a built-in CBRN Permutation."
+      },
+      {
+        "name": "Noble",
+        "generation": "GEN II",
+        "price": 40,
+        "description": "The Noble Variant is based on the Generation I Commando armors, offering the Character a +1 Bonus Armor to Chest and a built-in BSD-0 Helmet Permutation, with a +10 Bonus to Perception Tests."
+      },
+      {
+        "name": "Oceanic",
+        "generation": "GEN II",
+        "price": 43,
+        "description": "The Oceanic Armor is an underwater variant, used in deep-ocean exploration and battlement. The armor is streamlined and pressure-withstanding to allow the suit to survive hundreds of atmospheres worth of pressure. The suit is able to negate all extra damage caused by higher gravities, as well as giving the suit a +3 Armor in all Armor Locations. When underwater, Movement-based Penalties are cut in half. When out of water, the suit’s Mythic Agility is removed."
+      },
+      {
+        "name": "ODST",
+        "generation": "GEN II",
+        "price": 31,
+        "description": "A popular GEN II variation for former ODST. The ODST variant comes with the ODST standard armored M/LBE Hard Case armored backpack. The suit comes with a pitch-black design that helps the suit blend with darkness, giving +10 to Camouflage when in darkness. The Chest Piece is also enlarged, covering more of the torso and stomach regions, giving +2 to Armor in the Chest Location."
+      },
+      {
+        "name": "Operator",
+        "generation": "GEN II",
+        "price": 63,
+        "description": "The new standard for navigation and surroundings awareness, Operator has become widespread on the field. The suit gives the Character +5 to Navigate (Ground) and Pilot (Ground) and contains a built-in UGPS and Tacpad on the wrist Gauntlets. The suit offers discreet intelligence secure transmissions that can bypass most Covenant security networks for silent intrusion. The suit gives -1 Armor to the Arms, Legs, and Head Locations."
+      },
+      {
+        "name": "Orbital",
+        "generation": "GEN II",
+        "price": 93,
+        "description": "The Orbital suit is similar to the E.V.A in use but offers a more heavily armored alternative for zero-gravity engagements. Orbital’s Helmet offers a wide visual range, giving the Character a +5 to all Visual Perception Tests, though due to its large visor, the helmet suffers a -1 Penalty to Armor. The Chest, Arm, and Leg have +2 Armor. The Orbital suit comes with a Docking Cable Torso Armor Permutation, and the Pauldrons have built-in Jump Jet Restraints Shoulder Armor Permutations. The Arms and Legs of the suit use micro-thrusters to assist the Character in zero-gravity environments, giving the Character a +10 to Athletics Tests while under the effects of Zero-Gravity. The suit also has improved gel layering, which halves all Damage from explosive decompression and seals suit breaches instantly."
+      },
+      {
+        "name": "Pathfinder",
+        "generation": "GEN II",
+        "price": 83,
+        "description": "A Variant built for unknown territory and exploration; Pathfinder comes equipped with tech that allows for easier exploration. The suit suffers a -2 to armor in the Arms and Legs Locations, due to making room for equipment. Equipped with Stabilizer Units and Balance Drives, the suit gives the Character +20 to Athletic Tests and halves Penalties from Difficult and Dangerous Terrain . The Pathfinder Helmet comes with a built-in Remote Sensor Helmet Amor Permutation, a built-in UGPS, and a built-in CBRN Sensor. To make room for this equipment, the armor on the Helmet is given a -1 Penalty to Armor. The Pauldrons have a built-in Tactical Flashlight."
+      },
+      {
+        "name": "Pioneer",
+        "generation": "GEN II",
+        "price": 98,
+        "description": "A Variant built for unknown territory and exploration; Pioneer comes equipped with tech that allows for easier exploration. The suit suffers a -1 to armor in the Arms, Torso, and Legs Locations, due to making room for equipment. Equipped with a specialized Rebreather Unit that doubles the amount of oxygen. Also comes with Visual Sensor Units that can be used as an Extended Action (2 Full Actions) to scan the surroundings of the User to form a useable map that can be sent to others. This map is made in a 400 Meter radius when used, and the map may be extended with each use. Does not show location of Characters or equipment."
+      },
+      {
+        "name": "Prefect",
+        "generation": "GEN II",
+        "price": 99,
+        "description": "The first reverse engineered Forerunner Mjolnir armor, Prefect is a highly expensive and highly experimental armor that merges known Forerunner material and equipment with standard GEN II suits. Prefect offers the user access to the built-in Z2500 Automated Protection Drone Armor Ability. The helmet has a Promethean Vision Armor Ability built in. The Chest Piece can project the Z-90 Photon Hardlight Shield Armor Ability. The suit, itself, has improved armor due to the material used, giving the armor +2 on all Armor Locations, as well as a +1 in Mythic Agility. 1,031 cR Protector Protector is built with sensors and charge pistons to enhance stability and weapon use, giving +5 to Warfare Melee, Warfare Range, and Athletic Tests. The suit is heavily armored with super-dense plating, giving +5 Armor on all locations. The weight reduces this variant’s Agility Bonus to 0. Due to having a stronger fusion reactor installed, this suit’s Self Destruct deals 10D10+30 Damage, with a Pierce of 40."
+      },
+      {
+        "name": "Rakshasa",
+        "generation": "GEN II",
+        "price": 46,
+        "description": "A versatile and easy to maintain variant of Mjolnir that is stripped of unneeded assets to help assist in long-term missions. Replaces the Thruster Pack, Ground Pound, Spartan Charge Thrust Package, and Hover Stabilization Abilities with the Integrated Self-Repair System (ISRS). Any Breakpoint or Armor Rating reduction the armor receives will be slowly repaired by 1 point every 2 hours. Rakshasa gives +3 Bonus to Armor to all Locations but reduces Mythic Strength and Mythic Agility by 1."
+      },
+      {
+        "name": "Ranger",
+        "generation": "GEN II",
+        "price": 145,
+        "description": "Built for lone-wolf operations, Ranger offers a series of built-in Permutations. The Ranger Helmet has a built-in BSD-0 Helmet Permutation. The Pauldrons each have a built-in Tactical Flashlight. The Wrist Gauntlets have a built in UGPS System, while the Legs offer +1 Mythic Agility, gaining a -2 Penalty to Armor to the Leg Location."
+      },
+      {
+        "name": "Reaper",
+        "generation": "GEN II",
+        "price": 100,
+        "description": "Built alongside the Prefect Project, Reaper was to be a cheaper, more obtainable variant. The Reaper suit offers similar defensive and offensive capabilities over Prefect but does not contain the equipment it has. The Reaper variant gives the user +2 Mythic Strength and +2 Mythic Agility and has a +2 Bonus to Armor on all Locations."
+      },
+      {
+        "name": "Recluse",
+        "generation": "GEN II",
+        "price": 136,
+        "description": "Recluse is the ultimate Armor in Stealth technology. Recluse has a fully functioning Active Camo system built-in, giving the user a +60 to Camouflage Tests for 12 Rounds, before needing to Recharge for 9 Rounds. The Active Camo system does not alter the recharge of the Shields, due to an experimental new power source."
+      },
+      {
+        "name": "Recon",
+        "generation": "GEN II",
+        "price": 64,
+        "description": "Recon, built for Stealth Operations, is a deep-field reconnaissance variant for GEN II armors. The suit offers +10 to Camouflage Tests due to its lower profile design and gives +20 to the Shields of the user. The Recon Suit’s lower-profile design and increased Shields gives the suit a -2 Penalty to Armor on all Locations."
+      },
+      {
+        "name": "Rogue",
+        "generation": "GEN II",
+        "price": 83,
+        "description": "The Rogue Armor is designed for enhanced network connectivity, alongside defined intelligence packs. The suit gives +20 to Cryptography and Security Tests."
+      },
+      {
+        "name": "Scout",
+        "generation": "GEN II",
+        "price": 50,
+        "description": "The Scout variant is used as the most popular armor for Scouting Missions. The suit offers anti-tracking systems and shroud-induction packages, giving the Character +10 to Camouflage. The Scout armor is more lightweight, giving +1 to Mythic Agility and -2 Armor on all Armor Locations. The helmet of the Scout armor counts as having a Target Designator."
+      },
+      {
+        "name": "Soldier",
+        "generation": "GEN II",
+        "price": 49,
+        "description": "Used as a Support Role on the battlefield, Soldier is designed to carry equipment. The Chest Piece has a built-in Hard Case with the armor of the Chest Piece. The suit comes with two external Biofoam Canisters on each thigh. The suit is tuned to have improved carry weight, giving the Character +100 KG to their Carrying Weight."
+      },
+      {
+        "name": "Stalker",
+        "generation": "GEN II",
+        "price": 172,
+        "description": "The Stalker variant was built for hunter-tracker field applications. The suit is built for maximum stealth for close-range targets. The suit has a weak camouflaging system which can always be active. This stealth system gives the user +30 to all Camouflage Tests. When the Camouflage Stealth System is active, Shield Recharge Delay is tripled from 2 to 6. The Stalker suit gains a -1 Penalty to armor on the Arms, Legs, and Helmet Locations, while gaining a -3 Penalty to armor on the Chest Location. The Chest Piece holds a built-in Electronic Countermeasure System. The legs of the suit halves all Bonuses Opponents receive to hearing the Character’s movements."
+      },
+      {
+        "name": "Suture",
+        "generation": "GEN II",
+        "price": 109,
+        "description": "A variant built for field medics. This variant gives +2D5 total to recovered Wounds from Biofoam and +1 for Medigel, as long as the User is administering it with the Suture variant. Does not extend the amount of uses Biofoam will give a Character. Once the Biofoam would normally not heal a Character any further, this Bonus is lost. Also gives a +10 to all Medical Tests and ignores any Penalties for untrained Medical Skill Tests."
+      },
+      {
+        "name": "TANKER",
+        "generation": "GEN II",
+        "price": 455,
+        "description": "The prototype TANKER variant of Mjolnir is built with incredibly dense plating for super-heavy defensive options. TANKER is triple the weight of GEN-II Mjolnir and gives +10 to Armor on all Locations. This variant reduces Mythic Agility by 3 and the Agility Characteristic by 20."
+      },
+      {
+        "name": "Technician",
+        "generation": "GEN II",
+        "price": 83,
+        "description": "Technician variant GEN II armor is a UNSC-technology specialized suit. This variant is able to connect, scan, and assist with all UNSC and known-Human technology. This gives the user a +20 Bonus to any Tests dealing with the repair or Technical use of human Equipment. When wearing the suit and helmet, the Character is considered to have the Technology (UNSC) Skill at +10."
+      },
+      {
+        "name": "Tracker",
+        "generation": "GEN II",
+        "price": 83,
+        "description": "Tracker is a long-distance extreme-range tracking suit. The Helmet comes with a built-in Spotter Assist Target System. The Chest has a built-in forensics and biological tracking system that gives +40 to Investigations for tracking targets once proper material is found for study. The Chest Piece has -1 Armor on the Chest Location. The suit’s Helmet gains +1 Armor due to being enclosed. Due to using a camera, EMP effects are treated as a Flashbang, visually."
+      },
+      {
+        "name": "Valkyrie",
+        "generation": "GEN II",
+        "price": 100,
+        "description": "The Valkyrie variant offers specialized Inertial Dampeners that work as an improved gel layering, halving all damage from Explosive Decompression and Damage caused by wrecks, crashes, Falling Damage, and being hit by large objects like vehicles. These specialized Dampeners offer an Advanced Targeting and Imaging Calculation System (ATICS) that gives the Character a +10 Bonus to all Pilot Skills."
+      },
+      {
+        "name": "Vanguard",
+        "generation": "GEN II",
+        "price": 63,
+        "description": "Vanguard was designed to help support front-line enemy engagement. The suit’s Helmet gains +2 Armor due to being enclosed. Due to using a camera, EMP effects are treated as a Flashbang, visually. Due to its stacked plating and hardened gel-layering, Vanguard gains +10 Armor when dealing against melee weapons with the Cauterize Special Rule and gains +5 armor when dealing against non-cauterize other melee weapons. Due to the stacked plating, the suit gives a -2 Mythic Agility Penalty."
+      },
+      {
+        "name": "Vector",
+        "generation": "GEN II",
+        "price": 200,
+        "description": "The Vector Armor comes with Covenant technology interface technology and dummy switches. This allows the Vector Suit to not show up on Covenant scanners, comms, and equipment. The Vector suit will still show up on visual scanners like cameras and visors."
+      },
+      {
+        "name": "Venator",
+        "generation": "GEN II",
+        "price": 36,
+        "description": "The Helmet comes with special targeting algorithms, allowing for assistance with close-quarters melee combat, giving the Character +20 to their Warfare Melee when making Melee Attacks. Venator features an enclosed helmet with no visor. The suit’s Helmet gains +1 Armor. Due to using a camera, EMP effects are treated as a Flashbang, visually."
+      },
+      {
+        "name": "Vigilant",
+        "generation": "GEN II",
+        "price": 85,
+        "description": "A stealth-based variant for Mjolnir that counts as always having a Target Designator on-hand. The Helmet is able to accept silent commands to mark locations for ordnance strikes, target designation, and target tracking. When used for targeting ordnance strikes or any drop, the drop does not scatter in any way and directly hits its target. The suit also gives a +10 Bonus to Camouflage."
+      },
+      {
+        "name": "War Master",
+        "generation": "GEN II",
+        "price": 83,
+        "description": "War Master is an experimental testbed for Lethbridge Modifications. This Variant gives +2 Armor to all Locations and a +10 Bonus to Agility when worn. The Helmet has a built-in CNM and Rebreather Unit."
+      },
+      {
+        "name": "Warrior",
+        "generation": "GEN II",
+        "price": 56,
+        "description": "Warrior is the outcome of armor streamline and mobility enhancement. The suit gives the user +2 Mythic Agility, The increased mobility offers enhanced terrain tracking and assisted movement, which allows the Character to halve any Penalty from Difficult Terrain."
+      },
+      {
+        "name": "Wetwork",
+        "generation": "GEN II",
+        "price": 141,
+        "description": "Built for target acquisition and elimination, the Wetwork armor is favored for assassination missions. Wetwork has a combined specialized system of equipment throughout the suit. The built-in equipment includes a Spotter Assist Target System, WYRD III, a built-in UGPS, and a built-in Remote Sensor Permutation. The Suit has a -1 Penalty to all Armor Locations but gains +5 to all camouflage Tests."
+      }
+    ],
+    "gen_iii": [
+      {
+        "name": "Default Armors",
+        "generation": "GEN III",
+        "price": 0,
+        "description": "These are standard models that come at no extra cost but gain no extra Bonuses and Penalties. All armor not available in this list is considered a Default Armor. Some include Cohort, Linebreaker, Mercury, and Volant."
+      },
+      {
+        "name": "Anubis",
+        "generation": "GEN III",
+        "price": 250,
+        "description": "Retooled to no longer be a technological demo for new generational upgrades, Anubis is now designed to feed data directly to a Smart and Dumb AI housed within the Armor, if it has one. Anubis doubles the maximum amount of distance that can be traveled in a Round when using Thrusters and the User gains a +10 to any Stunts or Agility Tests when using Thrusters. Smart and Dumb AI housed within the Armor will gain a +10 Bonus to any Armor Interface Abilities they use. If the Armor Interface Ability would instead give a Buff instead of needing a Test, it will give a +5 Bonus, instead."
+      },
+      {
+        "name": "Argus",
+        "generation": "GEN III",
+        "price": 475,
+        "description": "A sniper/spotter variant that offers the user the most when using long and extreme-range weaponry. Argus takes no Penalties from Long Range and Extreme Range Attacks. Argus has a built-in Spotter Assist Target System, while the Chest has specialized spotter-tracker mechanics that not only target and track users out to 3,000 Meters, but also gives the user +5 to any Spotting and Long or Extreme Range Attacks."
+      },
+      {
+        "name": "Armet",
+        "generation": "GEN III",
+        "price": 50,
+        "description": "An updated hazmat protection variant that ONI uses to test developments for various survival needs. Armet protects the User from all forms of Radiation and Radiation Poisoning and is immune to the Acid Special Rule."
+      },
+      {
+        "name": "Artaius",
+        "generation": "GEN III",
+        "price": 100,
+        "description": "Artaius allows the User to interface with a single Drone and control them as a Free Action. While interacted with the Drone that is being controlled as a Free Action, the User may also control another Drone using normal Actions. Also Available for GEN II Mjolnir Armor."
+      },
+      {
+        "name": "Aviator",
+        "generation": "GEN III",
+        "price": 132,
+        "description": "Aviator possesses internal Gravity Compensators within the Chest and Pauldrons, giving -1 Armor to the Chest location and Head location. The internal Gravity Compensators, alongside the advanced targeting and imaging calculation within the helmet, give the Character a +10 Bonus to Pilot (Air), Pilot (Space), Navigation (Air), and Navigation (Space). The GEN III variant allows for extended use in a vacuum, doubling the amount of usable Oxygen given by Permutations and Mjolnir. Also Available for GEN II Mjolnir Armor."
+      },
+      {
+        "name": "Barrister",
+        "generation": "GEN III",
+        "price": 30,
+        "description": "Barrister has advanced scanning units designed for law enforcement. If the Character has the UNSC Law Education, they will gain an extra +10 to Investigation Skill Tests when dealing with criminal affairs, tracking users, and opposing Camouflage. The helmet has an extended memory threshold for video storage, allowing it to store up to 1,000 hours of footage captured."
+      },
+      {
+        "name": "Brawler",
+        "generation": "GEN III",
+        "price": 525,
+        "description": "A rare variant that must be authorized to be used. Brawler makes use of dwindling supplies of Hyperdiamond Armor Sheets that are incorporated into the Liquid Nanocrystal Undersuit layering. Brawler is double the weight of GEN-III Mjolnir and gives +10 to Armor on all Locations. This variant reduces Mythic Agility by 3 and the Agility Characteristic by 15."
+      },
+      {
+        "name": "Cavallino",
+        "generation": "GEN III",
+        "price": 150,
+        "description": "Cavallino assists fireteam leaders in tracking and commanding troops on the field. Cavallino allows for the User to make use of the VISR map without being considered Blind, while also having constantly up-to-date real-time locations and statuses of all friendly IFF Tags within 1,000 meters. When making Leadership Tests, Cavallino makes use of a massive database of leadership positions and tactics to give a +10 bonus to all Leadership-based Tests. Also Available for GEN II Mjolnir Armor."
+      },
+      {
+        "name": "Celox",
+        "generation": "GEN III",
+        "price": 50,
+        "description": "Initially designed off of the GEN II Scout Variant, Celox offers anti-tracking systems and shroud-induction packages, giving the Character +10 to Camouflage. Celox is capable of intercepting Covenant, Created, and Banished signals and the direction of its source to a meter of accuracy. The helmet of the Scout armor counts as having a Target Designator. Also Available for GEN II Mjolnir Armor."
+      },
+      {
+        "name": "Courier",
+        "generation": "GEN III",
+        "price": 50,
+        "description": "Courier is designed for secure data storage and physical relay of data archives. Courier is able to store 50 data transfer chips and read and write to them near instantly. Courier is immune to Hacking Attempts and is capable of being completely removed from all systems and services, including B-Net, military and civilian communication lines, and even IFF Tag services. Also Available for GEN II Mjolnir Armor."
+      },
+      {
+        "name": "Deadeye",
+        "generation": "GEN III",
+        "price": 250,
+        "description": "The Deadeye variant of GEN II is a low-emissions, extreme-distance armor set. It contains range calculation systems that halve all Long Range and Extreme Range Penalties and emission-blockers that reduce the distance a Radar can pick up the armor by half of the Radar’s range. The suit also has specialized prototype rebreathers that offer 30 hours of Oxygen for the user. Due to the amount of electronics, Deadeye has -1 to all Armor Locations. Also Available for GEN II Mjolnir Armor."
+      },
+      {
+        "name": "Enigma",
+        "generation": "GEN III",
+        "price": 300,
+        "description": "A state-of-the-art sensor system and neurolink system that allows the User to Pilot Vehicles with the Neural Interface Special Rule and take no Penalties from using Weapons while making Pilot Actions. The User is also able to make use of one more Weapon in the same Turn at a -20 Penalty, as well as allow AI to piggyback into the same Neural Interface and make use of any and all tethered weapons without Penalty. When used with only a single weapon on a Vehicle with the Neural Interface Special Rule, Enigma will give the User a +10 Bonus To Hit. Also Available for GEN II Mjolnir Armor."
+      },
+      {
+        "name": "Firefall",
+        "generation": "GEN III",
+        "price": 70,
+        "description": "A package Variant built from Helljumper. Firefall incorporates specialized shock-absorbing systems designed to ignore Falling Damage as long as the User lands on their feet or is able to Tumble. Also Available for GEN II Mjolnir Armor."
+      },
+      {
+        "name": "Flanker",
+        "generation": "GEN III",
+        "price": 250,
+        "description": "A specialized recon suite that is designed to mask the electronics of the Armor as much as possible. When used, the Armor is invisible to a Mgalekgolo’s Technological Hunter Trait. It is also invisible to Promethean Vision. When Opposing Camouflage Tests against Equipment, Permutations, or VISR that would give benefits in spotting the User, ignore all those Bonuses that would be gained. These benefits are all lost when used alongside Active Camouflage. Also Available for GEN II Mjolnir Armor."
+      },
+      {
+        "name": "Hermes",
+        "generation": "GEN III",
+        "price": 195,
+        "description": "An upgraded suite based on the Gen II Hermes variant. The Armor no longer needs minimum Characteristics to use this Armor. The Character gains -15 to Agility but gain +6 to Mythic Agility. Also Available for GEN II Mjolnir Armor."
+      },
+      {
+        "name": "ISR",
+        "generation": "GEN III",
+        "price": 500,
+        "description": "ISR is a Specialized ONI Tactical Intelligence Collection Unit. As a Full Action, the User is able to make a scan in the direction they are currently looking. This will quadruple the User’s Perceptive Modifier and mark any Character and Vehicle spotted up to 2,000 meters away. At the beginning of the User’s next Turn, they will have information on every single marked Target. This includes any known Targets, such as those wanted by the UNSC. It will give a rundown of all vehicles, races, and more, which can be accessed via lookup tools and speech commands. This information can be sent to others as a Free Action. Attacks against these marked Targets by the User will allow the User to make use of the extended Perceptive Modifier for 2 Turns. Even if this information is sent to others, they may not make use of the extended range."
+      },
+      {
+        "name": "Menachite",
+        "generation": "GEN III",
+        "price": 524,
+        "description": "Menachite is an ONI watershed development platform for improvements on all aspects of the baseline of GEN III Mjolnir. It may only be taken by those who have been given permission by higher-up authorities within the UNSC or ONI Officers. Gives a +5 to Strength and Agility, a +1 to Mythic Strength and Mythic Agility, and a +25 to Energy Shield Integrity. It offers double the listed Oxygen of the base Mjolnir Armor, increases the Blast Radius of Self Destruct by 20 meters, reduces Thruster Pack recharge by 1 Half Action, and allows the User to make Sprint Actions for 1 Turn longer. Also Available for GEN II Mjolnir Armor."
+      },
+      {
+        "name": "Rampart",
+        "generation": "GEN III",
+        "price": 195,
+        "description": "Rampart is built off of the EOD Variant Mjolnir packages. The dense, heavy plating allows the Character it ignore an Explosive’s Kill Radius. Reduces the User’s Agility by 10. Also Available for GEN II Mjolnir Armor."
+      },
+      {
+        "name": "Rockeye",
+        "generation": "GEN III",
+        "price": 277,
+        "description": "A specialized heavy armor variant that makes use of denser plating. The Variant is twice the weight and gives +8 to Armor on all Locations and removes the Mythic Agility benefits given by the armor. Also Available for GEN I and Gen II Mjolnir Armor."
+      },
+      {
+        "name": "Security",
+        "generation": "GEN III",
+        "price": 78,
+        "description": "The Security Variant of Mjolnir specializes in Ship and Station Defense. This suit grants the Character a +10 to Visual Perception Tests and +20 to all Cryptography Skill Tests. Reduces the Armor of the Helmet Location by 2. The Arms, Legs, and Chest Armor Location gains a +3 Bonus. The Gen III version of Security also gives a +10 Bonus to defending against any Hacking attempts."
+      },
+      {
+        "name": "Soldier",
+        "generation": "GEN III",
+        "price": 49,
+        "description": "Used as a Support Role on the battlefield, Soldier is designed to carry equipment. The Chest Piece has a built-in Hard Case with the armor of the Chest Piece. The suit comes with two external Biofoam Canisters on each thigh. The suit is tuned to have improved carry weight, giving the Character +100 KG to their Carrying Weight."
+      },
+      {
+        "name": "Stormfall",
+        "generation": "GEN III",
+        "price": 50,
+        "description": "Stormfall is a non-enclosed variant built off of Gungnir. The tracking systems that were once in the gauntlet are now in the helmet, making use of the suit’s ability to make micro-adjustments to the Armor for its benefits. The Helmet features a built-in WYRD-III System that give the Character a +10 Bonus for To Hit Tests with weaponry using Smart-Link scopes."
+      },
+      {
+        "name": "Talon",
+        "generation": "GEN III",
+        "price": 60,
+        "description": "The Talon variant specializes in aero-space tactical software and advanced algorithms. These special assistance-programs, alongside the increased field-of-view and widened visor give the Character a +15 to Visual Perception Tests and Pilot (Air) and (Space) Tests. Also Available for GEN I and Gen II Mjolnir Armor."
+      },
+      {
+        "name": "Torchbearer",
+        "generation": "GEN III",
+        "price": 394,
+        "description": "Designed off of Hellbringer ODST Armor variants, Torchbearer halves the Damage, Fatigue, and Stun from Flame, Cryo, Acid, and Electrified Special Rules. Torchbearer will also leave the User immune to Environmental fires. Reduces the Armor’s Mythic Agility by 1 and gives +2 Armor to the Chest location."
+      },
+      {
+        "name": "Trailblazer",
+        "generation": "GEN III",
+        "price": 98,
+        "description": "Trailblazer is built off of the success of the gen II Recon Variant and designed to improve VISR systems with secondary processing systems. The suit offers +10 to Camouflage Tests due to its lower profile design and gives +20 to the Shields of the user. The Recon Suit’s lower-profile design and increased Shields gives the suit a -2 Penalty to Armor on all Locations. While making use of VISR, Trailblazer will give the User a +10 Bonus to Opposing Camouflage Tests from Opponents."
+      },
+      {
+        "name": "War Master",
+        "generation": "GEN III",
+        "price": 103,
+        "description": "This Variant gives +2 Armor to all Locations and a +10 Bonus to Agility when worn. The Helmet has a built-in CNM and Rebreather Unit. When used with a vehicle’s Neutral Interface, the Character does not take Penalties to use Weapons while making Pilot Actions. Also Available for GEN II Mjolnir Armor."
+      },
+      {
+        "name": "Zvezda",
+        "generation": "GEN III",
+        "price": 200,
+        "description": "A specialized variant designed for target acquisition. The armor is a full-body phase array antenna that allows the User to mark a Character or Vehicle within Perceptive Range, and continue to know and track their location. The Target’s current location is updated at the beginning of the User’s Turn. The Target will be tracked this way until the mark is removed by the User or until the Target has gone past 1,000 meters. The Target’s location may be sent to others as a Free Action once per Turn. The mark may also be lost if the Target escapes underground, into an area with a lot of lead, or other radiation electronic baffling."
+      }
+    ]
+  },
+  "citation": "Mythic 7.0 CU1, Mjolnir Armor Variants, pp. 170-178"
+}

@@ -156,7 +156,12 @@ class DebugReportMixin:
                 f"{', '.join(character.specialization_packs) or 'None'}",
                 f"Equipment: {', '.join(character.equipment) or 'None'}",
                 f"Equipment pack: {character.equipment_pack or 'None'}",
-                f"Armor: {character.armor or 'None'}",
+                f"Armor: {character.armor or 'None'}"
+                + (
+                    f" ({character.armor_variant['name']} variant)"
+                    if character.armor_variant
+                    else ""
+                ),
                 f"Weapons: {', '.join(weapon_summary(w) for w in character.weapons) or 'None'}",
                 f"Connections: {', '.join(character.connections) or 'None'}",
                 f"Light Aspects: {', '.join(character.light_aspects) or 'None'}",

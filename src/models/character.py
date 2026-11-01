@@ -67,6 +67,10 @@ class Character:
     equipment: List[str] = field(default_factory=list)
     equipment_pack: Optional[str] = None
     armor: Optional[str] = None
+    # Spartans: {"name", "generation", "price"} of the Mjolnir variant fitted,
+    # and the characteristic bonuses the worn suit grants (see starting_armor).
+    armor_variant: Optional[Dict[str, Any]] = None
+    armor_bonus: Dict[str, int] = field(default_factory=dict)
     # Core: {"name", "quantity", "nickname", "note", "category"} dicts naming
     # UNSC Armory records (see src/models/equipment_packs.py).
     weapons: List[Any] = field(default_factory=list)
@@ -235,20 +239,43 @@ class Character:
         pack_name: str,
         items: List[str],
         weapons: Optional[List[dict]] = None,
+        armor: Optional[str] = None,
     ):
-        """Set the pack's gear (``items``) and its resolved armory ``weapons``."""
+        """Set the pack's gear (``items``), armory ``weapons`` and worn ``armor``."""
         self.equipment_pack = pack_name
         self.equipment = list(items)
         self.weapons = [dict(weapon) for weapon in weapons or []]
+        self.armor = armor
         self.log(
             f"Applying equipment pack: {pack_name} "
             f"({len(self.weapons)} weapons, {len(items)} items)"
         )
+        if armor:
+            self.log(f"Armor: {armor}")
         for weapon in self.weapons:
             quantity = weapon.get("quantity", 1)
             self.log(f"Weapon: {weapon['name']}" + (f" x{quantity}" if quantity != 1 else ""))
         for item in items:
             self.log(f"Equipment: {item}")
+
+    def apply_starting_armor(
+        self,
+        armor: str,
+        variant: Optional[dict] = None,
+        bonus: Optional[Dict[str, int]] = None,
+    ):
+        """Wear a Spartan's chosen suit; bonuses are recorded, not added to base stats."""
+        self.armor = armor
+        self.armor_variant = dict(variant) if variant else None
+        self.armor_bonus = dict(bonus or {})
+        self.log(f"Starting armor: {armor}")
+        if variant:
+            self.log(
+                f"Mjolnir variant: {variant['name']} ({variant['generation']}, "
+                f"{variant.get('price', 0)} cR)"
+            )
+        if self.armor_bonus:
+            self.log(f"Armor bonuses while worn: {self.armor_bonus}")
 
     def apply_light_powers(
         self,
