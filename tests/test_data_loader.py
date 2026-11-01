@@ -91,6 +91,44 @@ def test_abilities_have_no_copy_paste_artifacts():
         assert not re.search(r"\s(99|10[0-4])$", ability["description"]), ability["name"]
 
 
+def test_unsc_armory_loads_in_core_mode():
+    core = DataLoader().load_all()
+    weapons = core.get("unsc_weapons", "unsc_weapons")["unsc_weapons"]
+    explosives = core.get("unsc_explosives", "unsc_grenades_and_explosives")["unsc_explosives"]
+    assert sum(map(len, weapons.values())) == 123
+    assert sum(map(len, explosives.values())) == 28
+
+    by_name = {w["name"]: w for group in weapons.values() for w in group}
+    m6d = by_name["M6D Personal Defense Weapon System"]
+    assert (m6d["damage"], m6d["bonus_damage"], m6d["pierce"], m6d["magazine"]) == ("3D10", "10", 4, 12)
+    assert m6d["tags"] == ["I", "UD", "OH"] and m6d["special_rules"] == ["Headshot"]
+    frag = explosives["grenades"][0]
+    assert frag["nickname"] == "Frag Grenade" and frag["range"] == "Blast (8), Kill (2)"
+
+    errors = []
+    validate_all.check_unsc_armory(core, errors)
+    assert errors == []
+
+    lns = DataLoader(use_light_and_sky=True).load_all()
+    assert not lns.list("unsc_weapons")  # core armory is not part of Light & Sky mode
+
+
+def test_unsc_armory_check_flags_bad_records():
+    bad = GameData()
+    bad.add_document("unsc_weapons", "w", {"unsc_weapons": {"pistols": [
+        {"name": "Gun", "weapon_type": "Pistol", "damage": "3D10", "price": 5, "weight_kg": 1,
+         "tags": ["ZZ"], "rate_of_fire": "Auto (1)", "range": "1m-2m", "magazine": 1,
+         "magazine_type": "Magazine", "reload": "1 Half Actions", "ammunition": "x"},
+        {"name": "Gun", "weapon_type": "Pistol", "damage": "3D10", "price": -1, "weight_kg": 1},
+    ]}})
+    errors = []
+    validate_all.check_unsc_armory(bad, errors)
+    assert any("unknown tags" in e for e in errors)
+    assert any("duplicate weapon name" in e for e in errors)
+    assert any("price must be" in e for e in errors)
+    assert any("missing ammunition" in e for e in errors)
+
+
 def test_lifestyle_and_grenade_checks():
     core = DataLoader().load_all()
     lns = DataLoader(use_light_and_sky=True).load_all()

@@ -4,7 +4,15 @@
 Part of MainWindow (src/ui/main_window.py); methods use its widgets and state via self.
 """
 
-from PySide6.QtWidgets import QLabel
+from PySide6.QtWidgets import QDialog, QLabel
+
+from src.models.equipment_packs import (
+    armory_index,
+    choice_groups,
+    describe,
+    resolve_pack,
+)
+from src.ui.background_choice_dialog import BackgroundChoiceDialog
 
 
 class EquipmentMixin:
@@ -37,7 +45,7 @@ class EquipmentMixin:
         for index, (pack_name, items) in enumerate(equipment_sets.items()):
             tile, select_button = self._create_selection_tile(
                 pack_name.replace("_", " ").title(),
-                "\n".join(items),
+                "\n".join(describe(item) for item in items),
                 min_height=145,
             )
             select_button.toggled.connect(
@@ -89,12 +97,43 @@ class EquipmentMixin:
                 ),
                 None,
             )
-            self.generated_character.equipment = []
-            self.generated_character.equipment_pack = None
+            choices = []
             if selected:
-                self.generated_character.apply_equipment_pack(*selected)
+                choices = self._prompt_equipment_choices(*selected)
+                if choices is None:
+                    return  # player cancelled; stay on the equipment page
+            self.generated_character.equipment = []
+            self.generated_character.weapons = []
+            self.generated_character.equipment_pack = None
+            self._equipment_pack_choices = {}
+            if selected:
+                pack_name, items = selected
+                weapons, gear, problems = resolve_pack(
+                    items, choices, armory_index(self.game_data)
+                )
+                for problem in problems:
+                    self.generated_character.log(f"Equipment pack: {problem}")
+                self.generated_character.apply_equipment_pack(pack_name, gear, weapons)
+                self._equipment_pack_choices = {"name": pack_name, "choices": choices}
         self.character_setup_home.set_character_ready_to_export(True)
         self.pages.setCurrentWidget(self.character_setup_home)
+
+    def _prompt_equipment_choices(self, pack_name, items):
+        """Pick one weapon for each either/or line. None if the player cancels."""
+        groups = choice_groups(items)
+        if not groups:
+            return []
+        stored = getattr(self, "_equipment_pack_choices", {}) or {}
+        previous = stored.get("choices", []) if stored.get("name") == pack_name else []
+        dialog = BackgroundChoiceDialog(
+            pack_name.replace("_", " ").title(),
+            groups,
+            selected=previous,
+            parent=self,
+        )
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return None
+        return dialog.selected_choices
 
     def _clear_equipment_grid(self):
         while self.equipment_grid.count():

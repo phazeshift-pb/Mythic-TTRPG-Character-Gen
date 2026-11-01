@@ -188,15 +188,20 @@ class CharacterFilesMixin:
                     selected_value(self.soldier_combo), {}
                 ),
             }
+            pack = next(
+                (
+                    name
+                    for button, name, _ in self.equipment_tiles
+                    if button.isChecked()
+                ),
+                None,
+            )
+            stored = getattr(self, "_equipment_pack_choices", {}) or {}
             equipment = {
-                "pack": next(
-                    (
-                        name
-                        for button, name, _ in self.equipment_tiles
-                        if button.isChecked()
-                    ),
-                    None,
-                )
+                "pack": pack,
+                "choices": list(stored.get("choices", []))
+                if pack and stored.get("name") == pack
+                else [],
             }
 
         return {

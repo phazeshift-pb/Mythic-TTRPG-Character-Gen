@@ -78,6 +78,9 @@ class DataLoader:
         "elements": "lns_elements",
         "hand_cannons": "lns_weapons",
         "light_weapon_abilities": "light_weapon_abilities",
+        # Core UNSC Armory
+        "unsc_weapons": "unsc_weapons",
+        "unsc_explosives": "unsc_explosives",
     }
 
     def __init__(self, use_light_and_sky: bool = False, data_root=None):

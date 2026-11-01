@@ -67,7 +67,9 @@ class Character:
     equipment: List[str] = field(default_factory=list)
     equipment_pack: Optional[str] = None
     armor: Optional[str] = None
-    weapons: List[str] = field(default_factory=list)
+    # Core: {"name", "quantity", "nickname", "note", "category"} dicts naming
+    # UNSC Armory records (see src/models/equipment_packs.py).
+    weapons: List[Any] = field(default_factory=list)
     connections: List[str] = field(default_factory=list)
     specialization_packs: List[str] = field(default_factory=list)
     outliers: List[str] = field(default_factory=list)
@@ -228,10 +230,23 @@ class Character:
             f"(Burn Luck: {luck_cost}; effect: {outlier_data['effect']})"
         )
 
-    def apply_equipment_pack(self, pack_name: str, items: List[str]):
+    def apply_equipment_pack(
+        self,
+        pack_name: str,
+        items: List[str],
+        weapons: Optional[List[dict]] = None,
+    ):
+        """Set the pack's gear (``items``) and its resolved armory ``weapons``."""
         self.equipment_pack = pack_name
         self.equipment = list(items)
-        self.log(f"Applying equipment pack: {pack_name} ({len(items)} items)")
+        self.weapons = [dict(weapon) for weapon in weapons or []]
+        self.log(
+            f"Applying equipment pack: {pack_name} "
+            f"({len(self.weapons)} weapons, {len(items)} items)"
+        )
+        for weapon in self.weapons:
+            quantity = weapon.get("quantity", 1)
+            self.log(f"Weapon: {weapon['name']}" + (f" x{quantity}" if quantity != 1 else ""))
         for item in items:
             self.log(f"Equipment: {item}")
 

@@ -90,6 +90,35 @@ def test_outlier_page_can_be_finished_repeatedly(window):
     assert character.characteristics == allocated
 
 
+def test_equipment_pack_links_armory_weapons(window, monkeypatch):
+    from src.ui.creator import equipment as equipment_module
+
+    class PickFirst:
+        def __init__(self, title, groups, selected=(), parent=None):
+            self.selected_choices = [group["labels"][0] for group in groups]
+
+        def exec(self):
+            from PySide6.QtWidgets import QDialog
+
+            return QDialog.DialogCode.Accepted
+
+    monkeypatch.setattr(equipment_module, "BackgroundChoiceDialog", PickFirst)
+    window.open_equipment_page()
+    tile = next(button for button, name, _ in window.equipment_tiles if name == "point_man")
+    tile.setChecked(True)
+    window.equipment_done_button.click()
+
+    character = window.generated_character
+    names = [weapon["name"] for weapon in character.weapons]
+    assert names[0] == "MA5B Individual Combat Weapon System"
+    assert "M9 High-Explosive Dual-Purpose Grenade" in names
+    assert "Flashlight" in character.equipment
+    assert not any("Grenade" in item for item in character.equipment)
+    export = window._character_export_data()
+    assert export["selections"]["equipment"]["pack"] == "point_man"
+    assert len(export["selections"]["equipment"]["choices"]) == 3
+
+
 def test_core_forte_does_not_change_game_data():
     data = DataLoader(use_light_and_sky=False).load_all()
     generator = CharacterGenerator(data)

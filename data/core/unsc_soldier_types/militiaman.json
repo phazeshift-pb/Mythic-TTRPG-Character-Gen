@@ -62,55 +62,136 @@
 
   "equipment_sets": {
     "marksman": [
-      "M392 DMR",
+      {"weapon": "M392 Designated Marksman Rifle", "label": "M392 DMR"},
       "3 Ammunition Pouches",
-      "M6 Series Pistol (time period appropriate)",
+      {
+        "label": "M6 Series Pistol (time period appropriate)",
+        "choose_one": [
+          {"weapon": "M6A Personal Defense Weapon System"},
+          {"weapon": "M6B Personal Defense Weapon System"},
+          {"weapon": "M6C Personal Defense Weapon System"},
+          {"weapon": "M6D Personal Defense Weapon System"},
+          {"weapon": "M6E Personal Defense Weapon System"},
+          {"weapon": "M6F Personal Defense Weapon System"},
+          {"weapon": "M6G Personal Defense Weapon System"},
+          {"weapon": "M6H Personal Defense Weapon System"},
+          {"weapon": "M6H2 Personal Defense Weapon System"},
+          {"weapon": "M6I Adjustable Personal Defense Weapon System"},
+          {"weapon": "M6K Personal Defense Weapon System"}
+        ]
+      },
       "Flashlight",
-      "Two M9 Dual-Purpose Grenades",
-      "M1 Combat Knife or MK 88 Ratio",
-      "Two Flashbang Grenades",
+      {"weapon": "M9 High-Explosive Dual-Purpose Grenade", "quantity": 2, "label": "Two M9 Dual-Purpose Grenades"},
+      {
+        "label": "M1 Combat Knife or MK 88 Ratio",
+        "choose_one": [
+          {"weapon": "M1 Combat Knife"},
+          {"weapon": "MK 88 Ratio Combat Knife"}
+        ]
+      },
+      {"weapon": "Flashbang Grenade", "quantity": 2, "label": "Two Flashbang Grenades"},
       "Holographic Tactical Eyepiece",
       "Two Tactical Hard Cases",
       "Utility Webbing",
       "M50B, M52B, or M53 BDU (time period dependent)"
     ],
-
     "point_man": [
-      "MA37 Assault Rifle",
+      {"weapon": "MA37 Assault Rifle", "label": "MA37 Assault Rifle"},
       "3 Ammunition Pouches",
-      "M6 Series Pistol (time period appropriate)",
+      {
+        "label": "M6 Series Pistol (time period appropriate)",
+        "choose_one": [
+          {"weapon": "M6A Personal Defense Weapon System"},
+          {"weapon": "M6B Personal Defense Weapon System"},
+          {"weapon": "M6C Personal Defense Weapon System"},
+          {"weapon": "M6D Personal Defense Weapon System"},
+          {"weapon": "M6E Personal Defense Weapon System"},
+          {"weapon": "M6F Personal Defense Weapon System"},
+          {"weapon": "M6G Personal Defense Weapon System"},
+          {"weapon": "M6H Personal Defense Weapon System"},
+          {"weapon": "M6H2 Personal Defense Weapon System"},
+          {"weapon": "M6I Adjustable Personal Defense Weapon System"},
+          {"weapon": "M6K Personal Defense Weapon System"}
+        ]
+      },
       "Flashlight",
-      "Two M9 Dual-Purpose Grenades",
-      "M1 Combat Knife or MK 88 Ratio",
-      "Two Flashbang Grenades",
+      {"weapon": "M9 High-Explosive Dual-Purpose Grenade", "quantity": 2, "label": "Two M9 Dual-Purpose Grenades"},
+      {
+        "label": "M1 Combat Knife or MK 88 Ratio",
+        "choose_one": [
+          {"weapon": "M1 Combat Knife"},
+          {"weapon": "MK 88 Ratio Combat Knife"}
+        ]
+      },
+      {"weapon": "Flashbang Grenade", "quantity": 2, "label": "Two Flashbang Grenades"},
       "Holographic Tactical Eyepiece",
       "Two Tactical Hard Cases",
       "Utility Webbing",
       "M50B, M52B, or M53 BDU (time period dependent)"
     ],
-
     "close_quarters": [
-      "M90 SCAWS Shotgun",
+      {"weapon": "M90 Series Close Assault Weapon System", "label": "M90 SCAWS Shotgun"},
       "3 Ammunition Pouches",
-      "M6 Series Pistol (time period appropriate)",
+      {
+        "label": "M6 Series Pistol (time period appropriate)",
+        "choose_one": [
+          {"weapon": "M6A Personal Defense Weapon System"},
+          {"weapon": "M6B Personal Defense Weapon System"},
+          {"weapon": "M6C Personal Defense Weapon System"},
+          {"weapon": "M6D Personal Defense Weapon System"},
+          {"weapon": "M6E Personal Defense Weapon System"},
+          {"weapon": "M6F Personal Defense Weapon System"},
+          {"weapon": "M6G Personal Defense Weapon System"},
+          {"weapon": "M6H Personal Defense Weapon System"},
+          {"weapon": "M6H2 Personal Defense Weapon System"},
+          {"weapon": "M6I Adjustable Personal Defense Weapon System"},
+          {"weapon": "M6K Personal Defense Weapon System"}
+        ]
+      },
       "Flashlight",
-      "Two M9 Dual-Purpose Grenades",
-      "M1 Combat Knife or MK 88 Ratio",
-      "Two Flashbang Grenades",
+      {"weapon": "M9 High-Explosive Dual-Purpose Grenade", "quantity": 2, "label": "Two M9 Dual-Purpose Grenades"},
+      {
+        "label": "M1 Combat Knife or MK 88 Ratio",
+        "choose_one": [
+          {"weapon": "M1 Combat Knife"},
+          {"weapon": "MK 88 Ratio Combat Knife"}
+        ]
+      },
+      {"weapon": "Flashbang Grenade", "quantity": 2, "label": "Two Flashbang Grenades"},
       "Holographic Tactical Eyepiece",
       "Two Tactical Hard Cases",
       "Utility Webbing",
       "M50B, M52B, or M53 BDU (time period dependent)"
     ],
-
     "assault": [
-      "M7 Caseless SMG",
+      {"weapon": "M7 Caseless Submachine Gun", "label": "M7 Caseless SMG"},
       "3 Ammunition Pouches",
-      "M6 Series Pistol (time period appropriate)",
+      {
+        "label": "M6 Series Pistol (time period appropriate)",
+        "choose_one": [
+          {"weapon": "M6A Personal Defense Weapon System"},
+          {"weapon": "M6B Personal Defense Weapon System"},
+          {"weapon": "M6C Personal Defense Weapon System"},
+          {"weapon": "M6D Personal Defense Weapon System"},
+          {"weapon": "M6E Personal Defense Weapon System"},
+          {"weapon": "M6F Personal Defense Weapon System"},
+          {"weapon": "M6G Personal Defense Weapon System"},
+          {"weapon": "M6H Personal Defense Weapon System"},
+          {"weapon": "M6H2 Personal Defense Weapon System"},
+          {"weapon": "M6I Adjustable Personal Defense Weapon System"},
+          {"weapon": "M6K Personal Defense Weapon System"}
+        ]
+      },
       "Flashlight",
-      "M9 Dual-Purpose Grenade",
-      "M1 Combat Knife or MK 88 Ratio",
-      "Three Flashbang Grenades",
+      {"weapon": "M9 High-Explosive Dual-Purpose Grenade", "label": "M9 Dual-Purpose Grenade"},
+      {
+        "label": "M1 Combat Knife or MK 88 Ratio",
+        "choose_one": [
+          {"weapon": "M1 Combat Knife"},
+          {"weapon": "MK 88 Ratio Combat Knife"}
+        ]
+      },
+      {"weapon": "Flashbang Grenade", "quantity": 3, "label": "Three Flashbang Grenades"},
       "Holographic Tactical Eyepiece",
       "Two Tactical Softcases",
       "Utility Webbing",

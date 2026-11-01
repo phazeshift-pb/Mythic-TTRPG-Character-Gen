@@ -97,40 +97,69 @@
 
   "equipment_sets": {
     "standard": [
-      "MA5 Series Assault Rifle (time period appropriate)",
+      {
+        "label": "MA5 Series Assault Rifle (time period appropriate)",
+        "choose_one": [
+          {"weapon": "MA5B Individual Combat Weapon System"},
+          {"weapon": "MA5C Individual Combat Weapon System"},
+          {"weapon": "MA5D Individual Combat Weapon System"}
+        ]
+      },
       "3 Ammunition Pouches",
       "WAYPOINT Comm",
       "Flashlight",
       "Interrogator Translator",
-      "M1 Combat Knife or Model 52 Knife",
+      {
+        "label": "M1 Combat Knife or Model 52 Knife",
+        "choose_one": [
+          {"weapon": "M1 Combat Knife"},
+          {"weapon": "Model 52 Navy Knife"}
+        ]
+      },
       "Spoofer",
       "Holographic Tactical Eyepiece",
       "Two Tactical Softcases",
       "Utility Webbing",
       "M50B, M52B, or M53 BDU (time period dependent)"
     ],
-
     "marksman": [
-      "BR55 or BR85 Battle Rifle",
+      {
+        "label": "BR55 or BR85 Battle Rifle",
+        "choose_one": [
+          {"weapon": "BR55 Service Rifle"},
+          {"weapon": "BR85 Service Rifle"}
+        ]
+      },
       "3 Ammunition Pouches",
       "WAYPOINT Comm",
       "Flashlight",
       "Interrogator Translator",
-      "M1 Combat Knife or Model 52 Knife",
+      {
+        "label": "M1 Combat Knife or Model 52 Knife",
+        "choose_one": [
+          {"weapon": "M1 Combat Knife"},
+          {"weapon": "Model 52 Navy Knife"}
+        ]
+      },
       "Spoofer",
       "Holographic Tactical Eyepiece",
       "Tactical Softcase",
       "Utility Webbing",
       "M50B, M52B, or M53 BDU (time period dependent)"
     ],
-
     "close_quarters": [
-      "M45 Tactical Shotgun",
+      {"weapon": "M45 Tactical Shotgun", "label": "M45 Tactical Shotgun"},
       "3 Ammunition Pouches",
       "WAYPOINT Comm",
       "Flashlight",
       "Interrogator Translator",
-      "M1 Combat Knife or Model 52 Knife",
+      {
+        "label": "M1 Combat Knife or Model 52 Knife",
+        "choose_one": [
+          {"weapon": "M1 Combat Knife"},
+          {"weapon": "Model 52 Navy Knife"}
+        ]
+      },
       "Spoofer",
       "Holographic Tactical Eyepiece",
       "Two Tactical Softcases",

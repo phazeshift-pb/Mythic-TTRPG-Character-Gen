@@ -66,26 +66,76 @@
 
   "equipment_sets": {
     "standard": [
-      "M6 Series Pistol or M61 Carbine Variant",
+      {
+        "label": "M6 Series Pistol or M6J Carbine Variant",
+        "choose_one": [
+          {"weapon": "M6A Personal Defense Weapon System"},
+          {"weapon": "M6B Personal Defense Weapon System"},
+          {"weapon": "M6C Personal Defense Weapon System"},
+          {"weapon": "M6D Personal Defense Weapon System"},
+          {"weapon": "M6E Personal Defense Weapon System"},
+          {"weapon": "M6F Personal Defense Weapon System"},
+          {"weapon": "M6G Personal Defense Weapon System"},
+          {"weapon": "M6H Personal Defense Weapon System"},
+          {"weapon": "M6H2 Personal Defense Weapon System"},
+          {"weapon": "M6I Adjustable Personal Defense Weapon System"},
+          {"weapon": "M6K Personal Defense Weapon System"},
+          {"weapon": "M6J Adjustable Personal Defense Carbine"}
+        ]
+      },
       "Two Large Tactical Softcases",
       "UNSC Portable TACPAD",
       "Flashlight",
-      "Two M9 Dual-Purpose Grenades",
-      "M1 Combat Knife or Model 52 Knife",
+      {"weapon": "M9 High-Explosive Dual-Purpose Grenade", "quantity": 2, "label": "Two M9 Dual-Purpose Grenades"},
+      {
+        "label": "M1 Combat Knife or Model 52 Knife",
+        "choose_one": [
+          {"weapon": "M1 Combat Knife"},
+          {"weapon": "Model 52 Navy Knife"}
+        ]
+      },
       "Multi-Tool Kit",
       "Holographic Tactical Eyepiece",
       "Six Tactical Softcases",
       "Utility Webbing",
       "M50B, M52B, or M53 BDU (time period dependent)"
     ],
-
     "guard": [
-      "BR55, BR75, or BR85 Battle Rifle",
+      {
+        "label": "BR55, BR75, or BR85 Battle Rifle",
+        "choose_one": [
+          {"weapon": "BR55 Service Rifle"},
+          {"weapon": "BR75 Service Rifle"},
+          {"weapon": "BR85 Service Rifle"}
+        ]
+      },
       "3 Ammunition Pouches",
-      "M6 Series Pistol or M61 Carbine",
+      {
+        "label": "M6 Series Pistol or M6J Carbine",
+        "choose_one": [
+          {"weapon": "M6A Personal Defense Weapon System"},
+          {"weapon": "M6B Personal Defense Weapon System"},
+          {"weapon": "M6C Personal Defense Weapon System"},
+          {"weapon": "M6D Personal Defense Weapon System"},
+          {"weapon": "M6E Personal Defense Weapon System"},
+          {"weapon": "M6F Personal Defense Weapon System"},
+          {"weapon": "M6G Personal Defense Weapon System"},
+          {"weapon": "M6H Personal Defense Weapon System"},
+          {"weapon": "M6H2 Personal Defense Weapon System"},
+          {"weapon": "M6I Adjustable Personal Defense Weapon System"},
+          {"weapon": "M6K Personal Defense Weapon System"},
+          {"weapon": "M6J Adjustable Personal Defense Carbine"}
+        ]
+      },
       "Flashlight",
       "UNSC Portable TACPAD",
-      "M1 Combat Knife or Model 52 Knife",
+      {
+        "label": "M1 Combat Knife or Model 52 Knife",
+        "choose_one": [
+          {"weapon": "M1 Combat Knife"},
+          {"weapon": "Model 52 Navy Knife"}
+        ]
+      },
       "Multi-Tool Kit",
       "Holographic Tactical Eyepiece",
       "Three Tactical Hard Cases",

@@ -1,0 +1,180 @@
+{
+  "format_version": 1,
+  "ruleset": "Core",
+  "character": {
+    "name": "Billy Test Char",
+    "soldier_type": "UNSC or Insurrectionist Marine Soldier",
+    "characteristics": {
+      "STR": 40,
+      "TOU": 43,
+      "AGI": 45,
+      "WFR": 40,
+      "WFM": 35,
+      "INT": 22,
+      "PER": 35,
+      "CRG": 40,
+      "CHA": 20,
+      "LDR": 20
+    },
+    "mythic_characteristics": {},
+    "skills": {
+      "Intimidation": 0,
+      "Athletics": 10,
+      "Evasion": 0,
+      "Demolition": 0,
+      "Investigation": 0,
+      "Survival": 0
+    },
+    "abilities": [
+      "Disarm",
+      "Evasive Maneuvers",
+      "Hand-To-Hand Basic"
+    ],
+    "upbringing": "Military",
+    "environment": "City",
+    "lifestyle": "Body Builder",
+    "lifestyle_results": [
+      {
+        "name": "Body Builder",
+        "roll": 10,
+        "choices": []
+      },
+      {
+        "name": "Body Builder",
+        "roll": 2,
+        "choices": []
+      },
+      {
+        "name": "Body Builder",
+        "roll": 7,
+        "choices": []
+      }
+    ],
+    "wounds": 48,
+    "wounds_modifier": 0,
+    "fatigue": 0,
+    "rank": null,
+    "credits": 0,
+    "experience": 13200,
+    "starting_experience": 15000,
+    "experience_spent": 1800,
+    "experience_tier": 5,
+    "equipment": [
+      "3 Ammunition Pouches",
+      "Flashlight",
+      "Holographic Tactical Eyepiece",
+      "Two Tactical Hard Cases",
+      "Utility Webbing",
+      "M50B, M52B, or M53 BDU (time period dependent)"
+    ],
+    "equipment_pack": "marksman",
+    "armor": null,
+    "weapons": [
+      {
+        "name": "BR55 Service Rifle",
+        "quantity": 1,
+        "nickname": "Battle Rifle",
+        "category": "rifles"
+      },
+      {
+        "name": "M6C Personal Defense Weapon System",
+        "quantity": 1,
+        "nickname": "M6C",
+        "category": "pistols"
+      },
+      {
+        "name": "M9 High-Explosive Dual-Purpose Grenade",
+        "quantity": 2,
+        "nickname": "Frag Grenade",
+        "category": "grenades"
+      },
+      {
+        "name": "M1 Combat Knife",
+        "quantity": 1,
+        "nickname": "Combat Knife",
+        "category": "melee_weapons"
+      },
+      {
+        "name": "Flashbang Grenade",
+        "quantity": 2,
+        "nickname": "Flashbang",
+        "category": "grenades"
+      }
+    ],
+    "connections": [],
+    "specialization_packs": [
+      "Close Quarters"
+    ],
+    "outliers": [
+      "Aptitude"
+    ],
+    "luck_available": 5,
+    "luck_total": 5,
+    "light_aspects": [],
+    "light_abilities": [],
+    "light_grenades": [],
+    "supers": []
+  },
+  "selections": {
+    "starting_xp": 15000,
+    "initial_setup": {
+      "soldier_type": "marine",
+      "upbringing": "Military",
+      "environment": "City",
+      "background_choices": {
+        "upbringing": [
+          "+3 Courage",
+          "-3 Charisma"
+        ],
+        "environment": [
+          "+5 Agility",
+          "-5 Strength"
+        ]
+      },
+      "lifestyles": [
+        "Body Builder",
+        "Body Builder",
+        "Body Builder"
+      ],
+      "skill_training": {
+        "Intimidation": 0,
+        "Athletics": 0,
+        "Evasion": 0,
+        "Demolition": 0
+      }
+    },
+    "creation_points": {
+      "option": "Base (85 points)",
+      "total": 85,
+      "allocations": {
+        "STR": 11,
+        "TOU": 9,
+        "AGI": 15,
+        "WFR": 10,
+        "WFM": 10,
+        "INT": 0,
+        "PER": 13,
+        "CRG": 12,
+        "CHA": 4,
+        "LDR": 1
+      }
+    },
+    "outliers": [
+      "Aptitude"
+    ],
+    "outlier_characteristics": {
+      "Aptitude": "WFR"
+    },
+    "specialization_packs": [
+      "Close Quarters"
+    ],
+    "equipment": {
+      "pack": "marksman",
+      "choices": [
+        "BR55 Service Rifle",
+        "M6C Personal Defense Weapon System",
+        "M1 Combat Knife"
+      ]
+    }
+  }
+}

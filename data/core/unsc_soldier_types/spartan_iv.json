@@ -112,79 +112,229 @@
 
   "equipment_sets": {
     "point_man": [
-      "MA5K Carbine",
+      {"weapon": "MA5K Carbine", "label": "MA5K Carbine"},
       "Hard Case, Two Tactical Softcases",
-      "M6 Series Pistol or M61 Carbine",
+      {
+        "label": "M6 Series Pistol or M6J Carbine",
+        "choose_one": [
+          {"weapon": "M6A Personal Defense Weapon System"},
+          {"weapon": "M6B Personal Defense Weapon System"},
+          {"weapon": "M6C Personal Defense Weapon System"},
+          {"weapon": "M6D Personal Defense Weapon System"},
+          {"weapon": "M6E Personal Defense Weapon System"},
+          {"weapon": "M6F Personal Defense Weapon System"},
+          {"weapon": "M6G Personal Defense Weapon System"},
+          {"weapon": "M6H Personal Defense Weapon System"},
+          {"weapon": "M6H2 Personal Defense Weapon System"},
+          {"weapon": "M6I Adjustable Personal Defense Weapon System"},
+          {"weapon": "M6K Personal Defense Weapon System"},
+          {"weapon": "M6J Adjustable Personal Defense Carbine"}
+        ]
+      },
       "Flashlight",
-      "Two M9 Dual-Purpose Grenades",
-      "M1 Combat Knife or Model 52 Knife",
-      "Two Flashbang Grenades",
+      {"weapon": "M9 High-Explosive Dual-Purpose Grenade", "quantity": 2, "label": "Two M9 Dual-Purpose Grenades"},
+      {
+        "label": "M1 Combat Knife or Model 52 Knife",
+        "choose_one": [
+          {"weapon": "M1 Combat Knife"},
+          {"weapon": "Model 52 Navy Knife"}
+        ]
+      },
+      {"weapon": "Flashbang Grenade", "quantity": 2, "label": "Two Flashbang Grenades"},
       "Utility Webbing"
     ],
-
     "assault_and_ambush": [
-      "Two M7 Silenced Submachine Guns",
+      {"weapon": "M7 Caseless Submachine Gun", "quantity": 2, "note": "Silenced", "label": "Two M7 Silenced Submachine Guns"},
       "Hard Case, Tactical Softcase",
-      "M6 Series Pistol or M61 Carbine",
+      {
+        "label": "M6 Series Pistol or M6J Carbine",
+        "choose_one": [
+          {"weapon": "M6A Personal Defense Weapon System"},
+          {"weapon": "M6B Personal Defense Weapon System"},
+          {"weapon": "M6C Personal Defense Weapon System"},
+          {"weapon": "M6D Personal Defense Weapon System"},
+          {"weapon": "M6E Personal Defense Weapon System"},
+          {"weapon": "M6F Personal Defense Weapon System"},
+          {"weapon": "M6G Personal Defense Weapon System"},
+          {"weapon": "M6H Personal Defense Weapon System"},
+          {"weapon": "M6H2 Personal Defense Weapon System"},
+          {"weapon": "M6I Adjustable Personal Defense Weapon System"},
+          {"weapon": "M6K Personal Defense Weapon System"},
+          {"weapon": "M6J Adjustable Personal Defense Carbine"}
+        ]
+      },
       "Flashlight",
-      "Two M9 Dual-Purpose Grenades",
-      "M1 Combat Knife or Model 52 Knife",
-      "Flashbang Grenade",
+      {"weapon": "M9 High-Explosive Dual-Purpose Grenade", "quantity": 2, "label": "Two M9 Dual-Purpose Grenades"},
+      {
+        "label": "M1 Combat Knife or Model 52 Knife",
+        "choose_one": [
+          {"weapon": "M1 Combat Knife"},
+          {"weapon": "Model 52 Navy Knife"}
+        ]
+      },
+      {"weapon": "Flashbang Grenade", "label": "Flashbang Grenade"},
       "Utility Webbing"
     ],
-
     "close_quarters": [
-      "M45 Tactical Shotgun",
+      {"weapon": "M45 Tactical Shotgun", "label": "M45 Tactical Shotgun"},
       "Hard Case, Two Tactical Softcases",
-      "M6 Series Pistol or M61 Carbine",
+      {
+        "label": "M6 Series Pistol or M6J Carbine",
+        "choose_one": [
+          {"weapon": "M6A Personal Defense Weapon System"},
+          {"weapon": "M6B Personal Defense Weapon System"},
+          {"weapon": "M6C Personal Defense Weapon System"},
+          {"weapon": "M6D Personal Defense Weapon System"},
+          {"weapon": "M6E Personal Defense Weapon System"},
+          {"weapon": "M6F Personal Defense Weapon System"},
+          {"weapon": "M6G Personal Defense Weapon System"},
+          {"weapon": "M6H Personal Defense Weapon System"},
+          {"weapon": "M6H2 Personal Defense Weapon System"},
+          {"weapon": "M6I Adjustable Personal Defense Weapon System"},
+          {"weapon": "M6K Personal Defense Weapon System"},
+          {"weapon": "M6J Adjustable Personal Defense Carbine"}
+        ]
+      },
       "Flashlight",
-      "M9 Dual-Purpose Grenade",
-      "M1 Combat Knife or Model 52 Knife",
-      "Three Flashbang Grenades",
+      {"weapon": "M9 High-Explosive Dual-Purpose Grenade", "label": "M9 Dual-Purpose Grenade"},
+      {
+        "label": "M1 Combat Knife or Model 52 Knife",
+        "choose_one": [
+          {"weapon": "M1 Combat Knife"},
+          {"weapon": "Model 52 Navy Knife"}
+        ]
+      },
+      {"weapon": "Flashbang Grenade", "quantity": 3, "label": "Three Flashbang Grenades"},
       "Utility Webbing"
     ],
-
     "heavy_support": [
-      "AIE-486H Heavy Machine Gun",
+      {"weapon": "AIE-486H Heavy Machine Gun", "label": "AIE-486H Heavy Machine Gun"},
       "Hard Case, Tactical Softcase",
-      "M6 Series Pistol",
+      {
+        "label": "M6 Series Pistol",
+        "choose_one": [
+          {"weapon": "M6A Personal Defense Weapon System"},
+          {"weapon": "M6B Personal Defense Weapon System"},
+          {"weapon": "M6C Personal Defense Weapon System"},
+          {"weapon": "M6D Personal Defense Weapon System"},
+          {"weapon": "M6E Personal Defense Weapon System"},
+          {"weapon": "M6F Personal Defense Weapon System"},
+          {"weapon": "M6G Personal Defense Weapon System"},
+          {"weapon": "M6H Personal Defense Weapon System"},
+          {"weapon": "M6H2 Personal Defense Weapon System"},
+          {"weapon": "M6I Adjustable Personal Defense Weapon System"},
+          {"weapon": "M6K Personal Defense Weapon System"}
+        ]
+      },
       "Flashlight",
-      "M9 Dual-Purpose Grenade",
-      "M1 Combat Knife or Model 52 Knife",
-      "Flashbang",
+      {"weapon": "M9 High-Explosive Dual-Purpose Grenade", "label": "M9 Dual-Purpose Grenade"},
+      {
+        "label": "M1 Combat Knife or Model 52 Knife",
+        "choose_one": [
+          {"weapon": "M1 Combat Knife"},
+          {"weapon": "Model 52 Navy Knife"}
+        ]
+      },
+      {"weapon": "Flashbang Grenade", "label": "Flashbang"},
       "Utility Webbing"
     ],
-
     "heavy_squad_support": [
-      "M735 or M739 Light Machine Gun",
+      {
+        "label": "M735 or M739 Light Machine Gun",
+        "choose_one": [
+          {"weapon": "M735 Light Machine Gun"},
+          {"weapon": "M739 Light Machine Gun"}
+        ]
+      },
       "Hard Case, Tactical Softcase",
-      "M6 Series Pistol",
+      {
+        "label": "M6 Series Pistol",
+        "choose_one": [
+          {"weapon": "M6A Personal Defense Weapon System"},
+          {"weapon": "M6B Personal Defense Weapon System"},
+          {"weapon": "M6C Personal Defense Weapon System"},
+          {"weapon": "M6D Personal Defense Weapon System"},
+          {"weapon": "M6E Personal Defense Weapon System"},
+          {"weapon": "M6F Personal Defense Weapon System"},
+          {"weapon": "M6G Personal Defense Weapon System"},
+          {"weapon": "M6H Personal Defense Weapon System"},
+          {"weapon": "M6H2 Personal Defense Weapon System"},
+          {"weapon": "M6I Adjustable Personal Defense Weapon System"},
+          {"weapon": "M6K Personal Defense Weapon System"}
+        ]
+      },
       "Flashlight",
-      "M9 Dual-Purpose Grenade",
-      "M1 Combat Knife or Model 52 Knife",
-      "Flashbang",
+      {"weapon": "M9 High-Explosive Dual-Purpose Grenade", "label": "M9 Dual-Purpose Grenade"},
+      {
+        "label": "M1 Combat Knife or Model 52 Knife",
+        "choose_one": [
+          {"weapon": "M1 Combat Knife"},
+          {"weapon": "Model 52 Navy Knife"}
+        ]
+      },
+      {"weapon": "Flashbang Grenade", "label": "Flashbang"},
       "Utility Webbing"
     ],
-
     "long_range_specialist": [
-      "Sniper Rifle System 99 Rifle",
+      {"weapon": "Sniper Rifle System 99 Anti-Materiel", "label": "Sniper Rifle System 99 Rifle"},
       "Tactical Hard Case, Tactical Softcase",
-      "M6 Series Pistol",
+      {
+        "label": "M6 Series Pistol",
+        "choose_one": [
+          {"weapon": "M6A Personal Defense Weapon System"},
+          {"weapon": "M6B Personal Defense Weapon System"},
+          {"weapon": "M6C Personal Defense Weapon System"},
+          {"weapon": "M6D Personal Defense Weapon System"},
+          {"weapon": "M6E Personal Defense Weapon System"},
+          {"weapon": "M6F Personal Defense Weapon System"},
+          {"weapon": "M6G Personal Defense Weapon System"},
+          {"weapon": "M6H Personal Defense Weapon System"},
+          {"weapon": "M6H2 Personal Defense Weapon System"},
+          {"weapon": "M6I Adjustable Personal Defense Weapon System"},
+          {"weapon": "M6K Personal Defense Weapon System"}
+        ]
+      },
       "Flashlight",
-      "M9 Dual-Purpose Grenade",
-      "M1 Combat Knife or Model 52 Knife",
-      "Two Flashbang Grenades",
+      {"weapon": "M9 High-Explosive Dual-Purpose Grenade", "label": "M9 Dual-Purpose Grenade"},
+      {
+        "label": "M1 Combat Knife or Model 52 Knife",
+        "choose_one": [
+          {"weapon": "M1 Combat Knife"},
+          {"weapon": "Model 52 Navy Knife"}
+        ]
+      },
+      {"weapon": "Flashbang Grenade", "quantity": 2, "label": "Two Flashbang Grenades"},
       "Utility Webbing"
     ],
-
     "anti_armor": [
-      "M41 Rocket Launcher",
+      {"weapon": "M41 Surface-to-Surface Rocket Launcher", "label": "M41 Rocket Launcher"},
       "Hard Case, Tactical Softcase",
-      "M6 Series Pistol",
+      {
+        "label": "M6 Series Pistol",
+        "choose_one": [
+          {"weapon": "M6A Personal Defense Weapon System"},
+          {"weapon": "M6B Personal Defense Weapon System"},
+          {"weapon": "M6C Personal Defense Weapon System"},
+          {"weapon": "M6D Personal Defense Weapon System"},
+          {"weapon": "M6E Personal Defense Weapon System"},
+          {"weapon": "M6F Personal Defense Weapon System"},
+          {"weapon": "M6G Personal Defense Weapon System"},
+          {"weapon": "M6H Personal Defense Weapon System"},
+          {"weapon": "M6H2 Personal Defense Weapon System"},
+          {"weapon": "M6I Adjustable Personal Defense Weapon System"},
+          {"weapon": "M6K Personal Defense Weapon System"}
+        ]
+      },
       "Flashlight",
-      "M9 Dual-Purpose Grenade",
-      "M1 Combat Knife or Model 52 Knife",
-      "Flashbang",
+      {"weapon": "M9 High-Explosive Dual-Purpose Grenade", "label": "M9 Dual-Purpose Grenade"},
+      {
+        "label": "M1 Combat Knife or Model 52 Knife",
+        "choose_one": [
+          {"weapon": "M1 Combat Knife"},
+          {"weapon": "Model 52 Navy Knife"}
+        ]
+      },
+      {"weapon": "Flashbang Grenade", "label": "Flashbang"},
       "Utility Webbing"
     ]
   }

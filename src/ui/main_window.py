@@ -250,6 +250,8 @@ class MainWindow(
         self._outlier_characteristics = {}
         # {"upbringing"|"environment": {"name": str, "choices": [label, ...]}}
         self._background_choices = {}
+        # {"name": pack_name, "choices": [weapon name, ...]}
+        self._equipment_pack_choices = {}
         self._loaded_character_path = None
 
         self.update_soldier_types()
@@ -415,6 +417,7 @@ class MainWindow(
             if hasattr(self, attr):
                 delattr(self, attr)
         self._light_xp_spent = 0
+        self._equipment_pack_choices = {}
         self._selected_light_category = None
         self._selected_light_aspects = {}
         self._selected_light_powers = {}

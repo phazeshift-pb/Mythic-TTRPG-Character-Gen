@@ -21,6 +21,7 @@ sys.path.insert(0, str(REPO_ROOT))
 from src.data_loader import DataLoader  # noqa: E402
 from src.models.background_choices import SECTIONS, is_choice, option_modifiers  # noqa: E402
 from src.models.character import CHARACTERISTIC_NAME_TO_CODE  # noqa: E402
+from src.models import equipment_packs  # noqa: E402
 
 DATA_ROOT = REPO_ROOT / "data"
 CHARACTERS_ROOT = REPO_ROOT / "characters"
@@ -109,6 +110,78 @@ def check_grenades(game_data, errors):
                         )
 
 
+WEAPON_TAGS = {"I", "U", "UD", "OH", "TH", "DW", "HW", "PD", "SD", "BD"}
+RANGED_FIELDS = ("rate_of_fire", "range", "magazine", "magazine_type", "reload", "ammunition")
+
+
+def check_unsc_armory(game_data, errors):
+    """Core UNSC weapons and explosives: unique names, known tags, sane numbers."""
+    for family, key in (("unsc_weapons", "unsc_weapons"), ("unsc_explosives", "unsc_explosives")):
+        for doc in game_data.families.get(family, {}).values():
+            source = doc.get("source_path", family)
+            seen = set()
+            for group, records in doc.get(key, {}).items():
+                for record in records:
+                    name = record.get("name")
+                    if not name:
+                        errors.append(f"{source}: {group} entry missing name")
+                        continue
+                    if name in seen:
+                        errors.append(f"{source}: duplicate weapon name '{name}'")
+                    seen.add(name)
+                    for field in ("weapon_type", "damage", "price", "weight_kg"):
+                        if field not in record:
+                            errors.append(f"{source}: '{name}' missing {field}")
+                    for field in ("price", "weight_kg"):
+                        value = record.get(field)
+                        if not isinstance(value, (int, float)) or value < 0:
+                            errors.append(f"{source}: '{name}' {field} must be a non-negative number")
+                    unknown = set(record.get("tags", [])) - WEAPON_TAGS
+                    if unknown:
+                        errors.append(f"{source}: '{name}' has unknown tags {sorted(unknown)}")
+                    if family == "unsc_weapons" and group != "melee_weapons":
+                        for field in RANGED_FIELDS:
+                            if record.get(field) in (None, ""):
+                                errors.append(f"{source}: '{name}' missing {field}")
+                    pierce = record.get("pierce")
+                    if pierce is not None and not isinstance(pierce, (int, str)):
+                        errors.append(f"{source}: '{name}' pierce must be a number or formula text")
+
+
+def check_equipment_packs(game_data, errors):
+    """Pack weapon references must name armory records; choices need 2+ options."""
+    index = equipment_packs.armory_index(game_data)
+    if not index:
+        return  # this ruleset has no armory (Light & Sky packs are plain text)
+    for name, doc in game_data.families.get("soldier_type", {}).items():
+        source = doc.get("source_path", name)
+        for pack, items in (doc.get("equipment_sets") or {}).items():
+            for entry in items:
+                if isinstance(entry, str):
+                    continue
+                if equipment_packs.is_choice(entry):
+                    options = entry["choose_one"]
+                    if len(options) < 2 or not all(equipment_packs.is_weapon_ref(o) for o in options):
+                        errors.append(
+                            f"{source}: pack '{pack}' has a malformed choice group "
+                            f"'{equipment_packs.describe(entry)}' (need 2+ weapon options)"
+                        )
+                        continue
+                elif not equipment_packs.is_weapon_ref(entry):
+                    errors.append(f"{source}: pack '{pack}' has an unrecognized entry {entry!r}")
+                    continue
+                for ref in equipment_packs.weapon_references([entry]):
+                    if ref["weapon"] not in index:
+                        errors.append(
+                            f"{source}: pack '{pack}' references unknown weapon '{ref['weapon']}'"
+                        )
+                    quantity = ref.get("quantity", 1)
+                    if not isinstance(quantity, int) or quantity < 1:
+                        errors.append(
+                            f"{source}: pack '{pack}' weapon '{ref['weapon']}' quantity must be a positive whole number"
+                        )
+
+
 _MODIFIER = re.compile(r"^\s*[+-]\d+\s+(.+?)\s*$")
 
 
@@ -193,6 +266,8 @@ def main(argv=None):
         check_lifestyle_rolls(game_data, errors)
         check_background_modifiers(game_data, errors, warnings)
         check_grenades(game_data, errors)
+        check_unsc_armory(game_data, errors)
+        check_equipment_packs(game_data, errors)
 
     check_saved_characters(known_skills, known_abilities, warnings)
 

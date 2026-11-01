@@ -32,7 +32,10 @@ class BackgroundChoiceDialog(QDialog):
             previous = selected[index] if index < len(selected) else None
             if previous in group["labels"]:
                 combo.setCurrentIndex(group["labels"].index(previous))
-            form.addRow(self.SECTION_LABELS.get(group["section"], "Choice"), combo)
+            row_label = group.get("row_label") or self.SECTION_LABELS.get(
+                group["section"], "Choice"
+            )
+            form.addRow(row_label, combo)
             self.combos.append(combo)
         layout.addLayout(form)
 

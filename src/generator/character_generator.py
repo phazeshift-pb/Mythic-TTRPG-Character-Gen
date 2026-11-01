@@ -2,6 +2,7 @@ import random
 from typing import Optional
 
 from ..models.character import Character
+from ..models.equipment_packs import armory_index, is_choice, resolve_pack
 
 
 class CharacterGenerator:
@@ -440,9 +441,23 @@ class CharacterGenerator:
 
         filtered_items = []
         for item in items:
-            if not self.use_light_and_sky and item.startswith("LNS_"):
+            if (
+                not self.use_light_and_sky
+                and isinstance(item, str)
+                and item.startswith("LNS_")
+            ):
                 continue
             filtered_items.append(item)
 
-        char.equipment.extend(filtered_items)
-        char.log(f"Applied equipment set '{first_set_name}' with {len(filtered_items)} items.")
+        # Weapon references resolve against the armory; choice groups need a
+        # player pick, so this automatic path leaves them out.
+        weapons, gear, _ = resolve_pack(
+            [i for i in filtered_items if not is_choice(i)],
+            index=armory_index(self.data),
+        )
+        char.equipment.extend(gear)
+        char.weapons.extend(weapons)
+        char.log(
+            f"Applied equipment set '{first_set_name}' with "
+            f"{len(weapons)} weapons and {len(gear)} items."
+        )

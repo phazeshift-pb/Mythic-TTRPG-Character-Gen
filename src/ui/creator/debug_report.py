@@ -4,6 +4,7 @@
 Part of MainWindow (src/ui/main_window.py); methods use its widgets and state via self.
 """
 
+from src.models.equipment_packs import weapon_summary
 from src.models.derived_stats import (
     ROBUST_WOUNDS,
     WOUNDS_BASE,
@@ -156,7 +157,7 @@ class DebugReportMixin:
                 f"Equipment: {', '.join(character.equipment) or 'None'}",
                 f"Equipment pack: {character.equipment_pack or 'None'}",
                 f"Armor: {character.armor or 'None'}",
-                f"Weapons: {', '.join(character.weapons) or 'None'}",
+                f"Weapons: {', '.join(weapon_summary(w) for w in character.weapons) or 'None'}",
                 f"Connections: {', '.join(character.connections) or 'None'}",
                 f"Light Aspects: {', '.join(character.light_aspects) or 'None'}",
                 f"Light Abilities: {', '.join(character.light_abilities) or 'None'}",

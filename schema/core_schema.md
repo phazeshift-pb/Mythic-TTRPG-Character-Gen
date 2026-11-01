@@ -57,6 +57,8 @@ Files: `core/unsc_soldier_types/*.json`, `light_and_sky/character_creation/human
 }
 ```
 
+Each `equipment_sets` pack is an array whose entries are one of: a plain string for gear that has no armory record yet (`"Flashlight"`); a weapon reference `{ "weapon": string, "quantity"?: number, "note"?: string, "label"?: string }`, where `weapon` is the exact `name` of a record in `core/equipment/unsc_weapons.json` or `unsc_grenades_and_explosives.json`, `quantity` defaults to 1, and `label` keeps the book's wording for display; or a choice group `{ "label"?: string, "choose_one": [weapon reference, ...] }` where the player picks one option. A character's pack picks are saved as weapon names, one per choice group, in `selections.equipment.choices`, and the resolved weapons are saved in `character.weapons` as `{ "name", "quantity", "nickname"?, "note"?, "category"? }` objects.
+
 `physical_attributes`, `insurrectionist_rules`, and `equipment_sets` may be empty objects when the source table does not define them. `special_rules` is intentionally open-ended because soldier types contain named rules with different shapes. `mythic_characteristics` and `advancements` may be empty or partial maps.
 
 ## Character Creation
@@ -135,6 +137,9 @@ All records in these families may use `citation`, `reference_page`, `requirement
 - `combat/armor.json`: armor catalog/table document. It may contain armor tables, `armor_subtype`, `armor_variant`, `armor_perks`, and `exotic_armor_perks`.
 - `light_and_sky/equipment/armor.json`: armor catalog with timeline, material tables, modules, perks, and variants.
 - `light_and_sky/equipment/weapons.json`: grouped weapon arrays such as `scout_rifles`, `pulse_rifles`, and `sidearms`; weapon records contain source-defined combat fields including `rate_of_fire`, `damage`, `bonus_damage`, `pierce`, `range`, `magazine`, `reload`, `tags`, `ammo_type`, and `weapon_type`.
+- `core/equipment/unsc_weapons.json`: `{ "unsc_weapons": { group: [WeaponRecord] }, "citation": string }`. Groups are `pistols`, `smgs`, `rifles`, `machine_guns`, `sniper_rifles`, `shotguns`, `energy_weapons`, `chemical_sprayers`, `rocket_launchers`, `missile_launchers`, `grenade_launchers`, `mortar_launchers`, and `melee_weapons`. Vehicle weaponry and turrets are not included.
+- `core/equipment/unsc_grenades_and_explosives.json`: `{ "unsc_explosives": { "grenades" | "satchel_charges" | "demolitions" | "landmines": [WeaponRecord] }, "citation": string }`.
+- A core `WeaponRecord` uses the same combat field names as Light and Sky weapons: `name`, optional `nickname` (the book's short name), `faction`, `weapon_type`, `weight_kg`, `damage` (dice roll), `bonus_damage` (base damage, without a leading `+`), `pierce`, `price`, `tags` (`I`, `U`, `UD`, `OH`, `TH`, `DW`, `HW`, `PD`, `SD`, `BD`, without brackets), `special_rules` (array of rule names such as `"Blast (8)"`), optional `comes_with` (array), and `description` (the full rule text after the tags). Ranged weapons add `rate_of_fire`, `range`, `magazine`, `magazine_type` (`Magazine`, `Tube`, `Belt`, `Battery`, or `Tank`), `reload`, and `ammunition`. Melee weapons use `reach` instead of `range`; shields add `shield_armor` and `breakpoints`; a weapon with two damage profiles adds `damage_profile` and `alternate_profiles`. Explosives use `range` for the Blast/Kill radii. `--` in the book is stored as `null`; values containing formulas (`"(X)D10"`, `"4 +Full Strength Modifier"`) stay text.
 - Equipment records may use numeric strings for dice, ranges, Pierce, ammunition, and other values because these values can contain formulas or units.
 
 ## Light and Sky
