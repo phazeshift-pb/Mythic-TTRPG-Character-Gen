@@ -153,6 +153,7 @@ def test_unsc_armor_loads_and_matches_the_book():
     armor = core.get("unsc_armor", "unsc_armor")["unsc_armor"]
     by_name = {r["name"]: r for group in armor.values() for r in group}
     assert len(by_name) == 69
+    assert by_name["ED4 E.O.D"]["characteristic_bonus"] == {"AGI": -10}
     m52b = by_name["M52B Standard"]
     assert (m52b["weight_kg"], m52b["price"], m52b["armor_rating"]) == (
         11.9, 38, {"head": 18, "arms": 19, "chest": 20, "legs": 19})

@@ -71,6 +71,8 @@ class Character:
     # and the characteristic bonuses the worn suit grants (see starting_armor).
     armor_variant: Optional[Dict[str, Any]] = None
     armor_bonus: Dict[str, int] = field(default_factory=dict)
+    # Toggled on the character sheet; bonuses apply only while worn.
+    armor_equipped: bool = True
     # Core: {"name", "quantity", "nickname", "note", "category"} dicts naming
     # UNSC Armory records (see src/models/equipment_packs.py).
     weapons: List[Any] = field(default_factory=list)

@@ -117,7 +117,7 @@ def test_equipment_pack_links_armory_weapons(window, monkeypatch):
     assert not any("Grenade" in item for item in character.equipment)
     export = window._character_export_data()
     assert export["selections"]["equipment"]["pack"] == "point_man"
-    assert len(export["selections"]["equipment"]["choices"]) == 3
+    assert len(export["selections"]["equipment"]["choices"]) == 4
 
 
 def test_spartan_picks_mjolnir_and_variant(qt_app, project_root, monkeypatch):

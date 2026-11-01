@@ -21,6 +21,8 @@ from PySide6.QtWidgets import (
 )
 
 from src.game_data import GameData
+from src.models import worn_armor
+from src.models.derived_stats import max_wounds
 from src.models.starting_armor import format_bonus
 from src.models.equipment_packs import (
     armor_index,
@@ -152,20 +154,15 @@ class InteractiveCharacterSheet(QWidget):
         for key, label in self.identity_labels.items():
             label.setText(self._display_value(identity[key]))
 
-        characteristics = character.get("characteristics")
-        mythic = character.get("mythic_characteristics")
-        characteristics = characteristics if isinstance(characteristics, dict) else {}
-        mythic = mythic if isinstance(mythic, dict) else {}
-        for code, label in self.characteristic_labels.items():
-            value = characteristics.get(code, "—")
-            label.setText(str(value))
         self._set_characteristic_tooltips(game_data)
-        for code, label in self.mythic_characteristic_labels.items():
-            value = self._display_value(mythic[code]) if code in mythic else "—"
-            label.setText(value)
-        self._set_movement_speeds(character, game_data)
-        self._set_perceptive_range(character, game_data)
-        self._set_carrying_capacity(character, game_data)
+        has_armor = bool(character.get("armor"))
+        self.armor_equipped_checkbox.blockSignals(True)
+        self.armor_equipped_checkbox.setEnabled(has_armor)
+        self.armor_equipped_checkbox.setChecked(worn_armor.is_equipped(character))
+        self.armor_equipped_checkbox.blockSignals(False)
+        if has_armor:
+            self.character_data["armor_equipped"] = worn_armor.is_equipped(character)
+        self._refresh_armor_effects()
 
         self._set_skill_rows(character.get("skills"), game_data)
         self._set_ability_labels(character.get("abilities"), game_data)
@@ -231,6 +228,7 @@ class InteractiveCharacterSheet(QWidget):
 
     def _build_character_tab(self, layout):
         self.identity_labels = self._add_identity_section(layout)
+        self._add_worn_armor_section(layout)
         self.characteristic_labels = self._add_characteristic_section(layout)
         derived_stats = QHBoxLayout()
         self.movement_labels = self._add_movement_section(derived_stats)
@@ -294,6 +292,7 @@ class InteractiveCharacterSheet(QWidget):
         self.resource_inputs["wounds"] = self._add_resource_input(
             right_column, "Wounds", "wounds"
         )
+        self.max_wounds_label = self._add_value_section(right_column, "Max Wounds")
         self.resource_inputs["fatigue"] = self._add_resource_input(
             right_column, "Fatigue", "fatigue"
         )
@@ -383,6 +382,108 @@ class InteractiveCharacterSheet(QWidget):
         parent_layout.addWidget(section)
         return labels
 
+    def _add_worn_armor_section(self, parent_layout):
+        section, grid = self._new_section("Worn Armor")
+        self.armor_equipped_checkbox = QCheckBox("Armor equipped")
+        self.armor_equipped_checkbox.setToolTip(
+            "When checked, the worn armor's characteristic bonuses and penalties "
+            "are applied to characteristics, movement, carrying capacity, "
+            "Perceptive Range, skill tests, and Max Wounds."
+        )
+        self.armor_equipped_checkbox.toggled.connect(self._on_armor_equipped_toggled)
+        self.worn_armor_label = QLabel("No armor")
+        self.worn_armor_label.setWordWrap(True)
+        grid.addWidget(self.armor_equipped_checkbox, 0, 0)
+        grid.addWidget(self.worn_armor_label, 0, 1)
+        grid.setColumnStretch(1, 1)
+        parent_layout.addWidget(section)
+
+    def _on_armor_equipped_toggled(self, checked):
+        self.character_data["armor_equipped"] = bool(checked)
+        self._refresh_armor_effects()
+
+    def _armor_context(self):
+        """(armor records, soldier-type record) for the loaded character."""
+        game_data = getattr(self, "game_data", None)
+        if game_data is None:
+            return {}, None
+        return (
+            armor_index(game_data),
+            self._soldier_type_record(self.character_data, game_data),
+        )
+
+    def _effective_character(self):
+        armors, soldier = self._armor_context()
+        return worn_armor.effective_character(self.character_data, armors, soldier)
+
+    def _refresh_armor_effects(self):
+        """Re-derive every stat that worn armor changes."""
+        character = getattr(self, "character_data", {}) or {}
+        game_data = getattr(self, "game_data", None)
+        armors, soldier = self._armor_context()
+        bonus = worn_armor.armor_bonus(character, armors, soldier)
+        equipped = worn_armor.is_equipped(character)
+        effective = worn_armor.effective_character(character, armors, soldier)
+
+        descriptions = getattr(self, "_characteristic_descriptions", {})
+        characteristics = effective["characteristics"]
+        for code, label in self.characteristic_labels.items():
+            value = characteristics.get(code, "—")
+            change = worn_armor.bonus_for(code, bonus) if equipped else 0
+            label.setText(f"{value} ({change:+d})" if change else str(value))
+            tooltip = descriptions.get(code, "")
+            if change:
+                tooltip = (tooltip + "\n\n" if tooltip else "") + (
+                    f"Includes {change:+d} from worn armor "
+                    f"({character.get('characteristics', {}).get(code)} base)."
+                )
+            label.setToolTip(tooltip)
+        mythic = effective["mythic_characteristics"]
+        for code, label in self.mythic_characteristic_labels.items():
+            change = worn_armor.bonus_for(code, bonus, mythic=True) if equipped else 0
+            if code in mythic:
+                value = self._display_value(mythic[code])
+                label.setText(f"{value} ({change:+d})" if change else value)
+            else:
+                label.setText("—")
+            label.setToolTip(f"Includes {change:+d} Mythic from worn armor." if change else "")
+
+        self._set_movement_speeds(effective, game_data)
+        self._set_perceptive_range(effective, game_data)
+        self._set_carrying_capacity(effective, game_data)
+        self._set_max_wounds(character, effective)
+
+        armor = character.get("armor")
+        if not armor:
+            self.worn_armor_label.setText("No armor")
+        else:
+            summary = format_bonus(bonus) or "no characteristic changes"
+            state = "applied" if equipped else "not applied (armor removed)"
+            self.worn_armor_label.setText(f"{armor}: {summary} - {state}")
+
+    def _set_max_wounds(self, character, effective):
+        """Max Wounds = 40 + TOU modifier x2 + Mythic TOU x2 (+ Robust, background)."""
+        def wounds_for(stats):
+            toughness = self._parse_integer((stats.get("characteristics") or {}).get("TOU"))
+            if toughness is None:
+                return None
+            return max_wounds(
+                toughness,
+                (stats.get("mythic_characteristics") or {}).get("TOU", 0),
+                self._as_list(stats.get("outliers")).count("Robust"),
+                flat_bonus=self._parse_integer(stats.get("wounds_modifier")) or 0,
+            )
+
+        total = wounds_for(effective)
+        if total is None:
+            self.max_wounds_label.setText("Not available")
+            return
+        base = wounds_for(character)
+        change = total - base if base is not None else 0
+        self.max_wounds_label.setText(
+            f"{total} ({change:+d} from worn armor)" if change else str(total)
+        )
+
     def _add_characteristic_section(self, parent_layout):
         section, grid = self._new_section("Characteristics")
         labels = {}
@@ -437,6 +538,7 @@ class InteractiveCharacterSheet(QWidget):
             if isinstance(record, dict)
             and isinstance(record.get("id"), str)
         }
+        self._characteristic_descriptions = descriptions
         for code, label in self.characteristic_name_labels.items():
             description = descriptions.get(code, "")
             label.setToolTip(description)
@@ -833,6 +935,15 @@ class InteractiveCharacterSheet(QWidget):
             ),
             None,
         )
+        multipliers = movement_rules.get("multipliers")
+        if movement is None and agility_modifier > 0 and isinstance(multipliers, dict):
+            # The table stops at 9, but the book says movement continues past
+            # it using the same multipliers (Half 1x ... Sprint 8x).
+            movement = {
+                key: agility_modifier * value
+                for key, value in multipliers.items()
+                if isinstance(value, (int, float))
+            }
         if movement is None:
             self._display_unavailable_movement(
                 f"No movement entry for modifier {agility_modifier}"
@@ -1092,7 +1203,7 @@ class InteractiveCharacterSheet(QWidget):
             and isinstance(record.get("name"), str)
             and isinstance(record.get("id"), str)
         }
-        characteristic_values = self.character_data.get("characteristics")
+        characteristic_values = self._effective_character().get("characteristics")
         characteristic_values = (
             characteristic_values
             if isinstance(characteristic_values, dict)

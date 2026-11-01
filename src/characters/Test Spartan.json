@@ -1,0 +1,181 @@
+{
+  "format_version": 1,
+  "ruleset": "Core",
+  "character": {
+    "name": "Test Spartan",
+    "soldier_type": "UNSC / ONI Spartan II Augmented Soldier",
+    "characteristics": {
+      "STR": 60,
+      "TOU": 60,
+      "AGI": 50,
+      "WFR": 57,
+      "WFM": 45,
+      "INT": 38,
+      "PER": 40,
+      "CRG": 35,
+      "CHA": 21,
+      "LDR": 44
+    },
+    "mythic_characteristics": {
+      "STR": "+5",
+      "TOU": "+4",
+      "AGI": "+3"
+    },
+    "skills": {
+      "Intimidation": 10,
+      "Athletics": 10,
+      "Evasion": 10,
+      "Demolition": 10,
+      "Survival": 0
+    },
+    "abilities": [
+      "Gather Senses",
+      "Mobile Fire",
+      "Rapid Reload"
+    ],
+    "upbringing": "Commoner",
+    "environment": "Country",
+    "lifestyle": "Loner",
+    "lifestyle_results": [
+      {
+        "name": "Body Builder",
+        "roll": 7,
+        "choices": []
+      },
+      {
+        "name": "Body Builder",
+        "roll": 6,
+        "choices": []
+      },
+      {
+        "name": "Loner",
+        "roll": 3,
+        "choices": []
+      }
+    ],
+    "wounds": 60,
+    "wounds_modifier": 0,
+    "fatigue": 0,
+    "rank": "Petty Officer Second Class.",
+    "credits": 0,
+    "experience": 3300,
+    "starting_experience": 15000,
+    "experience_spent": 11700,
+    "experience_tier": 5,
+    "equipment": [
+      "Hard Case, Tactical Softcase",
+      "Flashlight",
+      "Utility Webbing"
+    ],
+    "equipment_pack": "heavy_support",
+    "armor": "Mark VI Powered Assault Armor",
+    "armor_variant": null,
+    "armor_bonus": {
+      "STR": 20,
+      "mythic_STR": 2,
+      "AGI": 10,
+      "mythic_AGI": 2
+    },
+    "armor_equipped": true,
+    "weapons": [
+      {
+        "name": "AIE-486H Heavy Machine Gun",
+        "quantity": 1,
+        "nickname": "AIE",
+        "category": "machine_guns"
+      },
+      {
+        "name": "M6A Personal Defense Weapon System",
+        "quantity": 1,
+        "nickname": "M6 Civ",
+        "category": "pistols"
+      },
+      {
+        "name": "M9 High-Explosive Dual-Purpose Grenade",
+        "quantity": 1,
+        "nickname": "Frag Grenade",
+        "category": "grenades"
+      },
+      {
+        "name": "M1 Combat Knife",
+        "quantity": 1,
+        "nickname": "Combat Knife",
+        "category": "melee_weapons"
+      },
+      {
+        "name": "Flashbang Grenade",
+        "quantity": 1,
+        "nickname": "Flashbang",
+        "category": "grenades"
+      }
+    ],
+    "connections": [],
+    "specialization_packs": [
+      "Heavy Weapons"
+    ],
+    "outliers": [],
+    "luck_available": 6,
+    "luck_total": 6,
+    "light_aspects": [],
+    "light_abilities": [],
+    "light_grenades": [],
+    "supers": []
+  },
+  "selections": {
+    "starting_xp": 15000,
+    "initial_setup": {
+      "soldier_type": "spartan_ii",
+      "upbringing": "Commoner",
+      "environment": "Country",
+      "background_choices": {
+        "environment": [
+          "+5 Perception",
+          "-5 Perception"
+        ]
+      },
+      "lifestyles": [
+        "Body Builder",
+        "Body Builder",
+        "Loner"
+      ],
+      "skill_training": {
+        "Intimidation": 10,
+        "Athletics": 10,
+        "Evasion": 10,
+        "Demolition": 10
+      }
+    },
+    "creation_points": {
+      "option": "Base (85 points)",
+      "total": 85,
+      "allocations": {
+        "STR": 4,
+        "TOU": 9,
+        "AGI": 0,
+        "WFR": 17,
+        "WFM": 5,
+        "INT": 10,
+        "PER": 0,
+        "CRG": 0,
+        "CHA": 20,
+        "LDR": 20
+      }
+    },
+    "outliers": [],
+    "outlier_characteristics": {},
+    "specialization_packs": [
+      "Heavy Weapons"
+    ],
+    "equipment": {
+      "pack": "heavy_support",
+      "choices": [
+        "M6A Personal Defense Weapon System",
+        "M1 Combat Knife"
+      ],
+      "starting_armor": {
+        "armor": "Mark VI Powered Assault Armor",
+        "variant": null
+      }
+    }
+  }
+}

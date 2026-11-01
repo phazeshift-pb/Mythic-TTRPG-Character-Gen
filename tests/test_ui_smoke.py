@@ -49,6 +49,39 @@ def test_background_choice_dialog(qt_app):
     assert dialog.selected_choices == ["+5 Courage", "-5 Strength"]
 
 
+def test_sheet_armor_toggle_updates_stats_live(qt_app):
+    from dataclasses import asdict
+
+    from src.data_loader import DataLoader
+    from src.generator.character_generator import CharacterGenerator
+    from src.models import starting_armor
+    from src.models.equipment_packs import armor_index
+    from src.ui.interactive_character_sheet import InteractiveCharacterSheet
+
+    data = DataLoader().load_all()
+    armors = armor_index(data)
+    soldier = data.get("soldier_type", "spartan_iv")
+    character = CharacterGenerator(data).generate("t", "spartan_iv", auto_assign_skills=False)
+    character.apply_starting_armor(
+        "GEN II Powered Armor", None, starting_armor.worn_bonus("GEN II Powered Armor", soldier, armors)
+    )
+    export = asdict(character)
+    export.pop("debug_log")
+    base_str = export["characteristics"]["STR"]
+
+    sheet = InteractiveCharacterSheet()
+    sheet.set_character(export, "Core", data)
+    assert sheet.armor_equipped_checkbox.isChecked()
+    assert sheet.characteristic_labels["STR"].text() == f"{base_str + 25} (+25)"
+    worn_carry = sheet.carrying_capacity_labels["carry"].text()
+
+    sheet.armor_equipped_checkbox.setChecked(False)
+    assert sheet.characteristic_labels["STR"].text() == str(base_str)
+    assert sheet.carrying_capacity_labels["carry"].text() != worn_carry
+    assert sheet.character_data_for_save()["armor_equipped"] is False
+    assert sheet.character_data_for_save()["characteristics"]["STR"] == base_str
+
+
 def test_starting_armor_dialog(qt_app):
     from src.data_loader import DataLoader
     from src.models.equipment_packs import armor_index

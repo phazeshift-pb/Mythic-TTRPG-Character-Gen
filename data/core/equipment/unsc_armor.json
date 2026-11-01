@@ -67,7 +67,10 @@
         },
         "special_rules": [],
         "description": "-10 Agility. Ignores Kill Radius damage increase and ignores 10 Pierce from Explosive weaponry.",
-        "era": "Pre-War"
+        "era": "Pre-War",
+        "characteristic_bonus": {
+          "AGI": -10
+        }
       },
       {
         "name": "M48M Medic",
@@ -228,7 +231,10 @@
         },
         "special_rules": [],
         "description": "-10 Agility. Ignores Kill Radius damage increase and ignores 10 Pierce from Explosive weaponry.",
-        "era": "Covenant War"
+        "era": "Covenant War",
+        "characteristic_bonus": {
+          "AGI": -10
+        }
       },
       {
         "name": "M52M Medic",
@@ -439,7 +445,10 @@
         },
         "special_rules": [],
         "description": "-10 Agility. Ignores Kill Radius damage increase and ignores 10 Pierce from Explosive weaponry.",
-        "era": "Post-War"
+        "era": "Post-War",
+        "characteristic_bonus": {
+          "AGI": -10
+        }
       },
       {
         "name": "M53M1 Medic",
@@ -768,7 +777,10 @@
         },
         "special_rules": [],
         "description": "-5 Penalty to Reaction Tests and -10 Penalty to Character’s Agility when worn. Ignores Kill Radius and ignores 10 Pierce from Explosives.",
-        "variant_of": "Standard ODST Battle Dress Uniform"
+        "variant_of": "Standard ODST Battle Dress Uniform",
+        "characteristic_bonus": {
+          "AGI": -10
+        }
       },
       {
         "name": "ODST UVH-BA Recon",
