@@ -101,7 +101,7 @@ class Character:
                 self.log(f"Set {code} = {value}")
 
         # Mythic characteristics
-        self.mythic_characteristics = soldier_data.get("mythic_characteristics", {})
+        self.mythic_characteristics = dict(soldier_data.get("mythic_characteristics", {}))
 
         # Rank
         for trait in soldier_data.get("traits", []):

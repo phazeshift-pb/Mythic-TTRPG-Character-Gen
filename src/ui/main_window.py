@@ -404,7 +404,6 @@ class MainWindow(
             return
 
         self.generated_character = char
-        self._pre_outlier_characteristics = char.characteristics.copy()
         self._pre_outlier_mythic_characteristics = (
             char.mythic_characteristics.copy()
         )

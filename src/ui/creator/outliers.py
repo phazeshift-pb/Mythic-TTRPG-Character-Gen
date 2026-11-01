@@ -1,3 +1,4 @@
+# pyright: reportAttributeAccessIssue=false, reportArgumentType=false
 """Outlier selection.
 
 Part of MainWindow (src/ui/main_window.py); methods use its widgets and state via self.
@@ -155,9 +156,11 @@ class OutliersMixin:
             self.generated_character.outliers = []
             self.generated_character.luck_available = self._starting_luck
             self.generated_character.luck_total = self._starting_luck
-            self.generated_character.characteristics = (
-                self._pre_outlier_characteristics.copy()
-            )
+            self.generated_character.characteristics = {
+                code: self._generated_characteristics[code]
+                + self._creation_allocations[code]
+                for code in CHAR_CODES
+            }
             self.generated_character.mythic_characteristics = (
                 self._pre_outlier_mythic_characteristics.copy()
             )
