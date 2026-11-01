@@ -98,3 +98,59 @@ def test_starting_armor_dialog(qt_app):
     assert dialog.selected_variant["name"] == "Recon"
     dialog.armor_combo.setCurrentIndex(0)  # SPI Mark I takes no variants
     assert not dialog.variant_combo.isEnabled() and dialog.selected_variant is None
+
+
+def _guardian_export(data):
+    from dataclasses import asdict
+
+    from src.generator.character_generator import CharacterGenerator
+
+    subclass = next(iter(data.get("soldier_type", "titan")["subclasses"]))
+    character = CharacterGenerator(data, use_light_and_sky=True).generate(
+        "Guardian", "titan", subclass=subclass, human_soldier_type="exo",
+        guardian_class="titan", auto_assign_skills=False,
+    )
+    export = asdict(character)
+    export.pop("debug_log")
+    return export
+
+
+def test_loot_dialog_rolls_and_adds_to_sheet(qt_app):
+    import random
+
+    from src.data_loader import DataLoader
+    from src.loot.generator import LootGenerator
+    from src.ui.interactive_character_sheet import InteractiveCharacterSheet
+    from src.ui.loot_dialog import LootDialog
+
+    data = DataLoader(use_light_and_sky=True).load_all()
+    sheet = InteractiveCharacterSheet()
+    sheet.set_character(_guardian_export(data), "Light & Sky", data)
+    assert not sheet.loot_button.isHidden()
+    base_agi = sheet.character_data["characteristics"]["AGI"]
+
+    dialog = LootDialog(LootGenerator(data, random.Random(7)), on_add=sheet.add_loot, parent=sheet)
+    dialog.rarity_combo.setCurrentIndex(dialog.rarity_combo.findData("Legendary"))
+    dialog.generate()
+    assert dialog.current_roll["kind"] == "weapon"
+    assert "PERKS" in dialog.card_label.text()
+    dialog.add_to_character()
+    weapon = sheet.character_data_for_save()["weapons"][-1]
+    assert weapon["source"] == "light_and_sky_loot"
+    assert weapon["name"] in sheet.weapon_label.text()
+
+    dialog.kind_combo.setCurrentIndex(dialog.kind_combo.findData("armor"))
+    assert dialog.material_combo.isVisibleTo(dialog)
+    dialog.generate()
+    roll = dialog.current_roll
+    assert roll["kind"] == "armor"
+    sheet.add_loot(roll, confirm_replace=False)
+    saved = sheet.character_data_for_save()
+    assert saved["armor_loot"] == roll
+    assert saved["armor"] in sheet.armor_label.text()
+    expected = base_agi + roll["agility_modifier"]
+    assert sheet.characteristic_labels["AGI"].text().startswith(str(max(0, expected)))
+    dialog.close()
+
+    sheet.set_character(saved, "Core", data)
+    assert sheet.loot_button.isHidden()

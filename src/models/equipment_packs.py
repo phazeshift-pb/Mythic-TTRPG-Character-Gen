@@ -18,6 +18,9 @@ yields more than one, the first is worn and the rest are carried as gear.
 
 from typing import Dict, List, NamedTuple, Optional, Sequence
 
+from src.loot.character_loot import perk_line
+
+
 ARMORY_FAMILIES = {"unsc_weapons": "unsc_weapons", "unsc_explosives": "unsc_explosives"}
 ARMOR_FAMILIES = {"unsc_armor": "unsc_armor"}
 
@@ -216,7 +219,9 @@ def weapon_summary(entry, index: Optional[Dict[str, dict]] = None) -> str:
         text += f" ({entry['nickname']})"
     if entry.get("note"):
         text += f" [{entry['note']}]"
-    record = (index or {}).get(name)
+    # Light & Sky loot carries its own stats (see src/loot/character_loot.py).
+    loot = entry.get("loot") if isinstance(entry.get("loot"), dict) else None
+    record = (index or {}).get(name) or loot
     if record:
         damage = record.get("damage")
         bonus = record.get("bonus_damage")
@@ -232,4 +237,8 @@ def weapon_summary(entry, index: Optional[Dict[str, dict]] = None) -> str:
             stats.append(record["rate_of_fire"])
         if stats:
             text += " - " + ", ".join(stats)
+    if loot:
+        perks = perk_line(loot)
+        if perks:
+            text += f"\n    {perks}"
     return text

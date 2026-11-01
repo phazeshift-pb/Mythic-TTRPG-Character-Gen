@@ -44,6 +44,28 @@ applicable soldier traits, and Strongman or Strong Back effects. Mythic
 Strength, Toughness, and Agility values appear in separate boxes below their
 base characteristics.
 
+## Light & Sky loot
+
+Light & Sky character sheets have a **Light & Sky Loot** button next to Save.
+It opens the random loot generator from the Destiny TTRPG Loot Generator: pick
+Weapon or Armor, optionally narrow by ammo type, weapon type, armor material
+and rarity, then press **Generate** to roll a loot card. Hover over the card to
+read its perk descriptions.
+
+- **Add to Weapons** appends the rolled weapon to the character's weapons. Its
+  stats, element, special rules and perks are saved with it
+  (`source: "light_and_sky_loot"`, full roll under `loot`).
+- **Equip Armor** makes the rolled armor set the character's worn armor (it
+  asks before replacing armor already worn). The full roll is saved as
+  `armor_loot`, and the set's Agility modifier is saved as `armor_bonus`, so
+  the Armor equipped toggle and all worn-armor effects use it.
+- **Export Card** saves the loot card as a PNG.
+
+Press **Save** on the sheet afterwards to keep the loot. Rarity odds, exotic
+chances, perk counts and rarity colors are in `src/loot/loot_rules.py`; the
+tables come from `data/light_and_sky/equipment`, and the element and ammo icons
+from `assets/light_and_sky`.
+
 ## Development
 
 Install dependencies with `pip install PySide6 pytest`, then run the app with

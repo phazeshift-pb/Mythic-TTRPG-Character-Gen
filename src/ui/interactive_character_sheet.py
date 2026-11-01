@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QHeaderView,
     QLabel,
+    QMessageBox,
     QPlainTextEdit,
     QPushButton,
     QScrollArea,
@@ -30,6 +31,9 @@ from src.models.equipment_packs import (
     armory_index,
     weapon_summary,
 )
+from src.loot import character_loot
+from src.loot.generator import LootDataMissing, LootGenerator
+from src.ui.loot_dialog import LootDialog
 from src.ui.specialization_page import DelayedTooltipLabel
 from src.ui.skill_test_dialog import SkillTestDialog
 from src.ui import theme
@@ -54,6 +58,8 @@ class InteractiveCharacterSheet(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.character_data: dict[str, Any] = {}
+        self.game_data: GameData | None = None
+        self.ruleset = ""
         self.note_fields: dict[str, QPlainTextEdit] = {}
 
         layout = QVBoxLayout(self)
@@ -97,6 +103,13 @@ class InteractiveCharacterSheet(QWidget):
         header.addLayout(experience_controls, 0, 1, Qt.AlignmentFlag.AlignCenter)
 
         header_buttons = QHBoxLayout()
+        self.loot_button = QPushButton("Light & Sky Loot")
+        self.loot_button.setToolTip(
+            "Roll random Light & Sky weapons and armor for this character."
+        )
+        self.loot_button.clicked.connect(self.open_loot_dialog)
+        self.loot_button.hide()
+        header_buttons.addWidget(self.loot_button)
         self.save_button = QPushButton("Save")
         self.save_button.setEnabled(False)
         self.save_button.clicked.connect(self.save_requested.emit)
@@ -129,6 +142,8 @@ class InteractiveCharacterSheet(QWidget):
     ):
         self.character_data = dict(character)
         self.game_data = game_data
+        self.ruleset = ruleset
+        self.loot_button.setVisible(ruleset == "Light & Sky")
         self.name_label.setText(str(character.get("name") or "Unnamed Character"))
         self.ruleset_label.setText(ruleset)
 
@@ -177,13 +192,29 @@ class InteractiveCharacterSheet(QWidget):
             )
         )
         armory = armory_index(game_data) if game_data else {}
+        weapons = self._as_list(character.get("weapons"))
         self.weapon_label.setText(
             self._format_items(
-                [weapon_summary(weapon, armory) for weapon in self._as_list(character.get("weapons"))]
+                [weapon_summary(weapon, armory) for weapon in weapons]
+            )
+        )
+        self.weapon_label.setToolTip(
+            "\n\n".join(
+                f"{weapon.get('name')}\n{character_loot.perk_descriptions(weapon['loot'])}"
+                for weapon in weapons
+                if isinstance(weapon, dict)
+                and isinstance(weapon.get("loot"), dict)
+                and character_loot.perk_descriptions(weapon["loot"])
             )
         )
         armors = armor_index(game_data) if game_data else {}
-        armor_lines = [armor_summary(character.get("armor"), armors)]
+        loot_armor = character_loot.worn_loot_armor(character)
+        if loot_armor:
+            armor_lines = character_loot.armor_sheet_lines(loot_armor)
+            self.armor_label.setToolTip(character_loot.perk_descriptions(loot_armor))
+        else:
+            armor_lines = [armor_summary(character.get("armor"), armors)]
+            self.armor_label.setToolTip("")
         variant = character.get("armor_variant")
         if isinstance(variant, dict) and variant.get("name"):
             armor_lines.append(
@@ -212,6 +243,40 @@ class InteractiveCharacterSheet(QWidget):
 
         for key, field in self.note_fields.items():
             field.setPlainText(str(character.get(key) or ""))
+
+    # ---------------------------------------------------------
+    # Light & Sky loot
+    # ---------------------------------------------------------
+    def open_loot_dialog(self):
+        try:
+            generator = LootGenerator(getattr(self, "game_data", None))
+        except LootDataMissing as error:
+            QMessageBox.warning(self, "Loot Unavailable", str(error))
+            return
+        LootDialog(generator, on_add=self.add_loot, parent=self).exec()
+
+    def add_loot(self, roll: dict, confirm_replace: bool = True):
+        """Add a rolled weapon, or equip a rolled armor set. Returns a status message."""
+        data = self.character_data_for_save()
+        if roll.get("kind") == "armor":
+            current = data.get("armor")
+            if current and confirm_replace:
+                answer = QMessageBox.question(
+                    self,
+                    "Replace Worn Armor?",
+                    f"Replace {current} with {character_loot.armor_name(roll)}?",
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                    QMessageBox.StandardButton.No,
+                )
+                if answer != QMessageBox.StandardButton.Yes:
+                    return None
+            name = character_loot.equip_armor(data, roll)
+            message = f"{name} equipped."
+        else:
+            name = character_loot.add_weapon(data, roll)["name"]
+            message = f"{name} added to Weapons."
+        self.set_character(data, self.ruleset, self.game_data)
+        return message + " Press Save on the character sheet to keep it."
 
     def set_save_available(self, available: bool):
         self.save_button.setEnabled(available)
