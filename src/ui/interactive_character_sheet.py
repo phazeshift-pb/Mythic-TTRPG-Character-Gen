@@ -1,4 +1,5 @@
 import html
+import random
 import re
 from typing import Any
 
@@ -41,6 +42,7 @@ from src.loot.generator import LootDataMissing, LootGenerator
 from src.ui.loot_dialog import LootDialog
 from src.ui.specialization_page import DelayedTooltipLabel
 from src.ui.skill_test_dialog import SkillTestDialog
+from src.ui.attack_roll_dialog import AttackRollDialog
 from src.ui import theme
 
 
@@ -64,6 +66,7 @@ class InteractiveCharacterSheet(QWidget):
         super().__init__(parent)
         self.character_data: dict[str, Any] = {}
         self.game_data: GameData | None = None
+        self.dice_rng = random.Random()  # tests can seed this
         self.ruleset = ""
         self.note_fields: dict[str, QPlainTextEdit] = {}
 
@@ -1405,6 +1408,11 @@ class InteractiveCharacterSheet(QWidget):
         )
         result_box.addSpacing(8)
         result_box.addWidget(self.attack_total_label)
+        self.attack_roll_button = QPushButton("Roll Attack")
+        self.attack_roll_button.setToolTip("Roll the To Hit Test against this total.")
+        self.attack_roll_button.setEnabled(False)
+        self.attack_roll_button.clicked.connect(self.open_attack_roll)
+        result_box.addWidget(self.attack_roll_button)
         self.attack_base_label = self._form_label("")
         self.attack_base_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         result_box.addWidget(self.attack_base_label)
@@ -1441,6 +1449,20 @@ class InteractiveCharacterSheet(QWidget):
             box.toggled.connect(self._refresh_attack)
         self.attack_custom_input.valueChanged.connect(self._refresh_attack)
         return section
+
+    def attack_roll_dialog(self):
+        """The roll window for the current attack (not shown), or None."""
+        self._refresh_attack()
+        result = getattr(self, "_attack_result", None)
+        if result is None:
+            return None
+        title = f"{self._attack_profile().name} - {self.attack_mode_input.currentText()}"
+        return AttackRollDialog(title, result, rng=self.dice_rng, parent=self)
+
+    def open_attack_roll(self):
+        dialog = self.attack_roll_dialog()
+        if dialog is not None:
+            dialog.exec()
 
     def _populate_attack_weapons(self):
         game_data = getattr(self, "game_data", None)
@@ -1579,6 +1601,8 @@ class InteractiveCharacterSheet(QWidget):
         stats = getattr(self, "_throwing_character", None) or {}
         code = attack.MODE_CHARACTERISTIC.get(mode, "WFR")
         value = self._parse_integer((stats.get("characteristics") or {}).get(code))
+        self.attack_roll_button.setEnabled(value is not None)
+        self._attack_result = None
         if value is None:
             self.attack_total_label.setText("Roll under —")
             self.attack_base_label.setText("Load a character to calculate attacks.")
@@ -1589,6 +1613,7 @@ class InteractiveCharacterSheet(QWidget):
         result = attack.attack_target(
             profile, self._attack_options(profile, mode, value, mythic_strength)
         )
+        self._attack_result = result
         names = {"WFR": "Warfare Range", "WFM": "Warfare Melee"}
         self.attack_total_label.setText(f"Roll {result.total} or under")
         self.attack_total_label.setToolTip("Roll 1D100. A natural 01 is a critical success.")
@@ -2188,6 +2213,7 @@ class InteractiveCharacterSheet(QWidget):
             skill_level,
             difficulty_options,
             parent=self,
+            rng=self.dice_rng,
         )
         dialog.exec()
 

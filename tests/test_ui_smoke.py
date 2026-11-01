@@ -324,3 +324,55 @@ def test_sheet_energy_shields(qt_app):
     sheet.armor_equipped_checkbox.setChecked(False)
     assert sheet.shield_labels["integrity"].text() == "—"
     assert "energy_shield_current" not in sheet.character_data_for_save()
+
+
+def test_skill_test_dialog_rolls(qt_app):
+    import random
+
+    from src.ui.skill_test_dialog import SkillTestDialog
+
+    dialog = SkillTestDialog(
+        "Athletics", [("Strength", "STR", 50)], 10, [("Challenging", 0), ("Hard", -20)],
+        rng=random.Random(7),
+    )
+    result = dialog.roll()
+    assert result.target == 60
+    assert result.degrees_text in dialog.roll_result_label.text()
+    assert dialog.roll_button.text() == "Roll Again"
+
+
+def test_attack_roll_dialog(qt_app):
+    import random
+    from dataclasses import asdict
+
+    from src.data_loader import DataLoader
+    from src.generator.character_generator import CharacterGenerator
+    from src.models import attack
+    from src.ui.attack_roll_dialog import describe_hit, plan_attacks
+    from src.ui.interactive_character_sheet import InteractiveCharacterSheet
+    from src.models import dice
+
+    data = DataLoader().load_all()
+    export = asdict(CharacterGenerator(data).generate("t", "marine", auto_assign_skills=False))
+    export.pop("debug_log")
+    export["weapons"] = [{"name": "M6A Personal Defense Weapon System", "quantity": 1}]
+    sheet = InteractiveCharacterSheet()
+    sheet.dice_rng = random.Random(3)
+    sheet.set_character(export, "Core", data)
+    weapon = sheet.attack_weapon_input
+    weapon.setCurrentIndex(weapon.findText("M6A Personal Defense Weapon System"))
+    sheet.attack_aim_input.setCurrentIndex(sheet.attack_aim_input.findData("full"))
+
+    dialog = sheet.attack_roll_dialog()
+    assert dialog.table.rowCount() == 1
+    dialog.count_input.setValue(3)
+    targets = [int(dialog.table.item(row, 1).text()) for row in range(3)]
+    assert targets[0] == targets[1] == dialog.result.total
+    assert targets[2] == dialog.result.total - 10  # Full Aim only helps the first two
+
+    result = attack.AttackResult("WFR", 50, [("Called Shot: Body location", -30)], [])
+    assert plan_attacks(result, 2) == [20, 20]
+    # Missed the Called Shot but would have hit with 2 Degrees of Success without it
+    assert "still hits" in describe_hit(dice.resolve_test(25, 20), 20, -30)
+    assert describe_hit(dice.resolve_test(45, 20), 20, -30) == "Miss"
+    assert describe_hit(dice.resolve_test(1, 20), 20, -30).startswith("You choose")

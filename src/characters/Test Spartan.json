@@ -119,7 +119,12 @@
     "light_aspects": [],
     "light_abilities": [],
     "light_grenades": [],
-    "supers": []
+    "supers": [],
+    "creation_experience": 15000,
+    "energy_shield_current": 125,
+    "medical_notes": "",
+    "character_notes": "",
+    "combat_notes": ""
   },
   "selections": {
     "starting_xp": 15000,
