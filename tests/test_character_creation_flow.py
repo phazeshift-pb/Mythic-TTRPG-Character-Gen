@@ -194,3 +194,41 @@ def test_guardian_mythics_do_not_change_human_record():
 
     assert guardian.mythic_characteristics == {"STR": "+3", "TOU": "+4", "AGI": "+1"}
     assert data.get("soldier_type", "exo")["mythic_characteristics"] == {}
+
+
+@pytest.mark.parametrize(
+    "soldier, expected",
+    [
+        # Marine: +5 Simple STR/AGI/PER, +10 Rookie WFR on a 25 base.
+        ("marine", {"STR": 30, "AGI": 30, "WFR": 35, "PER": 30, "TOU": 25}),
+        # ORION: base 35/40/35/25..., +5 WFM, +10 WFR, +5 PER, +5 LDR.
+        ("orion", {"WFM": 30, "WFR": 35, "PER": 45, "LDR": 30, "STR": 35}),
+        # Navy: +10 Rookie INT and PER.
+        ("navy_technician", {"INT": 35, "PER": 35, "STR": 25}),
+    ],
+)
+def test_soldier_type_advancements_apply_to_characteristics(soldier, expected):
+    data = DataLoader().load_all()
+    character = CharacterGenerator(data).generate(
+        "t", soldier, starting_experience=10000, auto_assign_skills=False
+    )
+    for code, value in expected.items():
+        assert character.characteristics[code] == value, code
+    assert any("Soldier Type advancement" in line for line in character.debug_log)
+
+
+def test_soldier_type_advancements_count_as_owned_in_xp_shop():
+    from dataclasses import asdict
+
+    from src.models.xp_shop import XpShop
+
+    data = DataLoader().load_all()
+    character = asdict(
+        CharacterGenerator(data).generate(
+            "t", "marine", starting_experience=10000, auto_assign_skills=False
+        )
+    )
+    shop = XpShop(character, data, "Core")
+    warfare_range = shop.find("characteristic:WFR")
+    assert warfare_range.current.startswith("35 (Rookie)")
+    assert warfare_range.cost == 800  # Intermediate is next

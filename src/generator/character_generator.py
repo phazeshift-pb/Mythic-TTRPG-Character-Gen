@@ -1,7 +1,7 @@
 import random
 from typing import Optional
 
-from ..models.character import Character
+from ..models.character import Character, advancement_bonus
 from ..models.equipment_packs import armor_index, armory_index, is_choice, resolve_pack
 
 
@@ -229,12 +229,20 @@ class CharacterGenerator:
                 number = self._numeric_value(value)
                 if number is not None:
                     components.setdefault(code, []).append(number)
+            for code, value in (base_record.get("advancements") or {}).items():
+                bonus = advancement_bonus(value)
+                if bonus:
+                    components.setdefault(code, []).append(bonus)
 
         if guardian_record:
             for code, value in guardian_record.get("base_characteristics", {}).items():
                 number = self._numeric_value(value)
                 if number is not None:
                     components.setdefault(code, []).append(number)
+            for code, value in (guardian_record.get("advancements") or {}).items():
+                bonus = advancement_bonus(value)
+                if bonus and guardian_record is not base_record:
+                    components.setdefault(code, []).append(bonus)
 
             subclass_data = guardian_record.get("subclasses", {}).get(subclass, {})
             for code, value in subclass_data.get("characteristic_modifiers", {}).items():
@@ -320,6 +328,7 @@ class CharacterGenerator:
                     char.characteristics[code] += modifier
                     char.log(f"Guardian class modifier: {code} +{modifier}")
 
+            char.apply_soldier_type_advancements(guardian)
             char.mythic_characteristics.update(guardian.get("mythic_characteristics", {}))
 
             subclasses = guardian.get("subclasses", {})

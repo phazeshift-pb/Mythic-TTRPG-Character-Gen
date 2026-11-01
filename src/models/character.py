@@ -23,6 +23,18 @@ CHARACTERISTIC_NAME_TO_CODE = {
 }
 
 _MODIFIER_PATTERN = re.compile(r"^\s*([+-]\d+)\s+(.+?)\s*$")
+_ADVANCEMENT_PATTERN = re.compile(r"([+-]\d+)")
+
+
+def advancement_bonus(value: Any) -> int:
+    """Characteristic bonus of a Soldier Type advancement such as '+10 Rookie'."""
+    if isinstance(value, (int, float)):
+        return int(value)
+    if isinstance(value, str):
+        match = _ADVANCEMENT_PATTERN.search(value)
+        if match:
+            return int(match.group(1))
+    return 0
 
 
 @dataclass
@@ -121,6 +133,8 @@ class Character:
                 self.characteristics[code] = int(value)
                 self.log(f"Set {code} = {value}")
 
+        self.apply_soldier_type_advancements(soldier_data)
+
         # Mythic characteristics
         self.mythic_characteristics = dict(soldier_data.get("mythic_characteristics", {}))
 
@@ -132,6 +146,18 @@ class Character:
 
         # Equipment sets (not applied automatically)
         # You will apply these in the generator pipeline.
+
+    def apply_soldier_type_advancements(self, soldier_data: dict):
+        """Add the Characteristic Advancements a Soldier Type unlocks at creation.
+
+        e.g. a Marine's "+10 Rookie" Warfare Range adds +10 WFR. These count as
+        owned tiers in the XP Shop, so they are never bought again.
+        """
+        for code, value in (soldier_data.get("advancements") or {}).items():
+            bonus = advancement_bonus(value)
+            if bonus and code in self.characteristics:
+                self.characteristics[code] += bonus
+                self.log(f"Soldier Type advancement: {code} {value} ({bonus:+d})")
 
     # -----------------------------
     # Apply Upbringing
