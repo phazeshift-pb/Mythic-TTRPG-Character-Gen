@@ -376,3 +376,108 @@ def test_attack_roll_dialog(qt_app):
     assert "still hits" in describe_hit(dice.resolve_test(25, 20), 20, -30)
     assert describe_hit(dice.resolve_test(45, 20), 20, -30) == "Miss"
     assert describe_hit(dice.resolve_test(1, 20), 20, -30).startswith("You choose")
+
+
+def _marine_sheet(data):
+    from dataclasses import asdict
+
+    from src.generator.character_generator import CharacterGenerator
+    from src.ui.interactive_character_sheet import InteractiveCharacterSheet
+
+    export = asdict(CharacterGenerator(data).generate("t", "marine", auto_assign_skills=False))
+    export.pop("debug_log")
+    sheet = InteractiveCharacterSheet()
+    sheet.set_character(export, "Core", data)
+    return sheet, export
+
+
+def test_sheet_skill_rows_show_training_and_open_a_test(qt_app, monkeypatch):
+    from PySide6.QtWidgets import QFrame
+
+    from src.data_loader import DataLoader
+    from src.ui import interactive_character_sheet as sheet_module
+
+    data = DataLoader().load_all()
+    sheet, export = _marine_sheet(data)
+    export["skills"] = {"Athletics": 10, "Appeal": 0}
+    sheet.set_character(export, "Core", data)
+
+    def pips(name):
+        return [
+            frame.property("role") == "pip-on"
+            for frame in sheet.skill_rows[name].findChildren(QFrame)
+            if str(frame.property("role")).startswith("pip-")
+        ]
+
+    assert pips("Athletics") == [True, True, False]
+    assert pips("Appeal") == [True, False, False]
+    assert pips("Command") == [False, False, False]
+    assert sheet.skill_list.count() == len(sheet.skill_rows)
+
+    opened = []
+
+    class FakeDialog:
+        def __init__(self, skill, characteristics, level, difficulties, parent=None, rng=None):
+            opened.append((skill, level))
+
+        def exec(self):
+            pass
+
+    monkeypatch.setattr(sheet_module, "SkillTestDialog", FakeDialog)
+    sheet.skill_rows["Athletics"].click()
+    sheet.skill_rows["Command"].click()
+    assert opened == [("Athletics", 10), ("Command", -10)]
+
+    # Reloading replaces the rows rather than adding to them.
+    row_count = sheet.skill_list.count()
+    sheet.set_character(export, "Core", data)
+    assert sheet.skill_list.count() == row_count
+
+
+def test_sheet_tabs_keep_notes_and_gear_text(qt_app):
+    from src.data_loader import DataLoader
+
+    data = DataLoader().load_all()
+    sheet, export = _marine_sheet(data)
+    export["medical_notes"] = "Broken rib"
+    export["combat_notes"] = "Spare mags"
+    export["equipment_pack"] = "point_man"
+    export["weapons"] = [{"name": "M1 Combat Knife", "quantity": 1}]
+    sheet.set_character(export, "Core", data)
+
+    tabs = [sheet.tabs.tabText(index) for index in range(sheet.tabs.count())]
+    assert tabs == ["Character", "Combat", "Notes"]
+    for note in sheet.note_fields.values():
+        assert sheet.notes_tab.isAncestorOf(note)
+    assert sheet.combat_tab.isAncestorOf(sheet.throw_table)
+    saved = sheet.character_data_for_save()
+    assert saved["medical_notes"] == "Broken rib"
+    assert saved["combat_notes"] == "Spare mags"
+    assert sheet.equipment_pack_label.text() == "Point Man"
+    assert "<b>M1 Combat Knife</b>" in sheet.weapon_label.text()
+    assert saved["equipment_pack"] == "point_man"
+
+
+def test_sheet_summary_text_is_escaped_and_handles_nothing(qt_app):
+    from src.ui.interactive_character_sheet import InteractiveCharacterSheet as Sheet
+
+    assert Sheet._summary_html([]) == "None"
+    text = Sheet._summary_html(["<Blade> - 1D10, Pierce 2\n    Perks: Sharp"])
+    assert "<b>&lt;Blade&gt;</b>" in text
+    assert "1D10, Pierce 2" in text
+    assert "Perks: Sharp" in text
+
+
+def test_sheet_style_does_not_reach_its_dialogs(qt_app):
+    """The sheet's paper styling must stay off dialogs parented to the sheet."""
+    from PySide6.QtWidgets import QDialog
+
+    from src.ui.interactive_character_sheet import InteractiveCharacterSheet
+
+    sheet = InteractiveCharacterSheet()
+    dialog = QDialog(sheet)
+    assert sheet.tabs.styleSheet() == ""
+    assert sheet.tabs.parent().styleSheet() != ""  # the styled page holds the tabs
+    assert sheet.styleSheet() == ""  # ...but the dialog's parent isn't styled
+    assert dialog.styleSheet() == ""
+    assert not sheet.tabs.parent().isAncestorOf(dialog)
