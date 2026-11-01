@@ -308,3 +308,5 @@ class CharacterFilesMixin:
             "Character Exported",
             f"Character saved to:\n{output_path}",
         )
+        self.reset_character_creator()
+        self.pages.setCurrentWidget(self.landing_page)

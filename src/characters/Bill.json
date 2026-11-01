@@ -1,0 +1,117 @@
+{
+  "format_version": 1,
+  "ruleset": "Light & Sky",
+  "character": {
+    "name": "Bill",
+    "soldier_type": "Hunter Class Soldier Type",
+    "characteristics": {
+      "STR": 41,
+      "TOU": 31,
+      "AGI": 50,
+      "WFR": 55,
+      "WFM": 25,
+      "INT": 34,
+      "PER": 34,
+      "CRG": 38,
+      "CHA": 34,
+      "LDR": 33
+    },
+    "mythic_characteristics": {
+      "STR": "+2",
+      "TOU": "+3",
+      "AGI": "+3"
+    },
+    "skills": {
+      "Athletics": 10,
+      "Survival": 0,
+      "Security": 0,
+      "Deception": 0,
+      "Investigation": 0
+    },
+    "abilities": [
+      "Disarm",
+      "Evasive Maneuvers",
+      "Hand-To-Hand Basic"
+    ],
+    "upbringing": null,
+    "environment": null,
+    "lifestyle": null,
+    "lifestyle_results": [],
+    "wounds": 52,
+    "wounds_modifier": 0,
+    "fatigue": 0,
+    "rank": null,
+    "credits": 0,
+    "experience": 5500,
+    "starting_experience": 15000,
+    "experience_spent": 9500,
+    "experience_tier": 5,
+    "equipment": [],
+    "equipment_pack": null,
+    "armor": null,
+    "armor_variant": null,
+    "armor_bonus": {},
+    "armor_equipped": true,
+    "weapons": [],
+    "connections": [
+      "Arc"
+    ],
+    "specialization_packs": [
+      "Close Quarters"
+    ],
+    "outliers": [],
+    "luck_available": 6,
+    "luck_total": 6,
+    "light_aspects": [],
+    "light_abilities": [],
+    "light_grenades": [],
+    "supers": [],
+    "creation_experience": 15000,
+    "characteristic_advancements": {},
+    "educations": {},
+    "languages": [],
+    "weapon_training": [],
+    "faction_training": [],
+    "wound_upgrades": 0,
+    "augmentations": [],
+    "light_aspect_slots_purchased": 0,
+    "light_ability_slots_purchased": 0,
+    "xp_purchases": []
+  },
+  "selections": {
+    "starting_xp": 15000,
+    "initial_setup": {
+      "human_soldier_type": "human_awoken",
+      "guardian_soldier_type": "hunter",
+      "subclass": "Gunslinger",
+      "connection": "Arc",
+      "skill_training": {}
+    },
+    "creation_points": {
+      "option": "Base (85 points)",
+      "total": 85,
+      "allocations": {
+        "STR": 11,
+        "TOU": 1,
+        "AGI": 10,
+        "WFR": 10,
+        "WFM": 5,
+        "INT": 9,
+        "PER": 9,
+        "CRG": 13,
+        "CHA": 9,
+        "LDR": 8
+      }
+    },
+    "outliers": [],
+    "outlier_characteristics": {},
+    "specialization_packs": [
+      "Close Quarters"
+    ],
+    "equipment": {
+      "light_aspects": [],
+      "light_abilities": [],
+      "supers": []
+    }
+  }
+}

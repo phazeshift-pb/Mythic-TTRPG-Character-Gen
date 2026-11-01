@@ -71,7 +71,14 @@ class CreationPointsMixin:
         )
         self._max_creation_points = points.get("max_per_characteristic", 20)
 
-    def _build_characteristic_controls(self):
+    def _clear_creation_points(self):
+        self._creation_allocations = {code: 0 for code in CHAR_CODES}
+        self._clear_characteristic_controls()
+        self.next_button.setEnabled(False)
+        self.creation_points_remaining_label.setText("Points remaining: 0")
+        self.character_setup_home.set_all_stat_points_allocated(False)
+
+    def _clear_characteristic_controls(self):
         while self.characteristic_grid.count():
             item = self.characteristic_grid.takeAt(0)
             if item is None:
@@ -82,6 +89,9 @@ class CreationPointsMixin:
 
         self.characteristic_value_labels.clear()
         self.characteristic_buttons.clear()
+
+    def _build_characteristic_controls(self):
+        self._clear_characteristic_controls()
         characteristic_document = (
             self.game_data.get("characteristics", "characteristics") or {}
         )

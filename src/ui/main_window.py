@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
     QApplication,
     QFrame,
     QLabel,
+    QMessageBox,
     QPushButton,
     QStackedWidget,
     QVBoxLayout,
@@ -102,6 +103,9 @@ class MainWindow(
         )
         self.character_setup_home.finish_character_button.clicked.connect(
             self.finish_and_name_character
+        )
+        self.character_setup_home.discard_button.clicked.connect(
+            self.discard_character_creation
         )
 
         self.experience_input = self.character_setup_home.experience_input
@@ -461,6 +465,69 @@ class MainWindow(
 
         self._update_creation_point_display()
         self.pages.setCurrentWidget(self.creation_page)
+
+    # ---------------------------------------------------------
+    # Start over
+    # ---------------------------------------------------------
+    def discard_character_creation(self):
+        has_changes = (
+            self.experience_input.value() > 0
+            or self.selected_mode is not None
+            or hasattr(self, "generated_character")
+        )
+        if has_changes:
+            answer = QMessageBox.question(
+                self,
+                "Discard Character?",
+                "Discard all changes to this character and return to the main page?",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                QMessageBox.StandardButton.No,
+            )
+            if answer != QMessageBox.StandardButton.Yes:
+                return
+        self.reset_character_creator()
+        self.pages.setCurrentWidget(self.landing_page)
+
+    def reset_character_creator(self):
+        """Return every creator page to its state on a new window."""
+        # Drop the character and mode first: the combo and spin box signals
+        # fired below act on whichever of them still exist.
+        for attr in (
+            "generated_character",
+            "_generated_characteristics",
+            "_pre_outlier_mythic_characteristics",
+            "_pre_specialization_skills",
+            "_pre_specialization_abilities",
+        ):
+            if hasattr(self, attr):
+                delattr(self, attr)
+        self.version_and_expansions_page.clear_selection()
+
+        self._selected_core_soldier = None
+        self._background_choices = {}
+        self._outlier_characteristics = {}
+        self._equipment_pack_choices = {}
+        self._light_xp_spent = 0
+        self._selected_light_category = None
+        self._selected_light_aspects = {}
+        self._selected_light_powers = {}
+        self._selected_light_supers = {}
+
+        # With no mode selected, the refresh below leaves these untouched.
+        for combo in (
+            self.upbringing_combo,
+            self.environment_combo,
+            *self.lifestyle_combos,
+        ):
+            combo.clear()
+
+        self._clear_creation_points()
+        self.experience_input.setValue(0)
+        self._handle_version_selection_changed(None)
+        self._build_specialization_pack_tiles()
+        self.equipment_page.clear_selection()
+        self.update_equipment_selection()
+        self.initial_character_setup_page.select_category("soldier")
 
 
 # Backwards-compatible name for older imports.

@@ -166,6 +166,350 @@ def test_spartan_picks_mjolnir_and_variant(qt_app, project_root, monkeypatch):
     ui.close()
 
 
+@pytest.fixture
+def finish_dialogs(tmp_path, monkeypatch):
+    """Answer the name prompt and write exports under tmp_path."""
+    from PySide6.QtWidgets import QInputDialog, QMessageBox
+
+    from src.ui.creator import character_files
+
+    fake_module = tmp_path / "src" / "ui" / "creator" / "character_files.py"
+    monkeypatch.setattr(character_files, "__file__", str(fake_module))
+    monkeypatch.setattr(QMessageBox, "information", lambda *args: None)
+    monkeypatch.setattr(QMessageBox, "critical", lambda *args: None)
+
+    def answer(name, accepted=True):
+        monkeypatch.setattr(
+            QInputDialog, "getText", lambda *args, **kwargs: (name, accepted)
+        )
+
+    return answer, fake_module.parents[2] / "characters"
+
+
+def test_finishing_character_returns_to_landing_page(window, finish_dialogs):
+    answer, characters_directory = finish_dialogs
+    answer("Noble Six")
+
+    window.finish_and_name_character()
+
+    assert (characters_directory / "Noble Six.json").exists()
+    assert window.pages.currentWidget() is window.landing_page
+
+
+def test_cancelling_name_prompt_stays_on_setup_home(window, finish_dialogs):
+    answer, characters_directory = finish_dialogs
+    answer("Noble Six", accepted=False)
+    window.pages.setCurrentWidget(window.character_setup_home)
+
+    window.finish_and_name_character()
+
+    assert not characters_directory.exists()
+    assert window.pages.currentWidget() is window.character_setup_home
+    assert hasattr(window, "generated_character")
+
+
+def test_failed_export_stays_on_setup_home(window, finish_dialogs, monkeypatch):
+    answer, _ = finish_dialogs
+    answer("Noble Six")
+    window.pages.setCurrentWidget(window.character_setup_home)
+
+    def fail_write(*args, **kwargs):
+        raise OSError("disk full")
+
+    monkeypatch.setattr(Path, "write_text", fail_write)
+
+    window.finish_and_name_character()
+
+    assert window.pages.currentWidget() is window.character_setup_home
+    assert hasattr(window, "generated_character")
+
+
+def _creator_state(ui):
+    """Everything a player could see or inherit when opening the creator."""
+    home = ui.character_setup_home
+    combos = {
+        "soldier": ui.soldier_combo,
+        "human": ui.human_combo,
+        "guardian": ui.guardian_combo,
+        "upbringing": ui.upbringing_combo,
+        "environment": ui.environment_combo,
+        "subclass": ui.subclass_combo,
+        "connection": ui.connection_combo,
+        **{f"lifestyle{i}": combo for i, combo in enumerate(ui.lifestyle_combos)},
+    }
+    return {
+        "xp": ui.experience_input.value(),
+        "tier": ui.experience_tier_label.text(),
+        "mode": ui.selected_mode,
+        "mode_tiles": [
+            tile.isChecked()
+            for tile in ui.version_and_expansions_page.mode_tiles.values()
+        ],
+        "continue": ui.version_and_expansions_page.continue_button.isEnabled(),
+        "home_buttons": [button.isEnabled() for button in home.home_buttons],
+        "finish": home.finish_character_button.isEnabled(),
+        "equipment_button": home.equipment_or_light_powers_button.text(),
+        "combos": {
+            name: (combo.currentText(), combo.count()) for name, combo in combos.items()
+        },
+        "setup_category": ui.initial_character_setup_page._selected_category,
+        "setup_next": ui.generate_button.isEnabled(),
+        "points_option": ui.creation_points_combo.currentIndex(),
+        "allocations": ui._creation_allocations,
+        "points_label": ui.creation_points_remaining_label.text(),
+        "points_controls": len(ui.characteristic_value_labels),
+        "points_grid": ui.characteristic_grid.count(),
+        "points_next": ui.next_button.isEnabled(),
+        "outliers": [tile.isChecked() for tile, _, _ in ui.outlier_tiles],
+        "outlier_stats": ui._outlier_characteristics,
+        "outlier_done": ui.outlier_done_button.text(),
+        "luck": ui.outlier_page.available_luck_label.text(),
+        "packs": [button.isChecked() for button, _ in ui.specialization_tiles],
+        "packs_next": ui.specialization_done_button.isEnabled(),
+        "packs_next_text": ui.specialization_done_button.text(),
+        "equipment_title": ui.equipment_page_title.text(),
+        "equipment_tiles": len(ui.equipment_tiles),
+        "equipment_grid": ui.equipment_grid.count(),
+        "equipment_done": ui.equipment_done_button.text(),
+        "light_panel_hidden": ui.equipment_page.category_panel.isHidden(),
+        "light_categories": [
+            button.isChecked() for button in ui.equipment_page.category_buttons.values()
+        ],
+        "light_tiles": (len(ui.light_aspect_tiles), len(ui.light_ability_tiles)),
+        "light_xp_label": ui.equipment_page.experience_remaining_label.text(),
+        "light_options": (
+            ui.equipment_page.options_title.text(),
+            ui.equipment_page.options_description.text(),
+        ),
+        "light_selected": (
+            ui._selected_light_category,
+            ui._selected_light_aspects,
+            ui._selected_light_powers,
+            ui._selected_light_supers,
+            ui._light_xp_spent,
+        ),
+        "soldier_skills": ui._selected_soldier_skills,
+        "background_choices": ui._background_choices,
+        "pack_choices": ui._equipment_pack_choices,
+        "core_soldier": getattr(ui, "_selected_core_soldier", None),
+        "character": hasattr(ui, "generated_character"),
+        "pre_specialization": hasattr(ui, "_pre_specialization_skills"),
+    }
+
+
+def _pick(combo, index=1):
+    combo.setCurrentIndex(index)
+
+
+def _build_core_character(ui, monkeypatch):
+    from src.ui.creator import equipment as equipment_module
+
+    class PickFirst:
+        def __init__(self, title, groups, selected=(), parent=None):
+            self.selected_choices = [group["labels"][0] for group in groups]
+
+        def exec(self):
+            from PySide6.QtWidgets import QDialog
+
+            return QDialog.DialogCode.Accepted
+
+    monkeypatch.setattr(equipment_module, "BackgroundChoiceDialog", PickFirst)
+    monkeypatch.setattr(ui, "_ensure_background_choices", lambda: True)
+    monkeypatch.setattr(
+        ui,
+        "_choose_lifestyle_options",
+        lambda record, roll, groups: [group["labels"][0] for group in groups],
+    )
+    ui.experience_input.setValue(100000)
+    ui.version_and_expansions_page.mode_tiles["Core"].setChecked(True)
+    ui.soldier_combo.setCurrentIndex(ui.soldier_combo.findData("marine"))
+    _pick(ui.upbringing_combo)
+    _pick(ui.environment_combo)
+    for combo in ui.lifestyle_combos:
+        _pick(combo)
+    ui._background_choices["upbringing"] = {
+        "name": ui.upbringing_combo.currentData(),
+        "choices": ["stale"],
+    }
+    ui._refresh_initial_setup_options()
+    ui.initial_character_setup_page.select_category("lifestyles")
+    ui.generate_character()
+    _allocate_all_points(ui)
+    _select_outlier(ui, "Robust")
+    ui.outlier_done_button.click()
+    ui.specialization_tiles[0][0].setChecked(True)
+    ui.specialization_done_button.click()
+    next(b for b, name, _ in ui.equipment_tiles if name == "point_man").setChecked(True)
+    ui.equipment_done_button.click()
+    assert ui.character_setup_home.finish_character_button.isEnabled()
+
+
+def _build_light_and_sky_character(ui, monkeypatch):
+    ui.experience_input.setValue(1000000)
+    ui.version_and_expansions_page.mode_tiles["Light & Sky"].setChecked(True)
+    _pick(ui.human_combo)
+    ui.guardian_combo.setCurrentIndex(ui.guardian_combo.findData("titan"))
+    ui.subclass_combo.setCurrentIndex(0)
+    _pick(ui.connection_combo)
+    ui._refresh_initial_setup_options()
+    ui.generate_character()
+    _allocate_all_points(ui)
+    ui.outlier_done_button.click()
+    ui.specialization_tiles[0][0].setChecked(True)
+    ui.specialization_done_button.click()
+    ui.equipment_page.category_buttons["aspects"].click()
+    ui.light_aspect_tiles[0][0].setChecked(True)
+    ui.equipment_done_button.click()
+    assert ui.character_setup_home.finish_character_button.isEnabled()
+
+
+@pytest.fixture
+def blank_window(qt_app, project_root):
+    from src.ui.main_window import MainWindow
+
+    ui = MainWindow()
+    yield ui
+    ui.close()
+
+
+@pytest.mark.parametrize(
+    "build", [_build_core_character, _build_light_and_sky_character]
+)
+def test_saving_character_resets_creator_to_new_window_state(
+    blank_window, finish_dialogs, monkeypatch, build
+):
+    from src.ui.main_window import MainWindow
+
+    answer, characters_directory = finish_dialogs
+    answer("Noble Six")
+    fresh = MainWindow()
+    new_window_state = _creator_state(fresh)
+    fresh.close()
+
+    build(blank_window, monkeypatch)
+    blank_window.character_setup_home.finish_character_button.click()
+
+    assert (characters_directory / "Noble Six.json").exists()
+    assert _creator_state(blank_window) == new_window_state
+
+
+@pytest.mark.parametrize(
+    "first", [_build_core_character, _build_light_and_sky_character]
+)
+def test_second_character_after_saving_starts_clean(
+    blank_window, finish_dialogs, monkeypatch, first
+):
+    import json
+
+    from PySide6.QtCore import QEvent
+    from PySide6.QtWidgets import QApplication
+
+    answer, characters_directory = finish_dialogs
+    answer("First")
+    first(blank_window, monkeypatch)
+    blank_window.character_setup_home.finish_character_button.click()
+    # The app's event loop would destroy the replaced tiles at this point.
+    QApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)
+
+    blank_window.create_character_button.click()
+    assert blank_window.pages.currentWidget() is blank_window.character_setup_home
+
+    _build_core_character(blank_window, monkeypatch)
+    answer("Second")
+    blank_window.character_setup_home.finish_character_button.click()
+
+    saved = json.loads(
+        (characters_directory / "Second.json").read_text(encoding="utf-8")
+    )
+    assert saved["ruleset"] == "Core"
+    assert saved["character"]["name"] == "Second"
+    assert saved["character"]["outliers"] == ["Robust"]
+    assert saved["selections"]["equipment"]["pack"] == "point_man"
+    assert sum(saved["selections"]["creation_points"]["allocations"].values()) == (
+        saved["selections"]["creation_points"]["total"]
+    )
+
+
+def _start_light_and_sky_setup(ui, monkeypatch):
+    ui.experience_input.setValue(1000000)
+    ui.version_and_expansions_page.mode_tiles["Light & Sky"].setChecked(True)
+
+
+@pytest.fixture
+def discard_answers(monkeypatch):
+    """Answer the discard prompt, recording each time it is asked."""
+    from PySide6.QtWidgets import QMessageBox
+
+    asked = []
+
+    def answer(button):
+        def question(*args):
+            asked.append(args)
+            return button
+
+        monkeypatch.setattr(QMessageBox, "question", question)
+
+    answer.asked = asked
+    return answer
+
+
+@pytest.mark.parametrize(
+    "build",
+    [_build_core_character, _build_light_and_sky_character, _start_light_and_sky_setup],
+)
+def test_discard_resets_creator_and_returns_to_landing_page(
+    blank_window, discard_answers, monkeypatch, build
+):
+    from PySide6.QtWidgets import QMessageBox
+
+    from src.ui.main_window import MainWindow
+
+    fresh = MainWindow()
+    new_window_state = _creator_state(fresh)
+    fresh.close()
+    discard_answers(QMessageBox.StandardButton.Yes)
+    build(blank_window, monkeypatch)
+    blank_window.pages.setCurrentWidget(blank_window.character_setup_home)
+
+    blank_window.character_setup_home.discard_button.click()
+
+    assert len(discard_answers.asked) == 1
+    assert blank_window.pages.currentWidget() is blank_window.landing_page
+    assert _creator_state(blank_window) == new_window_state
+
+
+def test_declining_discard_keeps_the_character(
+    blank_window, discard_answers, monkeypatch
+):
+    from PySide6.QtWidgets import QMessageBox
+
+    discard_answers(QMessageBox.StandardButton.No)
+    _build_core_character(blank_window, monkeypatch)
+    blank_window.pages.setCurrentWidget(blank_window.character_setup_home)
+    character = blank_window.generated_character
+
+    blank_window.character_setup_home.discard_button.click()
+
+    assert blank_window.pages.currentWidget() is blank_window.character_setup_home
+    assert blank_window.generated_character is character
+    assert blank_window.character_setup_home.finish_character_button.isEnabled()
+
+
+def test_discard_is_available_and_skips_prompt_with_no_changes(
+    blank_window, discard_answers
+):
+    from PySide6.QtWidgets import QMessageBox
+
+    discard_answers(QMessageBox.StandardButton.No)
+    blank_window.pages.setCurrentWidget(blank_window.character_setup_home)
+    assert blank_window.character_setup_home.discard_button.isEnabled()
+
+    blank_window.character_setup_home.discard_button.click()
+
+    assert discard_answers.asked == []
+    assert blank_window.pages.currentWidget() is blank_window.landing_page
+
+
 def test_core_forte_does_not_change_game_data():
     data = DataLoader(use_light_and_sky=False).load_all()
     generator = CharacterGenerator(data)
