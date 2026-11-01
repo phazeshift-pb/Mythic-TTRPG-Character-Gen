@@ -1,3 +1,4 @@
+# pyright: reportAttributeAccessIssue=false, reportArgumentType=false
 """Loading, saving and exporting character files.
 
 Part of MainWindow (src/ui/main_window.py); methods use its widgets and state via self.

@@ -1,3 +1,4 @@
+# pyright: reportAttributeAccessIssue=false, reportArgumentType=false
 """Light & Sky aspects, abilities, grenades and supers.
 
 Part of MainWindow (src/ui/main_window.py); methods use its widgets and state via self.

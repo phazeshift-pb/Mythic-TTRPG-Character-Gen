@@ -1,3 +1,4 @@
+# pyright: reportAttributeAccessIssue=false, reportArgumentType=false
 """Soldier type, background, lifestyle and Light & Sky setup choices.
 
 Part of MainWindow (src/ui/main_window.py); methods use its widgets and state via self.

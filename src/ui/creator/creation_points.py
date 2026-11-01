@@ -1,3 +1,4 @@
+# pyright: reportAttributeAccessIssue=false, reportArgumentType=false
 """Experience tier and creation point allocation.
 
 Part of MainWindow (src/ui/main_window.py); methods use its widgets and state via self.
