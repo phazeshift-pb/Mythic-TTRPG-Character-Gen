@@ -264,3 +264,63 @@ def test_sheet_attack_calculator(qt_app):
     sheet.attack_braced_input.setChecked(True)
     assert "Heavy Weapon not Braced" not in sheet.attack_breakdown_label.text()
     assert "attack" not in "".join(sheet.character_data_for_save())
+
+
+def test_sheet_damage_resistance(qt_app):
+    import random
+    from dataclasses import asdict
+
+    from src.data_loader import DataLoader
+    from src.generator.character_generator import CharacterGenerator
+    from src.loot.generator import LootGenerator
+    from src.models import damage_resistance
+    from src.ui.interactive_character_sheet import InteractiveCharacterSheet
+
+    data = DataLoader(use_light_and_sky=True).load_all()
+    sheet = InteractiveCharacterSheet()
+    sheet.set_character(_guardian_export(data), "Light & Sky", data)
+    roll = LootGenerator(data, random.Random(5)).generate_armor()
+    sheet.add_loot(roll, confirm_replace=False)
+
+    stats = sheet._throwing_character
+    base = damage_resistance.damage_resistance(
+        stats["characteristics"]["TOU"], stats["mythic_characteristics"].get("TOU", 0)
+    )["chest"]["total"]
+    assert sheet.dr_labels["chest"]["total"].text() == str(base + roll["armor_values"]["chest"])
+
+    sheet.dr_other_inputs["chest"].setValue(3)
+    assert sheet.dr_labels["chest"]["total"].text() == str(base + roll["armor_values"]["chest"] + 3)
+    saved = sheet.character_data_for_save()
+    assert saved["damage_resistance_other"] == {"chest": 3}
+
+    sheet.armor_equipped_checkbox.setChecked(False)
+    assert sheet.dr_labels["chest"]["total"].text() == str(base + 3)
+
+
+def test_sheet_energy_shields(qt_app):
+    import random
+
+    from src.data_loader import DataLoader
+    from src.loot.generator import LootGenerator
+    from src.ui.interactive_character_sheet import InteractiveCharacterSheet
+
+    data = DataLoader(use_light_and_sky=True).load_all()
+    sheet = InteractiveCharacterSheet()
+    sheet.set_character(_guardian_export(data), "Light & Sky", data)
+    assert sheet.shield_labels["integrity"].text() == "—"
+    assert not sheet.shield_current_input.isEnabled()
+
+    sheet.add_loot(LootGenerator(data, random.Random(5)).generate_armor(), confirm_replace=False)
+    assert [sheet.shield_labels[k].text() for k in ("integrity", "delay", "recharge")] == ["125", "5", "50"]
+    assert sheet.shield_current_input.value() == 125
+
+    sheet.shield_current_input.setValue(20)
+    sheet.shield_recharge_button.click()
+    sheet._recharge_energy_shield()
+    assert sheet.shield_current_input.value() in (70, 120)
+    saved = sheet.character_data_for_save()
+    assert saved["energy_shield_current"] == sheet.shield_current_input.value()
+
+    sheet.armor_equipped_checkbox.setChecked(False)
+    assert sheet.shield_labels["integrity"].text() == "—"
+    assert "energy_shield_current" not in sheet.character_data_for_save()

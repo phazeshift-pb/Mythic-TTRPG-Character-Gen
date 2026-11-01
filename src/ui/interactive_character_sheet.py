@@ -28,7 +28,7 @@ from src.game_data import GameData
 from src.models import worn_armor
 from src.models.derived_stats import max_wounds
 from src.models.starting_armor import format_bonus
-from src.models import attack, throwing
+from src.models import attack, damage_resistance, energy_shields, throwing
 from src.models.xp_shop import XpShop
 from src.models.equipment_packs import (
     armor_index,
@@ -179,6 +179,13 @@ class InteractiveCharacterSheet(QWidget):
             label.setText(self._display_value(identity[key]))
 
         self._set_characteristic_tooltips(game_data)
+        saved_other = character.get("damage_resistance_other")
+        saved_other = saved_other if isinstance(saved_other, dict) else {}
+        for slot, box in self.dr_other_inputs.items():
+            box.blockSignals(True)
+            box.setValue(self._integer_value(saved_other.get(slot, 0)))
+            box.blockSignals(False)
+        self._load_energy_shield_inputs(character)
         has_armor = bool(character.get("armor"))
         self.armor_equipped_checkbox.blockSignals(True)
         self.armor_equipped_checkbox.setEnabled(has_armor)
@@ -236,7 +243,6 @@ class InteractiveCharacterSheet(QWidget):
         self.armor_label.setText(
             self._display_value("\n".join(line for line in armor_lines if line))
         )
-        self.shield_label.setText("Not provided")
         self._populate_attack_weapons()
         self._set_light_and_sky_powers(character, ruleset)
 
@@ -293,6 +299,14 @@ class InteractiveCharacterSheet(QWidget):
         self.save_button.setEnabled(available)
 
     def character_data_for_save(self):
+        other = {
+            slot: box.value() for slot, box in self.dr_other_inputs.items() if box.value()
+        }
+        if other:
+            self.character_data["damage_resistance_other"] = other
+        else:
+            self.character_data.pop("damage_resistance_other", None)
+        self._store_energy_shield_inputs()
         for key, field in self.note_fields.items():
             self.character_data[key] = field.toPlainText()
         self.character_data["equipment"] = [
@@ -364,7 +378,6 @@ class InteractiveCharacterSheet(QWidget):
         self.weapon_label = self._add_text_section(columns, "Weapons")
         right_column = QVBoxLayout()
         self.armor_label = self._add_value_section(right_column, "Armor")
-        self.shield_label = self._add_value_section(right_column, "Shields")
         self.resource_inputs["wounds"] = self._add_resource_input(
             right_column, "Wounds", "wounds"
         )
@@ -377,6 +390,8 @@ class InteractiveCharacterSheet(QWidget):
         columns.setStretch(1, 1)
         layout.addLayout(columns)
 
+        layout.addWidget(self._build_damage_resistance_section())
+        layout.addWidget(self._build_energy_shield_section())
         layout.addWidget(self._build_attack_calculator())
 
         notes_row = QHBoxLayout()
@@ -549,6 +564,8 @@ class InteractiveCharacterSheet(QWidget):
         self._set_max_wounds(character, effective)
         self._throwing_character = effective
         self._refresh_throwing()
+        self._refresh_damage_resistance()
+        self._refresh_energy_shield()
         self._refresh_attack()
 
         armor = character.get("armor")
@@ -966,6 +983,274 @@ class InteractiveCharacterSheet(QWidget):
         self.throw_grip_input.currentIndexChanged.connect(self._refresh_throwing)
         self.throw_weight_input.valueChanged.connect(self._refresh_throwing)
         return panel
+
+    # ---------------------------------------------------------
+    # Damage Resistance
+    # ---------------------------------------------------------
+    DR_COLUMNS = (
+        ("location", "Location"),
+        ("roll", "Hit Roll"),
+        ("armor", "Armor"),
+        ("variant", "Variant"),
+        ("toughness", "TOU Mod"),
+        ("mythic", "Mythic TOU"),
+        ("other", "Other"),
+        ("total", "Total DR"),
+    )
+
+    def _build_damage_resistance_section(self):
+        section, grid = self._new_section("Damage Resistance")
+        for column, (_, title) in enumerate(self.DR_COLUMNS):
+            header = self._form_label(title)
+            header.setStyleSheet("border: none; font-weight: bold;")
+            header.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            grid.addWidget(header, 0, column)
+        self.dr_labels: dict[str, dict[str, QLabel]] = {}
+        self.dr_other_inputs: dict[str, QSpinBox] = {}
+        for row, (slot, name, roll) in enumerate(damage_resistance.LOCATIONS, start=1):
+            labels = {}
+            for column, (key, _) in enumerate(self.DR_COLUMNS):
+                if key == "other":
+                    box = QSpinBox()
+                    box.setRange(-100, 200)
+                    box.setToolTip(
+                        "Armor from Permutations, cover worn on the body, GM rulings... "
+                        "Saved with the character."
+                    )
+                    box.valueChanged.connect(self._refresh_damage_resistance)
+                    grid.addWidget(box, row, column)
+                    self.dr_other_inputs[slot] = box
+                    continue
+                text = {"location": name, "roll": roll}.get(key, "—")
+                label = self._form_label(text)
+                label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+                if key == "location":
+                    label.setStyleSheet("border: none; font-weight: bold;")
+                elif key == "total":
+                    label.setMinimumHeight(32)
+                    label.setStyleSheet(
+                        f"font-size: 18px; font-weight: bold; color: {theme.HIGHLIGHT}; "
+                        f"background-color: #1b1b1b; border: 1px solid {theme.GREEN_LIGHT}; "
+                        "border-radius: 4px; padding: 2px 10px;"
+                    )
+                grid.addWidget(label, row, column)
+                labels[key] = label
+            self.dr_labels[slot] = labels
+        for column in range(len(self.DR_COLUMNS)):
+            grid.setColumnStretch(column, 1)
+        self.dr_summary_label = self._form_label("")
+        self.dr_summary_label.setWordWrap(True)
+        self.dr_summary_label.setStyleSheet(f"border: none; color: {theme.TEXT_MUTED};")
+        grid.addWidget(self.dr_summary_label, len(damage_resistance.LOCATIONS) + 1, 0, 1, len(self.DR_COLUMNS))
+        return section
+
+    def _refresh_damage_resistance(self, *_):
+        if not hasattr(self, "dr_labels"):
+            return
+        character = getattr(self, "character_data", {}) or {}
+        stats = getattr(self, "_throwing_character", None) or {}
+        toughness = self._parse_integer((stats.get("characteristics") or {}).get("TOU"))
+        if toughness is None:
+            for labels in self.dr_labels.values():
+                for key in ("armor", "variant", "toughness", "mythic", "total"):
+                    labels[key].setText("—")
+            self.dr_summary_label.setText("Load a character to see Damage Resistance.")
+            return
+
+        game_data = getattr(self, "game_data", None)
+        armors = armor_index(game_data) if game_data else {}
+        armor = damage_resistance.armor_ratings(character, armors, game_data)
+        mythic = (stats.get("mythic_characteristics") or {}).get("TOU", 0)
+        table = damage_resistance.damage_resistance(
+            toughness, mythic, armor, {slot: box.value() for slot, box in self.dr_other_inputs.items()}
+        )
+        for slot, parts in table.items():
+            labels = self.dr_labels[slot]
+            labels["armor"].setText(str(parts["armor"]))
+            labels["variant"].setText(f"{parts['variant']:+d}" if parts["variant"] else "—")
+            labels["toughness"].setText(str(parts["toughness"]))
+            labels["mythic"].setText(str(parts["mythic"]))
+            labels["total"].setText(str(parts["total"]))
+            labels["total"].setToolTip(
+                " + ".join(
+                    f"{parts[key]} {title}"
+                    for key, title in (
+                        ("armor", "Armor"), ("variant", "Variant"), ("toughness", "Toughness Modifier"),
+                        ("mythic", "Mythic Toughness"), ("other", "Other"),
+                    )
+                    if parts[key] or key in ("armor", "toughness")
+                )
+            )
+
+        lines = [f"Damage Resistance = Toughness Modifier ({table['head']['toughness']}) "
+                 f"+ Mythic Toughness ({table['head']['mythic']}) + Armor Rating for the location hit."]
+        if not armor["name"]:
+            lines.append("No armor worn.")
+        elif not armor["equipped"]:
+            lines.append(f"{armor['name']} is removed, so it adds no Armor.")
+        elif not armor["found"]:
+            lines.append(f"Armor Ratings for {armor['name']} aren't in the data; use Other.")
+        else:
+            worn = armor["name"] + (f" ({armor['variant']} variant)" if armor["variant"] else "")
+            lines.append(f"Wearing {worn}.")
+        if armor["equipped"]:
+            for note in armor.get("variant_notes", []):
+                lines.append(f"Not included (situational): {note}")
+        self.dr_summary_label.setText("\n".join(lines))
+
+    # ---------------------------------------------------------
+    # Energy Shields
+    # ---------------------------------------------------------
+    def _shield_tile(self, grid, column, title):
+        heading = self._form_label(title)
+        heading.setStyleSheet("border: none; font-weight: bold;")
+        heading.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        value = QLabel("—")
+        value.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        value.setMinimumHeight(40)
+        value.setStyleSheet(
+            f"font-size: 22px; font-weight: bold; color: {theme.HIGHLIGHT}; "
+            f"background-color: #1b1b1b; border: 1px solid {theme.GREEN_LIGHT}; "
+            "border-radius: 4px; padding: 2px 12px;"
+        )
+        grid.addWidget(heading, 0, column)
+        grid.addWidget(value, 1, column)
+        return value
+
+    def _build_energy_shield_section(self):
+        section, grid = self._new_section("Energy Shields")
+        self.shield_labels = {
+            "integrity": self._shield_tile(grid, 0, "Shield Integrity"),
+            "delay": self._shield_tile(grid, 1, "Recharge Delay (Rounds)"),
+            "recharge": self._shield_tile(grid, 2, "Recharge Rate (per Round)"),
+        }
+        self.shield_labels["delay"].setToolTip(
+            "Rounds before the shield starts recharging. Taking 10+ Damage in a Round resets it."
+        )
+
+        tracker = QGridLayout()
+        tracker.addWidget(self._form_label("Current"), 0, 0)
+        self.shield_current_input = QSpinBox()
+        self.shield_current_input.setRange(0, 0)
+        self.shield_current_input.setToolTip("Shield Integrity left. Saved with the character.")
+        tracker.addWidget(self.shield_current_input, 0, 1)
+        self.shield_recharge_button = QPushButton("Recharge")
+        self.shield_recharge_button.setToolTip("Add one Round of Recharge Rate (after the Delay has passed).")
+        self.shield_recharge_button.clicked.connect(self._recharge_energy_shield)
+        self.shield_full_button = QPushButton("Full")
+        self.shield_full_button.clicked.connect(
+            lambda: self.shield_current_input.setValue(self.shield_current_input.maximum())
+        )
+        tracker.addWidget(self.shield_recharge_button, 0, 2)
+        tracker.addWidget(self.shield_full_button, 0, 3)
+        tracker.addWidget(self._form_label("Other Integrity"), 1, 0)
+        self.shield_other_input = QSpinBox()
+        self.shield_other_input.setRange(-500, 1000)
+        self.shield_other_input.setSingleStep(5)
+        self.shield_other_input.setToolTip(
+            "Extra Shield Integrity from Permutations (e.g. UA/SIMA-Alpha +50) or GM rulings. "
+            "Saved with the character."
+        )
+        self.shield_other_input.valueChanged.connect(self._refresh_energy_shield)
+        tracker.addWidget(self.shield_other_input, 1, 1)
+        self.shield_panels_input = QCheckBox("Photo-Reactive Panels active")
+        self.shield_panels_input.setStyleSheet("border: none;")
+        self.shield_panels_input.setToolTip("SPI armor: Recharge Rate halved and Delay doubled while active.")
+        self.shield_panels_input.toggled.connect(self._refresh_energy_shield)
+        tracker.addWidget(self.shield_panels_input, 1, 2, 1, 2)
+        grid.addLayout(tracker, 0, 3, 2, 1)
+
+        self.shield_source_label = self._form_label("")
+        self.shield_source_label.setWordWrap(True)
+        self.shield_source_label.setStyleSheet("border: none; font-weight: bold;")
+        grid.addWidget(self.shield_source_label, 2, 0, 1, 4)
+        self.shield_notes_label = self._form_label("")
+        self.shield_notes_label.setWordWrap(True)
+        self.shield_notes_label.setStyleSheet(f"border: none; color: {theme.TEXT_MUTED};")
+        grid.addWidget(self.shield_notes_label, 3, 0, 1, 4)
+        for column in range(4):
+            grid.setColumnStretch(column, 1)
+        return section
+
+    def _load_energy_shield_inputs(self, character):
+        self.shield_other_input.blockSignals(True)
+        self.shield_other_input.setValue(self._integer_value(character.get("energy_shield_other")))
+        self.shield_other_input.blockSignals(False)
+        self.shield_panels_input.blockSignals(True)
+        self.shield_panels_input.setChecked(bool(character.get("energy_shield_panels_active")))
+        self.shield_panels_input.blockSignals(False)
+        current = self._parse_integer(character.get("energy_shield_current"))
+        self._shield_pending_current = current  # None: start full
+
+    def _store_energy_shield_inputs(self):
+        data = self.character_data
+        for key, value in (
+            ("energy_shield_other", self.shield_other_input.value()),
+            ("energy_shield_panels_active", self.shield_panels_input.isChecked()),
+        ):
+            if value:
+                data[key] = value
+            else:
+                data.pop(key, None)
+        if self.shield_current_input.isEnabled():
+            data["energy_shield_current"] = self.shield_current_input.value()
+        else:
+            data.pop("energy_shield_current", None)
+
+    def _current_energy_shield(self):
+        game_data = getattr(self, "game_data", None)
+        armors = armor_index(game_data) if game_data else {}
+        return energy_shields.energy_shield(
+            getattr(self, "character_data", {}) or {},
+            armors,
+            getattr(self, "ruleset", ""),
+            game_data,
+            panels_active=self.shield_panels_input.isChecked(),
+            other_integrity=self.shield_other_input.value(),
+        )
+
+    def _recharge_energy_shield(self):
+        shield = self._current_energy_shield()
+        self.shield_current_input.setValue(
+            energy_shields.recharge(self.shield_current_input.value(), shield)
+        )
+
+    def _refresh_energy_shield(self, *_):
+        if not hasattr(self, "shield_labels"):
+            return
+        shield = self._current_energy_shield()
+        has = shield["has_shield"]
+        for key, label in self.shield_labels.items():
+            label.setText(str(shield[key]) if has else "—")
+        current_box = self.shield_current_input
+        previous_max = current_box.maximum()
+        pending = getattr(self, "_shield_pending_current", "unset")
+        current_box.blockSignals(True)
+        current_box.setMaximum(shield["integrity"] if has else 0)
+        if has and pending != "unset":
+            current_box.setValue(shield["integrity"] if pending is None else pending)
+            self._shield_pending_current = "unset"
+        elif has and current_box.value() == previous_max:
+            current_box.setValue(shield["integrity"])  # stay full when the maximum changes
+        current_box.blockSignals(False)
+        for widget in (current_box, self.shield_recharge_button, self.shield_full_button):
+            widget.setEnabled(has)
+        self.shield_recharge_button.setText(f"Recharge (+{shield['recharge']})" if has else "Recharge")
+        self.shield_panels_input.setVisible(shield["spi"])
+
+        if has:
+            source = f"From {shield['source']}"
+            if shield["variant"] and shield["variant_modifiers"]:
+                changes = ", ".join(
+                    f"{value:+d} {key.title()}" for key, value in shield["variant_modifiers"].items()
+                )
+                source += f" ({shield['variant']} variant: {changes})"
+            self.shield_source_label.setText(source + ".")
+            notes = list(shield["notes"]) + list(energy_shields.RULE_NOTES)
+        else:
+            self.shield_source_label.setText("No Energy Shield.")
+            notes = list(shield["notes"])
+        self.shield_notes_label.setText("\n".join(f"• {note}" for note in notes))
 
     # ---------------------------------------------------------
     # Attack calculator
