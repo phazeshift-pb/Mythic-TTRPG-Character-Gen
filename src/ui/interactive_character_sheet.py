@@ -1,3 +1,4 @@
+import html
 import re
 from typing import Any
 
@@ -27,7 +28,7 @@ from src.game_data import GameData
 from src.models import worn_armor
 from src.models.derived_stats import max_wounds
 from src.models.starting_armor import format_bonus
-from src.models import throwing
+from src.models import attack, throwing
 from src.models.xp_shop import XpShop
 from src.models.equipment_packs import (
     armor_index,
@@ -236,6 +237,7 @@ class InteractiveCharacterSheet(QWidget):
             self._display_value("\n".join(line for line in armor_lines if line))
         )
         self.shield_label.setText("Not provided")
+        self._populate_attack_weapons()
         self._set_light_and_sky_powers(character, ruleset)
 
         experience = {
@@ -374,6 +376,8 @@ class InteractiveCharacterSheet(QWidget):
         columns.setStretch(0, 2)
         columns.setStretch(1, 1)
         layout.addLayout(columns)
+
+        layout.addWidget(self._build_attack_calculator())
 
         notes_row = QHBoxLayout()
         for key, title in (
@@ -545,6 +549,7 @@ class InteractiveCharacterSheet(QWidget):
         self._set_max_wounds(character, effective)
         self._throwing_character = effective
         self._refresh_throwing()
+        self._refresh_attack()
 
         armor = character.get("armor")
         if not armor:
@@ -961,6 +966,359 @@ class InteractiveCharacterSheet(QWidget):
         self.throw_grip_input.currentIndexChanged.connect(self._refresh_throwing)
         self.throw_weight_input.valueChanged.connect(self._refresh_throwing)
         return panel
+
+    # ---------------------------------------------------------
+    # Attack calculator
+    # ---------------------------------------------------------
+    @staticmethod
+    def _form_label(text):
+        label = QLabel(text)
+        label.setStyleSheet("border: none;")
+        return label
+
+    @staticmethod
+    def _fill_combo(combo, items, keep=None):
+        """Replace a combo's (key, label) items, keeping the current key when possible."""
+        current = keep if keep is not None else combo.currentData()
+        combo.blockSignals(True)
+        combo.clear()
+        for key, label in items:
+            combo.addItem(label, key)
+        index = combo.findData(current)
+        combo.setCurrentIndex(index if index >= 0 else 0)
+        combo.blockSignals(False)
+
+    def _build_attack_calculator(self):
+        section, grid = self._new_section("Attack Calculator")
+        self._attack_ability_boxes: dict[str, QCheckBox] = {}
+        self._attack_ability_state: dict[str, bool] = {}
+        self._attack_profiles: list = []
+
+        # Column 1: the attack
+        attack_box = QGridLayout()
+        row = 0
+
+        def add_row(text, widget):
+            nonlocal row
+            attack_box.addWidget(self._form_label(text), row, 0)
+            attack_box.addWidget(widget, row, 1)
+            row += 1
+
+        self.attack_weapon_input = QComboBox()
+        add_row("Weapon", self.attack_weapon_input)
+        self.attack_mode_input = QComboBox()
+        add_row("Attack", self.attack_mode_input)
+        self.attack_fire_mode_input = QComboBox()
+        self.attack_fire_mode_input.setToolTip("Semi-Auto and Burst fire give +10 To Hit.")
+        add_row("Fire rate", self.attack_fire_mode_input)
+        self.attack_range_input = QComboBox()
+        add_row("Range", self.attack_range_input)
+        self.attack_wielding_input = QComboBox()
+        for key, label in (("two", "Normal grip"), ("one", "One-handed"), ("dual", "Dual wielding")):
+            self.attack_wielding_input.addItem(label, key)
+        add_row("Wielding", self.attack_wielding_input)
+        self.attack_braced_input = QCheckBox("Braced")
+        self.attack_braced_input.setStyleSheet("border: none;")
+        self.attack_braced_input.setToolTip(
+            "[HW] weapons take -20 unless Braced (Half Action). Bracing also halves "
+            "One-handed and Dual Wielding Penalties."
+        )
+        add_row("", self.attack_braced_input)
+        self.attack_aim_input = QComboBox()
+        for key, (label, value) in attack.AIM.items():
+            self.attack_aim_input.addItem(f"{label} ({value:+d})" if value else label, key)
+        add_row("Aim", self.attack_aim_input)
+        self.attack_laser_input = QCheckBox("Targeting laser (+5)")
+        self.attack_laser_input.setStyleSheet("border: none;")
+        self.attack_laser_input.setToolTip(
+            "+5 To Hit if the target is within half your Perceptive Range. Doesn't stack with Aim."
+        )
+        add_row("", self.attack_laser_input)
+        self.attack_movement_input = QComboBox()
+        for key, (label, ranged, melee) in attack.MOVEMENT.items():
+            self.attack_movement_input.addItem(label, key)
+        self.attack_movement_input.setToolTip(
+            "Attacking while moving: Half or Full Move -20, Charge -30 (a melee Charge Attack "
+            "gets +10 instead), Run -40."
+        )
+        add_row("Moving", self.attack_movement_input)
+        self.attack_first_charge_shot_input = QCheckBox("First shot of the Charge")
+        self.attack_first_charge_shot_input.setStyleSheet("border: none;")
+        self.attack_first_charge_shot_input.setChecked(True)
+        self.attack_first_charge_shot_input.setToolTip("Aggressive Advance: the first shot of a Charge has no Penalty.")
+        add_row("", self.attack_first_charge_shot_input)
+        self.attack_called_shot_input = QCheckBox("Called Shot")
+        self.attack_called_shot_input.setStyleSheet("border: none;")
+        self.attack_called_target_input = QComboBox()
+        for key, (label, value) in attack.CALLED_SHOTS.items():
+            self.attack_called_target_input.addItem(f"{label} ({value})", key)
+        attack_box.addWidget(self.attack_called_shot_input, row, 0)
+        attack_box.addWidget(self.attack_called_target_input, row, 1)
+        row += 1
+        attack_box.setColumnStretch(1, 1)
+        attack_box.setRowStretch(row, 1)
+
+        # Column 2: conditions and other modifiers
+        conditions_box = QGridLayout()
+        self.attack_condition_inputs: dict[str, QComboBox] = {}
+        condition_tables = (
+            ("lighting", "Lighting", attack.LIGHTING),
+            ("weather", "Weather", attack.WEATHER),
+            ("perceptive", "Distance", attack.PERCEPTIVE),
+            ("target_stance", "Target is", attack.TARGET_STANCE),
+            ("target_size", "Target size", attack.TARGET_SIZE),
+            ("speed", "Speed", attack.SPEED),
+            ("blind_fire", "Visibility", attack.BLIND_FIRE),
+        )
+        for index, (key, title, table) in enumerate(condition_tables):
+            combo = QComboBox()
+            for option, values in table.items():
+                label = values[0]
+                numbers = [value for value in values[1:] if value]
+                if key == "target_stance" and numbers:
+                    label += f" ({values[1]:+d} ranged, {values[2]:+d} melee)"
+                elif numbers:
+                    label += f" ({numbers[0]:+d})"
+                combo.addItem(label, option)
+            conditions_box.addWidget(self._form_label(title), index, 0)
+            conditions_box.addWidget(combo, index, 1)
+            self.attack_condition_inputs[key] = combo
+        row = len(condition_tables)
+        self.attack_situational_inputs: dict[str, QCheckBox] = {}
+        for key, (label, value, _) in attack.SITUATIONAL.items():
+            box = QCheckBox(f"{label} ({value:+d})")
+            box.setStyleSheet("border: none;")
+            conditions_box.addWidget(box, row, 0, 1, 2)
+            self.attack_situational_inputs[key] = box
+            row += 1
+        self.attack_custom_input = QSpinBox()
+        self.attack_custom_input.setRange(-300, 300)
+        self.attack_custom_input.setSingleStep(5)
+        self.attack_custom_input.setToolTip("Any other Bonus or Penalty: scopes, grips, GM rulings...")
+        conditions_box.addWidget(self._form_label("Other / GM"), row, 0)
+        conditions_box.addWidget(self.attack_custom_input, row, 1)
+        conditions_box.setColumnStretch(1, 1)
+        conditions_box.setRowStretch(row + 1, 1)
+
+        # Column 3: abilities and the result
+        result_box = QVBoxLayout()
+        abilities_title = self._form_label("Abilities")
+        abilities_title.setStyleSheet("border: none; font-weight: bold;")
+        result_box.addWidget(abilities_title)
+        self.attack_ability_layout = QVBoxLayout()
+        result_box.addLayout(self.attack_ability_layout)
+        self.attack_no_abilities_label = self._form_label("No abilities affect this attack.")
+        self.attack_no_abilities_label.setStyleSheet(f"border: none; color: {theme.TEXT_MUTED};")
+        result_box.addWidget(self.attack_no_abilities_label)
+
+        self.attack_total_label = QLabel("Roll under —")
+        self.attack_total_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.attack_total_label.setStyleSheet(
+            f"font-size: 30px; font-weight: bold; color: {theme.HIGHLIGHT}; "
+            f"border: 2px solid {theme.GREEN_LIGHT}; border-radius: 6px; padding: 8px; "
+            "background-color: #1b1b1b;"
+        )
+        result_box.addSpacing(8)
+        result_box.addWidget(self.attack_total_label)
+        self.attack_base_label = self._form_label("")
+        self.attack_base_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        result_box.addWidget(self.attack_base_label)
+        self.attack_breakdown_label = self._form_label("")
+        self.attack_breakdown_label.setWordWrap(True)
+        self.attack_breakdown_label.setTextFormat(Qt.TextFormat.RichText)
+        result_box.addWidget(self.attack_breakdown_label)
+        self.attack_notes_label = self._form_label("")
+        self.attack_notes_label.setWordWrap(True)
+        self.attack_notes_label.setStyleSheet(f"border: none; color: {theme.TEXT_MUTED};")
+        result_box.addWidget(self.attack_notes_label)
+        result_box.addStretch(1)
+
+        grid.addLayout(attack_box, 0, 0)
+        grid.addLayout(conditions_box, 0, 1)
+        grid.addLayout(result_box, 0, 2)
+        for column in range(3):
+            grid.setColumnStretch(column, 1)
+        grid.setHorizontalSpacing(24)
+
+        # Wiring
+        self.attack_weapon_input.currentIndexChanged.connect(self._on_attack_weapon_changed)
+        self.attack_mode_input.currentIndexChanged.connect(self._on_attack_mode_changed)
+        for combo in (
+            self.attack_fire_mode_input, self.attack_range_input, self.attack_wielding_input,
+            self.attack_aim_input, self.attack_movement_input, self.attack_called_target_input,
+            *self.attack_condition_inputs.values(),
+        ):
+            combo.currentIndexChanged.connect(self._refresh_attack)
+        for box in (
+            self.attack_braced_input, self.attack_laser_input, self.attack_first_charge_shot_input,
+            self.attack_called_shot_input, *self.attack_situational_inputs.values(),
+        ):
+            box.toggled.connect(self._refresh_attack)
+        self.attack_custom_input.valueChanged.connect(self._refresh_attack)
+        return section
+
+    def _populate_attack_weapons(self):
+        game_data = getattr(self, "game_data", None)
+        armory = armory_index(game_data) if game_data else {}
+        self._attack_profiles = [attack.weapon_profile(attack.UNARMED)] + [
+            attack.weapon_profile(weapon, armory)
+            for weapon in self._as_list(self.character_data.get("weapons"))
+            if weapon
+        ]
+        previous = self.attack_weapon_input.currentText()
+        combo = self.attack_weapon_input
+        combo.blockSignals(True)
+        combo.clear()
+        for index, profile in enumerate(self._attack_profiles):
+            combo.addItem(profile.name, index)
+        found = combo.findText(previous)
+        default = 1 if len(self._attack_profiles) > 1 else 0
+        combo.setCurrentIndex(found if found >= 0 else default)
+        combo.blockSignals(False)
+        self._on_attack_weapon_changed()
+
+    def _attack_profile(self):
+        index = self.attack_weapon_input.currentData()
+        profiles = getattr(self, "_attack_profiles", [])
+        if isinstance(index, int) and 0 <= index < len(profiles):
+            return profiles[index]
+        return attack.weapon_profile(attack.UNARMED)
+
+    def _on_attack_weapon_changed(self, *_):
+        profile = self._attack_profile()
+        self._fill_combo(
+            self.attack_mode_input,
+            [(mode, attack.MODE_LABELS[mode]) for mode in profile.modes],
+            keep=profile.default_mode,
+        )
+        self._fill_combo(
+            self.attack_fire_mode_input,
+            [(mode.label, mode.label + (f" (+{mode.bonus})" if mode.bonus else "")) for mode in profile.fire_modes],
+        )
+        untrained = self._attack_untrained(profile)
+        box = self.attack_situational_inputs["untrained"]
+        box.blockSignals(True)
+        box.setChecked(bool(untrained))
+        box.blockSignals(False)
+        box.setToolTip(
+            "Couldn't tell which Weapon Training covers this weapon; tick it if you lack it."
+            if untrained is None
+            else "Set from the character's Weapon Training. Untick if the GM rules otherwise."
+        )
+        self.attack_braced_input.setEnabled(profile.wield_tag == "HW")
+        if profile.wield_tag != "HW":
+            self.attack_braced_input.setChecked(False)
+        self._on_attack_mode_changed()
+
+    def _attack_untrained(self, profile):
+        game_data = getattr(self, "game_data", None)
+        if game_data is None:
+            return None
+        try:
+            owned = XpShop(self.character_data, game_data, self.ruleset).owned_weapon_training()
+        except Exception:  # an incomplete character shouldn't break the sheet
+            return None
+        return attack.is_untrained(profile, owned, game_data.get("weapon_training", "weapon_training"))
+
+    def _on_attack_mode_changed(self, *_):
+        profile = self._attack_profile()
+        mode = self.attack_mode_input.currentData() or profile.default_mode
+        bands = attack.range_bands(profile, mode)
+        current = self.attack_range_input.currentData()
+        keys = [key for key, _, _ in bands]
+        self._fill_combo(
+            self.attack_range_input,
+            [(key, f"{label} ({value:+d})" if value else label) for key, label, value in bands],
+            keep=current if current in keys else attack.default_range(profile, mode),
+        )
+        firing = mode == attack.FIRE
+        self.attack_fire_mode_input.setEnabled(firing and self.attack_fire_mode_input.count() > 0)
+        self.attack_laser_input.setEnabled(firing)
+        self.attack_wielding_input.setEnabled(mode != attack.THROW and profile.wield_tag is not None)
+        self.attack_condition_inputs["blind_fire"].setEnabled(firing)
+        self.attack_condition_inputs["perceptive"].setEnabled(mode != attack.MELEE)
+        for key, box in self.attack_situational_inputs.items():
+            box.setEnabled(mode in attack.SITUATIONAL[key][2])
+        self._rebuild_attack_abilities(profile, mode)
+        self._refresh_attack()
+
+    def _rebuild_attack_abilities(self, profile, mode):
+        for name, box in self._attack_ability_boxes.items():
+            self._attack_ability_state[name] = box.isChecked()
+            self.attack_ability_layout.removeWidget(box)
+            box.deleteLater()
+        self._attack_ability_boxes = {}
+        relevant = attack.relevant_abilities(self.character_data.get("abilities"), profile, mode)
+        for name, effect, default in relevant:
+            box = QCheckBox(f"{name}: {effect}")
+            box.setStyleSheet("border: none;")
+            box.setChecked(self._attack_ability_state.get(name, default))
+            box.toggled.connect(self._refresh_attack)
+            self.attack_ability_layout.addWidget(box)
+            self._attack_ability_boxes[name] = box
+        self.attack_no_abilities_label.setVisible(not relevant)
+
+    def _attack_options(self, profile, mode, characteristic, mythic_strength):
+        fire_label = self.attack_fire_mode_input.currentData()
+        fire_mode = next((m for m in profile.fire_modes if m.label == fire_label), None)
+        return attack.AttackOptions(
+            characteristic=characteristic,
+            mythic_strength=mythic_strength,
+            mode=mode,
+            fire_mode=fire_mode,
+            range_band=self.attack_range_input.currentData() or "optimal",
+            wielding=self.attack_wielding_input.currentData() or "two",
+            braced=self.attack_braced_input.isChecked(),
+            aim=self.attack_aim_input.currentData() or "none",
+            laser=self.attack_laser_input.isChecked(),
+            movement=self.attack_movement_input.currentData() or "none",
+            first_charge_shot=self.attack_first_charge_shot_input.isChecked(),
+            called_shot=self.attack_called_shot_input.isChecked(),
+            called_target=self.attack_called_target_input.currentData() or "location",
+            situational={key for key, box in self.attack_situational_inputs.items() if box.isChecked()},
+            abilities={name for name, box in self._attack_ability_boxes.items() if box.isChecked()},
+            custom=self.attack_custom_input.value(),
+            **{key: combo.currentData() for key, combo in self.attack_condition_inputs.items()},
+        )
+
+    def _refresh_attack(self, *_):
+        if not hasattr(self, "attack_total_label"):
+            return
+        profile = self._attack_profile()
+        mode = self.attack_mode_input.currentData() or profile.default_mode
+        self.attack_called_target_input.setEnabled(self.attack_called_shot_input.isChecked())
+        self.attack_first_charge_shot_input.setVisible(
+            "Aggressive Advance" in self._attack_ability_boxes
+            and self.attack_movement_input.currentData() == "charge"
+        )
+        stats = getattr(self, "_throwing_character", None) or {}
+        code = attack.MODE_CHARACTERISTIC.get(mode, "WFR")
+        value = self._parse_integer((stats.get("characteristics") or {}).get(code))
+        if value is None:
+            self.attack_total_label.setText("Roll under —")
+            self.attack_base_label.setText("Load a character to calculate attacks.")
+            self.attack_breakdown_label.setText("")
+            self.attack_notes_label.setText("")
+            return
+        mythic_strength = throwing.mythic_value((stats.get("mythic_characteristics") or {}).get("STR", 0))
+        result = attack.attack_target(
+            profile, self._attack_options(profile, mode, value, mythic_strength)
+        )
+        names = {"WFR": "Warfare Range", "WFM": "Warfare Melee"}
+        self.attack_total_label.setText(f"Roll {result.total} or under")
+        self.attack_total_label.setToolTip("Roll 1D100. A natural 01 is a critical success.")
+        modifier = result.total_modifier
+        self.attack_base_label.setText(
+            f"{names[result.characteristic_name]} ({result.characteristic_name}) {result.characteristic}"
+            + (f" {modifier:+d}" if modifier else ", no modifiers")
+        )
+        rows = "".join(
+            f"<tr><td style='padding-right:12px; color:{theme.HIGHLIGHT if amount > 0 else '#e08a7a'};'>"
+            f"<b>{amount:+d}</b></td><td>{html.escape(label)}</td></tr>"
+            for label, amount in result.modifiers
+        )
+        self.attack_breakdown_label.setText(f"<table>{rows}</table>" if rows else "")
+        self.attack_notes_label.setText("\n".join(result.notes))
 
     def _throwing_items(self):
         """(name, weight kg) for each carried weapon with a known weight, lightest first."""

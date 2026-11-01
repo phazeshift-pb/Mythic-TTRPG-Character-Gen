@@ -224,3 +224,43 @@ def test_sheet_shows_throwing_distance(qt_app):
         strength, mythic, 0.4, degrees_of_failure=2, carry_weight=sheet._carry_weight
     )
     assert sheet.throw_table.item(0, 2).text() == worse.range_text()
+
+
+def test_sheet_attack_calculator(qt_app):
+    from dataclasses import asdict
+
+    from src.data_loader import DataLoader
+    from src.generator.character_generator import CharacterGenerator
+    from src.ui.interactive_character_sheet import InteractiveCharacterSheet
+
+    data = DataLoader().load_all()
+    export = asdict(CharacterGenerator(data).generate("t", "marine", auto_assign_skills=False))
+    export.pop("debug_log")
+    export["weapons"] = [
+        {"name": "M6A Personal Defense Weapon System", "quantity": 1},
+        {"name": "M1 Combat Knife", "quantity": 1},
+        {"name": "AIE-486H Heavy Machine Gun", "quantity": 1},
+    ]
+    sheet = InteractiveCharacterSheet()
+    sheet.set_character(export, "Core", data)
+    stats = sheet._throwing_character["characteristics"]
+    weapon = sheet.attack_weapon_input
+
+    weapon.setCurrentIndex(weapon.findText("M6A Personal Defense Weapon System"))
+    assert sheet.attack_mode_input.currentData() == "fire"
+    assert sheet.attack_fire_mode_input.currentData() == "Semi-Auto (2)"
+    assert sheet.attack_total_label.text() == f"Roll {stats['WFR'] + 10} or under"
+
+    sheet.attack_called_shot_input.setChecked(True)
+    assert sheet.attack_total_label.text() == f"Roll {stats['WFR'] + 10 - 30} or under"
+    sheet.attack_called_shot_input.setChecked(False)
+
+    weapon.setCurrentIndex(weapon.findText("M1 Combat Knife"))
+    assert sheet.attack_mode_input.currentData() == "melee"
+    assert "Warfare Melee" in sheet.attack_base_label.text()
+
+    weapon.setCurrentIndex(weapon.findText("AIE-486H Heavy Machine Gun"))
+    assert "Heavy Weapon not Braced" in sheet.attack_breakdown_label.text()
+    sheet.attack_braced_input.setChecked(True)
+    assert "Heavy Weapon not Braced" not in sheet.attack_breakdown_label.text()
+    assert "attack" not in "".join(sheet.character_data_for_save())
