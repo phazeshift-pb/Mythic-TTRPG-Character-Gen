@@ -236,8 +236,10 @@ class LightLoadout:
         return self.shop.aspect_slots()
 
     def aspect_slot_maximum(self) -> int:
+        """The rules' maximum plus free slots (e.g. Passive), which are not purchasable ones."""
         slots = self.aspect_rules.get("aspect_slots", {})
-        return max(self.aspect_slot_count(), _int(slots.get("maximum_slots"), DEFAULT_ASPECT_MAXIMUM))
+        maximum = _int(slots.get("maximum_slots"), DEFAULT_ASPECT_MAXIMUM)
+        return max(self.aspect_slot_count(), maximum + self.shop.light_bonus("bonus_aspect_slots"))
 
     def ability_slot_count(self) -> int:
         return self.shop.ability_slots()
@@ -249,10 +251,15 @@ class LightLoadout:
         return self.ability_slot_count() + max(0, extra - purchased)
 
     def _aspect_slot_cost(self, number) -> int:
-        for entry in self.aspect_rules.get("aspect_slots", {}).get("additional_slot_costs", []):
-            if _int(entry.get("slot")) == number:
-                return _int(entry.get("experience_cost"))
-        return 0
+        """XP for locked Aspect Slot ``number``: the price of the purchase that unlocks it.
+
+        Purchases are priced in order (200, 400, 800), so free slots such as
+        Passive's shift which slot number each purchase opens.
+        """
+        costs = self.aspect_rules.get("aspect_slots", {}).get("additional_slot_costs", [])
+        purchased = _int(self.character.get("light_aspect_slots_purchased"))
+        index = purchased + (number - self.aspect_slot_count() - 1)
+        return _int(costs[index].get("experience_cost")) if 0 <= index < len(costs) else 0
 
     def _ability_slot_cost(self) -> int:
         slots = self.ability_rules.get("rules", {}).get("ability_slots", {})
@@ -372,8 +379,10 @@ class LightLoadout:
     # Energy
     # -----------------------------------------------------------------
     def maximum(self, pool: str) -> int:
+        """Energy limit: 100 by the rules, plus Energize (+25 Light) / Super (+20 Super)."""
         key = "maximum_light_energy" if pool == "light" else "maximum_super_energy"
-        return _int(self.energy_rules.get(key), DEFAULT_MAX_ENERGY)
+        bonus = "bonus_light_energy" if pool == "light" else "bonus_super_energy"
+        return _int(self.energy_rules.get(key), DEFAULT_MAX_ENERGY) + self.shop.light_bonus(bonus)
 
     def energy(self, pool: str) -> int:
         key = self._energy_key(pool)

@@ -15,8 +15,20 @@ Soldier types with a Skill Training trait prompt for the listed number of skills
 those choices and training levels are recorded there and applied to the
 character. `creation_points` records the point option and per-characteristic
 allocations, while `outliers`, `specialization_packs`, and `equipment` record
-later choices. The selected characteristic for Aptitude or mythic
-characteristic for Forte is stored in `selections.outlier_characteristics`.
+later choices. The Characteristics picked for Aptitude and Forte are stored in
+`selections.outlier_characteristics` (a list per outlier) and in the
+character's `outlier_choices`.
+
+Outliers follow the book: Enduring, Robust and Vigorous can be taken twice
+(a **Times taken** box appears on the card), and Aptitude / Forte open a
+dialog to pick up to two per Characteristic; each take burns Luck again and
+`character.outliers` lists the outlier once per take. Aptitude, Forte and
+Imposing (+3 STR and TOU) change Characteristics at creation, Robust adds Wounds,
+Advocate adds +2 `support_points`, and Acumen triples the Intellect Modifier
+for the XP Shop's Education and Language limits. The character sheet lists
+outliers (hover for the effect), shows editable Support Points, the Fatigue
+penalty after Enduring, and Natural Healing after Vigorous. The numbers live
+in the outlier records (`src/models/outliers.py` documents the fields).
 Upbringings and environments that offer a choice (for example City: "+5 Agility,
 Courage, or Perception") open a dialog when selected so you can pick one option
 per line. The picks are stored in `selections.initial_setup.background_choices`.

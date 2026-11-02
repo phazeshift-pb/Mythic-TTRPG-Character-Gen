@@ -18,6 +18,7 @@ from typing import Any, Optional
 
 from .character import CHAR_CODES, CHARACTERISTIC_NAME_TO_CODE
 from .derived_stats import characteristic_modifier, max_wounds, mythic_value
+from . import outliers as outlier_rules
 
 LIGHT_AND_SKY = "Light & Sky"
 
@@ -87,25 +88,71 @@ def _int(value, default: int = 0) -> int:
         return default
 
 
+# Light & Sky bonuses that soldier types (``special_rules``) and outliers
+# (outlier records) can carry. Free slots never count against purchasable ones.
+LIGHT_BONUS_KEYS = (
+    "bonus_aspect_slots",
+    "bonus_light_ability_slots",
+    "bonus_light_energy",
+    "bonus_super_energy",
+)
+
+
 def bonus_light_ability_slots(soldier_record) -> int:
     """Extra Light Ability Slots a soldier type gives (the Warlock's Power trait).
 
-    Read from ``special_rules.bonus_light_ability_slots``. These slots are free
-    and do not count against the purchasable slots.
+    Read from ``special_rules.bonus_light_ability_slots``.
     """
+    return soldier_light_bonus(soldier_record, "bonus_light_ability_slots")
+
+
+def soldier_light_bonus(soldier_record, key: str) -> int:
     if not isinstance(soldier_record, dict):
         return 0
     special = soldier_record.get("special_rules")
-    return max(0, _int((special or {}).get("bonus_light_ability_slots"))) if isinstance(special, dict) else 0
+    return max(0, _int(special.get(key))) if isinstance(special, dict) else 0
 
 
-def starting_light_ability_slots(game_data, soldier_record) -> int:
-    """Light Ability Slots a new character has: the rules' starting slots plus any class bonus."""
+def outlier_light_bonus(game_data, outlier_names, key: str) -> int:
+    """Sum of ``key`` over the character's outliers (an outlier taken twice counts twice)."""
+    if game_data is None:
+        return 0
+    records = {}
+    for document in game_data.families.get("outliers", {}).values():
+        outliers = document.get("outliers", {}) if isinstance(document, dict) else {}
+        for record in outliers.get("list", []) if isinstance(outliers, dict) else []:
+            if isinstance(record, dict) and record.get("name"):
+                records.setdefault(_fold(record["name"]), record)
+    return sum(
+        max(0, _int(records.get(_fold(name), {}).get(key)))
+        for name in _as_list(outlier_names)
+    )
+
+
+def starting_light_ability_slots(game_data, soldier_record, outlier_names=()) -> int:
+    """Light Ability Slots a new character has: starting slots + class and outlier bonuses."""
     rules = {}
     if game_data is not None:
         document = game_data.get("light_ability_rules", "light_ability_rules") or {}
         rules = document.get("light_abilities", {}).get("rules", {}).get("ability_slots", {})
-    return _int(rules.get("starting_slots"), 2) + bonus_light_ability_slots(soldier_record)
+    return (
+        _int(rules.get("starting_slots"), 2)
+        + bonus_light_ability_slots(soldier_record)
+        + outlier_light_bonus(game_data, outlier_names, "bonus_light_ability_slots")
+    )
+
+
+def starting_aspect_slots(game_data, soldier_record=None, outlier_names=()) -> int:
+    """Aspect Slots a new character has: starting slots + class and outlier bonuses (Passive)."""
+    rules = {}
+    if game_data is not None:
+        document = game_data.get("light_aspect_rules", "light_aspect_rules") or {}
+        rules = document.get("light_aspects", {}).get("rules", {}).get("aspect_slots", {})
+    return (
+        _int(rules.get("starting_slots"), 1)
+        + soldier_light_bonus(soldier_record, "bonus_aspect_slots")
+        + outlier_light_bonus(game_data, outlier_names, "bonus_aspect_slots")
+    )
 
 
 def _fold(text) -> str:
@@ -399,8 +446,7 @@ class XpShop:
     def education_limit(self) -> int:
         rules = self.rules.get("educations", {})
         multiplier = _int(rules.get("limit_intellect_modifier_multiplier"), 2)
-        intellect = _int((self.character.get("characteristics") or {}).get("INT"))
-        return characteristic_modifier(intellect) * multiplier
+        return self._learning_modifier() * multiplier
 
     def _education_items(self) -> list[ShopItem]:
         rules = self.rules.get("educations", {})
@@ -517,9 +563,15 @@ class XpShop:
             owned.add(starting)
         return owned
 
-    def language_limit(self) -> int:
+    def _learning_modifier(self) -> int:
+        """Intellect Modifier for Education and Language limits (tripled by Acumen)."""
         intellect = _int((self.character.get("characteristics") or {}).get("INT"))
-        return max(1, characteristic_modifier(intellect))
+        return characteristic_modifier(intellect) * outlier_rules.learning_multiplier(
+            self.game_data, self.character
+        )
+
+    def language_limit(self) -> int:
+        return max(1, self._learning_modifier())
 
     def _training_items(self) -> list[ShopItem]:
         items = []
@@ -746,9 +798,21 @@ class XpShop:
         soldier_type = str(self.character.get("soldier_type") or "")
         return soldier_type.split()[0] if soldier_type else ""
 
+    def light_bonus(self, key: str) -> int:
+        """A Light & Sky bonus from the soldier type and outliers (see LIGHT_BONUS_KEYS)."""
+        if key == "bonus_light_ability_slots":
+            soldier = self.class_ability_slots()
+        else:
+            soldier = soldier_light_bonus(self.soldier, key)
+        return soldier + outlier_light_bonus(self.game_data, self.character.get("outliers"), key)
+
     def aspect_slots(self) -> int:
         starting = _int(self._aspect_rules().get("aspect_slots", {}).get("starting_slots"), 1)
-        return starting + _int(self.character.get("light_aspect_slots_purchased"))
+        return (
+            starting
+            + self.light_bonus("bonus_aspect_slots")
+            + _int(self.character.get("light_aspect_slots_purchased"))
+        )
 
     def class_ability_slots(self) -> int:
         """Free Light Ability Slots from the soldier type (Warlock: +1)."""
@@ -762,7 +826,7 @@ class XpShop:
         starting = _int(slot_rules.get("starting_slots"), 2)
         return (
             starting
-            + self.class_ability_slots()
+            + self.light_bonus("bonus_light_ability_slots")
             + _int(self.character.get("light_ability_slots_purchased"))
         )
 
@@ -771,6 +835,8 @@ class XpShop:
         aspect_rules = self._aspect_rules().get("aspect_slots", {})
         purchased_aspects = _int(self.character.get("light_aspect_slots_purchased"))
         slot_costs = aspect_rules.get("additional_slot_costs", [])
+        # Free slots (Passive outlier) push each purchase one slot further along
+        free_aspects = self.light_bonus("bonus_aspect_slots")
         for index, entry in enumerate(slot_costs):
             slot = _int(entry.get("slot"))
             item = ShopItem(
@@ -779,8 +845,9 @@ class XpShop:
                 name=f"Aspect Slot {slot}",
                 cost=_int(entry.get("experience_cost")),
                 current="Owned" if index < purchased_aspects else "—",
-                next=f"{slot} Aspect Slots",
-                description=aspect_rules.get("installation", ""),
+                next=f"{slot + free_aspects} Aspect Slots",
+                description=aspect_rules.get("installation", "")
+                + (f" ({free_aspects} free Aspect Slot from Outliers not counted.)" if free_aspects else ""),
                 source=LIGHT_AND_SKY,
                 kind="aspect_slot",
             )
@@ -796,11 +863,13 @@ class XpShop:
         cost = _int(slot_rules.get("cost_per_additional_slot"), 500)
         total = self.ability_slots()
         class_slots = self.class_ability_slots()
-        class_note = (
-            f"{class_slots} free from {self.guardian_class() or 'soldier type'}; "
-            if class_slots
-            else ""
-        )
+        outlier_slots = self.light_bonus("bonus_light_ability_slots") - class_slots
+        free = []
+        if class_slots:
+            free.append(f"{class_slots} free from {self.guardian_class() or 'soldier type'}")
+        if outlier_slots:
+            free.append(f"{outlier_slots} free from Outliers")
+        class_note = "; ".join(free) + "; " if free else ""
         item = ShopItem(
             key="ability_slot",
             category="Light Slots",

@@ -4,6 +4,7 @@ from typing import Dict, List, Optional, Any
 
 from .background_choices import choice_groups, resolve_modifiers
 from .derived_stats import max_wounds
+from . import outliers as outlier_rules
 
 
 CHAR_CODES = ["STR", "TOU", "AGI", "WFR", "WFM", "INT", "PER", "CRG", "CHA", "LDR"]
@@ -90,7 +91,10 @@ class Character:
     weapons: List[Any] = field(default_factory=list)
     connections: List[str] = field(default_factory=list)
     specialization_packs: List[str] = field(default_factory=list)
-    outliers: List[str] = field(default_factory=list)
+    outliers: List[str] = field(default_factory=list)  # one entry per time taken
+    # Aptitude / Forte: the Characteristic picked for each time taken
+    outlier_choices: Dict[str, List[str]] = field(default_factory=dict)
+    support_points: int = 0  # Advocate adds 2; set the Rank's SP on the sheet
     luck_available: int = 0
     luck_total: int = 0
     light_aspects: List[str] = field(default_factory=list)
@@ -243,37 +247,89 @@ class Character:
     def apply_outlier(
         self, outlier_data: dict, luck_cost: int, characteristic: Optional[str] = None
     ):
-        outlier_name = outlier_data["name"]
-        if outlier_name not in self.outliers:
-            if outlier_name == "Aptitude":
-                if characteristic not in CHAR_CODES:
-                    raise ValueError("Aptitude requires a valid characteristic code.")
-                self.characteristics[characteristic] += 5
-                self.log(f"Aptitude: +5 {characteristic}")
-            elif outlier_name == "Forte":
-                if characteristic not in MYTHIC_CHAR_CODES:
-                    raise ValueError(
-                        "Forte requires a valid mythic characteristic code."
-                    )
-                current_value = self.mythic_characteristics.get(characteristic, 0)
-                try:
-                    new_value = int(current_value) + 1
-                except (TypeError, ValueError) as error:
-                    raise ValueError(
-                        f"Invalid mythic characteristic value for {characteristic}: "
-                        f"{current_value!r}"
-                    ) from error
-                self.mythic_characteristics[characteristic] = f"+{new_value}"
-                self.log(f"Forte: +1 Mythic {characteristic} (now +{new_value})")
+        """Take an outlier once (call again to take it again where the book allows).
 
-            self.outliers.append(outlier_name)
-            self.luck_total -= luck_cost
-            self.luck_available = min(self.luck_available, self.luck_total)
-            self.compute_wounds()
+        Aptitude and Forte need ``characteristic``: the code that gains the bonus.
+        A take beyond the outlier's limit is ignored and logged.
+        """
+        outlier_name = outlier_data["name"]
+        choice_kind = outlier_rules.needs_choice(outlier_data)
+        # Records without limit fields (older data, tests) behave as before
+        if choice_kind is None and outlier_name in {"Aptitude", "Forte"}:
+            choice_kind = "characteristic" if outlier_name == "Aptitude" else "mythic"
+            outlier_data = dict(
+                outlier_data,
+                **{
+                    "max_times_per_characteristic"
+                    if choice_kind == "characteristic"
+                    else "max_times_per_mythic": 2
+                },
+            )
+        choices = self.outlier_choices.get(outlier_name, [])
+        if not outlier_rules.can_take(outlier_data, self.outliers, choices, characteristic):
+            if choice_kind == "characteristic" and characteristic not in CHAR_CODES:
+                raise ValueError(f"{outlier_name} requires a valid characteristic code.")
+            if choice_kind == "mythic" and characteristic not in MYTHIC_CHAR_CODES:
+                raise ValueError(f"{outlier_name} requires a valid mythic characteristic code.")
+            self.log(f"Outlier not applied (limit reached): {outlier_name} {characteristic or ''}")
+            return
+
+        if choice_kind == "characteristic":
+            if characteristic not in CHAR_CODES:
+                raise ValueError(f"{outlier_name} requires a valid characteristic code.")
+            bonus = int(outlier_data.get("chosen_characteristic_bonus", 5))
+            self.characteristics[characteristic] += bonus
+            self.log(f"{outlier_name}: +{bonus} {characteristic}")
+        elif choice_kind == "mythic":
+            if characteristic not in MYTHIC_CHAR_CODES:
+                raise ValueError(f"{outlier_name} requires a valid mythic characteristic code.")
+            current_value = self.mythic_characteristics.get(characteristic, 0)
+            try:
+                new_value = int(current_value) + int(outlier_data.get("chosen_mythic_bonus", 1))
+            except (TypeError, ValueError) as error:
+                raise ValueError(
+                    f"Invalid mythic characteristic value for {characteristic}: "
+                    f"{current_value!r}"
+                ) from error
+            self.mythic_characteristics[characteristic] = f"+{new_value}"
+            self.log(f"{outlier_name}: +1 Mythic {characteristic} (now +{new_value})")
+        if choice_kind:
+            self.outlier_choices.setdefault(outlier_name, []).append(characteristic)
+
+        for code, value in (outlier_data.get("characteristic_bonus") or {}).items():
+            if code in self.characteristics:
+                self.characteristics[code] += int(value)
+                self.log(f"{outlier_name}: {int(value):+d} {code}")
+        if outlier_data.get("support_points"):
+            self.support_points += int(outlier_data["support_points"])
+            self.log(f"{outlier_name}: +{int(outlier_data['support_points'])} Support Points")
+
+        self.outliers.append(outlier_name)
+        self.luck_total -= luck_cost
+        self.luck_available = min(self.luck_available, self.luck_total)
+        self.compute_wounds()
+        times = self.outliers.count(outlier_name)
         self.log(
-            f"Applying outlier: {outlier_name} "
-            f"(Burn Luck: {luck_cost}; effect: {outlier_data['effect']})"
+            f"Applying outlier: {outlier_name}"
+            f"{f' (x{times})' if times > 1 else ''} "
+            f"(Burn Luck: {luck_cost}; effect: "
+            f"{outlier_rules.effect_text(outlier_data, times)})"
         )
+
+    def clear_outliers(self, outlier_records: Optional[Dict[str, dict]] = None):
+        """Undo the outlier effects not rebuilt by the creator (Support Points), then forget them.
+
+        The creator restores Characteristics, Mythics and Luck itself before
+        re-applying the current picks.
+        """
+        by_name = {
+            str(name).casefold(): record for name, record in (outlier_records or {}).items()
+        }
+        for name in self.outliers:
+            points = int((by_name.get(name.casefold()) or {}).get("support_points") or 0)
+            self.support_points = max(0, self.support_points - points)
+        self.outliers = []
+        self.outlier_choices = {}
 
     def apply_equipment_pack(
         self,

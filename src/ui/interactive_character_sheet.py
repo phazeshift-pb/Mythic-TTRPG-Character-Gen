@@ -31,6 +31,7 @@ from src.models.derived_stats import max_wounds
 from src.models.starting_armor import format_bonus
 from src.models import attack, damage_resistance, energy_shields, throwing
 from src.models.light_loadout import LightLoadout
+from src.models import outliers as outlier_rules
 from src.models.xp_shop import XpShop
 from src.models.equipment_packs import (
     armor_index,
@@ -297,6 +298,19 @@ class InteractiveCharacterSheet(QWidget):
         self._set_resource_value("credits", character.get("credits", 0))
         self._set_resource_value("wounds", character.get("wounds", 0))
         self._set_resource_value("fatigue", character.get("fatigue", 0))
+        self._set_resource_value("support_points", character.get("support_points", 0))
+        advocate = outlier_rules.support_points(game_data, character)
+        self.resource_inputs["support_points"].setToolTip(
+            "Support Points from your Rank (set by the GM)"
+            + (
+                f", including +{advocate} from Advocate at creation. "
+                f"Advocate also adds +{advocate} each time you are rewarded after a mission."
+                if advocate
+                else "."
+            )
+        )
+        self._set_outlier_section(character, game_data)
+        self._refresh_outlier_readouts()
 
         for key, field in self.note_fields.items():
             field.setPlainText(str(character.get(key) or ""))
@@ -371,6 +385,8 @@ class InteractiveCharacterSheet(QWidget):
             "Abilities and Education"
         )
         left_column.addWidget(ability_section)
+        outlier_section, self.outlier_layout = self._new_section("Outliers")
+        left_column.addWidget(outlier_section)
         equipment_section, equipment_body = self._new_section("Equipment")
         self.equipment_pack_label = self._role_label("None", "strong")
         self.equipment_pack_label.setWordWrap(True)
@@ -680,6 +696,57 @@ class InteractiveCharacterSheet(QWidget):
             label.setStyleSheet(theme.SHEET_ABILITY)
             label.setIndent(0)
             self.ability_layout.addWidget(label)
+
+    def _set_outlier_section(self, character, game_data):
+        """One line per outlier taken, with its rank, picks and effect as the tooltip."""
+        while self.outlier_layout.count():
+            item = self.outlier_layout.takeAt(0)
+            if item.widget() is not None:
+                item.widget().deleteLater()
+        rows = outlier_rules.summary(game_data, character) if game_data else [
+            {"name": name, "times": 1, "picks": [], "effect": ""}
+            for name in dict.fromkeys(self._as_list(character.get("outliers")))
+        ]
+        if not rows:
+            self.outlier_layout.addWidget(self._role_label("None", "note"), 0, 0)
+            return
+        for index, row in enumerate(rows):
+            text = row["name"]
+            if row["picks"]:
+                text += ": " + ", ".join(row["picks"])
+            elif row["times"] > 1:
+                text += f" x{row['times']}"
+            label = DelayedTooltipLabel(text, row["effect"])
+            label.setWordWrap(True)
+            label.setStyleSheet(theme.SHEET_ABILITY)
+            label.setIndent(0)
+            self.outlier_layout.addWidget(label, index, 0)
+
+    def _refresh_outlier_readouts(self):
+        """Fatigue penalty (Enduring ignores levels) and Natural Healing (Vigorous)."""
+        character = getattr(self, "character_data", {}) or {}
+        game_data = getattr(self, "game_data", None)
+        rules = {}
+        if game_data is not None:
+            document = game_data.get("wounds", "wounds") or {}
+            rules = document.get("wounds", {}) if isinstance(document, dict) else {}
+        per_level = self._parse_integer((rules.get("fatigue") or {}).get("penalty_per_level"))
+        per_level = -5 if per_level is None else per_level
+        fatigue = self.resource_inputs["fatigue"].value()
+        ignored = outlier_rules.ignored_fatigue_levels(game_data, character)
+        penalty = per_level * max(0, fatigue - ignored)
+        self.fatigue_penalty_label.setText(f"{penalty:+d}" if penalty else "None")
+        self.fatigue_penalty_label.setToolTip(
+            f"{per_level} per level of Fatigue"
+            + (f"; Enduring ignores the first {ignored} levels." if ignored else ".")
+        )
+        base = self._parse_integer((rules.get("natural_healing") or {}).get("base_healing_per_day"))
+        base = 1 if base is None else base
+        multiplier = outlier_rules.natural_healing_multiplier(game_data, character)
+        self.natural_healing_label.setText(f"{base * multiplier} Wound{'s' if base * multiplier != 1 else ''}/day")
+        self.natural_healing_label.setToolTip(
+            f"{base} per day" + (f", x{multiplier} from Vigorous." if multiplier > 1 else ".")
+        )
 
     def _add_learned_labels(self, character):
         """Educations, Languages, Training and augmentations from the XP Shop."""
@@ -2222,7 +2289,9 @@ class InteractiveCharacterSheet(QWidget):
             grid.addWidget(self._role_label(title, "caption"), 0, column)
             grid.addWidget(widget, 1, column)
             grid.setColumnStretch(column, 1)
-        self.support_points_label = self._add_readout(grid, 2, 0, "SUPPORT POINTS", "—")
+        self.resource_inputs["support_points"] = self._resource_spin_box("support_points")
+        grid.addWidget(self._role_label("SUPPORT POINTS", "caption"), 2, 0)
+        grid.addWidget(self.resource_inputs["support_points"], 3, 0)
         parent_layout.addWidget(section)
 
     def _add_vitals_section(self, parent_layout):
@@ -2239,6 +2308,11 @@ class InteractiveCharacterSheet(QWidget):
         grid.addWidget(self.max_wounds_label, 3, 0)
         grid.addWidget(self._role_label("FATIGUE", "caption"), 4, 0)
         grid.addWidget(self.resource_inputs["fatigue"], 5, 0)
+        self.resource_inputs["fatigue"].valueChanged.connect(
+            lambda _value: self._refresh_outlier_readouts()
+        )
+        self.fatigue_penalty_label = self._add_readout(grid, 6, 0, "FATIGUE PENALTY")
+        self.natural_healing_label = self._add_readout(grid, 8, 0, "NATURAL HEALING")
         parent_layout.addWidget(section)
 
     def _set_luck_total(self, value):

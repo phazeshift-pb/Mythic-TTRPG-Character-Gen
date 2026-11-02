@@ -223,11 +223,7 @@ class CharacterFilesMixin:
                     "total": self.creation_points_combo.currentData(),
                     "allocations": self._creation_allocations.copy(),
                 },
-                "outliers": [
-                    outlier["name"]
-                    for button, outlier, _ in self.outlier_tiles
-                    if button.isChecked()
-                ],
+                "outliers": self._selected_outlier_names(),
                 "outlier_characteristics": {
                     outlier_name: characteristic
                     for outlier_name, characteristic

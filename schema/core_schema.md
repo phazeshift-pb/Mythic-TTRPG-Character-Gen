@@ -72,7 +72,7 @@ Spartan soldier types list their starting suits in `special_rules.mjolnir_armor.
 - `experience_tiers`: `{ "experience_tiers": { "tiers": [record], "luck": number, "credits": number, "notes": string } }`.
 - `creation_points`: `{ "creation_points": object }`.
 - `languages`: `{ "languages": { "rules": object, "notes": string } }`.
-- `weapon_training`, `wounds_formula`, and `outliers`: named rule documents whose nested fields remain source-defined.
+- `weapon_training`, `wounds_formula`, and `outliers`: named rule documents whose nested fields remain source-defined. Outlier records may carry `max_times`, `max_times_per_characteristic` / `max_times_per_mythic` (with `chosen_characteristic_bonus` / `chosen_mythic_bonus`), `second_rank_effect`, `characteristic_bonus` (CharacteristicMap), `size_category_increase`, `support_points`, `learning_intellect_modifier_multiplier`, `ignored_fatigue_levels_per_rank`, and `natural_healing_multiplier_by_rank` (array by times taken); see `src/models/outliers.py`. Characters list an outlier in `outliers` once per time taken, store Aptitude / Forte picks in `outlier_choices` (`{ name: [code] }`), and keep `support_points`. Light & Sky outlier records may carry `bonus_aspect_slots`, `bonus_light_ability_slots`, `bonus_light_energy`, and `bonus_super_energy` (integers; Passive, Focus, Energize, Super). Free slots add to the starting and purchasable slots and raise the creator's picks; energy bonuses raise the Light / Super Energy limit. Soldier-type `special_rules` may carry the same keys.
 - `light_and_sky/character_creation/connections.json`: `{ "connections": { "rules": object, "light": [record], "darkness": [record], "specialized": [record], ... } }`.
 
 ## Core Catalogs and Lookup Tables

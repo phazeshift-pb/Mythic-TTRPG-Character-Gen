@@ -576,3 +576,19 @@ def test_soldier_type_advancements_count_as_owned_in_xp_shop():
     warfare_range = shop.find("characteristic:WFR")
     assert warfare_range.current.startswith("35 (Rookie)")
     assert warfare_range.cost == 800  # Intermediate is next
+
+
+def test_robust_can_be_taken_twice_in_the_creator(window):
+    _allocate_all_points(window)
+    _select_outlier(window, "Robust")
+    if window._starting_luck < 2:
+        pytest.skip("needs 2 Luck")
+    label, spin = window._outlier_rank_inputs["Robust"]
+    assert not spin.isHidden() and spin.maximum() == 2
+    spin.setValue(2)
+    window.outlier_done_button.click()
+    assert window.generated_character.outliers == ["Robust", "Robust"]
+    assert window._selected_outlier_names() == ["Robust", "Robust"]
+    assert window.generated_character.luck_total == window._starting_luck - 2
+    _select_outlier(window, None)
+    assert spin.isHidden()

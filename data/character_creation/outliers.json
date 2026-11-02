@@ -7,27 +7,32 @@
     "list": [
       {
         "name": "Acumen",
-        "effect": "Triples Intellect Modifier for determining Educations and Languages."
+        "effect": "Triples Intellect Modifier for determining Educations and Languages.",
+        "learning_intellect_modifier_multiplier": 3
       },
       {
         "name": "Advocate",
-        "effect": "+2 Support Points at creation and each mission reward."
+        "effect": "+2 Support Points at creation and each mission reward.",
+        "support_points": 2
       },
       {
         "name": "Aptitude",
         "effect": "+5 to one chosen Characteristic.",
-        "max_times_per_characteristic": 2
+        "max_times_per_characteristic": 2,
+        "chosen_characteristic_bonus": 5
       },
       {
         "name": "Enduring",
         "effect": "Ignore first 2 levels of Fatigue.",
         "max_times": 2,
-        "second_rank_effect": "Ignore first 4 levels of Fatigue."
+        "second_rank_effect": "Ignore first 4 levels of Fatigue.",
+        "ignored_fatigue_levels_per_rank": 2
       },
       {
         "name": "Forte",
         "effect": "+1 Mythic Characteristic.",
-        "max_times_per_mythic": 2
+        "max_times_per_mythic": 2,
+        "chosen_mythic_bonus": 1
       },
       {
         "name": "Hard-Head",
@@ -35,7 +40,9 @@
       },
       {
         "name": "Imposing",
-        "effect": "Increase height up to 20%; weight increases by height% × 2; count as one Size Category larger; +3 Strength and Toughness."
+        "effect": "Increase height up to 20%; weight increases by height% × 2; count as one Size Category larger; +3 Strength and Toughness.",
+        "characteristic_bonus": {"STR": 3, "TOU": 3},
+        "size_category_increase": 1
       },
       {
         "name": "Olympian",
@@ -66,7 +73,8 @@
         "name": "Vigorous",
         "effect": "Double Natural Healing.",
         "max_times": 2,
-        "second_rank_effect": "Triple Natural Healing."
+        "second_rank_effect": "Triple Natural Healing.",
+        "natural_healing_multiplier_by_rank": [2, 3]
       }
     ]
   }

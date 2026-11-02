@@ -131,6 +131,10 @@ class DataLoader:
         self._load_folder(
             data / "mythic_characteristics.json", game_data, validator
         )
+        # Fatigue penalties and Natural Healing (Enduring / Vigorous on the sheet)
+        self._load_folder(
+            data / "wounds_medical/wounds.json", game_data, validator
+        )
 
         # -----------------------------
         # CORE MODE

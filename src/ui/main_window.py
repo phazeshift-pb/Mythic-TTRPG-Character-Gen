@@ -306,10 +306,12 @@ class MainWindow(
         ]
 
     def _selected_outlier_names(self):
+        """Selected outliers, one entry per time taken (e.g. Robust twice)."""
         return [
             outlier["name"]
             for tile, outlier, _ in self.outlier_tiles
             if tile.isChecked()
+            for _ in range(self._outlier_times(outlier))
         ]
 
     @property
@@ -446,10 +448,7 @@ class MainWindow(
         self._selected_light_aspects = {}
         self._selected_light_powers = {}
         self._selected_light_supers = {}
-        for tile, _, _ in self.outlier_tiles:
-            tile.blockSignals(True)
-            tile.setChecked(False)
-            tile.blockSignals(False)
+        self._reset_outlier_tiles()
         for button, _ in self.specialization_tiles:
             button.blockSignals(True)
             button.setChecked(False)

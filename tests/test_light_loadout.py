@@ -157,3 +157,48 @@ def test_creator_light_power_limit_counts_the_warlock_power_slot(lns_data, guard
         tiles.append(tile)
     assert len(creator._selected_light_powers) == limit
     assert [tile.checked for tile in tiles] == [True] * limit + [False] * (4 - limit)
+
+
+@pytest.mark.parametrize(
+    "outlier, aspects, abilities, light_max, super_max",
+    [
+        (None, 1, 2, 100, 100),
+        ("Passive", 2, 2, 100, 100),
+        ("Focus", 1, 3, 100, 100),
+        ("Energize", 1, 2, 125, 100),
+        ("Super", 1, 2, 100, 120),
+    ],
+)
+def test_guardian_outliers_apply_their_bonuses(lns_data, outlier, aspects, abilities, light_max, super_max):
+    loadout = LightLoadout(titan(outliers=[outlier] if outlier else []), lns_data)
+    assert loadout.aspect_slot_count() == aspects
+    assert loadout.ability_slot_count() == abilities
+    assert loadout.maximum("light") == light_max
+    assert loadout.maximum("super") == super_max
+    assert loadout.energy("light") == light_max  # a fresh character starts full
+
+
+def test_outlier_free_slots_stack_with_warlock_and_do_not_use_up_purchases(lns_data):
+    character = titan(soldier_type="Warlock Class Soldier Type", outliers=["Passive", "Focus"])
+    loadout = LightLoadout(character, lns_data)
+    # 2 starting + Warlock + Focus, then 3 purchasable
+    assert [slot.unlocked for slot in loadout.slots("ability")] == [True] * 4 + [False] * 3
+    # 1 starting + Passive, then 3 purchasable priced 200 / 400 / 800 in order
+    aspect_slots = loadout.slots("aspect")
+    assert [slot.unlocked for slot in aspect_slots] == [True, True, False, False, False]
+    assert [slot.unlock_cost for slot in aspect_slots[2:]] == [200, 400, 800]
+    assert "1 free from Outliers" in loadout.shop.find("ability_slot").current
+    assert loadout.shop.find("aspect_slot:2").next == "3 Aspect Slots"
+
+
+def test_creator_outliers_raise_creation_picks(lns_data):
+    from types import SimpleNamespace
+
+    from src.ui.creator.light_powers import LightPowersMixin
+
+    creator = LightPowersMixin()
+    creator.game_data = lns_data
+    creator.guardian_combo = _Combo("warlock")
+    assert (creator._light_aspect_slot_limit(), creator._light_power_slot_limit()) == (1, 3)
+    creator.generated_character = SimpleNamespace(outliers=["Passive", "Focus"])
+    assert (creator._light_aspect_slot_limit(), creator._light_power_slot_limit()) == (2, 4)

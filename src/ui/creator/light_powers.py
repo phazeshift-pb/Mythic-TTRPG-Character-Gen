@@ -3,7 +3,7 @@
 
 Part of MainWindow (src/ui/main_window.py); methods use its widgets and state via self.
 """
-from src.models.xp_shop import starting_light_ability_slots
+from src.models.xp_shop import starting_aspect_slots, starting_light_ability_slots
 
 class LightPowersMixin:
     def select_light_category(self, category):
@@ -91,17 +91,30 @@ class LightPowersMixin:
             for key, value in self._selected_light_supers.items()
             if key in valid_power_keys
         }
-        # Switching away from a Warlock can leave more picks than slots
+        # Switching away from a Warlock, or dropping Passive / Focus, can leave
+        # more picks than slots
         power_limit = self._light_power_slot_limit()
         if len(self._selected_light_powers) > power_limit:
             self._selected_light_powers = dict(
                 list(self._selected_light_powers.items())[:power_limit]
             )
+        aspect_limit = self._light_aspect_slot_limit()
+        if len(self._selected_light_aspects) > aspect_limit:
+            self._selected_light_aspects = dict(
+                list(self._selected_light_aspects.items())[:aspect_limit]
+            )
 
         if self._selected_light_category == "aspects":
             self.equipment_page.options_title.setText("Light Aspects")
+            aspect_limit = self._light_aspect_slot_limit()
+            outlier_note = (
+                " (includes the Passive Outlier's extra Aspect)"
+                if aspect_limit > starting_aspect_slots(self.game_data)
+                else ""
+            )
             self.equipment_page.options_description.setText(
-                "Select one Light Aspect."
+                f"Select up to {aspect_limit} Light Aspect"
+                f"{'s' if aspect_limit != 1 else ''} - one per Aspect Slot{outlier_note}."
             )
             for index, (connection, aspect) in enumerate(all_aspects):
                 key = (connection.casefold(), aspect["name"].casefold())
@@ -132,12 +145,18 @@ class LightPowersMixin:
             power_limit = self._light_power_slot_limit()
             guardian = self._selected_guardian_record() or {}
             class_name = str(guardian.get("name") or "class").split()[0]
-            class_note = (
-                f" ({self._light_power_class_bonus()} extra from the "
-                f"{class_name} Power trait)"
-                if self._light_power_class_bonus()
-                else ""
+            extras = []
+            if self._light_power_class_bonus():
+                extras.append(
+                    f"{self._light_power_class_bonus()} extra from the "
+                    f"{class_name} Power trait"
+                )
+            outlier_bonus = power_limit - starting_light_ability_slots(
+                self.game_data, self._selected_guardian_record()
             )
+            if outlier_bonus:
+                extras.append(f"{outlier_bonus} extra from the Focus Outlier")
+            class_note = f" ({'; '.join(extras)})" if extras else ""
             self.equipment_page.options_description.setText(
                 f"Select up to {power_limit} Light Abilities and/or Light Grenades"
                 f" - one per Light Ability Slot{class_note}."
@@ -266,9 +285,12 @@ class LightPowersMixin:
                 else self._selected_light_powers
             )
         )
-        limit = (
-            1 if selection_kind in {"aspect", "super"} else self._light_power_slot_limit()
-        )
+        if selection_kind == "super":
+            limit = 1
+        elif selection_kind == "aspect":
+            limit = self._light_aspect_slot_limit()
+        else:
+            limit = self._light_power_slot_limit()
         if (
             checked
             and selection_key not in selections
@@ -295,7 +317,7 @@ class LightPowersMixin:
         super_count = len(self._selected_light_supers)
         self._update_light_xp_display()
         self.equipment_done_button.setText(
-            f"Done (Aspects {aspect_count}/1; "
+            f"Done (Aspects {aspect_count}/{self._light_aspect_slot_limit()}; "
             f"Light Powers {ability_count}/{self._light_power_slot_limit()}; "
             f"Supers {super_count}/1)"
         )
@@ -334,10 +356,21 @@ class LightPowersMixin:
             self.game_data, self._selected_guardian_record()
         ) - starting_light_ability_slots(self.game_data, None)
 
+    def _chosen_outliers(self):
+        """Outliers picked so far (Passive and Focus add creation picks)."""
+        character = getattr(self, "generated_character", None)
+        return list(getattr(character, "outliers", None) or [])
+
     def _light_power_slot_limit(self):
         """Light Abilities / Grenades a new character can take: one per starting slot."""
         return starting_light_ability_slots(
-            self.game_data, self._selected_guardian_record()
+            self.game_data, self._selected_guardian_record(), self._chosen_outliers()
+        )
+
+    def _light_aspect_slot_limit(self):
+        """Light Aspects a new character can take: one per starting Aspect Slot."""
+        return starting_aspect_slots(
+            self.game_data, self._selected_guardian_record(), self._chosen_outliers()
         )
 
     def _light_aspect_cost(self, aspect, connection):
