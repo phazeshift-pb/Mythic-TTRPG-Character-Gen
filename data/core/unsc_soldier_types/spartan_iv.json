@@ -86,6 +86,9 @@
   },
 
   "special_rules": {
+    "starting_abilities": ["Fast Foot"],
+    "starting_rank": "Petty Officer Second Class",
+    "all_faction_training": true,
     "mjolnir_armor": {
       "description": "Spartans begin with a set of Mjolnir or SPI armor appropriate to the timeline. They may swap armor between missions.",
       "armor_options": [

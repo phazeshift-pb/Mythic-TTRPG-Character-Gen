@@ -444,6 +444,9 @@ class XpShop:
         return records
 
     def education_limit(self) -> int:
+        """2x Intellect Modifier (Acumen triples the modifier); no limit for a Smart AI."""
+        if ((self.soldier or {}).get("special_rules") or {}).get("unlimited_educations"):
+            return 10**6
         rules = self.rules.get("educations", {})
         multiplier = _int(rules.get("limit_intellect_modifier_multiplier"), 2)
         return self._learning_modifier() * multiplier
@@ -561,6 +564,11 @@ class XpShop:
         owned = set(_as_list(self.character.get("faction_training")))
         if starting:
             owned.add(starting)
+        # Spartans' Weapons Expert: every Faction Training at creation
+        if ((self.soldier or {}).get("special_rules") or {}).get("all_faction_training"):
+            owned |= {
+                entry["name"] for entry in rules.get("factions", []) if entry.get("name")
+            }
         return owned
 
     def _learning_modifier(self) -> int:

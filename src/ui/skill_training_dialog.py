@@ -17,21 +17,30 @@ class SkillTrainingDialog(QDialog):
         training_bonus,
         selected_skills=(),
         parent=None,
+        title="Choose Skill Training",
+        noun="skills",
+        training_label=None,
     ):
+        """Pick exactly ``skill_count`` names from a list.
+
+        Also used for a Soldier Type's starting Educations (``noun="Educations"``).
+        """
         super().__init__(parent)
         if skill_count < 1 or skill_count > len(skill_names):
-            raise ValueError("Skill training count is outside the available skill list.")
+            raise ValueError(f"The {noun} count is outside the available list.")
 
-        self.setWindowTitle("Choose Skill Training")
+        self.setWindowTitle(title)
         self.setMinimumWidth(360)
         layout = QVBoxLayout(self)
-        training_label = (
-            "Trained" if training_bonus == 0 else f"+{training_bonus}"
-        )
+        if training_label is None:
+            training_label = (
+                "Trained" if training_bonus == 0 else f"+{training_bonus}"
+            )
+        singular = noun[:-1] if noun.endswith("s") else noun
         layout.addWidget(
             QLabel(
-                f"Choose exactly {skill_count} skills. "
-                f"Each selected skill starts at {training_label}."
+                f"Choose exactly {skill_count} {noun}. "
+                f"Each selected {singular} starts at {training_label}."
             )
         )
 

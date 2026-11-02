@@ -1,6 +1,6 @@
 {
   "name": "UNSC or Insurrectionist Navy Technician",
-  "experience_cost": 2000,
+  "experience_cost": 1550,
   "training": ["Basic", "Infantry"],
   "upbringing": "Any",
 
@@ -60,7 +60,9 @@
     "modification_discount": "Weapon and Vehicle Modifications cost half cR."
   },
 
-  "special_rules": {},
+  "special_rules": {
+    "starting_educations": {"count": 3, "level": 5}
+  },
 
   "subclasses": {},
 

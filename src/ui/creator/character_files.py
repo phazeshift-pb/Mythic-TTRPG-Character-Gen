@@ -192,6 +192,9 @@ class CharacterFilesMixin:
                 "skill_training": self._selected_soldier_skills.get(
                     selected_value(self.soldier_combo), {}
                 ),
+                "starting_educations": self._selected_soldier_educations.get(
+                    selected_value(self.soldier_combo), {}
+                ),
             }
             pack = next(
                 (

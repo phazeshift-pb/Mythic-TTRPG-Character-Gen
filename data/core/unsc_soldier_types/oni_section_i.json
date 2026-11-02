@@ -77,6 +77,8 @@
   },
 
   "special_rules": {
+    "starting_rank": "O-1",
+    "support_points": 1,
     "description": "ONI Section I is the intelligence-gathering branch of ONI, specializing in espionage, codebreaking, and covert operations.",
 
     "evacuate": {

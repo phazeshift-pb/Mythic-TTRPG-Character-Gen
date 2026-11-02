@@ -63,13 +63,16 @@
 
   "special_rules": {
     "tier": 4,
-    "subclass_required": true
+    "subclass_required": true,
+    "starting_engrams": {"weapons": 3, "armor": 1, "rarity": "Common"}
   },
 
   "subclasses": {
     "Defender": {
       "characteristic_modifiers": {
-        "TOU": "+10"
+        "TOU": "+10",
+        "STR": "-5",
+        "AGI": "-5"
       }
     },
     "Sentinel": {
@@ -83,7 +86,7 @@
     "Striker": {
       "characteristic_modifiers": {
         "WFM": "+10",
-        "WFR": "+10"
+        "WFR": "-10"
       }
     },
     "Sunbreaker": {

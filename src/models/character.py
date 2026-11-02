@@ -23,6 +23,15 @@ CHARACTERISTIC_NAME_TO_CODE = {
     "leadership": "LDR",
 }
 
+# Mythic 7.0: an Upbringing, Environment or Lifestyle option can't be taken
+# if it would lower a Characteristic to 5 or below.
+BACKGROUND_FLOOR = 5
+
+
+class BackgroundFloorError(ValueError):
+    """A background option would lower a Characteristic to 5 or below."""
+
+
 _MODIFIER_PATTERN = re.compile(r"^\s*([+-]\d+)\s+(.+?)\s*$")
 _ADVANCEMENT_PATTERN = re.compile(r"([+-]\d+)")
 
@@ -84,6 +93,8 @@ class Character:
     # and the characteristic bonuses the worn suit grants (see starting_armor).
     armor_variant: Optional[Dict[str, Any]] = None
     armor_bonus: Dict[str, int] = field(default_factory=dict)
+    # Light & Sky: the full roll of worn engram armor (see src/loot/character_loot.py)
+    armor_loot: Optional[Dict[str, Any]] = None
     # Toggled on the character sheet; bonuses apply only while worn.
     armor_equipped: bool = True
     # Core: {"name", "quantity", "nickname", "note", "category"} dicts naming
@@ -142,11 +153,31 @@ class Character:
         # Mythic characteristics
         self.mythic_characteristics = dict(soldier_data.get("mythic_characteristics", {}))
 
-        # Rank
-        for trait in soldier_data.get("traits", []):
-            if trait["name"].lower() == "rank":
-                self.rank = trait["effect"].replace("Begins at Rank:", "").strip()
-                self.log(f"Rank set to {self.rank}")
+        special = soldier_data.get("special_rules")
+        special = special if isinstance(special, dict) else {}
+
+        # Rank: the explicit starting_rank wins over the trait's wording
+        if special.get("starting_rank"):
+            self.rank = str(special["starting_rank"])
+            self.log(f"Rank set to {self.rank}")
+        else:
+            for trait in soldier_data.get("traits", []):
+                if trait["name"].lower() == "rank":
+                    self.rank = (
+                        trait["effect"].replace("Begins at Rank:", "").strip().rstrip(".")
+                    )
+                    self.log(f"Rank set to {self.rank}")
+
+        # Abilities a trait grants at creation (e.g. Spartans' Fast Foot)
+        for ability in special.get("starting_abilities") or []:
+            if ability not in self.abilities:
+                self.abilities.append(ability)
+                self.log(f"Soldier Type ability: {ability}")
+
+        # Support Points a trait grants at creation (e.g. ONI Section I +1)
+        if special.get("support_points"):
+            self.support_points += int(special["support_points"])
+            self.log(f"Soldier Type Support Points: +{int(special['support_points'])}")
 
         # Equipment sets (not applied automatically)
         # You will apply these in the generator pipeline.
@@ -184,8 +215,31 @@ class Character:
         modifiers, problems = resolve_modifiers(record, choices)
         for problem in problems:
             self.log(problem)
+        self._check_background_floor(record.get("name", "This option"), modifiers)
         for modifier in modifiers:
             self._apply_modifier(modifier)
+
+    def _check_background_floor(self, source: str, modifiers):
+        """Raise BackgroundFloorError if the modifiers lower any Characteristic to 5 or below."""
+        totals = dict(self.characteristics)
+        lowered = set()
+        for text in modifiers:
+            match = _MODIFIER_PATTERN.match(text) if isinstance(text, str) else None
+            if match is None:
+                continue
+            code = CHARACTERISTIC_NAME_TO_CODE.get(match.group(2).casefold())
+            if code in totals:
+                totals[code] += int(match.group(1))
+                if int(match.group(1)) < 0:
+                    lowered.add(code)
+        too_low = sorted(code for code in lowered if totals[code] <= BACKGROUND_FLOOR)
+        if too_low:
+            details = ", ".join(f"{code} {totals[code]}" for code in too_low)
+            raise BackgroundFloorError(
+                f"{source} can't be taken: it would lower {details} "
+                f"(a background option can't lower a Characteristic to "
+                f"{BACKGROUND_FLOOR} or below)."
+            )
 
     # -----------------------------
     # Apply Lifestyle
@@ -209,6 +263,7 @@ class Character:
                 modifiers, problems = resolve_modifiers(resolved, choices)
                 for problem in problems:
                     self.log(problem)
+                self._check_background_floor(resolved["name"], modifiers)
                 for modifier in modifiers:
                     self._apply_modifier(modifier)
                 self.lifestyle_results.append(

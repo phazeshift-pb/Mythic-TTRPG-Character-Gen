@@ -112,6 +112,8 @@ def _guardian_export(data):
     )
     export = asdict(character)
     export.pop("debug_log")
+    # Start bare: these tests add their own loot (starting engrams are tested elsewhere)
+    export.update(weapons=[], armor=None, armor_bonus={}, armor_loot=None)
     return export
 
 

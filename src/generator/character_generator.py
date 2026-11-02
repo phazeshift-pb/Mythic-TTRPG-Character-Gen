@@ -22,9 +22,10 @@ class CharacterGenerator:
         - no UNSC soldier types
     """
 
-    def __init__(self, game_data, use_light_and_sky: bool = False):
+    def __init__(self, game_data, use_light_and_sky: bool = False, rng: Optional[random.Random] = None):
         self.data = game_data
         self.use_light_and_sky = use_light_and_sky
+        self.rng = rng or random.Random()
 
     # ---------------------------------------------------------
     # Public API
@@ -48,6 +49,7 @@ class CharacterGenerator:
         upbringing_choices: Optional[list[str]] = None,
         environment_choices: Optional[list[str]] = None,
         lifestyle_choice=None,
+        starting_educations: Optional[dict[str, int]] = None,
     ) -> Character:
         """lifestyle_choice(record, roll, groups) -> [label, ...] picks options
         for lifestyle outcomes that offer a choice; it may raise to cancel."""
@@ -59,6 +61,7 @@ class CharacterGenerator:
         char.experience_tier = self._get_experience_tier(char.starting_experience)
         char.luck_total = self._get_tier_luck(char.experience_tier)
         char.luck_available = char.luck_total
+        char.credits = self._get_tier_credits(char.experience_tier)
         char.log(
             f"Starting experience: {char.starting_experience} "
             f"(Tier {char.experience_tier})"
@@ -112,6 +115,13 @@ class CharacterGenerator:
             if is_guardian and subclass is None:
                 char.log("ERROR: Guardian subclass required in Light & Sky mode.")
 
+        # Educations a Soldier Type trait grants (Navy Technician, Smart AI)
+        for education, level in (starting_educations or {}).items():
+            if level not in (5, 10):
+                raise ValueError(f"Invalid starting Education level for {education}: {level}")
+            char.educations[education] = level
+            char.log(f"Starting Education: {education} +{level}")
+
         # Skills
         if skill_training is not None:
             for skill, bonus in skill_training.items():
@@ -134,6 +144,7 @@ class CharacterGenerator:
         # is selected on the equipment page after character creation.
         if self.use_light_and_sky:
             self._apply_equipment(char)
+            self._apply_starting_engrams(char)
 
         # Finalize derived stats
         char.finalize()
@@ -170,6 +181,15 @@ class CharacterGenerator:
         for tier in tiers:
             if tier.get("tier") == tier_number:
                 return int(tier.get("luck", 0))
+        return 0
+
+    def _get_tier_credits(self, tier_number: int) -> int:
+        """Starting cR for an Experience Tier (Mythic 7.0 Experience Tier table)."""
+        document = self.data.get("experience_tiers", "experience_tiers") or {}
+        tiers = document.get("experience_tiers", {}).get("tiers", [])
+        for tier in tiers:
+            if tier.get("tier") == tier_number:
+                return int(tier.get("credits", 0) or 0)
         return 0
 
     def _selected_experience_costs(
@@ -432,6 +452,49 @@ class CharacterGenerator:
             char.train_skill(skill)
 
         char.log(f"Auto-trained skills: {', '.join(chosen)}")
+
+    # ---------------------------------------------------------
+    # Light & Sky starting engrams
+    # ---------------------------------------------------------
+    def _apply_starting_engrams(self, char: Character):
+        """Guardian Equipment trait: decode the class's starting engrams.
+
+        Every class begins with 3 Common Weapon Engrams and 1 Common Armor
+        Engram (``special_rules.starting_engrams``); each is rolled with the
+        Light & Sky loot tables and the armor is worn.
+        """
+        from ..loot import character_loot
+        from ..loot.generator import LootDataMissing, LootGenerator
+
+        soldier = None
+        for record in self.data.families.get("soldier_type", {}).values():
+            if isinstance(record, dict) and record.get("name") == char.soldier_type:
+                soldier = record
+        rule = ((soldier or {}).get("special_rules") or {}).get("starting_engrams")
+        if not isinstance(rule, dict):
+            return
+        try:
+            loot = LootGenerator(self.data, self.rng)
+        except LootDataMissing as error:
+            char.log(f"Starting engrams skipped: {error}")
+            return
+        rarity = rule.get("rarity", "Common")
+        for _ in range(int(rule.get("weapons", 0))):
+            entry = character_loot.weapon_entry(
+                loot.generate_weapon(forced_rarity=rarity, exotic_chance=0)
+            )
+            char.weapons.append(entry)
+            char.log(f"Weapon Engram: {entry['name']}")
+        for _ in range(int(rule.get("armor", 0))):
+            roll = loot.generate_armor(forced_rarity=rarity, exotic_chance=0)
+            worn = {}
+            name = character_loot.equip_armor(worn, roll)
+            char.armor = worn["armor"]
+            char.armor_variant = worn["armor_variant"]
+            char.armor_bonus = worn["armor_bonus"]
+            char.armor_equipped = worn["armor_equipped"]
+            char.armor_loot = worn["armor_loot"]
+            char.log(f"Armor Engram: {name}")
 
     # ---------------------------------------------------------
     # Equipment (expansion-aware)

@@ -18,7 +18,7 @@ from PySide6.QtWidgets import (
 )
 
 from src.generator.character_generator import CharacterGenerator
-from src.models.character import CHAR_CODES
+from src.models.character import CHAR_CODES, BackgroundFloorError
 from src.ui.character_setup_home import CharacterSetupHome
 from src.ui.debug_page import DebugPage
 from src.ui.equipment_page import EquipmentPage
@@ -207,6 +207,10 @@ class MainWindow(
         self.upbringing_combo.currentIndexChanged.connect(
             self.refresh_core_background_options
         )
+        # A Soldier Type can limit its Upbringings (Spartan II: Military only)
+        self.soldier_combo.currentIndexChanged.connect(
+            self.refresh_core_background_options
+        )
         self.human_combo.currentIndexChanged.connect(self.refresh_selection_options)
         self.guardian_combo.currentIndexChanged.connect(self.update_subclasses)
         self.generate_button.clicked.connect(self.generate_character)
@@ -259,6 +263,7 @@ class MainWindow(
 
         self._creation_allocations = {code: 0 for code in CHAR_CODES}
         self._selected_soldier_skills = {}
+        self._selected_soldier_educations = {}
         self._outlier_characteristics = {}
         # {"upbringing"|"environment": {"name": str, "choices": [label, ...]}}
         self._background_choices = {}
@@ -386,6 +391,11 @@ class MainWindow(
             if use_lns
             else [soldier_type]
         )
+        starting_educations = {}
+        for selected_type in selected_soldier_types:
+            starting_educations.update(
+                self._selected_soldier_educations.get(selected_type, {})
+            )
         skill_training = {}
         for selected_type in selected_soldier_types:
             for skill, bonus in self._selected_soldier_skills.get(
@@ -426,9 +436,13 @@ class MainWindow(
                     else None
                 ),
                 starting_experience=self.experience_input.value(),
+                starting_educations=starting_educations or None,
                 skill_training=skill_training or None,
             )
         except CreationCancelled:
+            return
+        except BackgroundFloorError as error:
+            QMessageBox.warning(self, "Background Not Allowed", str(error))
             return
 
         self.generated_character = char
@@ -453,6 +467,8 @@ class MainWindow(
             button.blockSignals(True)
             button.setChecked(False)
             button.blockSignals(False)
+        # A Smart AI has no Specialization Pack, so that step is already done
+        self.update_specialization_selection()
 
         if use_lns:
             self._build_light_power_tiles()

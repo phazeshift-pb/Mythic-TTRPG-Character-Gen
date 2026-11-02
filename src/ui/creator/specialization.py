@@ -169,13 +169,32 @@ class SpecializationMixin:
                     button.setChecked(False)
         self.update_specialization_selection()
 
+    def _soldier_takes_no_specialization(self):
+        """Smart AI: no Specialization Pack (its four +10 Skills stand in for one)."""
+        character = getattr(self, "generated_character", None)
+        if character is None or not hasattr(self, "game_data"):
+            return False
+        for record in self.game_data.families.get("soldier_type", {}).values():
+            if isinstance(record, dict) and record.get("name") == character.soldier_type:
+                return bool((record.get("special_rules") or {}).get("no_specialization_pack"))
+        return False
+
     def update_specialization_selection(self):
         if self.selected_mode == "Light & Sky":
             button_text = "Next: Light Abilities / Light Aspects"
         else:
             button_text = "Next: Equipment Packs"
+        no_pack = self._soldier_takes_no_specialization()
+        if no_pack:
+            button_text += " (this Soldier Type takes no Specialization Pack)"
+        for button, _ in self.specialization_tiles:
+            if no_pack and button.isChecked():
+                button.blockSignals(True)
+                button.setChecked(False)
+                button.blockSignals(False)
+            button.setEnabled(not no_pack)
         self.specialization_done_button.setText(button_text)
-        has_selection = any(
+        has_selection = no_pack or any(
             button.isChecked() for button, _ in self.specialization_tiles
         )
         self.specialization_done_button.setEnabled(has_selection)
