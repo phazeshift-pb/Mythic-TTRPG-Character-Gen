@@ -527,3 +527,37 @@ def test_sheet_spin_box_buttons_receive_clicks(qt_app):
             page.close()
     finally:
         qt_app.setStyle(original_style)
+
+
+def test_light_and_sky_tab_slots_and_energy(qt_app):
+    from src.data_loader import DataLoader
+    from src.ui.interactive_character_sheet import InteractiveCharacterSheet
+
+    data = DataLoader(use_light_and_sky=True).load_all()
+    sheet = InteractiveCharacterSheet()
+    export = _guardian_export(data)
+    sheet.set_character(export, "Light & Sky", data)
+    tabs = [sheet.tabs.tabText(index) for index in range(sheet.tabs.count())]
+    assert tabs == ["Character", "Combat", "Light && Sky", "Notes"]
+    page = sheet.light_page
+    assert sheet.light_tab.isAncestorOf(page)
+
+    # every possible slot is drawn; unbought ones are locked
+    assert len(page.slot_tiles["aspect"]) == 4
+    assert [tile.property("role") for tile in page.slot_tiles["aspect"][1:]] == ["slot-locked"] * 3
+    assert len(page.slot_tiles["ability"]) == 5
+    assert len(page.slot_tiles["super"]) == 1
+
+    # energy starts full and is saved with the character
+    assert page.energy_inputs["light"].value() == 100
+    page._adjust_energy("light", -10)
+    page.regen_buttons["New Turn"].click()
+    saved = sheet.character_data_for_save()
+    assert saved["light_energy"] == 95 and saved["super_energy"] == 100
+    assert isinstance(saved["light_loadout"], dict)
+
+    # a Core character has no Light & Sky tab
+    core = DataLoader().load_all()
+    _, marine = _marine_sheet(core)
+    sheet.set_character(marine, "Core", core)
+    assert sheet.tabs.indexOf(sheet.light_tab) == -1

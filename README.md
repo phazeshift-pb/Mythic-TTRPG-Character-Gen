@@ -116,6 +116,26 @@ chances, perk counts and rarity colors are in `src/loot/loot_rules.py`; the
 tables come from `data/light_and_sky/equipment`, and the element and ammo icons
 from `assets/light_and_sky`.
 
+## Light & Sky tab
+
+Light & Sky character sheets get a **Light & Sky** tab after Combat:
+
+- **Energy**: Light Energy and Super Energy (0-100) with bars, a current-value
+  box, quick +/- buttons, and regain buttons for the rules' events (New Turn,
+  defeating an enemy with weapons or with a Light Ability, assisting an ally).
+- **Super**, **Light Ability Slots** and **Aspect Slots**: every possible slot
+  is a tile. Bought slots hold one owned power, picked from a drop-down; slots
+  not yet bought show **Locked** with their XP cost and a button to the XP
+  Shop. Light Grenades fill Light Ability Slots. **Use** / **Cast Super**
+  spend the power's energy (Supers cost double, from Super Energy).
+- Only slotted Aspects count toward their effects (e.g. movement bonuses).
+
+What is slotted is saved as `light_loadout`
+(`{"aspects": [...], "abilities": [...], "super": name, "seen": [...]}`), and
+the pools as `light_energy` / `super_energy`. Powers bought since the last
+time the sheet was open drop into the first empty slot. The rules are in
+`src/models/light_loadout.py`.
+
 ## Development
 
 Install dependencies with `pip install PySide6 pytest`, then run the app with

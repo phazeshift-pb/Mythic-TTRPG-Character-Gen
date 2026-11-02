@@ -100,6 +100,9 @@ SHEET_ACCENT = HIGHLIGHT
 SHEET_GOOD = "#a6d16a"
 SHEET_BAD = "#f0907a"
 SHEET_HEADING_FONT = '"Bahnschrift", "Segoe UI"'
+# Light & Sky page: the two energy pools
+SHEET_LIGHT_ENERGY = HIGHLIGHT
+SHEET_SUPER_ENERGY = "#8fc6e8"
 
 SHEET_ABILITY = (
     f"QLabel {{ color: {SHEET_TEXT}; padding: 1px 0; }}"
@@ -245,4 +248,34 @@ QHeaderView::section {{
     background-color: transparent; color: {SHEET_TEXT_MUTED}; font-size: 11px; font-weight: bold;
     border: none; border-bottom: 1px solid {SHEET_LINE}; padding: 2px 4px;
 }}
+
+/* Light & Sky page */
+QFrame[role="slot"] {{
+    background-color: {SHEET_FIELD}; border: 1px solid {SHEET_LINE}; border-radius: 4px;
+}}
+QFrame[role="slot-filled"] {{
+    background-color: {SHEET_FIELD}; border: 1px solid {SHEET_HEADING}; border-radius: 4px;
+}}
+QFrame[role="slot-super"] {{
+    background-color: {SHEET_FIELD}; border: 2px solid {SHEET_SUPER_ENERGY}; border-radius: 4px;
+}}
+QFrame[role="slot-locked"] {{
+    background-color: {SHEET_SURFACE}; border: 1px dashed {SHEET_LINE}; border-radius: 4px;
+}}
+QFrame[role="slot"] QLabel, QFrame[role="slot-filled"] QLabel,
+QFrame[role="slot-super"] QLabel, QFrame[role="slot-locked"] QLabel {{ border: none; background: transparent; }}
+QLabel[role="slot-locked-title"] {{
+    font-family: {SHEET_HEADING_FONT}; font-size: 18px; font-weight: bold; color: {SHEET_LINE};
+}}
+QLabel[role="energy-badge"] {{ font-size: 11px; font-weight: bold; color: {SHEET_LIGHT_ENERGY}; }}
+QLabel[role="super-badge"] {{ font-size: 11px; font-weight: bold; color: {SHEET_SUPER_ENERGY}; }}
+QLabel[role="energy-value"] {{ font-family: {SHEET_HEADING_FONT}; font-size: 22px; font-weight: bold; }}
+QLabel[role="status-bad"] {{ color: {SHEET_BAD}; }}
+QLabel[role="status-good"] {{ color: {SHEET_GOOD}; }}
+QProgressBar {{
+    background-color: {SHEET_SURFACE_DEEP}; border: 1px solid {SHEET_LINE}; border-radius: 3px;
+    height: 16px; text-align: center; color: {SHEET_SURFACE}; font-weight: bold;
+}}
+QProgressBar[role="light-energy"]::chunk {{ background-color: {SHEET_LIGHT_ENERGY}; border-radius: 2px; }}
+QProgressBar[role="super-energy"]::chunk {{ background-color: {SHEET_SUPER_ENERGY}; border-radius: 2px; }}
 """

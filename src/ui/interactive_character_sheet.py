@@ -30,6 +30,7 @@ from src.models import worn_armor
 from src.models.derived_stats import max_wounds
 from src.models.starting_armor import format_bonus
 from src.models import attack, damage_resistance, energy_shields, throwing
+from src.models.light_loadout import LightLoadout
 from src.models.xp_shop import XpShop
 from src.models.equipment_packs import (
     armor_index,
@@ -43,6 +44,7 @@ from src.ui.loot_dialog import LootDialog
 from src.ui.specialization_page import DelayedTooltipLabel
 from src.ui.skill_test_dialog import SkillTestDialog
 from src.ui.attack_roll_dialog import AttackRollDialog
+from src.ui.light_and_sky_page import LightAndSkyPage
 from src.ui import theme
 
 
@@ -90,6 +92,12 @@ class InteractiveCharacterSheet(QWidget):
         )
         self.combat_tab, self.combat_content_layout = self._create_scrollable_tab()
         self.notes_tab, self.notes_content_layout = self._create_scrollable_tab()
+        # Shown only for Light & Sky characters (see _set_light_and_sky_powers)
+        self.light_tab, light_content_layout = self._create_scrollable_tab()
+        self.light_page = LightAndSkyPage()
+        self.light_page.loadout_changed.connect(self._refresh_armor_effects)
+        self.light_page.unlock_requested.connect(self.spend_xp_button.click)
+        light_content_layout.addWidget(self.light_page)
         self.tabs.addTab(self.character_tab, "Character")
         self.tabs.addTab(self.combat_tab, "Combat")
         self.tabs.addTab(self.notes_tab, "Notes")
@@ -181,6 +189,9 @@ class InteractiveCharacterSheet(QWidget):
         self.character_data = dict(character)
         self.game_data = game_data
         self.ruleset = ruleset
+        if ruleset == "Light & Sky":
+            # Settle which Aspects are slotted before movement is worked out
+            LightLoadout(self.character_data, game_data, ruleset).loadout()
         self.loot_button.setVisible(ruleset == "Light & Sky")
         self.name_label.setText(str(character.get("name") or "Unnamed Character"))
         self.ruleset_label.setText(ruleset)
@@ -404,26 +415,6 @@ class InteractiveCharacterSheet(QWidget):
         throwing_section, throwing_body = self._new_section("Throwing Distance")
         throwing_body.addWidget(self._build_throwing_panel(), 0, 0)
         layout.addWidget(throwing_section)
-
-        self.light_and_sky_section, light_and_sky_grid = self._new_section(
-            "Light & Sky Powers"
-        )
-        light_power_fields = (
-            ("CONNECTIONS", "light_connections_label"),
-            ("LIGHT ASPECTS", "light_aspects_label"),
-            ("LIGHT ABILITIES", "light_abilities_label"),
-            ("LIGHT GRENADES", "light_grenades_label"),
-            ("SUPERS", "light_supers_label"),
-        )
-        for column, (title, label_attribute) in enumerate(light_power_fields):
-            label = QLabel("None")
-            label.setWordWrap(True)
-            light_and_sky_grid.addWidget(self._role_label(title, "caption"), 0, column)
-            light_and_sky_grid.addWidget(label, 1, column, Qt.AlignmentFlag.AlignTop)
-            setattr(self, label_attribute, label)
-            light_and_sky_grid.setColumnStretch(column, 1)
-        self.light_and_sky_section.hide()
-        layout.addWidget(self.light_and_sky_section)
         layout.addStretch(1)
 
     def _build_notes_tab(self, layout):
@@ -444,31 +435,16 @@ class InteractiveCharacterSheet(QWidget):
         layout.addLayout(notes_row)
 
     def _set_light_and_sky_powers(self, character, ruleset):
-        is_light_and_sky = ruleset == "Light & Sky"
-        self.light_and_sky_section.setVisible(is_light_and_sky)
-        if not is_light_and_sky:
+        """Show the Light & Sky tab (after Combat) for Light & Sky characters only."""
+        index = self.tabs.indexOf(self.light_tab)
+        if ruleset != "Light & Sky":
+            if index != -1:
+                self.tabs.removeTab(index)
             return
-
-        self.light_aspects_label.setText(
-            self._format_items(character.get("light_aspects"))
-        )
-        self.light_abilities_label.setText(
-            self._format_items(character.get("light_abilities"))
-        )
-        self.light_grenades_label.setText(
-            self._format_items(character.get("light_grenades"))
-        )
-        self.light_connections_label.setText(
-            self._format_items(character.get("connections"))
-        )
-        self.light_supers_label.setText(
-            self._format_items(character.get("supers"))
-        )
-        shop = XpShop(character, getattr(self, "game_data", None), ruleset)
-        self.light_aspects_label.setToolTip(f"Aspect Slots: {shop.aspect_slots()}")
-        self.light_abilities_label.setToolTip(
-            f"Light Ability Slots: {shop.ability_slots()}"
-        )
+        if index == -1:
+            self.tabs.insertTab(self.tabs.indexOf(self.combat_tab) + 1, self.light_tab, "Light && Sky")
+        # The page edits character_data in place: energy and slotted powers save with it
+        self.light_page.set_character(self.character_data, self.game_data, ruleset)
 
     def _create_scrollable_tab(self):
         scroll = QScrollArea()
@@ -1952,7 +1928,12 @@ class InteractiveCharacterSheet(QWidget):
     def _movement_aspect_bonus(
         cls, character: dict[str, Any], game_data: GameData
     ) -> int | None:
-        raw_selected_aspects = cls._as_list(character.get("light_aspects"))
+        # Aspects only work while slotted; older saves without a loadout use every owned one
+        loadout = character.get("light_loadout")
+        if isinstance(loadout, dict) and isinstance(loadout.get("aspects"), list):
+            raw_selected_aspects = [name for name in loadout["aspects"] if name]
+        else:
+            raw_selected_aspects = cls._as_list(character.get("light_aspects"))
         if not all(isinstance(name, str) for name in raw_selected_aspects):
             return None
         selected_aspects = set(raw_selected_aspects)
