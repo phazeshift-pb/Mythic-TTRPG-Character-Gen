@@ -481,3 +481,49 @@ def test_sheet_style_does_not_reach_its_dialogs(qt_app):
     assert sheet.styleSheet() == ""  # ...but the dialog's parent isn't styled
     assert dialog.styleSheet() == ""
     assert not sheet.tabs.parent().isAncestorOf(dialog)
+
+
+def test_sheet_spin_box_buttons_receive_clicks(qt_app):
+    """Both buttons must be clickable in every Qt style, not covered by the text field."""
+    from PySide6.QtCore import Qt
+    from PySide6.QtTest import QTest
+    from PySide6.QtWidgets import (
+        QDoubleSpinBox, QSpinBox, QStyle, QStyleFactory, QStyleOptionSpinBox, QVBoxLayout, QWidget,
+    )
+
+    from src.ui import theme
+
+    def click(page, box, control):
+        option = QStyleOptionSpinBox()
+        box.initStyleOption(option)
+        rect = box.style().subControlRect(QStyle.ComplexControl.CC_SpinBox, option, control, box)
+        # Through the window, so the click reaches whichever child is on top like a real one.
+        QTest.mouseClick(
+            page.windowHandle(), Qt.MouseButton.LeftButton, Qt.KeyboardModifier.NoModifier,
+            box.mapTo(page, rect.center()),
+        )
+
+    original_style = qt_app.style().objectName()
+    try:
+        for style_name in QStyleFactory.keys():
+            qt_app.setStyle(style_name)
+            page = QWidget()
+            page.setStyleSheet(theme.SHEET_STYLE)
+            layout = QVBoxLayout(page)
+            vital = QSpinBox()
+            vital.setProperty("role", "vital")
+            boxes = [QSpinBox(), QDoubleSpinBox(), vital]
+            for box in boxes:
+                box.setRange(0, 100)
+                layout.addWidget(box)
+            page.show()
+            QTest.qWaitForWindowExposed(page)
+            for box in boxes:
+                box.setValue(50)
+                click(page, box, QStyle.SubControl.SC_SpinBoxUp)
+                assert box.value() == 51, style_name
+                click(page, box, QStyle.SubControl.SC_SpinBoxDown)
+                assert box.value() == 50, style_name
+            page.close()
+    finally:
+        qt_app.setStyle(original_style)

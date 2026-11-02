@@ -4,6 +4,11 @@ Change a colour here and every page that uses these styles follows.
 Page-specific one-off styles can stay inline next to their widget.
 """
 
+from pathlib import Path
+
+# Stylesheet url() paths resolve against the working directory unless absolute
+UI_ICONS = (Path(__file__).resolve().parents[2] / "assets" / "ui").as_posix()
+
 # Palette
 BACKGROUND = "#242424"
 TEXT = "#f2f0e6"
@@ -200,6 +205,27 @@ QSpinBox:disabled, QDoubleSpinBox:disabled, QComboBox:disabled {{
     background-color: {SHEET_SURFACE_DEEP}; color: {SHEET_TEXT_MUTED};
 }}
 QSpinBox[role="vital"] {{ font-family: {SHEET_HEADING_FONT}; font-size: 24px; font-weight: bold; }}
+/* Styling a spin box without these lets the text field cover the up button under the Windows 11 style. */
+QSpinBox::up-button, QDoubleSpinBox::up-button {{
+    subcontrol-origin: border; subcontrol-position: top right; width: 20px;
+    background-color: {SHEET_SURFACE_DEEP}; border-left: 1px solid {SHEET_LINE};
+    border-bottom: 1px solid {SHEET_LINE}; border-top-right-radius: 2px;
+}}
+QSpinBox::down-button, QDoubleSpinBox::down-button {{
+    subcontrol-origin: border; subcontrol-position: bottom right; width: 20px;
+    background-color: {SHEET_SURFACE_DEEP}; border-left: 1px solid {SHEET_LINE};
+    border-bottom-right-radius: 2px;
+}}
+QSpinBox::up-button:hover, QDoubleSpinBox::up-button:hover,
+QSpinBox::down-button:hover, QDoubleSpinBox::down-button:hover {{ background-color: {SHEET_DRAB_LIGHT}; }}
+QSpinBox::up-button:pressed, QDoubleSpinBox::up-button:pressed,
+QSpinBox::down-button:pressed, QDoubleSpinBox::down-button:pressed {{ background-color: {GREEN_DARK}; }}
+QSpinBox::up-arrow, QDoubleSpinBox::up-arrow {{ image: url("{UI_ICONS}/spin_up.svg"); width: 10px; height: 7px; }}
+QSpinBox::down-arrow, QDoubleSpinBox::down-arrow {{ image: url("{UI_ICONS}/spin_down.svg"); width: 10px; height: 7px; }}
+QSpinBox::up-arrow:disabled, QDoubleSpinBox::up-arrow:disabled,
+QSpinBox::up-arrow:off, QDoubleSpinBox::up-arrow:off {{ image: url("{UI_ICONS}/spin_up_disabled.svg"); }}
+QSpinBox::down-arrow:disabled, QDoubleSpinBox::down-arrow:disabled,
+QSpinBox::down-arrow:off, QDoubleSpinBox::down-arrow:off {{ image: url("{UI_ICONS}/spin_down_disabled.svg"); }}
 QComboBox QAbstractItemView {{
     background-color: {SHEET_FIELD}; color: {SHEET_TEXT}; border: 1px solid {SHEET_LINE};
     selection-background-color: {SHEET_DRAB_LIGHT}; selection-color: {SHEET_TEXT};
