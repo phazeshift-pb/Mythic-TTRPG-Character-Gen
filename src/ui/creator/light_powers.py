@@ -3,6 +3,7 @@
 
 Part of MainWindow (src/ui/main_window.py); methods use its widgets and state via self.
 """
+from src.models.xp_shop import starting_light_ability_slots
 
 class LightPowersMixin:
     def select_light_category(self, category):
@@ -90,6 +91,12 @@ class LightPowersMixin:
             for key, value in self._selected_light_supers.items()
             if key in valid_power_keys
         }
+        # Switching away from a Warlock can leave more picks than slots
+        power_limit = self._light_power_slot_limit()
+        if len(self._selected_light_powers) > power_limit:
+            self._selected_light_powers = dict(
+                list(self._selected_light_powers.items())[:power_limit]
+            )
 
         if self._selected_light_category == "aspects":
             self.equipment_page.options_title.setText("Light Aspects")
@@ -122,8 +129,18 @@ class LightPowersMixin:
                 self.equipment_grid.addWidget(tile, index // 3, index % 3)
         elif self._selected_light_category == "powers":
             self.equipment_page.options_title.setText("Light Abilities / Grenades")
+            power_limit = self._light_power_slot_limit()
+            guardian = self._selected_guardian_record() or {}
+            class_name = str(guardian.get("name") or "class").split()[0]
+            class_note = (
+                f" ({self._light_power_class_bonus()} extra from the "
+                f"{class_name} Power trait)"
+                if self._light_power_class_bonus()
+                else ""
+            )
             self.equipment_page.options_description.setText(
-                "Select up to two Light Abilities and/or Light Grenades."
+                f"Select up to {power_limit} Light Abilities and/or Light Grenades"
+                f" - one per Light Ability Slot{class_note}."
             )
             power_selection = self._selected_light_powers
         elif self._selected_light_category == "supers":
@@ -249,7 +266,9 @@ class LightPowersMixin:
                 else self._selected_light_powers
             )
         )
-        limit = 1 if selection_kind in {"aspect", "super"} else 2
+        limit = (
+            1 if selection_kind in {"aspect", "super"} else self._light_power_slot_limit()
+        )
         if (
             checked
             and selection_key not in selections
@@ -276,7 +295,8 @@ class LightPowersMixin:
         super_count = len(self._selected_light_supers)
         self._update_light_xp_display()
         self.equipment_done_button.setText(
-            f"Done (Aspects {aspect_count}/1; Light Powers {ability_count}/2; "
+            f"Done (Aspects {aspect_count}/1; "
+            f"Light Powers {ability_count}/{self._light_power_slot_limit()}; "
             f"Supers {super_count}/1)"
         )
 
@@ -300,6 +320,25 @@ class LightPowersMixin:
             self._light_xp_spent = new_xp_spent
         self.character_setup_home.set_character_ready_to_export(True)
         self.pages.setCurrentWidget(self.character_setup_home)
+
+    def _selected_guardian_record(self):
+        key = self.guardian_combo.currentData()
+        if not key:
+            return None
+        record = self.game_data.get("soldier_type", key)
+        return record if isinstance(record, dict) else None
+
+    def _light_power_class_bonus(self):
+        """Free Light Ability Slots from the chosen Guardian class (Warlock: 1)."""
+        return starting_light_ability_slots(
+            self.game_data, self._selected_guardian_record()
+        ) - starting_light_ability_slots(self.game_data, None)
+
+    def _light_power_slot_limit(self):
+        """Light Abilities / Grenades a new character can take: one per starting slot."""
+        return starting_light_ability_slots(
+            self.game_data, self._selected_guardian_record()
+        )
 
     def _light_aspect_cost(self, aspect, connection):
         selected_connection = self.connection_combo.currentText()

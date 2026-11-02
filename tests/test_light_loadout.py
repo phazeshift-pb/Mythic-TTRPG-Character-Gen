@@ -114,3 +114,46 @@ def test_energy_defaults_full_clamps_and_spends(lns_data):
     assert loadout.gain(light=5, super_=10) == (100, 10)
     assert character["super_energy"] == 10
     assert [event[0] for event in loadout.regeneration_events()][0] == "New Turn"
+
+
+class _Combo:
+    def __init__(self, data):
+        self.data = data
+
+    def currentData(self):
+        return self.data
+
+
+class _Tile:
+    def __init__(self):
+        self.checked = True
+
+    def blockSignals(self, _):
+        pass
+
+    def setChecked(self, value):
+        self.checked = value
+
+
+@pytest.mark.parametrize("guardian_class, limit", [("warlock", 3), ("titan", 2), ("hunter", 2)])
+def test_creator_light_power_limit_counts_the_warlock_power_slot(lns_data, guardian_class, limit):
+    from src.ui.creator.light_powers import LightPowersMixin
+
+    creator = LightPowersMixin()
+    creator.game_data = lns_data
+    creator.guardian_combo = _Combo(guardian_class)
+    creator._selected_light_aspects, creator._selected_light_supers = {}, {}
+    creator._selected_light_powers = {}
+    creator._selected_light_xp_cost = lambda: 0
+    creator._light_xp_budget = lambda: 10_000
+    creator._update_light_xp_display = lambda: None
+    creator.update_light_power_selection = lambda: None
+    assert creator._light_power_slot_limit() == limit
+
+    tiles = []
+    for number in range(4):
+        tile = _Tile()
+        creator._select_light_tile(tile, "power", True, ("Light Ability", f"p{number}"), {})
+        tiles.append(tile)
+    assert len(creator._selected_light_powers) == limit
+    assert [tile.checked for tile in tiles] == [True] * limit + [False] * (4 - limit)

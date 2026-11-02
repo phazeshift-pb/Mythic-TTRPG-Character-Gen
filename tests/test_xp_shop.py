@@ -312,3 +312,18 @@ def test_light_slots(lns_data):
     shop.buy(item(shop, "aspect_slot:2"))
     assert shop.aspect_slots() == 2
     assert not item(shop, "aspect_slot:3").blocked
+
+
+def test_warlock_power_slot_comes_from_soldier_type_data(lns_data):
+    from src.models.xp_shop import bonus_light_ability_slots, starting_light_ability_slots
+
+    warlock = lns_data.get("soldier_type", "warlock")
+    assert bonus_light_ability_slots(warlock) == 1
+    assert bonus_light_ability_slots(lns_data.get("soldier_type", "titan")) == 0
+    assert bonus_light_ability_slots(lns_data.get("soldier_type", "hunter")) == 0
+    # character creation: 2 starting slots, 3 for a Warlock
+    assert starting_light_ability_slots(lns_data, warlock) == 3
+    assert starting_light_ability_slots(lns_data, None) == 2
+    shop = XpShop(guardian(lns_data, "warlock"), lns_data, "Light & Sky")
+    assert shop.class_ability_slots() == 1
+    assert "1 free from Warlock" in item(shop, "ability_slot").current

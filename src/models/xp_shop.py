@@ -87,6 +87,27 @@ def _int(value, default: int = 0) -> int:
         return default
 
 
+def bonus_light_ability_slots(soldier_record) -> int:
+    """Extra Light Ability Slots a soldier type gives (the Warlock's Power trait).
+
+    Read from ``special_rules.bonus_light_ability_slots``. These slots are free
+    and do not count against the purchasable slots.
+    """
+    if not isinstance(soldier_record, dict):
+        return 0
+    special = soldier_record.get("special_rules")
+    return max(0, _int((special or {}).get("bonus_light_ability_slots"))) if isinstance(special, dict) else 0
+
+
+def starting_light_ability_slots(game_data, soldier_record) -> int:
+    """Light Ability Slots a new character has: the rules' starting slots plus any class bonus."""
+    rules = {}
+    if game_data is not None:
+        document = game_data.get("light_ability_rules", "light_ability_rules") or {}
+        rules = document.get("light_abilities", {}).get("rules", {}).get("ability_slots", {})
+    return _int(rules.get("starting_slots"), 2) + bonus_light_ability_slots(soldier_record)
+
+
 def _fold(text) -> str:
     return str(text or "").strip().casefold()
 
@@ -729,11 +750,21 @@ class XpShop:
         starting = _int(self._aspect_rules().get("aspect_slots", {}).get("starting_slots"), 1)
         return starting + _int(self.character.get("light_aspect_slots_purchased"))
 
+    def class_ability_slots(self) -> int:
+        """Free Light Ability Slots from the soldier type (Warlock: +1)."""
+        if self.soldier is not None:
+            return bonus_light_ability_slots(self.soldier)
+        # Soldier type not in the loaded data: fall back on the class name
+        return 1 if _fold(self.guardian_class()) == "warlock" else 0
+
     def ability_slots(self) -> int:
         slot_rules = self._light_rules().get("rules", {}).get("ability_slots", {})
         starting = _int(slot_rules.get("starting_slots"), 2)
-        bonus = 1 if _fold(self.guardian_class()) == "warlock" else 0
-        return starting + bonus + _int(self.character.get("light_ability_slots_purchased"))
+        return (
+            starting
+            + self.class_ability_slots()
+            + _int(self.character.get("light_ability_slots_purchased"))
+        )
 
     def _light_slot_items(self) -> list[ShopItem]:
         items = []
@@ -764,12 +795,18 @@ class XpShop:
         additional = _int(slot_rules.get("additional_slots"), 3)
         cost = _int(slot_rules.get("cost_per_additional_slot"), 500)
         total = self.ability_slots()
+        class_slots = self.class_ability_slots()
+        class_note = (
+            f"{class_slots} free from {self.guardian_class() or 'soldier type'}; "
+            if class_slots
+            else ""
+        )
         item = ShopItem(
             key="ability_slot",
             category="Light Slots",
             name="Light Ability Slot",
             cost=cost,
-            current=f"{total} slots ({purchased_abilities}/{additional} bought)",
+            current=f"{total} slots ({class_note}{purchased_abilities}/{additional} bought)",
             next=f"{total + 1} slots",
             description=slot_rules.get("installation", ""),
             source=LIGHT_AND_SKY,

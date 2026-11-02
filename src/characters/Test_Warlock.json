@@ -1,0 +1,142 @@
+{
+  "format_version": 1,
+  "ruleset": "Light & Sky",
+  "character": {
+    "name": "Test_Warlock",
+    "soldier_type": "Warlock Class Soldier Type",
+    "characteristics": {
+      "STR": 40,
+      "TOU": 40,
+      "AGI": 40,
+      "WFR": 55,
+      "WFM": 40,
+      "INT": 40,
+      "PER": 45,
+      "CRG": 25,
+      "CHA": 25,
+      "LDR": 25
+    },
+    "mythic_characteristics": {
+      "STR": "+2",
+      "TOU": "+2",
+      "AGI": "+2"
+    },
+    "skills": {
+      "Medication": 0,
+      "Pilot": 0,
+      "Navigation": 0,
+      "Athletics": 0,
+      "Demolition": 0,
+      "Technology": 0,
+      "Investigation": 0
+    },
+    "abilities": [
+      "Gather Senses",
+      "Mind Timer",
+      "Under Control"
+    ],
+    "upbringing": null,
+    "environment": null,
+    "lifestyle": null,
+    "lifestyle_results": [],
+    "wounds": 52,
+    "wounds_modifier": 0,
+    "fatigue": 0,
+    "rank": null,
+    "credits": 0,
+    "experience": 2325,
+    "starting_experience": 15000,
+    "experience_spent": 12675,
+    "experience_tier": 5,
+    "equipment": [],
+    "equipment_pack": null,
+    "armor": null,
+    "armor_variant": null,
+    "armor_bonus": {},
+    "armor_equipped": true,
+    "weapons": [],
+    "connections": [
+      "Void"
+    ],
+    "specialization_packs": [
+      "Demolitions"
+    ],
+    "outliers": [
+      "Energize",
+      "Super"
+    ],
+    "luck_available": 2,
+    "luck_total": 2,
+    "light_aspects": [
+      "Devour"
+    ],
+    "light_abilities": [
+      "Thruster",
+      "Pocket Singularity"
+    ],
+    "light_grenades": [
+      "Scatter Grenade"
+    ],
+    "supers": [
+      "Nova Bomb Vortex"
+    ],
+    "creation_experience": 15000,
+    "characteristic_advancements": {},
+    "educations": {},
+    "languages": [],
+    "weapon_training": [],
+    "faction_training": [],
+    "wound_upgrades": 0,
+    "augmentations": [],
+    "light_aspect_slots_purchased": 0,
+    "light_ability_slots_purchased": 0,
+    "xp_purchases": []
+  },
+  "selections": {
+    "starting_xp": 15000,
+    "initial_setup": {
+      "human_soldier_type": "human_awoken",
+      "guardian_soldier_type": "warlock",
+      "subclass": "Voidwalker",
+      "connection": "Void",
+      "skill_training": {}
+    },
+    "creation_points": {
+      "option": "Base (85 points)",
+      "total": 85,
+      "allocations": {
+        "STR": 10,
+        "TOU": 15,
+        "AGI": 5,
+        "WFR": 20,
+        "WFM": 10,
+        "INT": 10,
+        "PER": 15,
+        "CRG": 0,
+        "CHA": 0,
+        "LDR": 0
+      }
+    },
+    "outliers": [
+      "Energize",
+      "Super"
+    ],
+    "outlier_characteristics": {},
+    "specialization_packs": [
+      "Demolitions"
+    ],
+    "equipment": {
+      "light_aspects": [
+        "Devour"
+      ],
+      "light_abilities": [
+        "Thruster",
+        "Scatter Grenade",
+        "Pocket Singularity"
+      ],
+      "supers": [
+        "Nova Bomb Vortex"
+      ]
+    }
+  }
+}

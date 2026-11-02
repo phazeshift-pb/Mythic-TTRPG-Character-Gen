@@ -67,7 +67,8 @@
 
   "special_rules": {
     "tier": 4,
-    "subclass_required": true
+    "subclass_required": true,
+    "bonus_light_ability_slots": 1
   },
 
   "subclasses": {
