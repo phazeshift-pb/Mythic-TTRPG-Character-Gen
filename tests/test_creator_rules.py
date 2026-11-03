@@ -155,3 +155,63 @@ def test_upbringing_limits_by_soldier_type(core_data):
     assert setup._upbringing_key("War Orphan") in setup._allowed_upbringings()
     setup.soldier_combo = Combo("marine")
     assert setup._allowed_upbringings() is None
+
+
+
+def test_gm_can_allow_a_darkness_starting_connection(lns_data):
+    pytest.importorskip("PySide6")
+    from types import SimpleNamespace
+
+    from src.ui.creator.initial_setup import InitialSetupMixin
+
+    class Combo:
+        def __init__(self):
+            self.items, self.index = [], -1
+
+        def currentText(self):
+            return self.items[self.index] if 0 <= self.index < len(self.items) else ""
+
+        def clear(self):
+            self.items, self.index = [], -1
+
+        def addItem(self, text):
+            self.items.append(text)
+
+        def addItems(self, texts):
+            self.items.extend(texts)
+
+        def findText(self, text):
+            return self.items.index(text) if text in self.items else -1
+
+        def setCurrentIndex(self, index):
+            self.index = index
+
+        def blockSignals(self, _):
+            pass
+
+    class Checkbox:
+        def __init__(self):
+            self.checked = False
+
+        def isChecked(self):
+            return self.checked
+
+    setup = InitialSetupMixin()
+    setup.game_data = lns_data
+    setup.connection_combo = Combo()
+    checkbox = Checkbox()
+    setup.initial_character_setup_page = SimpleNamespace(gm_darkness_checkbox=checkbox)
+    setup._fill_connection_options()
+    assert setup.connection_combo.items == ["", "Arc", "Solar", "Void"]
+
+    checkbox.checked = True
+    setup._fill_connection_options()
+    assert setup.connection_combo.items == ["", "Arc", "Solar", "Void", "Stasis", "Strand"]
+    setup.connection_combo.setCurrentIndex(setup.connection_combo.findText("Strand"))
+
+    checkbox.checked = False  # GM changes their mind: the Darkness pick is dropped
+    setup._fill_connection_options()
+    assert "Strand" not in setup.connection_combo.items
+    assert setup.connection_combo.currentText() == ""
+    for name in ("Terraform", "Resurrection", "Prismatic"):
+        assert name not in setup.connection_combo.items

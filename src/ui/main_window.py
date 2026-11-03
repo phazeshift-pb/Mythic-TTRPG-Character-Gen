@@ -213,6 +213,9 @@ class MainWindow(
         )
         self.human_combo.currentIndexChanged.connect(self.refresh_selection_options)
         self.guardian_combo.currentIndexChanged.connect(self.update_subclasses)
+        self.initial_character_setup_page.gm_darkness_connection_changed.connect(
+            self.set_gm_allows_darkness_connection
+        )
         self.generate_button.clicked.connect(self.generate_character)
         self.initial_character_setup_page.back_button.clicked.connect(
             lambda: self.pages.setCurrentWidget(self.version_and_expansions_page)
@@ -517,6 +520,10 @@ class MainWindow(
             if hasattr(self, attr):
                 delattr(self, attr)
         self.version_and_expansions_page.clear_selection()
+        gm_checkbox = self.initial_character_setup_page.gm_darkness_checkbox
+        gm_checkbox.blockSignals(True)
+        gm_checkbox.setChecked(False)
+        gm_checkbox.blockSignals(False)
 
         self._selected_core_soldier = None
         self._background_choices = {}

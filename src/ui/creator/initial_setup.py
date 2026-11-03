@@ -479,14 +479,7 @@ class InitialSetupMixin:
         self.connection_combo.clear()
 
         if use_lns:
-            self.connection_combo.addItem("")
-            connections = self.game_data.get("connections", "connections") or {}
-            connections = connections.get("connections", connections)
-            # Light and Sky: a new Guardian starts with one Light Connection.
-            # Darkness and Specialized are bought later in the XP Shop.
-            self.connection_combo.addItems(
-                [item["name"] for item in connections.get("light", [])]
-            )
+            self._fill_connection_options()
         self.refresh_selection_options()
         self.update_subclasses()
         self._refresh_initial_setup_options()
@@ -624,6 +617,41 @@ class InitialSetupMixin:
             for combo in self.lifestyle_combos:
                 combo.blockSignals(False)
             self._refreshing_background_options = False
+        self._refresh_initial_setup_options()
+
+    def starting_connection_groups(self):
+        """Connection groups a new Guardian may start in.
+
+        Light and Sky: one Light Connection (Arc, Solar, Void) unless the GM
+        allows a Darkness one (Stasis, Strand). Specialized Connections need
+        both a Light and a Darkness Connection, so they are never a start.
+        """
+        page = self.initial_character_setup_page
+        if page.gm_darkness_checkbox.isChecked():
+            return ("light", "darkness")
+        return ("light",)
+
+    def _fill_connection_options(self):
+        """Rebuild the starting Connection list, keeping the pick if still allowed."""
+        selected = self.connection_combo.currentText()
+        connections = self.game_data.get("connections", "connections") or {}
+        connections = connections.get("connections", connections)
+        self.connection_combo.blockSignals(True)
+        self.connection_combo.clear()
+        self.connection_combo.addItem("")
+        for group in self.starting_connection_groups():
+            self.connection_combo.addItems(
+                [item["name"] for item in connections.get(group, [])]
+            )
+        index = self.connection_combo.findText(selected) if selected else -1
+        self.connection_combo.setCurrentIndex(max(0, index))
+        self.connection_combo.blockSignals(False)
+
+    def set_gm_allows_darkness_connection(self, allowed):
+        """The setup page's "GM allows" checkbox changed."""
+        if self.selected_mode != "Light & Sky" or not hasattr(self, "game_data"):
+            return
+        self._fill_connection_options()
         self._refresh_initial_setup_options()
 
     @staticmethod

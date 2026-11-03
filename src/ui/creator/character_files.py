@@ -148,6 +148,9 @@ class CharacterFilesMixin:
                 "guardian_soldier_type": selected_soldier_types[1],
                 "subclass": selected_value(self.subclass_combo),
                 "connection": selected_value(self.connection_combo),
+                "gm_allows_darkness_connection": (
+                    self.initial_character_setup_page.gm_darkness_checkbox.isChecked()
+                ),
                 "skill_training": {
                     soldier_type: self._selected_soldier_skills[soldier_type]
                     for soldier_type in selected_soldier_types

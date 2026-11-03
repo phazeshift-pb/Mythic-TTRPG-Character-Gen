@@ -100,9 +100,9 @@ SHEET_ACCENT = HIGHLIGHT
 SHEET_GOOD = "#a6d16a"
 SHEET_BAD = "#f0907a"
 SHEET_HEADING_FONT = '"Bahnschrift", "Segoe UI"'
-# Light & Sky page: the two energy pools
-SHEET_LIGHT_ENERGY = HIGHLIGHT
-SHEET_SUPER_ENERGY = "#8fc6e8"
+# Light & Sky page: the two energy pools (Super is yellow, as in the game)
+SHEET_LIGHT_ENERGY = "#8fc6e8"
+SHEET_SUPER_ENERGY = HIGHLIGHT
 
 SHEET_ABILITY = (
     f"QLabel {{ color: {SHEET_TEXT}; padding: 1px 0; }}"

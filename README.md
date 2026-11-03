@@ -19,6 +19,13 @@ later choices. The Characteristics picked for Aptitude and Forte are stored in
 `selections.outlier_characteristics` (a list per outlier) and in the
 character's `outlier_choices`.
 
+Light & Sky Guardians start with one Light Connection (Arc, Solar or Void). On
+the Connection step, **GM allows starting with a Darkness Connection** adds
+Stasis and Strand; the choice is saved as
+`selections.initial_setup.gm_allows_darkness_connection`. Specialized
+Connections need both a Light and a Darkness Connection, so they are only
+bought later in the XP Shop.
+
 Outliers follow the book: Enduring, Robust and Vigorous can be taken twice
 (a **Times taken** box appears on the card), and Aptitude / Forte open a
 dialog to pick up to two per Characteristic; each take burns Luck again and
