@@ -73,6 +73,7 @@
       "description": "The Prismatic Connection is unique and does not offer its own set of Light Abilities or Light Aspects.",
       "experience_refund": "When the User takes the Prismatic Connection, all previous extra Experience spent on Light Abilities and Light Aspects that do not match their Connection or Class is refunded.",
       "energy_regeneration": "The Character regains an additional 5 Light Energy and Super Energy at the beginning of each Turn.",
+      "turn_energy_bonus": 5,
       "weapon_ability_effects": "The Player may mix and match Light Weapon Ability effects from different Connections that the Character owns."
     }
   }

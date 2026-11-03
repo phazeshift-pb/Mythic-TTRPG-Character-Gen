@@ -418,10 +418,24 @@ class LightLoadout:
         return "light_energy" if pool == "light" else "super_energy"
 
     # Regeneration events from the Light Abilities energy rules: (label, light, super, rule)
+    def prismatic_turn_bonus(self) -> int:
+        """Prismatic Connection: +5 Light and Super Energy at the start of each Turn."""
+        if not self.shop.has_prismatic():
+            return 0
+        document = self._document("connections", "connections")
+        rules = document.get("connections", document).get("prismatic_rules", {})
+        return _int(rules.get("turn_energy_bonus"), 5)
+
     def regeneration_events(self) -> list[tuple[str, int, int, str]]:
         rules = self.energy_rules
+        turn = 5 + self.prismatic_turn_bonus()
+        turn_rule = rules.get("turn_regeneration", "")
+        if self.prismatic_turn_bonus():
+            turn_rule += (
+                f" Prismatic: +{self.prismatic_turn_bonus()} more Light and Super Energy."
+            )
         return [
-            ("New Turn", 5, 5, rules.get("turn_regeneration", "")),
+            ("New Turn", turn, turn, turn_rule.strip()),
             ("Defeat (Weapons)", 5, 5, rules.get("normal_defeat_regeneration", "")),
             ("Defeat (Light Ability)", 0, 10, rules.get("light_ability_defeat_regeneration", "")),
             ("Assist Ally", 0, 5, rules.get("ally_support_regeneration", "")),

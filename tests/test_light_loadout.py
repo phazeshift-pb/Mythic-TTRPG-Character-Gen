@@ -202,3 +202,13 @@ def test_creator_outliers_raise_creation_picks(lns_data):
     assert (creator._light_aspect_slot_limit(), creator._light_power_slot_limit()) == (1, 3)
     creator.generated_character = SimpleNamespace(outliers=["Passive", "Focus"])
     assert (creator._light_aspect_slot_limit(), creator._light_power_slot_limit()) == (2, 4)
+
+
+
+def test_prismatic_adds_five_energy_each_turn(lns_data):
+    plain = LightLoadout(titan(), lns_data)
+    assert plain.regeneration_events()[0][:3] == ("New Turn", 5, 5)
+    prismatic = LightLoadout(titan(connections=["Arc", "Stasis", "Prismatic"]), lns_data)
+    name, light, super_, rule = prismatic.regeneration_events()[0]
+    assert (name, light, super_) == ("New Turn", 10, 10)
+    assert "Prismatic" in rule
