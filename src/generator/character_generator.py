@@ -357,6 +357,7 @@ class CharacterGenerator:
                 return
 
             sub_data = subclasses[subclass]
+            char.subclass = subclass
             char.log(f"Applying Guardian subclass: {subclass}")
 
             for code, value in sub_data.get("characteristic_modifiers", {}).items():

@@ -563,3 +563,20 @@ def test_light_and_sky_tab_slots_and_energy(qt_app):
     _, marine = _marine_sheet(core)
     sheet.set_character(marine, "Core", core)
     assert sheet.tabs.indexOf(sheet.light_tab) == -1
+
+
+def test_light_and_sky_subclass_change_redraws_the_sheet(qt_app):
+    from src.data_loader import DataLoader
+    from src.ui.interactive_character_sheet import InteractiveCharacterSheet
+
+    data = DataLoader(use_light_and_sky=True).load_all()
+    sheet = InteractiveCharacterSheet()
+    export = _guardian_export(data)
+    sheet.set_character(export, "Light & Sky", data)
+    page = sheet.light_page
+    assert page.subclass_combo.currentData() == export["subclass"]
+    target = next(name for name in data.get("soldier_type", "titan")["subclasses"] if name != export["subclass"])
+    page.apply_subclass(target)
+    assert sheet.character_data_for_save()["subclass"] == target
+    assert page.subclass_combo.currentData() == target
+    assert target in sheet.identity_labels["Background"].text()

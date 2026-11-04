@@ -101,6 +101,8 @@ class Character:
     # UNSC Armory records (see src/models/equipment_packs.py).
     weapons: List[Any] = field(default_factory=list)
     connections: List[str] = field(default_factory=list)
+    # Light & Sky Guardian sub-class (changeable between missions; see models/subclass.py)
+    subclass: Optional[str] = None
     specialization_packs: List[str] = field(default_factory=list)
     outliers: List[str] = field(default_factory=list)  # one entry per time taken
     # Aptitude / Forte: the Characteristic picked for each time taken

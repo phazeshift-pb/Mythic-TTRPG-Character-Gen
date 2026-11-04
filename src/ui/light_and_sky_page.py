@@ -13,6 +13,7 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QComboBox,
+    QMessageBox,
     QFrame,
     QGridLayout,
     QHBoxLayout,
@@ -25,6 +26,7 @@ from PySide6.QtWidgets import (
 )
 
 from src.loot.character_loot import element_icon
+from src.models import subclass as subclass_rules
 from src.models.light_loadout import LightLoadout, Power, Slot
 
 EMPTY = "— Empty —"
@@ -78,6 +80,7 @@ class LightAndSkyPage(QWidget):
 
     loadout_changed = Signal()  # an Aspect went in or out (movement may change)
     unlock_requested = Signal()  # open the XP Shop to buy a slot
+    subclass_changed = Signal()  # characteristics changed: the sheet redraws
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -85,6 +88,7 @@ class LightAndSkyPage(QWidget):
         self.game_data = None
         self.ruleset = "Light & Sky"
         self.loadout: Optional[LightLoadout] = None
+        self._pending_status: Optional[tuple[str, bool]] = None
         self.slot_tiles: dict[str, list[QFrame]] = {"aspect": [], "ability": [], "super": []}
         self.slot_combos: dict[tuple[str, int], QComboBox] = {}
         self.use_buttons: dict[tuple[str, int], QPushButton] = {}
@@ -132,12 +136,25 @@ class LightAndSkyPage(QWidget):
         grid = QGridLayout()
         grid.setHorizontalSpacing(28)
         self.class_label = _label("—", "form-line", wrap=True)
+        self.subclass_combo = QComboBox()
+        self.subclass_combo.setToolTip(
+            "Sub-Classes can be changed between missions, refunding all "
+            "Characteristics or other benefits gained from them."
+        )
+        self.subclass_combo.currentIndexChanged.connect(self._on_subclass_changed)
+        class_cell = QVBoxLayout()
+        class_cell.setSpacing(4)
+        class_cell.addWidget(self.class_label)
+        subclass_row = QHBoxLayout()
+        subclass_row.addWidget(_label("Sub-Class", "note"))
+        subclass_row.addWidget(self.subclass_combo, 1)
+        class_cell.addLayout(subclass_row)
         self.connections_row = QHBoxLayout()
         self.connections_row.setSpacing(12)
         self.slot_summary_label = _label("—", "form-line", wrap=True)
         self.unslotted_label = _label("None", "note", wrap=True)
         grid.addWidget(_label("CLASS", "caption"), 0, 0)
-        grid.addWidget(self.class_label, 1, 0)
+        grid.addLayout(class_cell, 1, 0)
         grid.addWidget(_label("CONNECTIONS", "caption"), 0, 1)
         grid.addLayout(self.connections_row, 1, 1)
         grid.addWidget(_label("SLOTS UNLOCKED", "caption"), 0, 2)
@@ -225,6 +242,9 @@ class LightAndSkyPage(QWidget):
         self.ruleset = ruleset
         self.loadout = LightLoadout(character, game_data, ruleset)
         self.status_label.setText("")
+        if self._pending_status:
+            self._status(*self._pending_status)
+            self._pending_status = None
         self._build_regen_buttons()
         self._refresh_overview()
         self._refresh_energy()
@@ -252,6 +272,20 @@ class LightAndSkyPage(QWidget):
 
     def _refresh_overview(self):
         self.class_label.setText(str(self.character.get("soldier_type") or "—"))
+        names = subclass_rules.subclass_names(self.game_data, self.character)
+        current = self.character.get("subclass")
+        self.subclass_combo.blockSignals(True)
+        self.subclass_combo.clear()
+        if not current:
+            self.subclass_combo.addItem("— not recorded —", None)
+        for name in names:
+            change = subclass_rules.modifiers(self.game_data, self.character, name)
+            self.subclass_combo.addItem(
+                f"{name} ({subclass_rules.describe(change)})" if change else name, name
+            )
+        self.subclass_combo.setCurrentIndex(max(0, self.subclass_combo.findData(current)))
+        self.subclass_combo.setEnabled(bool(names))
+        self.subclass_combo.blockSignals(False)
         _clear(self.connections_row)
         connections = [name for name in self.character.get("connections") or [] if name]
         if not connections:
@@ -487,6 +521,53 @@ class LightAndSkyPage(QWidget):
     # -----------------------------------------------------------------
     # Actions
     # -----------------------------------------------------------------
+    def _on_subclass_changed(self, _index):
+        new = self.subclass_combo.currentData()
+        old = self.character.get("subclass")
+        if not new or new == old:
+            return
+        if old:
+            change = subclass_rules.change_preview(self.game_data, self.character, new)
+            question = (
+                f"Change Sub-Class from {old} to {new}?\n\n"
+                "Sub-Classes can be changed between missions, refunding the "
+                f"old one's Characteristics.\n\nCharacteristics: "
+                f"{subclass_rules.describe(change)}."
+            )
+        else:
+            question = (
+                f"Record {new} as this Guardian's Sub-Class?\n\n"
+                "Its Characteristic changes are assumed to be in the current "
+                "totals already, so nothing changes now. Later changes will "
+                "refund it."
+            )
+        answer = QMessageBox.question(
+            self,
+            "Change Sub-Class",
+            question,
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No,
+        )
+        if answer != QMessageBox.StandardButton.Yes:
+            self._refresh_overview()  # put the drop-down back
+            return
+        self.apply_subclass(new)
+
+    def apply_subclass(self, new: str):
+        """Switch Sub-Class (no prompt) and let the sheet redraw the new totals."""
+        old = self.character.get("subclass")
+        change = subclass_rules.change_subclass(self.game_data, self.character, new)
+        if old:
+            message = f"Sub-Class: {old} -> {new} ({subclass_rules.describe(change)})."
+        else:
+            message = f"Sub-Class recorded: {new}."
+        self._pending_status = (message, False, True)
+        self.subclass_changed.emit()
+        if self._pending_status:  # nothing redrew the page: show it here
+            self._refresh_overview()
+            self._status(*self._pending_status)
+            self._pending_status = None
+
     def _equip(self, kind: str, number: int, name: Optional[str]):
         if self.loadout is None:
             return

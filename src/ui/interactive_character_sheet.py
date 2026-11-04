@@ -98,6 +98,7 @@ class InteractiveCharacterSheet(QWidget):
         self.light_page = LightAndSkyPage()
         self.light_page.loadout_changed.connect(self._refresh_armor_effects)
         self.light_page.unlock_requested.connect(self.spend_xp_button.click)
+        self.light_page.subclass_changed.connect(self._on_subclass_changed)
         light_content_layout.addWidget(self.light_page)
         self.tabs.addTab(self.character_tab, "Character")
         self.tabs.addTab(self.combat_tab, "Combat")
@@ -206,6 +207,9 @@ class InteractiveCharacterSheet(QWidget):
             )
             if value
         ) or "None"
+        if character.get("subclass"):
+            # Light and Sky: a Sub-Class replaces Upbringing, Environment and Lifestyles
+            background = f"Sub-Class: {character['subclass']}"
         identity = {
             "Faction": "—",
             "Soldier Type": character.get("soldier_type"),
@@ -449,6 +453,10 @@ class InteractiveCharacterSheet(QWidget):
             self.note_fields[key] = note
             notes_row.addWidget(section)
         layout.addLayout(notes_row)
+
+    def _on_subclass_changed(self):
+        """A new Sub-Class changed Characteristics: redraw every tab from them."""
+        self.set_character(self.character_data_for_save(), self.ruleset, self.game_data)
 
     def _set_light_and_sky_powers(self, character, ruleset):
         """Show the Light & Sky tab (after Combat) for Light & Sky characters only."""

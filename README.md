@@ -148,6 +148,11 @@ Light & Sky character sheets get a **Light & Sky** tab after Combat:
   Shop. Light Grenades fill Light Ability Slots. **Use** / **Cast Super**
   spend the power's energy (Supers cost double, from Super Energy).
 - Only slotted Aspects count toward their effects (e.g. movement bonuses).
+- **Sub-Class** (under the class name): Light and Sky lets a Guardian change
+  Sub-Class between missions, refunding the old one's Characteristics. Picking
+  a new one asks for confirmation, takes the old modifiers off, puts the new
+  ones on, and redraws the whole sheet; current Wounds follow Max Wounds.
+  Saved as `subclass` (older files take it from `selections.initial_setup`).
 
 What is slotted is saved as `light_loadout`
 (`{"aspects": [...], "abilities": [...], "super": name, "seen": [...]}`), and

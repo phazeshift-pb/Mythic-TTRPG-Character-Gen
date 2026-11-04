@@ -58,6 +58,11 @@ class CharacterFilesMixin:
             ).load_all()
 
         character = export_data["character"]
+        if ruleset == "Light & Sky" and not character.get("subclass"):
+            # Files saved before the sheet tracked it: the sub-class is in the selections.
+            setup = (export_data.get("selections") or {}).get("initial_setup") or {}
+            if isinstance(setup.get("subclass"), str) and setup["subclass"]:
+                character["subclass"] = setup["subclass"]
         if character.get("creation_experience") is None:
             # Files saved before the XP Shop: creation XP is in the selections.
             selections = export_data.get("selections") or {}
