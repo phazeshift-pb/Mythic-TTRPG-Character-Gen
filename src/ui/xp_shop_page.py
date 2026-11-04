@@ -30,6 +30,7 @@ from PySide6.QtWidgets import (
 
 from src.models.xp_shop import LIGHT_AND_SKY, PurchaseError, XpShop, snapshot
 from src.ui import theme
+from src.ui.light_weapon_dialog import build_light_weapon
 
 COLUMNS = ("Purchase", "Current", "Next", "XP Cost", "Status", "")
 
@@ -298,6 +299,10 @@ class XpShopPage(QWidget):
         return entry
 
     def _ask_choice(self, item):
+        if item.prompt == "light_weapon":
+            return build_light_weapon(
+                self.game_data, self.character, item.kind == "super", parent=self
+            )
         if item.prompt == "options":
             labels = [option["label"] for option in item.options]
             label, accepted = QInputDialog.getItem(

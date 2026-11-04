@@ -18,6 +18,7 @@ from typing import Any, Optional
 
 from .character import CHAR_CODES, CHARACTERISTIC_NAME_TO_CODE
 from .derived_stats import characteristic_modifier, max_wounds, mythic_value
+from . import light_weapon
 from . import outliers as outlier_rules
 
 LIGHT_AND_SKY = "Light & Sky"
@@ -956,14 +957,17 @@ class XpShop:
 
     def _light_power_records(self):
         document = self._document("light_abilities", "light_abilities_and_grenades") or {}
+        names = set()
         for record in document.get("abilities", []):
+            names.add(_fold(record.get("name")))
             yield "Light Ability", record
         for record in document.get("grenades", []):
             yield "Light Grenade", record
         weapon = (self._document("light_weapon_abilities", "light_weapon_abilities") or {}).get(
             "light_weapon_abilities", {}
         ).get("base_ability")
-        if isinstance(weapon, dict):
+        # Light Weapon is also in the abilities list: show it once
+        if isinstance(weapon, dict) and _fold(weapon.get("name")) not in names:
             yield "Light Ability", dict(weapon, **{"class": "All", "category": "Weapon"})
 
     def _power_item(self, power_type, record, is_super) -> ShopItem:
@@ -998,20 +1002,35 @@ class XpShop:
         )
         if is_super and power_type == "Light Grenade":
             description = self._light_rules().get("grenade_supers", {}).get("rule", description)
+        light_weapon_item = light_weapon.is_light_weapon_name(name)
+        if light_weapon_item:
+            built = [
+                build for build in light_weapon.builds(self.character)
+                if bool(build.get("as_super")) == is_super
+            ]
+            current = f"{len(built)} built" if built else "—"
+            description = (
+                f"{description} Opens the Light Weapon builder; can be bought more than once."
+            ).strip()
+        else:
+            current = "Owned" if _fold(name) in owned else "—"
         item = ShopItem(
             key=f"{'super' if is_super else 'light_power'}:{power_type}:{name}",
             category="Supers" if is_super else "Light Abilities",
             name=name,
             cost=cost,
-            current="Owned" if _fold(name) in owned else "—",
+            current=current,
             next=" | ".join(details),
             description=description or "",
             requirement=f"{record.get('connection', '')} Connection",
             source=LIGHT_AND_SKY,
             kind="super" if is_super else "light_power",
-            payload={"name": name, "power_type": power_type},
+            payload={"name": name, "power_type": power_type, "light_weapon": light_weapon_item},
         )
-        if _fold(name) in owned:
+        if light_weapon_item:
+            item.prompt = "light_weapon"
+            item.prompt_label = "Build the Light Weapon"
+        if _fold(name) in owned and not light_weapon_item:
             item.blocked = "Already owned"
         elif not self._connection_matches(record):
             item.blocked = f"Needs the {record.get('connection')} Connection"
@@ -1051,6 +1070,12 @@ class XpShop:
                 raise PurchaseError("Choose an option for this purchase.")
             cost = option["cost"]
             detail = option["label"]
+        elif item.prompt == "light_weapon":
+            if not isinstance(choice, dict) or not choice.get("weapon"):
+                raise PurchaseError("Build the Light Weapon first: choose its weapon and effects.")
+            if bool(choice.get("as_super")) != (item.kind == "super"):
+                raise PurchaseError("This build is for the other kind (Light Ability / Super).")
+            detail = (choice.get("weapon") or {}).get("name", "")
         elif item.prompt == "text":
             choice = str(choice or "").strip()
             if not choice:
@@ -1173,10 +1198,14 @@ class XpShop:
         self.character.setdefault("light_aspects", []).append(item.payload["aspect"])
 
     def _apply_light_power(self, item, choice):
+        if item.payload.get("light_weapon"):
+            return light_weapon.add_build(self.character, choice)["name"]
         field_name = "light_grenades" if item.payload["power_type"] == "Light Grenade" else "light_abilities"
         self.character.setdefault(field_name, []).append(item.payload["name"])
 
     def _apply_super(self, item, choice):
+        if item.payload.get("light_weapon"):
+            return f"{light_weapon.add_build(self.character, choice)['name']} (Super)"
         self.character.setdefault("supers", []).append(item.payload["name"])
         return f"{item.payload['name']} (Super)"
 

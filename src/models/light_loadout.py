@@ -18,6 +18,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Optional
 
+from src.models import light_weapon
 from src.models.xp_shop import XpShop
 
 DEFAULT_MAX_ENERGY = 100
@@ -69,9 +70,13 @@ class Power:
     description: str = ""
     super_description: str = ""
     stats: list[str] = field(default_factory=list)  # grenade damage, range...
+    # Super Energy when it is not simply light_cost x multiplier (Light Weapon builds).
+    super_energy: Optional[int] = None
 
     def energy_cost(self, as_super: bool = False, multiplier: int = 2) -> Optional[int]:
         """Energy to use the power, or None when it varies ("X") or is unknown."""
+        if as_super and self.super_energy is not None:
+            return self.super_energy
         if isinstance(self.light_cost, bool) or not isinstance(self.light_cost, (int, float)):
             return None
         cost = int(self.light_cost)
@@ -213,7 +218,36 @@ class LightLoadout:
             powers.setdefault(
                 _fold(weapon["name"]), self._ability_power(dict(weapon, category="Weapon"))
             )
+        for build in light_weapon.builds(self.character):
+            if build.get("name"):
+                powers[_fold(build["name"])] = self._light_weapon_power(build)
         return powers
+
+    @staticmethod
+    def _light_weapon_power(build) -> Power:
+        """A built Light Weapon: its per-Turn Energy already includes its effects."""
+        energy = _int(build.get("energy_per_turn"), None)
+        stat_lines, effect_lines = light_weapon.summary_parts(build)
+        effects = " ".join(effect_lines) or "No added effects."
+        return Power(
+            name=build["name"],
+            kind="Light Ability",
+            connection=build.get("connection", ""),
+            category="Light Weapon Super" if build.get("as_super") else "Light Weapon",
+            light_cost=energy,
+            experience_cost=_int(build.get("experience_cost")),
+            description=(
+                "Energy is spent each Turn the weapon is active; it dissipates "
+                "when that Energy runs out. " + effects
+            ),
+            super_description=(
+                "Energy is spent each Turn the weapon is active. " + effects
+            )
+            if build.get("as_super")
+            else "",
+            stats=stat_lines,
+            super_energy=energy if build.get("as_super") else None,
+        )
 
     @staticmethod
     def _ability_power(record) -> Power:

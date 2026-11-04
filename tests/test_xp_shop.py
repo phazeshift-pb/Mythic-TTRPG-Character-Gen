@@ -5,6 +5,7 @@ import pytest
 
 from src.data_loader import DataLoader
 from src.generator.character_generator import CharacterGenerator
+from src.models.light_weapon import LightWeaponRules
 from src.models.xp_shop import PurchaseError, XpShop
 
 
@@ -288,9 +289,26 @@ def test_light_abilities_follow_connection_and_class(lns_data):
     assert not light_weapon.blocked and light_weapon.cost == 500
 
     super_weapon = next(entry for entry in shop.items("Supers") if entry.name == "Light Weapon")
-    assert super_weapon.cost == 750
-    shop.buy(super_weapon)
-    assert "Light Weapon" in character["supers"]
+    assert super_weapon.cost == 750 and super_weapon.prompt == "light_weapon"
+    with pytest.raises(PurchaseError, match="Build the Light Weapon"):
+        shop.buy(super_weapon)
+    rules = LightWeaponRules(lns_data)
+    build = rules.build(rules.weapon("melee:Kukri"), "Arc", True, [("arc:0", 1)])
+    entry = shop.buy(super_weapon, choice=build)
+    assert entry["name"] == "Light Weapon Super: Arc Kukri (Super)" and entry["detail"] == "Kukri"
+    assert "Light Weapon Super: Arc Kukri" in character["supers"]
+    assert character["light_weapons"][0]["energy_per_turn"] == 50
+
+    # Light Weapon is never "Already owned": each purchase is a new build
+    light_weapon_item = next(entry for entry in shop.items("Light Abilities") if entry.name == "Light Weapon")
+    with pytest.raises(PurchaseError, match="other kind"):
+        shop.buy(light_weapon_item, choice=build)
+    for _ in range(2):
+        light_weapon_item = next(entry for entry in shop.items("Light Abilities") if entry.name == "Light Weapon")
+        assert not light_weapon_item.blocked
+        shop.buy(light_weapon_item, choice=rules.build(rules.weapon("melee:Kukri"), "Arc", False))
+    assert character["light_abilities"][-2:] == ["Light Weapon: Arc Kukri", "Light Weapon: Arc Kukri (2)"]
+    assert next(entry for entry in shop.items("Light Abilities") if entry.name == "Light Weapon").current == "2 built"
 
     grenade = next(entry for entry in abilities if entry.payload["power_type"] == "Light Grenade" and not entry.blocked)
     shop.buy(grenade)

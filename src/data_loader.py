@@ -81,6 +81,7 @@ class DataLoader:
         "elements": "lns_elements",
         "hand_cannons": "lns_weapons",
         "light_weapon_abilities": "light_weapon_abilities",
+        "lns_melee_weapons": "lns_melee_weapons",
         # Core UNSC Armory
         "unsc_weapons": "unsc_weapons",
         "unsc_explosives": "unsc_explosives",

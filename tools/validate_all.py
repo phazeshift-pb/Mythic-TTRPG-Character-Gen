@@ -116,8 +116,12 @@ RANGED_FIELDS = ("rate_of_fire", "range", "magazine", "magazine_type", "reload",
 
 
 def check_unsc_armory(game_data, errors):
-    """Core UNSC weapons and explosives: unique names, known tags, sane numbers."""
-    for family, key in (("unsc_weapons", "unsc_weapons"), ("unsc_explosives", "unsc_explosives")):
+    """UNSC weapons/explosives and Light & Sky melee: unique names, known tags, sane numbers."""
+    for family, key in (
+        ("unsc_weapons", "unsc_weapons"),
+        ("unsc_explosives", "unsc_explosives"),
+        ("lns_melee_weapons", "lns_melee_weapons"),
+    ):
         for doc in game_data.families.get(family, {}).values():
             source = doc.get("source_path", family)
             seen = set()
@@ -147,6 +151,21 @@ def check_unsc_armory(game_data, errors):
                     pierce = record.get("pierce")
                     if pierce is not None and not isinstance(pierce, (int, str)):
                         errors.append(f"{source}: '{name}' pierce must be a number or formula text")
+
+
+def check_lns_weapon_light_costs(game_data, errors):
+    """Every Light & Sky weapon type carries its Light Weapon base cost (cR)."""
+    for doc in game_data.families.get("lns_weapons", {}).values():
+        source = doc.get("source_path", "lns_weapons")
+        for weapon_type, groups in doc.items():
+            if not isinstance(groups, list):
+                continue
+            costs = [g["light_ability_base_cost_cr"] for g in groups
+                     if isinstance(g, dict) and "light_ability_base_cost_cr" in g]
+            if len(costs) != 1:
+                errors.append(f"{source}: {weapon_type} needs exactly one light_ability_base_cost_cr")
+            elif not isinstance(costs[0], int) or costs[0] <= 0:
+                errors.append(f"{source}: {weapon_type} light_ability_base_cost_cr must be a positive integer")
 
 
 ARMOR_LOCATIONS = ("head", "arms", "chest", "legs")
@@ -345,6 +364,7 @@ def main(argv=None):
         check_background_modifiers(game_data, errors, warnings)
         check_grenades(game_data, errors)
         check_unsc_armory(game_data, errors)
+        check_lns_weapon_light_costs(game_data, errors)
         check_unsc_armor(game_data, errors)
         check_equipment_packs(game_data, errors)
         check_starting_armor_options(game_data, errors)

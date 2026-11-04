@@ -112,6 +112,9 @@ class Character:
     light_abilities: List[str] = field(default_factory=list)
     light_grenades: List[str] = field(default_factory=list)
     supers: List[str] = field(default_factory=list)
+    # Built Light Weapons (see src/models/light_weapon.py); their names are in
+    # light_abilities / supers like any other power.
+    light_weapons: List[Dict[str, Any]] = field(default_factory=list)
 
     # Post-creation XP purchases (see src/models/xp_shop.py)
     creation_experience: Optional[int] = None  # XP the character was created with
@@ -450,6 +453,11 @@ class Character:
         self.light_abilities = [ability["name"] for ability in selected_abilities]
         self.light_grenades = [grenade["name"] for grenade in selected_grenades]
         self.supers = [super_power["name"] for super_power in supers]
+        self.light_weapons = [
+            dict(power["_light_weapon"])
+            for power in list(abilities) + list(supers)
+            if power.get("_light_weapon")
+        ]
         for aspect in aspects:
             self.log(
                 f"Light Aspect: {aspect['name']} "
