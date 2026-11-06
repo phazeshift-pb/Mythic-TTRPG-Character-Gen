@@ -1,5 +1,9 @@
 # Mythic TTRPG Character Gen
 
+> **This repository has moved.** Since 2026-11-05 it lives in the private Mythic Suite monorepo,
+> [phazeshift-pb/Mythic-Suite](https://github.com/phazeshift-pb/Mythic-Suite), in `apps/character-manager/`,
+> with its full history. This repository is archived (read-only); don't make changes here.
+
 ## Character exports
 
 Choose **Finish and Name Your Character** from the Character Creator home screen
