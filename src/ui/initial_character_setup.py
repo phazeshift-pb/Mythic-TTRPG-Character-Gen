@@ -1,6 +1,7 @@
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QButtonGroup,
+    QCheckBox,
     QComboBox,
     QFrame,
     QGridLayout,
@@ -17,6 +18,7 @@ from src.ui import theme
 class InitialCharacterSetupPage(QWidget):
     option_selected = Signal(str, str, bool)
     selection_requirements_changed = Signal(bool)
+    gm_darkness_connection_changed = Signal(bool)
 
     TILE_COLUMNS = 3
     LIFESTYLE_TILE_COLUMNS = 2
@@ -48,6 +50,20 @@ class InitialCharacterSetupPage(QWidget):
         self.options_description = QLabel()
         self.options_description.setWordWrap(True)
         options_layout.addWidget(self.options_description)
+        # Light and Sky: Guardians start with a Light Connection unless the GM
+        # says otherwise. Shown only on the Connection category.
+        self.gm_darkness_checkbox = QCheckBox(
+            "GM allows starting with a Darkness Connection (Stasis or Strand)"
+        )
+        self.gm_darkness_checkbox.setToolTip(
+            "Light and Sky: a Character begins with a single Light Connection "
+            "unless the GM specifies otherwise. Specialized Connections still "
+            "need both a Light and a Darkness Connection, so they are bought "
+            "later in the XP Shop."
+        )
+        self.gm_darkness_checkbox.toggled.connect(self.gm_darkness_connection_changed.emit)
+        self.gm_darkness_checkbox.hide()
+        options_layout.addWidget(self.gm_darkness_checkbox)
 
         self.options_scroll = QScrollArea()
         self.options_scroll.setWidgetResizable(True)
@@ -169,6 +185,7 @@ class InitialCharacterSetupPage(QWidget):
             self.option_button_group = None
 
         if self._selected_category not in self._category_options:
+            self.gm_darkness_checkbox.hide()
             self.options_title.setText("")
             self.options_description.setText("")
             return
@@ -176,6 +193,7 @@ class InitialCharacterSetupPage(QWidget):
         title, options, selected_values = self._category_options[
             self._selected_category
         ]
+        self.gm_darkness_checkbox.setVisible(self._selected_category == "connection")
         self.options_title.setText(title)
         is_lifestyle = self._selected_category == "lifestyles"
         self.options_description.setText(

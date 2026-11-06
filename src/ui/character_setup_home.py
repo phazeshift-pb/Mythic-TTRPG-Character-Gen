@@ -16,6 +16,8 @@ class CharacterSetupHome(QWidget):
         layout = QVBoxLayout(self)
 
         header = QHBoxLayout()
+        self.discard_button = QPushButton("Discard and Return to Main Page")
+        header.addWidget(self.discard_button)
         header.addStretch(1)
         self.debug_button = QPushButton("Debug")
         header.addWidget(self.debug_button)

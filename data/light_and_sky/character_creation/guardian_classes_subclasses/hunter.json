@@ -63,7 +63,8 @@
 
   "special_rules": {
     "tier": 4,
-    "subclass_required": true
+    "subclass_required": true,
+    "starting_engrams": {"weapons": 3, "armor": 1, "rarity": "Common"}
   },
 
   "subclasses": {
@@ -76,7 +77,7 @@
     "Bladedancer": {
       "characteristic_modifiers": {
         "WFM": "+10",
-        "WFR": "-5"
+        "WFR": "-10"
       }
     },
     "Nightstalker": {

@@ -1,3 +1,4 @@
+# pyright: reportAttributeAccessIssue=false, reportArgumentType=false
 """Loading, saving and exporting character files.
 
 Part of MainWindow (src/ui/main_window.py); methods use its widgets and state via self.
@@ -56,9 +57,19 @@ class CharacterFilesMixin:
                 use_light_and_sky=ruleset == "Light & Sky"
             ).load_all()
 
-        self.character_sheet.set_character(
-            export_data["character"], ruleset, character_game_data
-        )
+        character = export_data["character"]
+        if ruleset == "Light & Sky" and not character.get("subclass"):
+            # Files saved before the sheet tracked it: the sub-class is in the selections.
+            setup = (export_data.get("selections") or {}).get("initial_setup") or {}
+            if isinstance(setup.get("subclass"), str) and setup["subclass"]:
+                character["subclass"] = setup["subclass"]
+        if character.get("creation_experience") is None:
+            # Files saved before the XP Shop: creation XP is in the selections.
+            selections = export_data.get("selections") or {}
+            starting_xp = selections.get("starting_xp")
+            if isinstance(starting_xp, int):
+                character["creation_experience"] = starting_xp
+        self.character_sheet.set_character(character, ruleset, character_game_data)
         self._loaded_character_path = Path(file_path)
         self.character_sheet.set_save_available(True)
         self.pages.setCurrentWidget(self.character_sheet)
@@ -142,6 +153,9 @@ class CharacterFilesMixin:
                 "guardian_soldier_type": selected_soldier_types[1],
                 "subclass": selected_value(self.subclass_combo),
                 "connection": selected_value(self.connection_combo),
+                "gm_allows_darkness_connection": (
+                    self.initial_character_setup_page.gm_darkness_checkbox.isChecked()
+                ),
                 "skill_training": {
                     soldier_type: self._selected_soldier_skills[soldier_type]
                     for soldier_type in selected_soldier_types
@@ -186,17 +200,27 @@ class CharacterFilesMixin:
                 "skill_training": self._selected_soldier_skills.get(
                     selected_value(self.soldier_combo), {}
                 ),
+                "starting_educations": self._selected_soldier_educations.get(
+                    selected_value(self.soldier_combo), {}
+                ),
             }
+            pack = next(
+                (
+                    name
+                    for button, name, _ in self.equipment_tiles
+                    if button.isChecked()
+                ),
+                None,
+            )
+            stored = getattr(self, "_equipment_pack_choices", {}) or {}
             equipment = {
-                "pack": next(
-                    (
-                        name
-                        for button, name, _ in self.equipment_tiles
-                        if button.isChecked()
-                    ),
-                    None,
-                )
+                "pack": pack,
+                "choices": list(stored.get("choices", []))
+                if pack and stored.get("name") == pack
+                else [],
             }
+            if stored.get("starting_armor"):
+                equipment["starting_armor"] = dict(stored["starting_armor"])
 
         return {
             "format_version": 1,
@@ -210,11 +234,7 @@ class CharacterFilesMixin:
                     "total": self.creation_points_combo.currentData(),
                     "allocations": self._creation_allocations.copy(),
                 },
-                "outliers": [
-                    outlier["name"]
-                    for button, outlier, _ in self.outlier_tiles
-                    if button.isChecked()
-                ],
+                "outliers": self._selected_outlier_names(),
                 "outlier_characteristics": {
                     outlier_name: characteristic
                     for outlier_name, characteristic
@@ -295,3 +315,5 @@ class CharacterFilesMixin:
             "Character Exported",
             f"Character saved to:\n{output_path}",
         )
+        self.reset_character_creator()
+        self.pages.setCurrentWidget(self.landing_page)

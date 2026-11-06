@@ -1,14 +1,19 @@
+import html
+import random
 import re
 from typing import Any
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QCheckBox,
+    QComboBox,
+    QDoubleSpinBox,
     QFrame,
     QGridLayout,
     QHBoxLayout,
     QHeaderView,
     QLabel,
+    QMessageBox,
     QPlainTextEdit,
     QPushButton,
     QScrollArea,
@@ -21,8 +26,26 @@ from PySide6.QtWidgets import (
 )
 
 from src.game_data import GameData
+from src.models import worn_armor
+from src.models.derived_stats import max_wounds
+from src.models.starting_armor import format_bonus
+from src.models import attack, damage_resistance, energy_shields, throwing
+from src.models.light_loadout import LightLoadout
+from src.models import outliers as outlier_rules
+from src.models.xp_shop import XpShop
+from src.models.equipment_packs import (
+    armor_index,
+    armor_summary,
+    armory_index,
+    weapon_summary,
+)
+from src.loot import character_loot
+from src.loot.generator import LootDataMissing, LootGenerator
+from src.ui.loot_dialog import LootDialog
 from src.ui.specialization_page import DelayedTooltipLabel
 from src.ui.skill_test_dialog import SkillTestDialog
+from src.ui.attack_roll_dialog import AttackRollDialog
+from src.ui.light_and_sky_page import LightAndSkyPage
 from src.ui import theme
 
 
@@ -45,72 +68,119 @@ class InteractiveCharacterSheet(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.character_data: dict[str, Any] = {}
+        self.game_data: GameData | None = None
+        self.dice_rng = random.Random()  # tests can seed this
+        self.ruleset = ""
         self.note_fields: dict[str, QPlainTextEdit] = {}
 
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(24, 20, 24, 20)
-        layout.setSpacing(12)
+        outer = QVBoxLayout(self)
+        outer.setContentsMargins(0, 0, 0, 0)
+        # Styled here rather than on self, so dialogs parented to the sheet
+        # keep their own look.
+        page = QWidget()
+        page.setObjectName("sheetPage")
+        page.setStyleSheet(theme.SHEET_STYLE)
+        outer.addWidget(page)
+        layout = QVBoxLayout(page)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
+        layout.addWidget(self._build_masthead())
 
-        header = QGridLayout()
-        title_layout = QVBoxLayout()
-        self.name_label = QLabel("Character Sheet")
-        self.name_label.setStyleSheet(theme.APP_TITLE)
-        self.ruleset_label = QLabel("")
-        title_layout.addWidget(self.name_label)
-        title_layout.addWidget(self.ruleset_label)
-        header.addLayout(title_layout, 0, 0, Qt.AlignmentFlag.AlignLeft)
+        self.tabs = QTabWidget()
+        self.tabs.setDocumentMode(True)
+        self.character_tab, self.character_content_layout = (
+            self._create_scrollable_tab()
+        )
+        self.combat_tab, self.combat_content_layout = self._create_scrollable_tab()
+        self.notes_tab, self.notes_content_layout = self._create_scrollable_tab()
+        # Shown only for Light & Sky characters (see _set_light_and_sky_powers)
+        self.light_tab, light_content_layout = self._create_scrollable_tab()
+        self.light_page = LightAndSkyPage()
+        self.light_page.loadout_changed.connect(self._refresh_armor_effects)
+        self.light_page.unlock_requested.connect(self.spend_xp_button.click)
+        self.light_page.subclass_changed.connect(self._on_subclass_changed)
+        light_content_layout.addWidget(self.light_page)
+        self.tabs.addTab(self.character_tab, "Character")
+        self.tabs.addTab(self.combat_tab, "Combat")
+        self.tabs.addTab(self.notes_tab, "Notes")
+        layout.addWidget(self.tabs)
 
-        experience_controls = QHBoxLayout()
-        adjustment_section, adjustment_layout = self._new_section("Adjust XP")
-        adjustment_layout.setColumnStretch(0, 1)
+        self._build_character_tab(self.character_content_layout)
+        self._build_combat_tab(self.combat_content_layout)
+        self._build_notes_tab(self.notes_content_layout)
+
+    def _build_masthead(self):
+        masthead = QWidget()
+        masthead.setObjectName("sheetMasthead")
+        layout = QVBoxLayout(masthead)
+        layout.setContentsMargins(24, 14, 24, 12)
+        layout.setSpacing(8)
+
+        title_row = QHBoxLayout()
+        title_text = QVBoxLayout()
+        title_text.setSpacing(0)
+        self.name_label = self._role_label("Character Sheet", "sheet-name")
+        self.ruleset_label = self._role_label("", "sheet-subtitle")
+        title_text.addWidget(self.name_label)
+        title_text.addWidget(self.ruleset_label)
+        title_row.addLayout(title_text, 1)
+        self.loot_button = QPushButton("Light && Sky Loot")
+        self.loot_button.setToolTip(
+            "Roll random Light & Sky weapons and armor for this character."
+        )
+        self.loot_button.clicked.connect(self.open_loot_dialog)
+        self.loot_button.hide()
+        self.save_button = QPushButton("Save")
+        self.save_button.setEnabled(False)
+        self.save_button.clicked.connect(self.save_requested.emit)
+        self.home_button = QPushButton("Back to Home")
+        for button in (self.loot_button, self.save_button, self.home_button):
+            title_row.addWidget(button, 0, Qt.AlignmentFlag.AlignTop)
+        layout.addLayout(title_row)
+
+        xp_row = QHBoxLayout()
+        xp_row.setSpacing(18)
+        self.experience_labels = {}
+        for field, caption in (
+            ("Current", "XP AVAILABLE"),
+            ("Spent", "XP SPENT"),
+            ("Total", "XP TOTAL"),
+        ):
+            readout = QVBoxLayout()
+            readout.setSpacing(0)
+            readout.addWidget(self._role_label(caption, "caption"))
+            value = self._role_label("—", "xp-value")
+            readout.addWidget(value)
+            xp_row.addLayout(readout)
+            self.experience_labels[field] = value
+        self.spend_xp_button = QPushButton("Spend XP")
+        self.spend_xp_button.setProperty("role", "primary")
+        self.spend_xp_button.setToolTip(
+            "Open the XP Shop to buy Characteristics, Skills, Abilities, "
+            "Educations, Training, Luck, Wounds and (Light & Sky) Light powers."
+        )
+        xp_row.addWidget(self.spend_xp_button)
+        xp_row.addStretch(1)
+        xp_row.addWidget(self._role_label("ADJUST XP", "caption"))
         self.xp_adjustment_input = QSpinBox()
         self.xp_adjustment_input.setRange(0, 1_000_000)
         self.xp_adjustment_input.setKeyboardTracking(False)
+        self.xp_adjustment_input.setMinimumWidth(90)
         self.add_xp_button = QPushButton("Add")
         self.subtract_xp_button = QPushButton("Subtract")
-        adjustment_buttons = QHBoxLayout()
-        adjustment_buttons.addWidget(self.add_xp_button)
-        adjustment_buttons.addWidget(self.subtract_xp_button)
-        adjustment_layout.addWidget(self.xp_adjustment_input, 0, 0, 1, 2)
-        adjustment_layout.addLayout(adjustment_buttons, 1, 0, 1, 2)
         self.add_xp_button.clicked.connect(
             lambda: self._adjust_experience(self.xp_adjustment_input.value())
         )
         self.subtract_xp_button.clicked.connect(
             lambda: self._adjust_experience(-self.xp_adjustment_input.value())
         )
-        experience_controls.addWidget(adjustment_section)
-        self.experience_labels = self._add_display_section(
-            experience_controls, "Experience", ("Current", "Spent", "Total")
-        )
-        self.spend_xp_button = QPushButton("Spend XP")
-        experience_controls.addWidget(self.spend_xp_button)
-        header.addLayout(experience_controls, 0, 1, Qt.AlignmentFlag.AlignCenter)
-
-        header_buttons = QHBoxLayout()
-        self.save_button = QPushButton("Save")
-        self.save_button.setEnabled(False)
-        self.save_button.clicked.connect(self.save_requested.emit)
-        self.home_button = QPushButton("Back to Home")
-        header_buttons.addWidget(self.save_button)
-        header_buttons.addWidget(self.home_button)
-        header.addLayout(header_buttons, 0, 2, Qt.AlignmentFlag.AlignRight)
-        header.setColumnStretch(0, 1)
-        header.setColumnStretch(1, 1)
-        header.setColumnStretch(2, 1)
-        layout.addLayout(header)
-
-        self.tabs = QTabWidget()
-        self.character_tab, self.character_content_layout = (
-            self._create_scrollable_tab()
-        )
-        self.combat_tab, self.combat_content_layout = self._create_scrollable_tab()
-        self.tabs.addTab(self.character_tab, "Character")
-        self.tabs.addTab(self.combat_tab, "Combat & Notes")
-        layout.addWidget(self.tabs)
-
-        self._build_character_tab(self.character_content_layout)
-        self._build_combat_tab(self.combat_content_layout)
+        adjust = QHBoxLayout()
+        adjust.setSpacing(6)
+        for widget in (self.xp_adjustment_input, self.add_xp_button, self.subtract_xp_button):
+            adjust.addWidget(widget)
+        xp_row.addLayout(adjust)
+        layout.addLayout(xp_row)
+        return masthead
 
     def set_character(
         self,
@@ -120,6 +190,11 @@ class InteractiveCharacterSheet(QWidget):
     ):
         self.character_data = dict(character)
         self.game_data = game_data
+        self.ruleset = ruleset
+        if ruleset == "Light & Sky":
+            # Settle which Aspects are slotted before movement is worked out
+            LightLoadout(self.character_data, game_data, ruleset).loadout()
+        self.loot_button.setVisible(ruleset == "Light & Sky")
         self.name_label.setText(str(character.get("name") or "Unnamed Character"))
         self.ruleset_label.setText(ruleset)
 
@@ -132,38 +207,44 @@ class InteractiveCharacterSheet(QWidget):
             )
             if value
         ) or "None"
+        if character.get("subclass"):
+            # Light and Sky: a Sub-Class replaces Upbringing, Environment and Lifestyles
+            background = f"Sub-Class: {character['subclass']}"
         identity = {
-            "Faction": "Not provided",
+            "Faction": "—",
             "Soldier Type": character.get("soldier_type"),
             "Rank": character.get("rank"),
             "Specialization": self._format_items(
                 character.get("specialization_packs")
             ),
-            "Race": "Not provided",
+            "Race": "—",
             "Background": background,
         }
         for key, label in self.identity_labels.items():
             label.setText(self._display_value(identity[key]))
 
-        characteristics = character.get("characteristics")
-        mythic = character.get("mythic_characteristics")
-        characteristics = characteristics if isinstance(characteristics, dict) else {}
-        mythic = mythic if isinstance(mythic, dict) else {}
-        for code, label in self.characteristic_labels.items():
-            value = characteristics.get(code, "—")
-            label.setText(str(value))
         self._set_characteristic_tooltips(game_data)
-        for code, label in self.mythic_characteristic_labels.items():
-            value = self._display_value(mythic[code]) if code in mythic else "—"
-            label.setText(value)
-        self._set_movement_speeds(character, game_data)
-        self._set_perceptive_range(character, game_data)
-        self._set_carrying_capacity(character, game_data)
+        saved_other = character.get("damage_resistance_other")
+        saved_other = saved_other if isinstance(saved_other, dict) else {}
+        for slot, box in self.dr_other_inputs.items():
+            box.blockSignals(True)
+            box.setValue(self._integer_value(saved_other.get(slot, 0)))
+            box.blockSignals(False)
+        self._load_energy_shield_inputs(character)
+        has_armor = bool(character.get("armor"))
+        self.armor_equipped_checkbox.blockSignals(True)
+        self.armor_equipped_checkbox.setEnabled(has_armor)
+        self.armor_equipped_checkbox.setChecked(worn_armor.is_equipped(character))
+        self.armor_equipped_checkbox.blockSignals(False)
+        if has_armor:
+            self.character_data["armor_equipped"] = worn_armor.is_equipped(character)
+        self._refresh_armor_effects()
 
         self._set_skill_rows(character.get("skills"), game_data)
         self._set_ability_labels(character.get("abilities"), game_data)
+        self._add_learned_labels(character)
         self.equipment_pack_label.setText(
-            self._display_value(character.get("equipment_pack"))
+            self._display_value(character.get("equipment_pack")).replace("_", " ").title()
         )
         self.equipment_editor.setPlainText(
             "\n".join(
@@ -172,9 +253,42 @@ class InteractiveCharacterSheet(QWidget):
                 if item
             )
         )
-        self.weapon_label.setText(self._format_items(character.get("weapons")))
-        self.armor_label.setText(self._display_value(character.get("armor")))
-        self.shield_label.setText("Not provided")
+        armory = armory_index(game_data) if game_data else {}
+        weapons = self._as_list(character.get("weapons"))
+        self.weapon_label.setText(
+            self._summary_html([weapon_summary(weapon, armory) for weapon in weapons])
+        )
+        self.weapon_label.setToolTip(
+            "\n\n".join(
+                f"{weapon.get('name')}\n{character_loot.perk_descriptions(weapon['loot'])}"
+                for weapon in weapons
+                if isinstance(weapon, dict)
+                and isinstance(weapon.get("loot"), dict)
+                and character_loot.perk_descriptions(weapon["loot"])
+            )
+        )
+        armors = armor_index(game_data) if game_data else {}
+        loot_armor = character_loot.worn_loot_armor(character)
+        if loot_armor:
+            armor_lines = character_loot.armor_sheet_lines(loot_armor)
+            self.armor_label.setToolTip(character_loot.perk_descriptions(loot_armor))
+        else:
+            armor_lines = [armor_summary(character.get("armor"), armors)]
+            self.armor_label.setToolTip("")
+        variant = character.get("armor_variant")
+        if isinstance(variant, dict) and variant.get("name"):
+            armor_lines.append(
+                f"Variant: {variant['name']} ({variant.get('generation', '')})"
+            )
+        bonus = format_bonus(character.get("armor_bonus"))
+        if bonus:
+            armor_lines.append(f"While worn: {bonus}")
+        self.armor_label.setText(
+            self._summary_html(
+                ["\n".join(line for line in armor_lines if line)] if any(armor_lines) else []
+            )
+        )
+        self._populate_attack_weapons()
         self._set_light_and_sky_powers(character, ruleset)
 
         experience = {
@@ -188,14 +302,69 @@ class InteractiveCharacterSheet(QWidget):
         self._set_resource_value("credits", character.get("credits", 0))
         self._set_resource_value("wounds", character.get("wounds", 0))
         self._set_resource_value("fatigue", character.get("fatigue", 0))
+        self._set_resource_value("support_points", character.get("support_points", 0))
+        advocate = outlier_rules.support_points(game_data, character)
+        self.resource_inputs["support_points"].setToolTip(
+            "Support Points from your Rank (set by the GM)"
+            + (
+                f", including +{advocate} from Advocate at creation. "
+                f"Advocate also adds +{advocate} each time you are rewarded after a mission."
+                if advocate
+                else "."
+            )
+        )
+        self._set_outlier_section(character, game_data)
+        self._refresh_outlier_readouts()
 
         for key, field in self.note_fields.items():
             field.setPlainText(str(character.get(key) or ""))
+
+    # ---------------------------------------------------------
+    # Light & Sky loot
+    # ---------------------------------------------------------
+    def open_loot_dialog(self):
+        try:
+            generator = LootGenerator(getattr(self, "game_data", None))
+        except LootDataMissing as error:
+            QMessageBox.warning(self, "Loot Unavailable", str(error))
+            return
+        LootDialog(generator, on_add=self.add_loot, parent=self).exec()
+
+    def add_loot(self, roll: dict, confirm_replace: bool = True):
+        """Add a rolled weapon, or equip a rolled armor set. Returns a status message."""
+        data = self.character_data_for_save()
+        if roll.get("kind") == "armor":
+            current = data.get("armor")
+            if current and confirm_replace:
+                answer = QMessageBox.question(
+                    self,
+                    "Replace Worn Armor?",
+                    f"Replace {current} with {character_loot.armor_name(roll)}?",
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                    QMessageBox.StandardButton.No,
+                )
+                if answer != QMessageBox.StandardButton.Yes:
+                    return None
+            name = character_loot.equip_armor(data, roll)
+            message = f"{name} equipped."
+        else:
+            name = character_loot.add_weapon(data, roll)["name"]
+            message = f"{name} added to Weapons."
+        self.set_character(data, self.ruleset, self.game_data)
+        return message + " Press Save on the character sheet to keep it."
 
     def set_save_available(self, available: bool):
         self.save_button.setEnabled(available)
 
     def character_data_for_save(self):
+        other = {
+            slot: box.value() for slot, box in self.dr_other_inputs.items() if box.value()
+        }
+        if other:
+            self.character_data["damage_resistance_other"] = other
+        else:
+            self.character_data.pop("damage_resistance_other", None)
+        self._store_energy_shield_inputs()
         for key, field in self.note_fields.items():
             self.character_data[key] = field.toPlainText()
         self.character_data["equipment"] = [
@@ -207,32 +376,23 @@ class InteractiveCharacterSheet(QWidget):
 
     def _build_character_tab(self, layout):
         self.identity_labels = self._add_identity_section(layout)
-        self.characteristic_labels = self._add_characteristic_section(layout)
-        derived_stats = QHBoxLayout()
-        self.movement_labels = self._add_movement_section(derived_stats)
-        range_and_capacity = QHBoxLayout()
-        self.movement_labels["sight"] = self._add_derived_stat_section(
-            range_and_capacity, "Perceptive Range", "Not provided"
-        )
-        self.carrying_capacity_labels = self._add_carrying_capacity_section(
-            range_and_capacity
-        )
-        range_and_capacity.setStretch(0, 1)
-        range_and_capacity.setStretch(1, 1)
-        derived_stats.addLayout(range_and_capacity)
-        derived_stats.setStretch(0, 1)
-        derived_stats.setStretch(1, 1)
-        layout.addLayout(derived_stats)
 
         columns = QHBoxLayout()
-        self.skill_table = self._add_skill_section(columns)
-        right_column = QVBoxLayout()
+        columns.setSpacing(20)
+        left_column = QVBoxLayout()
+        left_column.setSpacing(18)
+        self.characteristic_labels = self._add_characteristic_section(left_column)
+        self.movement_labels = self._add_movement_section(left_column)
+        self.carrying_capacity_labels = self._add_carrying_capacity_section(left_column)
+        self._add_worn_armor_section(left_column)
         ability_section, self.ability_layout = self._new_section(
             "Abilities and Education"
         )
-        right_column.addWidget(ability_section)
+        left_column.addWidget(ability_section)
+        outlier_section, self.outlier_layout = self._new_section("Outliers")
+        left_column.addWidget(outlier_section)
         equipment_section, equipment_body = self._new_section("Equipment")
-        self.equipment_pack_label = QLabel("None")
+        self.equipment_pack_label = self._role_label("None", "strong")
         self.equipment_pack_label.setWordWrap(True)
         equipment_body.addWidget(self.equipment_pack_label)
         self.equipment_editor = QPlainTextEdit()
@@ -241,44 +401,45 @@ class InteractiveCharacterSheet(QWidget):
         )
         self.equipment_editor.setMinimumHeight(130)
         equipment_body.addWidget(self.equipment_editor)
-        right_column.addWidget(equipment_section)
-        columns.addLayout(right_column)
-        columns.setStretch(0, 1)
-        columns.setStretch(1, 1)
-        layout.addLayout(columns)
+        left_column.addWidget(equipment_section)
+        left_column.addStretch(1)
 
-        progress_row = QHBoxLayout()
-        resource_layout = QVBoxLayout()
-        self.luck_inputs = self._add_luck_inputs(resource_layout)
-        self.support_points_label = self._add_value_section(
-            resource_layout, "Support Points", "Not provided"
-        )
-        self.resource_inputs = {}
-        self.resource_inputs["credits"] = self._add_resource_input(
-            resource_layout, "Credits", "credits"
-        )
-        progress_row.addLayout(resource_layout)
-        layout.addLayout(progress_row)
-        layout.addStretch(1)
+        right_column = QVBoxLayout()
+        right_column.setSpacing(18)
+        self._add_resources_section(right_column)
+        self._add_skill_section(right_column)
+        right_column.addStretch(1)
+
+        columns.addLayout(left_column, 3)
+        columns.addLayout(right_column, 2)
+        layout.addLayout(columns)
 
     def _build_combat_tab(self, layout):
-        columns = QHBoxLayout()
-        self.weapon_label = self._add_text_section(columns, "Weapons")
-        right_column = QVBoxLayout()
-        self.armor_label = self._add_value_section(right_column, "Armor")
-        self.shield_label = self._add_value_section(right_column, "Shields")
-        self.resource_inputs["wounds"] = self._add_resource_input(
-            right_column, "Wounds", "wounds"
-        )
-        self.resource_inputs["fatigue"] = self._add_resource_input(
-            right_column, "Fatigue", "fatigue"
-        )
-        columns.addLayout(right_column)
-        columns.setStretch(0, 2)
-        columns.setStretch(1, 1)
-        layout.addLayout(columns)
+        top_row = QHBoxLayout()
+        top_row.setSpacing(28)
+        vitals = QVBoxLayout()
+        self._add_vitals_section(vitals)
+        vitals.addStretch(1)
+        gear = QVBoxLayout()
+        gear.setSpacing(18)
+        self.weapon_label = self._add_text_section(gear, "Weapons")
+        self.armor_label = self._add_text_section(gear, "Armor")
+        top_row.addLayout(vitals, 1)
+        top_row.addLayout(gear, 3)
+        layout.addLayout(top_row)
 
+        layout.addWidget(self._build_damage_resistance_section())
+        layout.addWidget(self._build_energy_shield_section())
+        layout.addWidget(self._build_attack_calculator())
+
+        throwing_section, throwing_body = self._new_section("Throwing Distance")
+        throwing_body.addWidget(self._build_throwing_panel(), 0, 0)
+        layout.addWidget(throwing_section)
+        layout.addStretch(1)
+
+    def _build_notes_tab(self, layout):
         notes_row = QHBoxLayout()
+        notes_row.setSpacing(28)
         for key, title in (
             ("medical_notes", "Medical Information"),
             ("character_notes", "Character Information"),
@@ -287,111 +448,199 @@ class InteractiveCharacterSheet(QWidget):
             section, body = self._new_section(title)
             note = QPlainTextEdit()
             note.setPlaceholderText(f"Add {title.lower()}...")
-            note.setMinimumHeight(130)
+            note.setMinimumHeight(420)
             body.addWidget(note, 0, 0)
             self.note_fields[key] = note
             notes_row.addWidget(section)
         layout.addLayout(notes_row)
 
-        self.light_and_sky_section, light_and_sky_grid = self._new_section(
-            "Light & Sky Powers"
-        )
-        light_power_fields = (
-            ("Light Aspects", "light_aspects_label"),
-            ("Light Abilities", "light_abilities_label"),
-            ("Light Grenades", "light_grenades_label"),
-        )
-        for column, (title, label_attribute) in enumerate(light_power_fields):
-            section, body = self._new_section(title)
-            label = QLabel("None")
-            label.setWordWrap(True)
-            body.addWidget(label, 0, 0)
-            setattr(self, label_attribute, label)
-            light_and_sky_grid.addWidget(section, 0, column)
-            light_and_sky_grid.setColumnStretch(column, 1)
-        self.light_and_sky_section.hide()
-        layout.addStretch(1)
-        layout.addWidget(self.light_and_sky_section)
+    def _on_subclass_changed(self):
+        """A new Sub-Class changed Characteristics: redraw every tab from them."""
+        self.set_character(self.character_data_for_save(), self.ruleset, self.game_data)
 
     def _set_light_and_sky_powers(self, character, ruleset):
-        is_light_and_sky = ruleset == "Light & Sky"
-        self.light_and_sky_section.setVisible(is_light_and_sky)
-        if not is_light_and_sky:
+        """Show the Light & Sky tab (after Combat) for Light & Sky characters only."""
+        index = self.tabs.indexOf(self.light_tab)
+        if ruleset != "Light & Sky":
+            if index != -1:
+                self.tabs.removeTab(index)
             return
-
-        self.light_aspects_label.setText(
-            self._format_items(character.get("light_aspects"))
-        )
-        self.light_abilities_label.setText(
-            self._format_items(character.get("light_abilities"))
-        )
-        self.light_grenades_label.setText(
-            self._format_items(character.get("light_grenades"))
-        )
+        if index == -1:
+            self.tabs.insertTab(self.tabs.indexOf(self.combat_tab) + 1, self.light_tab, "Light && Sky")
+        # The page edits character_data in place: energy and slotted powers save with it
+        self.light_page.set_character(self.character_data, self.game_data, ruleset)
 
     def _create_scrollable_tab(self):
-        tab = QWidget()
-        tab_layout = QVBoxLayout(tab)
-        tab_layout.setContentsMargins(4, 8, 4, 4)
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
         content = QWidget()
+        content.setObjectName("sheetBody")
         content_layout = QVBoxLayout(content)
         content_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        content_layout.setSpacing(12)
+        content_layout.setContentsMargins(24, 18, 24, 24)
+        content_layout.setSpacing(18)
         scroll.setWidget(content)
-        tab_layout.addWidget(scroll)
-        return tab, content_layout
+        return scroll, content_layout
 
     def _add_identity_section(self, parent_layout):
-        section, grid = self._new_section("Character Identity")
-        fields = ("Faction", "Soldier Type", "Rank", "Specialization", "Race", "Background")
+        section, grid = self._new_section("Service Record")
+        grid.setHorizontalSpacing(28)
+        fields = ("Soldier Type", "Rank", "Specialization", "Background", "Faction", "Race")
         labels = {}
         for index, field in enumerate(fields):
             row, column = divmod(index, 3)
-            field_label = QLabel(f"{field}:")
-            field_label.setStyleSheet("font-weight: bold;")
-            value_label = QLabel("Not provided")
+            value_label = self._role_label("—", "form-line")
             value_label.setWordWrap(True)
-            grid.addWidget(field_label, row * 2, column)
-            grid.addWidget(value_label, row * 2 + 1, column)
+            grid.addWidget(self._role_label(field.upper(), "caption"), row * 3, column)
+            grid.addWidget(value_label, row * 3 + 1, column)
+            grid.addWidget(self._new_rule("form-rule", 1), row * 3 + 2, column)
+            grid.setColumnStretch(column, 1)
             labels[field] = value_label
         parent_layout.addWidget(section)
         return labels
 
+    def _add_worn_armor_section(self, parent_layout):
+        section, grid = self._new_section("Worn Armor")
+        self.armor_equipped_checkbox = QCheckBox("Armor equipped")
+        self.armor_equipped_checkbox.setToolTip(
+            "When checked, the worn armor's characteristic bonuses and penalties "
+            "are applied to characteristics, movement, carrying capacity, "
+            "Perceptive Range, skill tests, and Max Wounds."
+        )
+        self.armor_equipped_checkbox.toggled.connect(self._on_armor_equipped_toggled)
+        self.worn_armor_label = QLabel("No armor")
+        self.worn_armor_label.setWordWrap(True)
+        grid.addWidget(self.worn_armor_label, 0, 0)
+        grid.addWidget(self.armor_equipped_checkbox, 1, 0)
+        parent_layout.addWidget(section)
+
+    def _on_armor_equipped_toggled(self, checked):
+        self.character_data["armor_equipped"] = bool(checked)
+        self._refresh_armor_effects()
+
+    def _armor_context(self):
+        """(armor records, soldier-type record) for the loaded character."""
+        game_data = getattr(self, "game_data", None)
+        if game_data is None:
+            return {}, None
+        return (
+            armor_index(game_data),
+            self._soldier_type_record(self.character_data, game_data),
+        )
+
+    def _effective_character(self):
+        armors, soldier = self._armor_context()
+        return worn_armor.effective_character(self.character_data, armors, soldier)
+
+    def _refresh_armor_effects(self):
+        """Re-derive every stat that worn armor changes."""
+        character = getattr(self, "character_data", {}) or {}
+        game_data = getattr(self, "game_data", None)
+        armors, soldier = self._armor_context()
+        bonus = worn_armor.armor_bonus(character, armors, soldier)
+        equipped = worn_armor.is_equipped(character)
+        effective = worn_armor.effective_character(character, armors, soldier)
+
+        descriptions = getattr(self, "_characteristic_descriptions", {})
+        characteristics = effective["characteristics"]
+        for code, label in self.characteristic_labels.items():
+            value = characteristics.get(code, "—")
+            change = worn_armor.bonus_for(code, bonus) if equipped else 0
+            label.setText(f"{value} ({change:+d})" if change else str(value))
+            tooltip = descriptions.get(code, "")
+            if change:
+                tooltip = (tooltip + "\n\n" if tooltip else "") + (
+                    f"Includes {change:+d} from worn armor "
+                    f"({character.get('characteristics', {}).get(code)} base)."
+                )
+            label.setToolTip(tooltip)
+        mythic = effective["mythic_characteristics"]
+        for code, label in self.mythic_characteristic_labels.items():
+            change = worn_armor.bonus_for(code, bonus, mythic=True) if equipped else 0
+            if code in mythic:
+                value = self._display_value(mythic[code])
+                label.setText(f"{value} ({change:+d})" if change else value)
+            else:
+                label.setText("—")
+            label.setToolTip(f"Includes {change:+d} Mythic from worn armor." if change else "")
+
+        self._set_movement_speeds(effective, game_data)
+        self._set_perceptive_range(effective, game_data)
+        self._set_carrying_capacity(effective, game_data)
+        self._set_max_wounds(character, effective)
+        self._throwing_character = effective
+        self._refresh_throwing()
+        self._refresh_damage_resistance()
+        self._refresh_energy_shield()
+        self._refresh_attack()
+
+        armor = character.get("armor")
+        if not armor:
+            self.worn_armor_label.setText("No armor")
+        else:
+            summary = format_bonus(bonus) or "no characteristic changes"
+            state = "applied" if equipped else "not applied (armor removed)"
+            self.worn_armor_label.setText(f"{armor}: {summary} - {state}")
+
+    def _set_max_wounds(self, character, effective):
+        """Max Wounds = 40 + TOU modifier x2 + Mythic TOU x2 (+ Robust, background)."""
+        def wounds_for(stats):
+            toughness = self._parse_integer((stats.get("characteristics") or {}).get("TOU"))
+            if toughness is None:
+                return None
+            return max_wounds(
+                toughness,
+                (stats.get("mythic_characteristics") or {}).get("TOU", 0),
+                self._as_list(stats.get("outliers")).count("Robust"),
+                flat_bonus=self._parse_integer(stats.get("wounds_modifier")) or 0,
+            )
+
+        total = wounds_for(effective)
+        if total is None:
+            self.max_wounds_label.setText("Not available")
+            return
+        base = wounds_for(character)
+        change = total - base if base is not None else 0
+        self.max_wounds_label.setText(
+            f"{total} ({change:+d} from worn armor)" if change else str(total)
+        )
+
     def _add_characteristic_section(self, parent_layout):
         section, grid = self._new_section("Characteristics")
+        grid.setSpacing(6)
         labels = {}
         self.characteristic_name_labels = {}
         mythic_labels = {}
         for index, (code, name) in enumerate(self.CHARACTERISTICS):
-            label = QLabel(f"{name}\n{code}")
-            label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            label.setStyleSheet("font-weight: bold;")
-            value = QLabel("—")
-            value.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            value.setMinimumHeight(36)
-            value.setStyleSheet(
-                "QLabel { background-color: #1b1b1b; border: 1px solid #788f3e; "
-                "border-radius: 4px; padding: 4px; font-size: 16px; }"
-            )
-            grid.addWidget(label, 0, index)
-            grid.addWidget(value, 1, index)
-            self.characteristic_name_labels[code] = label
-            labels[code] = value
+            tile = self._new_tile()
+            body = QVBoxLayout(tile)
+            body.setContentsMargins(3, 6, 3, 6)
+            body.setSpacing(0)
+            code_label = self._role_label(code, "tile-title", center=True)
+            value = self._role_label("—", "stat", center=True)
+            value.setWordWrap(True)
+            name_label = self._role_label(name, "note", center=True)
+            name_label.setWordWrap(True)
+            body.addWidget(code_label)
+            body.addWidget(value)
+            body.addWidget(name_label)
             if code in {"STR", "TOU", "AGI"}:
-                mythic_title = QLabel("Mythic")
-                mythic_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
-                mythic_value = QLabel("—")
-                mythic_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
-                mythic_value.setMinimumHeight(28)
-                mythic_value.setStyleSheet(
-                    "QLabel { background-color: #1b1b1b; border: 1px solid #788f3e; "
-                    "border-radius: 4px; padding: 2px; }"
-                )
-                grid.addWidget(mythic_title, 2, index)
-                grid.addWidget(mythic_value, 3, index)
+                mythic_row = QHBoxLayout()
+                mythic_row.setSpacing(4)
+                mythic_value = self._role_label("—", "strong")
+                mythic_row.addStretch(1)
+                mythic_row.addWidget(self._role_label("MYTHIC", "caption"))
+                mythic_row.addWidget(mythic_value)
+                mythic_row.addStretch(1)
+                body.addSpacing(4)
+                body.addLayout(mythic_row)
                 mythic_labels[code] = mythic_value
+            body.addStretch(1)
+            row, column = divmod(index, 5)
+            grid.addWidget(tile, row, column)
+            grid.setColumnStretch(column, 1)
+            self.characteristic_name_labels[code] = code_label
+            labels[code] = value
         parent_layout.addWidget(section)
         self.mythic_characteristic_labels = mythic_labels
         return labels
@@ -413,6 +662,7 @@ class InteractiveCharacterSheet(QWidget):
             if isinstance(record, dict)
             and isinstance(record.get("id"), str)
         }
+        self._characteristic_descriptions = descriptions
         for code, label in self.characteristic_name_labels.items():
             description = descriptions.get(code, "")
             label.setToolTip(description)
@@ -442,7 +692,7 @@ class InteractiveCharacterSheet(QWidget):
             if name
         ]
         if not ability_names:
-            self.ability_layout.addWidget(QLabel("None"))
+            self.ability_layout.addWidget(self._role_label("None", "note"))
             return
 
         for name in ability_names:
@@ -451,6 +701,90 @@ class InteractiveCharacterSheet(QWidget):
                 descriptions.get(name.casefold(), ""),
             )
             label.setWordWrap(True)
+            label.setStyleSheet(theme.SHEET_ABILITY)
+            label.setIndent(0)
+            self.ability_layout.addWidget(label)
+
+    def _set_outlier_section(self, character, game_data):
+        """One line per outlier taken, with its rank, picks and effect as the tooltip."""
+        while self.outlier_layout.count():
+            item = self.outlier_layout.takeAt(0)
+            if item.widget() is not None:
+                item.widget().deleteLater()
+        rows = outlier_rules.summary(game_data, character) if game_data else [
+            {"name": name, "times": 1, "picks": [], "effect": ""}
+            for name in dict.fromkeys(self._as_list(character.get("outliers")))
+        ]
+        if not rows:
+            self.outlier_layout.addWidget(self._role_label("None", "note"), 0, 0)
+            return
+        for index, row in enumerate(rows):
+            text = row["name"]
+            if row["picks"]:
+                text += ": " + ", ".join(row["picks"])
+            elif row["times"] > 1:
+                text += f" x{row['times']}"
+            label = DelayedTooltipLabel(text, row["effect"])
+            label.setWordWrap(True)
+            label.setStyleSheet(theme.SHEET_ABILITY)
+            label.setIndent(0)
+            self.outlier_layout.addWidget(label, index, 0)
+
+    def _refresh_outlier_readouts(self):
+        """Fatigue penalty (Enduring ignores levels) and Natural Healing (Vigorous)."""
+        character = getattr(self, "character_data", {}) or {}
+        game_data = getattr(self, "game_data", None)
+        rules = {}
+        if game_data is not None:
+            document = game_data.get("wounds", "wounds") or {}
+            rules = document.get("wounds", {}) if isinstance(document, dict) else {}
+        per_level = self._parse_integer((rules.get("fatigue") or {}).get("penalty_per_level"))
+        per_level = -5 if per_level is None else per_level
+        fatigue = self.resource_inputs["fatigue"].value()
+        ignored = outlier_rules.ignored_fatigue_levels(game_data, character)
+        penalty = per_level * max(0, fatigue - ignored)
+        self.fatigue_penalty_label.setText(f"{penalty:+d}" if penalty else "None")
+        self.fatigue_penalty_label.setToolTip(
+            f"{per_level} per level of Fatigue"
+            + (f"; Enduring ignores the first {ignored} levels." if ignored else ".")
+        )
+        base = self._parse_integer((rules.get("natural_healing") or {}).get("base_healing_per_day"))
+        base = 1 if base is None else base
+        multiplier = outlier_rules.natural_healing_multiplier(game_data, character)
+        self.natural_healing_label.setText(f"{base * multiplier} Wound{'s' if base * multiplier != 1 else ''}/day")
+        self.natural_healing_label.setToolTip(
+            f"{base} per day" + (f", x{multiplier} from Vigorous." if multiplier > 1 else ".")
+        )
+
+    def _add_learned_labels(self, character):
+        """Educations, Languages, Training and augmentations from the XP Shop."""
+        groups = [
+            (
+                "Educations",
+                [
+                    f"{name} +{level}"
+                    for name, level in (character.get("educations") or {}).items()
+                ],
+            ),
+            ("Languages", self._as_list(character.get("languages"))),
+            (
+                "Weapon Training",
+                self._as_list(character.get("weapon_training")),
+            ),
+            (
+                "Faction Training",
+                self._as_list(character.get("faction_training")),
+            ),
+            ("Augmentations", self._as_list(character.get("augmentations"))),
+        ]
+        wound_upgrades = self._integer_value(character.get("wound_upgrades"))
+        if wound_upgrades:
+            groups.append(("Wound Upgrades", [f"{wound_upgrades} (+{wound_upgrades * 10} Wounds)"]))
+        for title, values in groups:
+            if not values:
+                continue
+            label = QLabel(f"<b>{title}:</b> " + ", ".join(str(value) for value in values))
+            label.setWordWrap(True)
             self.ability_layout.addWidget(label)
 
     def _add_movement_section(self, parent_layout):
@@ -458,45 +792,27 @@ class InteractiveCharacterSheet(QWidget):
         labels = {}
         for column, (key, title) in enumerate(
             (
-                ("half", "Half"),
-                ("full", "Full"),
-                ("charge", "Charge"),
-                ("run", "Run"),
-                ("sprint", "Sprint"),
+                ("half", "HALF"),
+                ("full", "FULL"),
+                ("charge", "CHARGE"),
+                ("run", "RUN"),
+                ("sprint", "SPRINT"),
+                ("sight", "PERCEPTIVE RANGE"),
             )
         ):
-            title_label = QLabel(title)
-            title_label.setStyleSheet("font-weight: bold;")
-            value_label = QLabel("Not provided")
-            value_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            grid.addWidget(title_label, 0, column)
-            grid.addWidget(value_label, 1, column)
-            labels[key] = value_label
-        modifier_label = QLabel("Agility Modifier: Not provided")
-        grid.addWidget(modifier_label, 2, 0, 1, 5)
-        labels["agility_modifier"] = modifier_label
+            labels[key] = self._add_readout(grid, 0, column, title)
+        labels["agility_modifier"] = self._role_label(
+            "Agility Modifier: Not provided", "note"
+        )
+        grid.addWidget(labels["agility_modifier"], 2, 0, 1, 6)
         parent_layout.addWidget(section)
         return labels
 
-    def _add_derived_stat_section(self, parent_layout, title, initial_value):
-        section, grid = self._new_section(title)
-        value_label = QLabel(initial_value)
-        value_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        grid.addWidget(value_label, 0, 0)
-        parent_layout.addWidget(section)
-        return value_label
-
     def _add_carrying_capacity_section(self, parent_layout):
-        section, grid = self._new_section("Carrying Capacity")
+        section, grid = self._new_section("Carrying Capacity (kg)")
         labels = {}
         for column, key in enumerate(("carry", "lift", "push")):
-            title = QLabel(key.title())
-            title.setStyleSheet("font-weight: bold;")
-            value = QLabel("Not provided")
-            value.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            grid.addWidget(title, 0, column)
-            grid.addWidget(value, 1, column)
-            labels[key] = value
+            labels[key] = self._add_readout(grid, 0, column, key.upper())
         parent_layout.addWidget(section)
         return labels
 
@@ -634,10 +950,791 @@ class InteractiveCharacterSheet(QWidget):
         }
         for key, value in values.items():
             self.carrying_capacity_labels[key].setText(f"{value:g}")
+        self._carry_weight = values["carry"]
 
     def _display_unavailable_carrying_capacity(self, message: str):
+        self._carry_weight = None
         for label in self.carrying_capacity_labels.values():
             label.setText(message)
+
+    # ---------------------------------------------------------
+    # Throwing distance
+    # ---------------------------------------------------------
+    def _build_throwing_panel(self):
+        panel = QWidget()
+        grid = QGridLayout(panel)
+        grid.setContentsMargins(0, 0, 0, 8)
+
+        self.throw_max_label = self._role_label("Not available", "stat-accent")
+        self.throw_max_label.setToolTip(
+            "Furthest a weightless object can go on a successful Warfare Melee "
+            "Test: (Strength Modifier + Mythic Strength) x 15 Meters."
+        )
+        grid.addWidget(self.throw_max_label, 1, 0, 1, 5)
+        self.throw_formula_label = QLabel("")
+        self.throw_formula_label.setWordWrap(True)
+        self.throw_formula_label.setProperty("role", "note")
+        grid.addWidget(self.throw_formula_label, 2, 0, 1, 5)
+
+        dof_label = QLabel("Degrees of Failure")
+        self.throw_dof_input = QSpinBox()
+        self.throw_dof_input.setRange(0, 30)
+        self.throw_dof_input.setToolTip(
+            "Each Degree of Failure on the Warfare Melee Test lowers the Multiplier by 1."
+        )
+        grip_label = QLabel("Grip")
+        self.throw_grip_input = QComboBox()
+        for name, (_, _, _, description) in throwing.GRIPS.items():
+            self.throw_grip_input.addItem(name)
+            self.throw_grip_input.setItemData(
+                self.throw_grip_input.count() - 1, description, Qt.ItemDataRole.ToolTipRole
+            )
+        grid.addWidget(dof_label, 3, 0)
+        grid.addWidget(self.throw_dof_input, 3, 1)
+        grid.addWidget(grip_label, 3, 2)
+        grid.addWidget(self.throw_grip_input, 3, 3)
+
+        self.throw_table = QTableWidget(0, 3)
+        self.throw_table.setHorizontalHeaderLabels(("Item", "Weight", "Range"))
+        self.throw_table.verticalHeader().setVisible(False)
+        self.throw_table.setShowGrid(False)
+        self.throw_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
+        self.throw_table.setSelectionMode(QTableWidget.SelectionMode.NoSelection)
+        header = self.throw_table.horizontalHeader()
+        header.setDefaultAlignment(Qt.AlignmentFlag.AlignLeft)
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
+        grid.addWidget(self.throw_table, 4, 0, 1, 5)
+
+        custom_label = QLabel("Other object (kg)")
+        self.throw_weight_input = QDoubleSpinBox()
+        self.throw_weight_input.setRange(0, 10_000)
+        self.throw_weight_input.setDecimals(2)
+        self.throw_weight_input.setSingleStep(0.1)
+        self.throw_custom_label = self._role_label("—", "strong")
+        grid.addWidget(custom_label, 5, 0)
+        grid.addWidget(self.throw_weight_input, 5, 1)
+        grid.addWidget(self.throw_custom_label, 5, 2, 1, 3)
+        grid.setColumnStretch(4, 1)
+        grid.setHorizontalSpacing(10)
+
+        self.throw_dof_input.valueChanged.connect(self._refresh_throwing)
+        self.throw_grip_input.currentIndexChanged.connect(self._refresh_throwing)
+        self.throw_weight_input.valueChanged.connect(self._refresh_throwing)
+        return panel
+
+    # ---------------------------------------------------------
+    # Damage Resistance
+    # ---------------------------------------------------------
+    DR_PARTS = (
+        ("armor", "ARMOR"),
+        ("variant", "VAR"),
+        ("toughness", "TOU"),
+        ("mythic", "MYTHIC"),
+    )
+
+    def _build_damage_resistance_section(self):
+        section, grid = self._new_section("Damage Resistance")
+        grid.setSpacing(8)
+        self.dr_labels: dict[str, dict[str, QLabel]] = {}
+        self.dr_other_inputs: dict[str, QSpinBox] = {}
+        for column, (slot, name, roll) in enumerate(damage_resistance.LOCATIONS):
+            tile = self._new_tile()
+            body = QVBoxLayout(tile)
+            body.setContentsMargins(10, 8, 10, 10)
+            body.setSpacing(4)
+            heading = QHBoxLayout()
+            heading.addWidget(self._role_label(name, "tile-title"))
+            heading.addStretch(1)
+            heading.addWidget(self._role_label(f"Hit roll {roll}", "note"))
+            body.addLayout(heading)
+            total = self._role_label("—", "stat-accent", center=True)
+            body.addWidget(total)
+            labels = {"total": total}
+            parts = QGridLayout()
+            parts.setHorizontalSpacing(4)
+            parts.setVerticalSpacing(0)
+            for part, (key, title) in enumerate(self.DR_PARTS):
+                labels[key] = self._role_label("—", "strong", center=True)
+                parts.addWidget(self._role_label(title, "caption", center=True), 0, part)
+                parts.addWidget(labels[key], 1, part)
+                parts.setColumnStretch(part, 1)
+            body.addLayout(parts)
+            other_row = QHBoxLayout()
+            other_row.addWidget(self._role_label("OTHER", "caption"))
+            box = QSpinBox()
+            box.setRange(-100, 200)
+            box.setToolTip(
+                "Armor from Permutations, cover worn on the body, GM rulings... "
+                "Saved with the character."
+            )
+            box.valueChanged.connect(self._refresh_damage_resistance)
+            other_row.addWidget(box, 1)
+            body.addLayout(other_row)
+            grid.addWidget(tile, 0, column)
+            grid.setColumnStretch(column, 1)
+            self.dr_other_inputs[slot] = box
+            self.dr_labels[slot] = labels
+        self.dr_summary_label = self._role_label("", "note")
+        self.dr_summary_label.setWordWrap(True)
+        grid.addWidget(self.dr_summary_label, 1, 0, 1, len(damage_resistance.LOCATIONS))
+        return section
+
+    def _refresh_damage_resistance(self, *_):
+        if not hasattr(self, "dr_labels"):
+            return
+        character = getattr(self, "character_data", {}) or {}
+        stats = getattr(self, "_throwing_character", None) or {}
+        toughness = self._parse_integer((stats.get("characteristics") or {}).get("TOU"))
+        if toughness is None:
+            for labels in self.dr_labels.values():
+                for key in ("armor", "variant", "toughness", "mythic", "total"):
+                    labels[key].setText("—")
+            self.dr_summary_label.setText("Load a character to see Damage Resistance.")
+            return
+
+        game_data = getattr(self, "game_data", None)
+        armors = armor_index(game_data) if game_data else {}
+        armor = damage_resistance.armor_ratings(character, armors, game_data)
+        mythic = (stats.get("mythic_characteristics") or {}).get("TOU", 0)
+        table = damage_resistance.damage_resistance(
+            toughness, mythic, armor, {slot: box.value() for slot, box in self.dr_other_inputs.items()}
+        )
+        for slot, parts in table.items():
+            labels = self.dr_labels[slot]
+            labels["armor"].setText(str(parts["armor"]))
+            labels["variant"].setText(f"{parts['variant']:+d}" if parts["variant"] else "—")
+            labels["toughness"].setText(str(parts["toughness"]))
+            labels["mythic"].setText(str(parts["mythic"]))
+            labels["total"].setText(str(parts["total"]))
+            labels["total"].setToolTip(
+                " + ".join(
+                    f"{parts[key]} {title}"
+                    for key, title in (
+                        ("armor", "Armor"), ("variant", "Variant"), ("toughness", "Toughness Modifier"),
+                        ("mythic", "Mythic Toughness"), ("other", "Other"),
+                    )
+                    if parts[key] or key in ("armor", "toughness")
+                )
+            )
+
+        lines = [f"Damage Resistance = Toughness Modifier ({table['head']['toughness']}) "
+                 f"+ Mythic Toughness ({table['head']['mythic']}) + Armor Rating for the location hit."]
+        if not armor["name"]:
+            lines.append("No armor worn.")
+        elif not armor["equipped"]:
+            lines.append(f"{armor['name']} is removed, so it adds no Armor.")
+        elif not armor["found"]:
+            lines.append(f"Armor Ratings for {armor['name']} aren't in the data; use Other.")
+        else:
+            worn = armor["name"] + (f" ({armor['variant']} variant)" if armor["variant"] else "")
+            lines.append(f"Wearing {worn}.")
+        if armor["equipped"]:
+            for note in armor.get("variant_notes", []):
+                lines.append(f"Not included (situational): {note}")
+        self.dr_summary_label.setText("\n".join(lines))
+
+    # ---------------------------------------------------------
+    # Energy Shields
+    # ---------------------------------------------------------
+    def _shield_tile(self, grid, column, title):
+        tile = self._new_tile()
+        body = QVBoxLayout(tile)
+        body.setContentsMargins(8, 6, 8, 8)
+        body.setSpacing(0)
+        value = self._role_label("—", "stat-accent", center=True)
+        body.addWidget(self._role_label(title.upper(), "caption", center=True))
+        body.addWidget(value)
+        grid.addWidget(tile, 0, column, 2, 1)
+        return value
+
+    def _build_energy_shield_section(self):
+        section, grid = self._new_section("Energy Shields")
+        self.shield_labels = {
+            "integrity": self._shield_tile(grid, 0, "Shield Integrity"),
+            "delay": self._shield_tile(grid, 1, "Delay in Rounds"),
+            "recharge": self._shield_tile(grid, 2, "Recharge per Round"),
+        }
+        self.shield_labels["delay"].setToolTip(
+            "Rounds before the shield starts recharging. Taking 10+ Damage in a Round resets it."
+        )
+
+        tracker = QGridLayout()
+        tracker.setHorizontalSpacing(10)
+        tracker.addWidget(self._form_label("Current"), 0, 0)
+        self.shield_current_input = QSpinBox()
+        self.shield_current_input.setRange(0, 0)
+        self.shield_current_input.setToolTip("Shield Integrity left. Saved with the character.")
+        tracker.addWidget(self.shield_current_input, 0, 1)
+        self.shield_recharge_button = QPushButton("Recharge")
+        self.shield_recharge_button.setToolTip("Add one Round of Recharge Rate (after the Delay has passed).")
+        self.shield_recharge_button.clicked.connect(self._recharge_energy_shield)
+        self.shield_full_button = QPushButton("Full")
+        self.shield_full_button.clicked.connect(
+            lambda: self.shield_current_input.setValue(self.shield_current_input.maximum())
+        )
+        tracker.addWidget(self.shield_recharge_button, 0, 2)
+        tracker.addWidget(self.shield_full_button, 0, 3)
+        tracker.addWidget(self._form_label("Other Integrity"), 1, 0)
+        self.shield_other_input = QSpinBox()
+        self.shield_other_input.setRange(-500, 1000)
+        self.shield_other_input.setSingleStep(5)
+        self.shield_other_input.setToolTip(
+            "Extra Shield Integrity from Permutations (e.g. UA/SIMA-Alpha +50) or GM rulings. "
+            "Saved with the character."
+        )
+        self.shield_other_input.valueChanged.connect(self._refresh_energy_shield)
+        tracker.addWidget(self.shield_other_input, 1, 1)
+        self.shield_panels_input = QCheckBox("Photo-Reactive Panels active")
+        self.shield_panels_input.setToolTip("SPI armor: Recharge Rate halved and Delay doubled while active.")
+        self.shield_panels_input.toggled.connect(self._refresh_energy_shield)
+        tracker.addWidget(self.shield_panels_input, 1, 2, 1, 2)
+        grid.addLayout(tracker, 0, 3, 2, 1)
+
+        self.shield_source_label = self._form_label("")
+        self.shield_source_label.setWordWrap(True)
+        self.shield_source_label.setProperty("role", "strong")
+        grid.addWidget(self.shield_source_label, 2, 0, 1, 4)
+        self.shield_notes_label = self._form_label("")
+        self.shield_notes_label.setWordWrap(True)
+        self.shield_notes_label.setProperty("role", "note")
+        grid.addWidget(self.shield_notes_label, 3, 0, 1, 4)
+        for column in range(4):
+            grid.setColumnStretch(column, 1)
+        return section
+
+    def _load_energy_shield_inputs(self, character):
+        self.shield_other_input.blockSignals(True)
+        self.shield_other_input.setValue(self._integer_value(character.get("energy_shield_other")))
+        self.shield_other_input.blockSignals(False)
+        self.shield_panels_input.blockSignals(True)
+        self.shield_panels_input.setChecked(bool(character.get("energy_shield_panels_active")))
+        self.shield_panels_input.blockSignals(False)
+        current = self._parse_integer(character.get("energy_shield_current"))
+        self._shield_pending_current = current  # None: start full
+
+    def _store_energy_shield_inputs(self):
+        data = self.character_data
+        for key, value in (
+            ("energy_shield_other", self.shield_other_input.value()),
+            ("energy_shield_panels_active", self.shield_panels_input.isChecked()),
+        ):
+            if value:
+                data[key] = value
+            else:
+                data.pop(key, None)
+        if self.shield_current_input.isEnabled():
+            data["energy_shield_current"] = self.shield_current_input.value()
+        else:
+            data.pop("energy_shield_current", None)
+
+    def _current_energy_shield(self):
+        game_data = getattr(self, "game_data", None)
+        armors = armor_index(game_data) if game_data else {}
+        return energy_shields.energy_shield(
+            getattr(self, "character_data", {}) or {},
+            armors,
+            getattr(self, "ruleset", ""),
+            game_data,
+            panels_active=self.shield_panels_input.isChecked(),
+            other_integrity=self.shield_other_input.value(),
+        )
+
+    def _recharge_energy_shield(self):
+        shield = self._current_energy_shield()
+        self.shield_current_input.setValue(
+            energy_shields.recharge(self.shield_current_input.value(), shield)
+        )
+
+    def _refresh_energy_shield(self, *_):
+        if not hasattr(self, "shield_labels"):
+            return
+        shield = self._current_energy_shield()
+        has = shield["has_shield"]
+        for key, label in self.shield_labels.items():
+            label.setText(str(shield[key]) if has else "—")
+        current_box = self.shield_current_input
+        previous_max = current_box.maximum()
+        pending = getattr(self, "_shield_pending_current", "unset")
+        current_box.blockSignals(True)
+        current_box.setMaximum(shield["integrity"] if has else 0)
+        if has and pending != "unset":
+            current_box.setValue(shield["integrity"] if pending is None else pending)
+            self._shield_pending_current = "unset"
+        elif has and current_box.value() == previous_max:
+            current_box.setValue(shield["integrity"])  # stay full when the maximum changes
+        current_box.blockSignals(False)
+        for widget in (current_box, self.shield_recharge_button, self.shield_full_button):
+            widget.setEnabled(has)
+        self.shield_recharge_button.setText(f"Recharge (+{shield['recharge']})" if has else "Recharge")
+        self.shield_panels_input.setVisible(shield["spi"])
+
+        if has:
+            source = f"From {shield['source']}"
+            if shield["variant"] and shield["variant_modifiers"]:
+                changes = ", ".join(
+                    f"{value:+d} {key.title()}" for key, value in shield["variant_modifiers"].items()
+                )
+                source += f" ({shield['variant']} variant: {changes})"
+            self.shield_source_label.setText(source + ".")
+            notes = list(shield["notes"]) + list(energy_shields.RULE_NOTES)
+        else:
+            self.shield_source_label.setText("No Energy Shield.")
+            notes = list(shield["notes"])
+        self.shield_notes_label.setText("\n".join(f"• {note}" for note in notes))
+
+    # ---------------------------------------------------------
+    # Attack calculator
+    # ---------------------------------------------------------
+    @staticmethod
+    def _form_label(text):
+        return QLabel(text)
+
+    @staticmethod
+    def _fill_combo(combo, items, keep=None):
+        """Replace a combo's (key, label) items, keeping the current key when possible."""
+        current = keep if keep is not None else combo.currentData()
+        combo.blockSignals(True)
+        combo.clear()
+        for key, label in items:
+            combo.addItem(label, key)
+        index = combo.findData(current)
+        combo.setCurrentIndex(index if index >= 0 else 0)
+        combo.blockSignals(False)
+
+    def _build_attack_calculator(self):
+        section, grid = self._new_section("Attack Calculator")
+        self._attack_ability_boxes: dict[str, QCheckBox] = {}
+        self._attack_ability_notes: list[QLabel] = []
+        self._attack_ability_state: dict[str, bool] = {}
+        self._attack_profiles: list = []
+
+        # Column 1: the attack
+        attack_box = QGridLayout()
+        attack_box.setHorizontalSpacing(12)
+        row = 0
+
+        def add_row(text, widget):
+            nonlocal row
+            attack_box.addWidget(self._form_label(text), row, 0)
+            attack_box.addWidget(widget, row, 1)
+            row += 1
+
+        self.attack_weapon_input = QComboBox()
+        add_row("Weapon", self.attack_weapon_input)
+        self.attack_mode_input = QComboBox()
+        add_row("Attack", self.attack_mode_input)
+        self.attack_fire_mode_input = QComboBox()
+        self.attack_fire_mode_input.setToolTip("Semi-Auto and Burst fire give +10 To Hit.")
+        add_row("Fire rate", self.attack_fire_mode_input)
+        self.attack_range_input = QComboBox()
+        add_row("Range", self.attack_range_input)
+        self.attack_wielding_input = QComboBox()
+        for key, label in (("two", "Normal grip"), ("one", "One-handed"), ("dual", "Dual wielding")):
+            self.attack_wielding_input.addItem(label, key)
+        add_row("Wielding", self.attack_wielding_input)
+        self.attack_braced_input = QCheckBox("Braced")
+        self.attack_braced_input.setToolTip(
+            "[HW] weapons take -20 unless Braced (Half Action). Bracing also halves "
+            "One-handed and Dual Wielding Penalties."
+        )
+        add_row("", self.attack_braced_input)
+        self.attack_aim_input = QComboBox()
+        for key, (label, value) in attack.AIM.items():
+            self.attack_aim_input.addItem(f"{label} ({value:+d})" if value else label, key)
+        add_row("Aim", self.attack_aim_input)
+        self.attack_laser_input = QCheckBox("Targeting laser (+5)")
+        self.attack_laser_input.setToolTip(
+            "+5 To Hit if the target is within half your Perceptive Range. Doesn't stack with Aim."
+        )
+        add_row("", self.attack_laser_input)
+        self.attack_movement_input = QComboBox()
+        for key, (label, ranged, melee) in attack.MOVEMENT.items():
+            self.attack_movement_input.addItem(label, key)
+        self.attack_movement_input.setToolTip(
+            "Attacking while moving: Half or Full Move -20, Charge -30 (a melee Charge Attack "
+            "gets +10 instead), Run -40."
+        )
+        add_row("Moving", self.attack_movement_input)
+        self.attack_first_charge_shot_input = QCheckBox("First shot of the Charge")
+        self.attack_first_charge_shot_input.setChecked(True)
+        self.attack_first_charge_shot_input.setToolTip("Aggressive Advance: the first shot of a Charge has no Penalty.")
+        add_row("", self.attack_first_charge_shot_input)
+        self.attack_called_shot_input = QCheckBox("Called Shot")
+        self.attack_called_target_input = QComboBox()
+        for key, (label, value) in attack.CALLED_SHOTS.items():
+            self.attack_called_target_input.addItem(f"{label} ({value})", key)
+        attack_box.addWidget(self.attack_called_shot_input, row, 0)
+        attack_box.addWidget(self.attack_called_target_input, row, 1)
+        row += 1
+        attack_box.setColumnStretch(1, 1)
+        attack_box.setRowStretch(row, 1)
+
+        # Column 2: conditions and other modifiers
+        conditions_box = QGridLayout()
+        conditions_box.setHorizontalSpacing(12)
+        self.attack_condition_inputs: dict[str, QComboBox] = {}
+        condition_tables = (
+            ("lighting", "Lighting", attack.LIGHTING),
+            ("weather", "Weather", attack.WEATHER),
+            ("perceptive", "Distance", attack.PERCEPTIVE),
+            ("target_stance", "Target is", attack.TARGET_STANCE),
+            ("target_size", "Target size", attack.TARGET_SIZE),
+            ("speed", "Speed", attack.SPEED),
+            ("blind_fire", "Visibility", attack.BLIND_FIRE),
+        )
+        for index, (key, title, table) in enumerate(condition_tables):
+            combo = QComboBox()
+            for option, values in table.items():
+                label = values[0]
+                numbers = [value for value in values[1:] if value]
+                if key == "target_stance" and numbers:
+                    label += f" ({values[1]:+d} ranged, {values[2]:+d} melee)"
+                elif numbers:
+                    label += f" ({numbers[0]:+d})"
+                combo.addItem(label, option)
+            conditions_box.addWidget(self._form_label(title), index, 0)
+            conditions_box.addWidget(combo, index, 1)
+            self.attack_condition_inputs[key] = combo
+        row = len(condition_tables)
+        self.attack_situational_inputs: dict[str, QCheckBox] = {}
+        for key, (label, value, _) in attack.SITUATIONAL.items():
+            box = QCheckBox(f"{label} ({value:+d})")
+            conditions_box.addWidget(box, row, 0, 1, 2)
+            self.attack_situational_inputs[key] = box
+            row += 1
+        self.attack_custom_input = QSpinBox()
+        self.attack_custom_input.setRange(-300, 300)
+        self.attack_custom_input.setSingleStep(5)
+        self.attack_custom_input.setToolTip("Any other Bonus or Penalty: scopes, grips, GM rulings...")
+        conditions_box.addWidget(self._form_label("Other / GM"), row, 0)
+        conditions_box.addWidget(self.attack_custom_input, row, 1)
+        conditions_box.setColumnStretch(1, 1)
+        conditions_box.setRowStretch(row + 1, 1)
+
+        # Column 3: abilities and the result
+        result_box = QVBoxLayout()
+        abilities_title = self._role_label("ABILITIES", "caption")
+        result_box.addWidget(abilities_title)
+        self.attack_ability_layout = QVBoxLayout()
+        result_box.addLayout(self.attack_ability_layout)
+        self.attack_no_abilities_label = self._form_label("No abilities affect this attack.")
+        self.attack_no_abilities_label.setProperty("role", "note")
+        result_box.addWidget(self.attack_no_abilities_label)
+
+        self.attack_total_label = self._role_label("Roll under —", "roll-target", center=True)
+        result_box.addSpacing(8)
+        result_box.addWidget(self.attack_total_label)
+        self.attack_roll_button = QPushButton("Roll Attack")
+        self.attack_roll_button.setToolTip("Roll the To Hit Test against this total.")
+        self.attack_roll_button.setEnabled(False)
+        self.attack_roll_button.clicked.connect(self.open_attack_roll)
+        result_box.addWidget(self.attack_roll_button)
+        self.attack_base_label = self._form_label("")
+        self.attack_base_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        result_box.addWidget(self.attack_base_label)
+        self.attack_breakdown_label = self._form_label("")
+        self.attack_breakdown_label.setWordWrap(True)
+        self.attack_breakdown_label.setTextFormat(Qt.TextFormat.RichText)
+        result_box.addWidget(self.attack_breakdown_label)
+        self.attack_notes_label = self._form_label("")
+        self.attack_notes_label.setWordWrap(True)
+        self.attack_notes_label.setProperty("role", "note")
+        result_box.addWidget(self.attack_notes_label)
+        result_box.addStretch(1)
+
+        grid.addLayout(attack_box, 0, 0)
+        grid.addLayout(conditions_box, 0, 1)
+        grid.addLayout(result_box, 0, 2)
+        for column in range(3):
+            grid.setColumnStretch(column, 1)
+        grid.setHorizontalSpacing(24)
+
+        # Wiring
+        self.attack_weapon_input.currentIndexChanged.connect(self._on_attack_weapon_changed)
+        self.attack_mode_input.currentIndexChanged.connect(self._on_attack_mode_changed)
+        for combo in (
+            self.attack_fire_mode_input, self.attack_range_input, self.attack_wielding_input,
+            self.attack_aim_input, self.attack_movement_input, self.attack_called_target_input,
+            *self.attack_condition_inputs.values(),
+        ):
+            combo.currentIndexChanged.connect(self._refresh_attack)
+        for combo in section.findChildren(QComboBox):
+            combo.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLengthWithIcon)
+            combo.setMinimumContentsLength(12)
+        for box in (
+            self.attack_braced_input, self.attack_laser_input, self.attack_first_charge_shot_input,
+            self.attack_called_shot_input, *self.attack_situational_inputs.values(),
+        ):
+            box.toggled.connect(self._refresh_attack)
+        self.attack_custom_input.valueChanged.connect(self._refresh_attack)
+        return section
+
+    def attack_roll_dialog(self):
+        """The roll window for the current attack (not shown), or None."""
+        self._refresh_attack()
+        result = getattr(self, "_attack_result", None)
+        if result is None:
+            return None
+        title = f"{self._attack_profile().name} - {self.attack_mode_input.currentText()}"
+        return AttackRollDialog(title, result, rng=self.dice_rng, parent=self)
+
+    def open_attack_roll(self):
+        dialog = self.attack_roll_dialog()
+        if dialog is not None:
+            dialog.exec()
+
+    def _populate_attack_weapons(self):
+        game_data = getattr(self, "game_data", None)
+        armory = armory_index(game_data) if game_data else {}
+        self._attack_profiles = [attack.weapon_profile(attack.UNARMED)] + [
+            attack.weapon_profile(weapon, armory)
+            for weapon in self._as_list(self.character_data.get("weapons"))
+            if weapon
+        ]
+        previous = self.attack_weapon_input.currentText()
+        combo = self.attack_weapon_input
+        combo.blockSignals(True)
+        combo.clear()
+        for index, profile in enumerate(self._attack_profiles):
+            combo.addItem(profile.name, index)
+        found = combo.findText(previous)
+        default = 1 if len(self._attack_profiles) > 1 else 0
+        combo.setCurrentIndex(found if found >= 0 else default)
+        combo.blockSignals(False)
+        self._on_attack_weapon_changed()
+
+    def _attack_profile(self):
+        index = self.attack_weapon_input.currentData()
+        profiles = getattr(self, "_attack_profiles", [])
+        if isinstance(index, int) and 0 <= index < len(profiles):
+            return profiles[index]
+        return attack.weapon_profile(attack.UNARMED)
+
+    def _on_attack_weapon_changed(self, *_):
+        profile = self._attack_profile()
+        self._fill_combo(
+            self.attack_mode_input,
+            [(mode, attack.MODE_LABELS[mode]) for mode in profile.modes],
+            keep=profile.default_mode,
+        )
+        self._fill_combo(
+            self.attack_fire_mode_input,
+            [(mode.label, mode.label + (f" (+{mode.bonus})" if mode.bonus else "")) for mode in profile.fire_modes],
+        )
+        untrained = self._attack_untrained(profile)
+        box = self.attack_situational_inputs["untrained"]
+        box.blockSignals(True)
+        box.setChecked(bool(untrained))
+        box.blockSignals(False)
+        box.setToolTip(
+            "Couldn't tell which Weapon Training covers this weapon; tick it if you lack it."
+            if untrained is None
+            else "Set from the character's Weapon Training. Untick if the GM rules otherwise."
+        )
+        self.attack_braced_input.setEnabled(profile.wield_tag == "HW")
+        if profile.wield_tag != "HW":
+            self.attack_braced_input.setChecked(False)
+        self._on_attack_mode_changed()
+
+    def _attack_untrained(self, profile):
+        game_data = getattr(self, "game_data", None)
+        if game_data is None:
+            return None
+        try:
+            owned = XpShop(self.character_data, game_data, self.ruleset).owned_weapon_training()
+        except Exception:  # an incomplete character shouldn't break the sheet
+            return None
+        return attack.is_untrained(profile, owned, game_data.get("weapon_training", "weapon_training"))
+
+    def _on_attack_mode_changed(self, *_):
+        profile = self._attack_profile()
+        mode = self.attack_mode_input.currentData() or profile.default_mode
+        bands = attack.range_bands(profile, mode)
+        current = self.attack_range_input.currentData()
+        keys = [key for key, _, _ in bands]
+        self._fill_combo(
+            self.attack_range_input,
+            [(key, f"{label} ({value:+d})" if value else label) for key, label, value in bands],
+            keep=current if current in keys else attack.default_range(profile, mode),
+        )
+        firing = mode == attack.FIRE
+        self.attack_fire_mode_input.setEnabled(firing and self.attack_fire_mode_input.count() > 0)
+        self.attack_laser_input.setEnabled(firing)
+        self.attack_wielding_input.setEnabled(mode != attack.THROW and profile.wield_tag is not None)
+        self.attack_condition_inputs["blind_fire"].setEnabled(firing)
+        self.attack_condition_inputs["perceptive"].setEnabled(mode != attack.MELEE)
+        for key, box in self.attack_situational_inputs.items():
+            box.setEnabled(mode in attack.SITUATIONAL[key][2])
+        self._rebuild_attack_abilities(profile, mode)
+        self._refresh_attack()
+
+    def _rebuild_attack_abilities(self, profile, mode):
+        for name, box in self._attack_ability_boxes.items():
+            self._attack_ability_state[name] = box.isChecked()
+            self.attack_ability_layout.removeWidget(box)
+            box.deleteLater()
+        for note in self._attack_ability_notes:
+            self.attack_ability_layout.removeWidget(note)
+            note.deleteLater()
+        self._attack_ability_boxes = {}
+        self._attack_ability_notes = []
+        relevant = attack.relevant_abilities(self.character_data.get("abilities"), profile, mode)
+        for name, effect, default in relevant:
+            box = QCheckBox(name)
+            box.setChecked(self._attack_ability_state.get(name, default))
+            box.toggled.connect(self._refresh_attack)
+            note = self._role_label(effect, "note")
+            note.setWordWrap(True)
+            self.attack_ability_layout.addWidget(box)
+            self.attack_ability_layout.addWidget(note)
+            self._attack_ability_boxes[name] = box
+            self._attack_ability_notes.append(note)
+        self.attack_no_abilities_label.setVisible(not relevant)
+
+    def _attack_options(self, profile, mode, characteristic, mythic_strength):
+        fire_label = self.attack_fire_mode_input.currentData()
+        fire_mode = next((m for m in profile.fire_modes if m.label == fire_label), None)
+        return attack.AttackOptions(
+            characteristic=characteristic,
+            mythic_strength=mythic_strength,
+            mode=mode,
+            fire_mode=fire_mode,
+            range_band=self.attack_range_input.currentData() or "optimal",
+            wielding=self.attack_wielding_input.currentData() or "two",
+            braced=self.attack_braced_input.isChecked(),
+            aim=self.attack_aim_input.currentData() or "none",
+            laser=self.attack_laser_input.isChecked(),
+            movement=self.attack_movement_input.currentData() or "none",
+            first_charge_shot=self.attack_first_charge_shot_input.isChecked(),
+            called_shot=self.attack_called_shot_input.isChecked(),
+            called_target=self.attack_called_target_input.currentData() or "location",
+            situational={key for key, box in self.attack_situational_inputs.items() if box.isChecked()},
+            abilities={name for name, box in self._attack_ability_boxes.items() if box.isChecked()},
+            custom=self.attack_custom_input.value(),
+            **{key: combo.currentData() for key, combo in self.attack_condition_inputs.items()},
+        )
+
+    def _refresh_attack(self, *_):
+        if not hasattr(self, "attack_total_label"):
+            return
+        profile = self._attack_profile()
+        mode = self.attack_mode_input.currentData() or profile.default_mode
+        self.attack_called_target_input.setEnabled(self.attack_called_shot_input.isChecked())
+        self.attack_first_charge_shot_input.setVisible(
+            "Aggressive Advance" in self._attack_ability_boxes
+            and self.attack_movement_input.currentData() == "charge"
+        )
+        stats = getattr(self, "_throwing_character", None) or {}
+        code = attack.MODE_CHARACTERISTIC.get(mode, "WFR")
+        value = self._parse_integer((stats.get("characteristics") or {}).get(code))
+        self.attack_roll_button.setEnabled(value is not None)
+        self._attack_result = None
+        if value is None:
+            self.attack_total_label.setText("Roll under —")
+            self.attack_base_label.setText("Load a character to calculate attacks.")
+            self.attack_breakdown_label.setText("")
+            self.attack_notes_label.setText("")
+            return
+        mythic_strength = throwing.mythic_value((stats.get("mythic_characteristics") or {}).get("STR", 0))
+        result = attack.attack_target(
+            profile, self._attack_options(profile, mode, value, mythic_strength)
+        )
+        self._attack_result = result
+        names = {"WFR": "Warfare Range", "WFM": "Warfare Melee"}
+        self.attack_total_label.setText(f"Roll {result.total} or under")
+        self.attack_total_label.setToolTip("Roll 1D100. A natural 01 is a critical success.")
+        modifier = result.total_modifier
+        self.attack_base_label.setText(
+            f"{names[result.characteristic_name]} ({result.characteristic_name}) {result.characteristic}"
+            + (f" {modifier:+d}" if modifier else ", no modifiers")
+        )
+        rows = "".join(
+            f"<tr><td style='padding-right:12px; color:{theme.SHEET_GOOD if amount > 0 else theme.SHEET_BAD};'>"
+            f"<b>{amount:+d}</b></td><td>{html.escape(label)}</td></tr>"
+            for label, amount in result.modifiers
+        )
+        self.attack_breakdown_label.setText(f"<table>{rows}</table>" if rows else "")
+        self.attack_notes_label.setText("\n".join(result.notes))
+
+    def _throwing_items(self):
+        """(name, weight kg) for each carried weapon with a known weight, lightest first."""
+        game_data = getattr(self, "game_data", None)
+        armory = armory_index(game_data) if game_data else {}
+        items = []
+        for weapon in self._as_list(self.character_data.get("weapons")):
+            name = weapon.get("name") if isinstance(weapon, dict) else weapon
+            if not isinstance(name, str):
+                continue
+            weight = weapon.get("weight_kg") if isinstance(weapon, dict) else None
+            if weight is None:
+                weight = (armory.get(name) or {}).get("weight_kg")
+            try:
+                weight = float(weight)
+            except (TypeError, ValueError):
+                continue
+            label = weapon.get("nickname") if isinstance(weapon, dict) else None
+            items.append((f"{name} ({label})" if label else name, weight))
+        return sorted(items, key=lambda item: item[1])
+
+    def _refresh_throwing(self, *_):
+        character = getattr(self, "_throwing_character", None) or {}
+        strength = self._parse_integer((character.get("characteristics") or {}).get("STR"))
+        self.throw_table.setRowCount(0)
+        if strength is None:
+            self.throw_max_label.setText("Not available")
+            self.throw_formula_label.setText("")
+            self.throw_custom_label.setText("—")
+            return
+
+        mythic = (character.get("mythic_characteristics") or {}).get("STR", 0)
+        modifier = strength // 10
+        total = throwing.throw_strength(strength, mythic)
+        carry = getattr(self, "_carry_weight", None)
+        grip = self.throw_grip_input.currentText()
+        dof = self.throw_dof_input.value()
+
+        def result(weight=0.0, **overrides):
+            options = {"grip": grip, "degrees_of_failure": dof, "carry_weight": carry}
+            options.update(overrides)
+            return throwing.throw_distance(strength, mythic, weight, **options)
+
+        best = result(grip="Solid", degrees_of_failure=0)
+        self.throw_max_label.setText(f"Max {best.range_text()}")
+        step_kg, per_step = throwing.weight_step(total)
+        lines = [
+            f"(STR Mod {modifier} + Mythic STR {throwing.mythic_value(mythic)}) x 15. "
+            f"-{total} m per Degree of Failure.",
+            f"Weight: every {step_kg:g} kg lowers the x15 by {per_step}.",
+        ]
+        if carry is not None:
+            lines.append(f"Can't throw anything over Carry Weight ({carry:g} kg).")
+        self.throw_formula_label.setText("\n".join(lines))
+
+        items = self._throwing_items()
+        self.throw_table.setVisible(bool(items))
+        for row, (name, weight) in enumerate(items):
+            throw = result(weight)
+            self.throw_table.insertRow(row)
+            cells = (name, f"{weight:g} kg", throw.range_text())
+            for column, text in enumerate(cells):
+                cell = QTableWidgetItem(text)
+                cell.setToolTip(throw.explanation)
+                if column == 2:
+                    cell.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+                self.throw_table.setItem(row, column, cell)
+        if items:
+            height = self.throw_table.horizontalHeader().height() + 4
+            height += sum(self.throw_table.rowHeight(r) for r in range(len(items)))
+            self.throw_table.setFixedHeight(min(height, 220))
+
+        custom = result(self.throw_weight_input.value())
+        text = custom.range_text()
+        if custom.can_throw and custom.to_hit:
+            text += f" ({custom.to_hit} To Hit)"
+        self.throw_custom_label.setText(text)
+        self.throw_custom_label.setToolTip(custom.explanation)
 
     @staticmethod
     def _formula_multiplier(formula, subject):
@@ -809,6 +1906,15 @@ class InteractiveCharacterSheet(QWidget):
             ),
             None,
         )
+        multipliers = movement_rules.get("multipliers")
+        if movement is None and agility_modifier > 0 and isinstance(multipliers, dict):
+            # The table stops at 9, but the book says movement continues past
+            # it using the same multipliers (Half 1x ... Sprint 8x).
+            movement = {
+                key: agility_modifier * value
+                for key, value in multipliers.items()
+                if isinstance(value, (int, float))
+            }
         if movement is None:
             self._display_unavailable_movement(
                 f"No movement entry for modifier {agility_modifier}"
@@ -897,7 +2003,12 @@ class InteractiveCharacterSheet(QWidget):
     def _movement_aspect_bonus(
         cls, character: dict[str, Any], game_data: GameData
     ) -> int | None:
-        raw_selected_aspects = cls._as_list(character.get("light_aspects"))
+        # Aspects only work while slotted; older saves without a loadout use every owned one
+        loadout = character.get("light_loadout")
+        if isinstance(loadout, dict) and isinstance(loadout.get("aspects"), list):
+            raw_selected_aspects = [name for name in loadout["aspects"] if name]
+        else:
+            raw_selected_aspects = cls._as_list(character.get("light_aspects"))
         if not all(isinstance(name, str) for name in raw_selected_aspects):
             return None
         selected_aspects = set(raw_selected_aspects)
@@ -941,29 +2052,59 @@ class InteractiveCharacterSheet(QWidget):
             f"Agility Modifier: {message}"
         )
 
+    SKILL_PIP_WIDTH = 46
+
     def _add_skill_section(self, parent_layout):
         section, body = self._new_section("Skills")
-        table = QTableWidget(0, 4)
-        table.setHorizontalHeaderLabels(("Skill", "Trained", "+10", "+20"))
-        table.horizontalHeader().setSectionResizeMode(
-            0, QHeaderView.ResizeMode.Stretch
-        )
-        for column in range(1, 4):
-            table.horizontalHeader().setSectionResizeMode(
-                column, QHeaderView.ResizeMode.ResizeToContents
-            )
-        table.verticalHeader().setVisible(False)
-        table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
-        table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
-        table.setSelectionMode(QTableWidget.SelectionMode.SingleSelection)
-        table.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        table.cellClicked.connect(self._open_skill_test)
-        body.addWidget(table, 0, 0)
+        header = QHBoxLayout()
+        header.setContentsMargins(4, 0, 0, 0)
+        header.setSpacing(0)
+        header.addWidget(self._role_label("Click a skill to roll a test", "note"), 1)
+        for title in ("TRAINED", "+10", "+20"):
+            caption = self._role_label(title, "caption", center=True)
+            caption.setFixedWidth(self.SKILL_PIP_WIDTH)
+            header.addWidget(caption)
+        self.skill_list = QVBoxLayout()
+        self.skill_list.setSpacing(0)
+        self.skill_rows: dict[str, QPushButton] = {}
+        body.addLayout(header, 0, 0)
+        body.addLayout(self.skill_list, 1, 0)
         parent_layout.addWidget(section)
-        return table
+
+    def _new_skill_row(self, name, trained, value):
+        row = QPushButton()
+        row.setProperty("role", "skill")
+        row.setFixedHeight(25)
+        row.setCursor(Qt.CursorShape.PointingHandCursor)
+        row.setToolTip(f"Roll a {name} test")
+        row.setAccessibleName(name)
+        row.clicked.connect(lambda _=False, skill=name: self._open_skill_test(skill))
+        layout = QHBoxLayout(row)
+        layout.setContentsMargins(4, 0, 0, 0)
+        layout.setSpacing(0)
+        cells = [self._role_label(name, "skill-trained" if trained else "skill-untrained")]
+        layout.addWidget(cells[0], 1)
+        for selected in (trained, trained and value >= 10, trained and value >= 20):
+            pip = QFrame()
+            pip.setProperty("role", "pip-on" if selected else "pip-off")
+            pip.setFixedSize(12, 12)
+            slot = QWidget()
+            slot.setFixedWidth(self.SKILL_PIP_WIDTH)
+            slot_layout = QHBoxLayout(slot)
+            slot_layout.setContentsMargins(0, 0, 0, 0)
+            slot_layout.addWidget(pip, 0, Qt.AlignmentFlag.AlignCenter)
+            layout.addWidget(slot)
+            cells += [slot, pip]
+        for cell in cells:
+            cell.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
+        return row
 
     def _set_skill_rows(self, skills, game_data):
-        self.skill_table.setRowCount(0)
+        for row in self.skill_rows.values():
+            self.skill_list.removeWidget(row)
+            row.setParent(None)
+            row.deleteLater()
+        self.skill_rows = {}
         trained_skills = skills if isinstance(skills, dict) else {}
         skills_document = (
             game_data.get("skills", "skills") if game_data is not None else None
@@ -990,40 +2131,11 @@ class InteractiveCharacterSheet(QWidget):
             value = (
                 self._integer_value(trained_skills[name]) if trained else 0
             )
-            row = self.skill_table.rowCount()
-            self.skill_table.insertRow(row)
-            self.skill_table.setItem(row, 0, QTableWidgetItem(name))
-            for column, selected in enumerate(
-                (trained, trained and value >= 10, trained and value >= 20),
-                1,
-            ):
-                checkbox = QCheckBox()
-                checkbox.setChecked(selected)
-                checkbox.setEnabled(False)
-                checkbox.setStyleSheet("QCheckBox { margin-left: 8px; }")
-                cell = QWidget()
-                cell_layout = QHBoxLayout(cell)
-                cell_layout.setContentsMargins(0, 0, 0, 0)
-                cell_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-                cell_layout.addWidget(checkbox)
-                self.skill_table.setCellWidget(row, column, cell)
-        self.skill_table.resizeRowsToContents()
-        table_height = (
-            self.skill_table.horizontalHeader().height()
-            + sum(
-                self.skill_table.rowHeight(row)
-                for row in range(self.skill_table.rowCount())
-            )
-            + 2 * self.skill_table.frameWidth()
-        )
-        self.skill_table.setFixedHeight(table_height)
+            row = self._new_skill_row(name, trained, value)
+            self.skill_list.addWidget(row)
+            self.skill_rows[name] = row
 
-    def _open_skill_test(self, row, column):
-        skill_item = self.skill_table.item(row, 0)
-        if skill_item is None:
-            return
-
-        skill_name = skill_item.text()
+    def _open_skill_test(self, skill_name):
         skills_document = (
             self.game_data.get("skills", "skills")
             if self.game_data is not None
@@ -1068,7 +2180,7 @@ class InteractiveCharacterSheet(QWidget):
             and isinstance(record.get("name"), str)
             and isinstance(record.get("id"), str)
         }
-        characteristic_values = self.character_data.get("characteristics")
+        characteristic_values = self._effective_character().get("characteristics")
         characteristic_values = (
             characteristic_values
             if isinstance(characteristic_values, dict)
@@ -1135,22 +2247,9 @@ class InteractiveCharacterSheet(QWidget):
             skill_level,
             difficulty_options,
             parent=self,
+            rng=self.dice_rng,
         )
         dialog.exec()
-
-    def _add_display_section(self, parent_layout, title, fields):
-        section, grid = self._new_section(title)
-        labels = {}
-        for column, field in enumerate(fields):
-            field_label = QLabel(field)
-            field_label.setStyleSheet("font-weight: bold;")
-            value_label = QLabel("—")
-            value_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            grid.addWidget(field_label, 0, column)
-            grid.addWidget(value_label, 1, column)
-            labels[field] = value_label
-        parent_layout.addWidget(section)
-        return labels
 
     def _adjust_experience(self, adjustment):
         current = max(
@@ -1168,38 +2267,61 @@ class InteractiveCharacterSheet(QWidget):
         self.experience_labels["Current"].setText(str(current))
         self.experience_labels["Total"].setText(str(total))
 
-    def _add_resource_input(self, parent_layout, title, key):
-        section, grid = self._new_section(title)
+    def _resource_spin_box(self, key):
         spin_box = QSpinBox()
         spin_box.setRange(0, 1_000_000)
         spin_box.valueChanged.connect(
             lambda value, field=key: self.character_data.__setitem__(field, value)
         )
-        grid.addWidget(spin_box, 0, 0)
-        parent_layout.addWidget(section)
         return spin_box
 
-    def _add_luck_inputs(self, parent_layout):
-        section, grid = self._new_section("Luck")
-        inputs = {}
-        for column, (key, title) in enumerate(
-            (("available", "Available"), ("total", "Total"))
-        ):
-            field_label = QLabel(title)
-            field_label.setStyleSheet("font-weight: bold;")
-            spin_box = QSpinBox()
-            spin_box.setRange(0, 1_000_000)
-            if key == "available":
-                spin_box.setMaximum(0)
-            grid.addWidget(field_label, 0, column)
-            grid.addWidget(spin_box, 1, column)
-            inputs[key] = spin_box
-        inputs["available"].valueChanged.connect(
+    def _add_resources_section(self, parent_layout):
+        section, grid = self._new_section("Resources")
+        self.resource_inputs = {"credits": self._resource_spin_box("credits")}
+        available = QSpinBox()
+        available.setRange(0, 0)
+        total = QSpinBox()
+        total.setRange(0, 1_000_000)
+        available.valueChanged.connect(
             lambda value: self.character_data.__setitem__("luck_available", value)
         )
-        inputs["total"].valueChanged.connect(self._set_luck_total)
+        total.valueChanged.connect(self._set_luck_total)
+        self.luck_inputs = {"available": available, "total": total}
+        for column, (title, widget) in enumerate(
+            (
+                ("LUCK AVAILABLE", available),
+                ("LUCK TOTAL", total),
+                ("CREDITS", self.resource_inputs["credits"]),
+            )
+        ):
+            grid.addWidget(self._role_label(title, "caption"), 0, column)
+            grid.addWidget(widget, 1, column)
+            grid.setColumnStretch(column, 1)
+        self.resource_inputs["support_points"] = self._resource_spin_box("support_points")
+        grid.addWidget(self._role_label("SUPPORT POINTS", "caption"), 2, 0)
+        grid.addWidget(self.resource_inputs["support_points"], 3, 0)
         parent_layout.addWidget(section)
-        return inputs
+
+    def _add_vitals_section(self, parent_layout):
+        section, grid = self._new_section("Vitals")
+        self.resource_inputs["wounds"] = self._resource_spin_box("wounds")
+        self.resource_inputs["wounds"].setProperty("role", "vital")
+        self.resource_inputs["fatigue"] = self._resource_spin_box("fatigue")
+        self.resource_inputs["fatigue"].setProperty("role", "vital")
+        grid.addWidget(self._role_label("WOUNDS", "caption"), 0, 0)
+        grid.addWidget(self.resource_inputs["wounds"], 1, 0)
+        grid.addWidget(self._role_label("MAX WOUNDS", "caption"), 2, 0)
+        self.max_wounds_label = self._role_label("—", "readout")
+        self.max_wounds_label.setWordWrap(True)
+        grid.addWidget(self.max_wounds_label, 3, 0)
+        grid.addWidget(self._role_label("FATIGUE", "caption"), 4, 0)
+        grid.addWidget(self.resource_inputs["fatigue"], 5, 0)
+        self.resource_inputs["fatigue"].valueChanged.connect(
+            lambda _value: self._refresh_outlier_readouts()
+        )
+        self.fatigue_penalty_label = self._add_readout(grid, 6, 0, "FATIGUE PENALTY")
+        self.natural_healing_label = self._add_readout(grid, 8, 0, "NATURAL HEALING")
+        parent_layout.addWidget(section)
 
     def _set_luck_total(self, value):
         self.character_data["luck_total"] = value
@@ -1276,29 +2398,67 @@ class InteractiveCharacterSheet(QWidget):
         parent_layout.addWidget(section)
         return label
 
-    def _add_value_section(self, parent_layout, title, value="Not provided"):
-        section, grid = self._new_section(title)
-        label = QLabel(value)
-        label.setWordWrap(True)
-        grid.addWidget(label, 0, 0)
-        parent_layout.addWidget(section)
+    def _add_readout(self, grid, row, column, caption, value="—"):
+        """A small caption over a value; returns the value label."""
+        value_label = self._role_label(value, "readout")
+        value_label.setWordWrap(True)
+        grid.addWidget(self._role_label(caption, "caption"), row, column)
+        grid.addWidget(value_label, row + 1, column)
+        return value_label
+
+    @staticmethod
+    def _role_label(text, role, center=False):
+        """A label styled by its role in theme.SHEET_STYLE."""
+        label = QLabel(text)
+        label.setProperty("role", role)
+        label.setIndent(0)
+        if center:
+            label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         return label
 
     @staticmethod
+    def _new_rule(role, height):
+        rule = QFrame()
+        rule.setProperty("role", role)
+        rule.setFixedHeight(height)
+        return rule
+
+    @staticmethod
+    def _new_tile():
+        tile = QFrame()
+        tile.setProperty("role", "tile")
+        return tile
+
+    @staticmethod
     def _new_section(title):
-        section = QFrame()
-        section.setFrameShape(QFrame.Shape.StyledPanel)
-        section.setStyleSheet(
-            "QFrame { background-color: #242424; border: 1px solid #526b28; "
-            "border-radius: 6px; }"
-        )
+        section = QWidget()
         layout = QVBoxLayout(section)
-        title_label = QLabel(title)
-        title_label.setStyleSheet("font-size: 17px; font-weight: bold;")
-        layout.addWidget(title_label)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(4)
+        layout.addWidget(InteractiveCharacterSheet._role_label(title, "section-title"))
+        layout.addWidget(InteractiveCharacterSheet._new_rule("section-rule", 2))
+        layout.addSpacing(4)
         grid = QGridLayout()
         layout.addLayout(grid)
         return section, grid
+
+    @staticmethod
+    def _summary_html(entries):
+        """Rich text for sheet entries: the name in bold, its details quieter below."""
+        blocks = []
+        for entry in entries:
+            head, *rest = str(entry).split("\n")
+            name, _, stats = head.partition(" - ")
+            details = [stats] if stats else []
+            details += [line.strip() for line in rest]
+            block = f"<b>{html.escape(name, quote=False)}</b>"
+            for line in details:
+                block += (
+                    f"<br><span style='color:{theme.SHEET_TEXT_MUTED};'>"
+                    f"{html.escape(line, quote=False)}</span>"
+                )
+            blocks.append(f"<p style='margin:0 0 6px 0;'>{block}</p>")
+        return "".join(blocks) or "None"
 
     @staticmethod
     def _format_items(values):

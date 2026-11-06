@@ -96,3 +96,12 @@ class VersionAndExpansionsPage(QWidget):
             self._selected_mode = mode
             self.continue_button.setEnabled(True)
             self.mode_changed.emit(mode)
+
+    def clear_selection(self):
+        # An exclusive group refuses to uncheck its checked button.
+        self.mode_button_group.setExclusive(False)
+        for tile in self.mode_tiles.values():
+            tile.setChecked(False)
+        self.mode_button_group.setExclusive(True)
+        self._selected_mode = None
+        self.continue_button.setEnabled(False)

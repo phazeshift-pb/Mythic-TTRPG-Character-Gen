@@ -1,0 +1,944 @@
+{
+  "lns_melee_weapons": {
+    "knives_daggers_swords": [
+      {
+        "name": "Combat Knife",
+        "weapon_type": "Knife",
+        "weight_kg": 0.4,
+        "damage": "2D10",
+        "bonus_damage": "4 +Full Strength Modifier",
+        "pierce": "5 +Half Strength Modifier",
+        "reach": null,
+        "price": 15,
+        "tags": [
+          "PD",
+          "SD",
+          "DW"
+        ],
+        "special_rules": [],
+        "description": ""
+      },
+      {
+        "name": "Shredder Combat Knife",
+        "weapon_type": "Knife",
+        "weight_kg": 1.3,
+        "damage": "2D10",
+        "bonus_damage": "4 +Full Strength Modifier",
+        "pierce": "9 +Full Strength Modifier",
+        "reach": null,
+        "price": 37,
+        "tags": [
+          "PD",
+          "SD",
+          "OH"
+        ],
+        "special_rules": [
+          "Penetrating"
+        ],
+        "description": "Penetrating Special Rule."
+      },
+      {
+        "name": "Heavy Knife",
+        "weapon_type": "Knife",
+        "weight_kg": 0.9,
+        "damage": "2D10",
+        "bonus_damage": "6 +Full Strength Modifier",
+        "pierce": "7 +Half Strength Modifier",
+        "reach": null,
+        "price": 17,
+        "tags": [
+          "PD",
+          "SD",
+          "OH"
+        ],
+        "special_rules": [],
+        "description": ""
+      },
+      {
+        "name": "Concealed Knife",
+        "weapon_type": "Knife",
+        "weight_kg": 0.3,
+        "damage": "2D10",
+        "bonus_damage": "2 +Half Strength Modifier",
+        "pierce": "11 +Half Strength Modifier",
+        "reach": null,
+        "price": 23,
+        "tags": [
+          "PD",
+          "SD",
+          "DW"
+        ],
+        "special_rules": [],
+        "description": "+20 to Concealing and Camouflage. A small, Concealable Combat knife."
+      },
+      {
+        "name": "Kukri",
+        "weapon_type": "Dagger",
+        "weight_kg": 0.8,
+        "damage": "2D10",
+        "bonus_damage": "9 +Half Strength Modifier",
+        "pierce": "7 +Half Strength Modifier",
+        "reach": null,
+        "price": 17,
+        "tags": [
+          "PD",
+          "SD",
+          "OH"
+        ],
+        "special_rules": [],
+        "description": "Lengthened Military Dagger with a 49cm long carbon-steel blade."
+      },
+      {
+        "name": "Machete",
+        "weapon_type": "Dagger",
+        "weight_kg": 0.9,
+        "damage": "2D10",
+        "bonus_damage": "12 +Half Strength Modifier",
+        "pierce": "1 +Half Strength Modifier",
+        "reach": null,
+        "price": 17,
+        "tags": [
+          "PD",
+          "SD",
+          "OH"
+        ],
+        "special_rules": [],
+        "description": "Military Dagger with a 30cm blade and a 12cm weighted handle."
+      },
+      {
+        "name": "Shortsword",
+        "weapon_type": "One-Handed Sword",
+        "weight_kg": 1.1,
+        "damage": "2D10",
+        "bonus_damage": "8 +Full Strength Modifier",
+        "pierce": "3 +Half Strength Modifier",
+        "reach": null,
+        "price": 17,
+        "tags": [
+          "PD",
+          "SD",
+          "OH"
+        ],
+        "special_rules": [],
+        "description": "Military Dagger with a 43cm blade and a 12cm weighted handle."
+      },
+      {
+        "name": "Longsword",
+        "weapon_type": "Two-Handed Sword",
+        "weight_kg": 2.1,
+        "damage": "3D10",
+        "bonus_damage": "8 +Full Strength Modifier",
+        "pierce": "6 +Half Strength Modifier",
+        "reach": "+1",
+        "price": 22,
+        "tags": [
+          "PD",
+          "SD",
+          "TH"
+        ],
+        "special_rules": [],
+        "description": "Military Sword with a 100cm blade and a 16cm weighted handle."
+      },
+      {
+        "name": "Heavy Sword",
+        "weapon_type": "Two-Handed Sword",
+        "weight_kg": 3.4,
+        "damage": "3D10",
+        "bonus_damage": "13 +Full Strength Modifier",
+        "pierce": "9 +Full Strength Modifier",
+        "reach": "+2",
+        "price": 28,
+        "tags": [
+          "PD",
+          "SD",
+          "HW",
+          "TH"
+        ],
+        "special_rules": [],
+        "description": "Weighted Military Sword with a 140cm blade and a 23cm weighted handle."
+      },
+      {
+        "name": "Great Sword",
+        "weapon_type": "Two-Handed Sword",
+        "weight_kg": 6.9,
+        "damage": "5D10",
+        "bonus_damage": "14 +Full Strength Modifier",
+        "pierce": "6 +Half Strength Modifier",
+        "reach": "+3",
+        "price": 39,
+        "tags": [
+          "PD",
+          "SD",
+          "TH"
+        ],
+        "special_rules": [
+          "Slow"
+        ],
+        "description": "Slow Special Rule. Large Military Sword with a 200cm blade and a 23cm weighted handle."
+      }
+    ],
+    "axes_and_scythes": [
+      {
+        "name": "Multi-Purpose Tomahawk",
+        "weapon_type": "Axe",
+        "weight_kg": 0.9,
+        "damage": "3D10",
+        "bonus_damage": "2 +Full Strength Modifier",
+        "pierce": "2 +Full Strength Modifier",
+        "reach": null,
+        "price": 17,
+        "tags": [
+          "SD",
+          "OH"
+        ],
+        "special_rules": [],
+        "description": "Military Tomahawk with a 30cm head and a 38cm handle."
+      },
+      {
+        "name": "Battle Axe",
+        "weapon_type": "Axe",
+        "weight_kg": 0.9,
+        "damage": "1D10",
+        "bonus_damage": "12 +Full Strength Modifier",
+        "pierce": "6 +Half Strength Modifier",
+        "reach": null,
+        "price": 17,
+        "tags": [
+          "SD",
+          "OH"
+        ],
+        "special_rules": [],
+        "description": "A single-handed combat axe."
+      },
+      {
+        "name": "Long Axe",
+        "weapon_type": "Axe",
+        "weight_kg": 2.1,
+        "damage": "2D10",
+        "bonus_damage": "12 +Full Strength Modifier",
+        "pierce": "7 +Half Strength Modifier",
+        "reach": "+2",
+        "price": 22,
+        "tags": [
+          "SD",
+          "TH"
+        ],
+        "special_rules": [],
+        "description": "A two-handed, extended handle combat axe."
+      },
+      {
+        "name": "Weighted Axe",
+        "weapon_type": "Axe",
+        "weight_kg": 5.4,
+        "damage": "3D10",
+        "bonus_damage": "18 +Full Strength Modifier",
+        "pierce": "3 +Half Strength Modifier",
+        "reach": "+1",
+        "price": 28,
+        "tags": [
+          "SD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [],
+        "description": "A two-handed, axe with a heavily weighted axe-head."
+      },
+      {
+        "name": "Heavy War Axe",
+        "weapon_type": "Axe",
+        "weight_kg": 9.4,
+        "damage": "5D10",
+        "bonus_damage": "16 +Full Strength Modifier",
+        "pierce": "3 +Half Strength Modifier",
+        "reach": "+1",
+        "price": 49,
+        "tags": [
+          "SD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Slow"
+        ],
+        "description": "Slow Special Rule. A two-handed, axe with a heavily weighted axe-head."
+      },
+      {
+        "name": "Multi-Purpose Hand Scythe",
+        "weapon_type": "Scythe",
+        "weight_kg": 0.6,
+        "damage": "1D10",
+        "bonus_damage": "6 +Half Strength Modifier",
+        "pierce": "13 +Full Strength Modifier",
+        "reach": null,
+        "price": 14,
+        "tags": [
+          "SD",
+          "DW"
+        ],
+        "special_rules": [],
+        "description": "Military Scythe with a short handle and curved blade."
+      },
+      {
+        "name": "Sickle",
+        "weapon_type": "Scythe",
+        "weight_kg": 0.9,
+        "damage": "2D10",
+        "bonus_damage": "5 +Half Strength Modifier",
+        "pierce": "13 +Full Strength Modifier",
+        "reach": null,
+        "price": 17,
+        "tags": [
+          "SD",
+          "OH"
+        ],
+        "special_rules": [],
+        "description": "Military Scythe with a moderately long handle and curved blade."
+      },
+      {
+        "name": "War Scythe",
+        "weapon_type": "Scythe",
+        "weight_kg": 2.0,
+        "damage": "2D10",
+        "bonus_damage": "5 +Half Strength Modifier",
+        "pierce": "13 +Full Strength Modifier",
+        "reach": "+1",
+        "price": 22,
+        "tags": [
+          "SD",
+          "TH"
+        ],
+        "special_rules": [],
+        "description": "Extended handle scythe with a long blade."
+      },
+      {
+        "name": "Heavy Combat Scythe",
+        "weapon_type": "Scythe",
+        "weight_kg": 2.0,
+        "damage": "2D10",
+        "bonus_damage": "5 +Half Strength Modifier",
+        "pierce": "13 +Full Strength Modifier",
+        "reach": "+2",
+        "price": 29,
+        "tags": [
+          "SD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [],
+        "description": "Moderately-long handle scythe with an incredibly large and weighted blade."
+      },
+      {
+        "name": "Reaper Scythe",
+        "weapon_type": "Scythe",
+        "weight_kg": 12.4,
+        "damage": "6D10",
+        "bonus_damage": "12 +Half Strength Modifier",
+        "pierce": "4 +Full Strength Modifier",
+        "reach": "+3",
+        "price": 47,
+        "tags": [
+          "SD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Slow"
+        ],
+        "description": "Slow Special Rule. A long-handled scythe with an equally large blade."
+      }
+    ],
+    "hammers_and_clubs": [
+      {
+        "name": "Police Baton",
+        "weapon_type": "Club",
+        "weight_kg": 1.0,
+        "damage": "3D10",
+        "bonus_damage": "6 +Full Strength Modifier",
+        "pierce": null,
+        "reach": "+1",
+        "price": 18,
+        "tags": [
+          "BD",
+          "OH"
+        ],
+        "special_rules": [],
+        "description": "Law Enforcement baton, 91cm in length. Collapsible to 12cm with a spring-loaded mechanism for Quick drawing."
+      },
+      {
+        "name": "Military Shovel",
+        "weapon_type": "Shovel",
+        "weight_kg": 1.0,
+        "damage": "2D10",
+        "bonus_damage": "7 +Full Strength Modifier",
+        "pierce": null,
+        "reach": null,
+        "price": 18,
+        "tags": [
+          "OH"
+        ],
+        "special_rules": [],
+        "description": "Sharpened and small collapsible Military Shovel. Doubles as an emergency melee weapon by design.",
+        "damage_profile": "BD",
+        "alternate_profiles": [
+          {
+            "damage_profile": "PD",
+            "damage": "2D10",
+            "bonus_damage": "3 +Full Strength Modifier",
+            "pierce": "5 +Half Strength Modifier",
+            "reach": null
+          }
+        ]
+      },
+      {
+        "name": "Hammer",
+        "weapon_type": "Hammer",
+        "weight_kg": 0.7,
+        "damage": "2D10",
+        "bonus_damage": "11 +Full Strength Modifier",
+        "pierce": null,
+        "reach": null,
+        "price": 17,
+        "tags": [
+          "BD",
+          "OH"
+        ],
+        "special_rules": [],
+        "description": "A single-handed combat hammer."
+      },
+      {
+        "name": "Two-Handed Hammer",
+        "weapon_type": "Hammer",
+        "weight_kg": 2.1,
+        "damage": "2D10",
+        "bonus_damage": "17 +Full Strength Modifier",
+        "pierce": null,
+        "reach": "+1",
+        "price": 22,
+        "tags": [
+          "BD",
+          "TH"
+        ],
+        "special_rules": [],
+        "description": "A two-handed metallic hammer."
+      },
+      {
+        "name": "Sledge Hammer",
+        "weapon_type": "Hammer",
+        "weight_kg": 9.1,
+        "damage": "4D10",
+        "bonus_damage": "22 +Full Strength Modifier",
+        "pierce": null,
+        "reach": "+1",
+        "price": 31,
+        "tags": [
+          "BD",
+          "HW",
+          "TH"
+        ],
+        "special_rules": [
+          "Slow",
+          "Stun (3)"
+        ],
+        "description": "Slow and Stun (3) Special Rule. A large breeching hammer designed for forceful entry."
+      },
+      {
+        "name": "Weighted War Maul",
+        "weapon_type": "Hammer",
+        "weight_kg": 10.6,
+        "damage": "7D10",
+        "bonus_damage": "9 +Full Strength Modifier",
+        "pierce": null,
+        "reach": "+1",
+        "price": 46,
+        "tags": [
+          "BD",
+          "HW",
+          "TH"
+        ],
+        "special_rules": [
+          "Slow"
+        ],
+        "description": "Slow Special Rule. A heavy hammer with an extended handle."
+      },
+      {
+        "name": "Shockstick",
+        "weapon_type": "Club",
+        "weight_kg": 1.5,
+        "damage": "3D10",
+        "bonus_damage": "2 +Full Strength Modifier",
+        "pierce": null,
+        "reach": null,
+        "price": 51,
+        "tags": [
+          "BD",
+          "OH"
+        ],
+        "special_rules": [
+          "Electrified (12)"
+        ],
+        "description": "Electrified (12) Special Rule that can be disabled. Electrified baton 51cm in length. Glows a blue or purple color, easily seen in dark lighting."
+      },
+      {
+        "name": "Cudgel",
+        "weapon_type": "Club",
+        "weight_kg": 1.7,
+        "damage": "3D10",
+        "bonus_damage": "6 +Full Strength Modifier",
+        "pierce": null,
+        "reach": null,
+        "price": 17,
+        "tags": [
+          "BD",
+          "OH"
+        ],
+        "special_rules": [],
+        "description": "A specially-hardened staff-like club."
+      },
+      {
+        "name": "Club",
+        "weapon_type": "Club",
+        "weight_kg": 4.8,
+        "damage": "3D10",
+        "bonus_damage": "12 +Full Strength Modifier",
+        "pierce": null,
+        "reach": "+1",
+        "price": 22,
+        "tags": [
+          "BD",
+          "TH"
+        ],
+        "special_rules": [],
+        "description": "A large club made of strong composite metal."
+      },
+      {
+        "name": "Great Club",
+        "weapon_type": "Club",
+        "weight_kg": 6.3,
+        "damage": "3D10",
+        "bonus_damage": "12 +Full Strength Modifier",
+        "pierce": null,
+        "reach": "+2",
+        "price": 29,
+        "tags": [
+          "BD",
+          "HW",
+          "TH"
+        ],
+        "special_rules": [],
+        "description": "A composite club with a weighted, extended handle and weighted end for striking."
+      },
+      {
+        "name": "Oni Kanabou",
+        "weapon_type": "Club",
+        "weight_kg": 12.9,
+        "damage": "5D10",
+        "bonus_damage": "19 +Full Strength Modifier",
+        "pierce": null,
+        "reach": "+3",
+        "price": 43,
+        "tags": [
+          "BD",
+          "HW",
+          "TH"
+        ],
+        "special_rules": [
+          "Slow"
+        ],
+        "description": "Slow Special Rule. A Massive, studded club made of composite alloys designed to handle sheer force."
+      }
+    ],
+    "chain_weapons": [
+      {
+        "name": "Flail",
+        "weapon_type": "Flail",
+        "weight_kg": 1.6,
+        "damage": "2D10",
+        "bonus_damage": "7 +Full Strength Modifier",
+        "pierce": "5 +Half Strength Modifier",
+        "reach": "+1",
+        "price": 17,
+        "tags": [
+          "BD",
+          "OH"
+        ],
+        "special_rules": [
+          "Spin (6)",
+          "Slow"
+        ],
+        "description": "A composite chain and ball weapon. Spin (6), Slow Special Rule."
+      },
+      {
+        "name": "Two-Handed Flail",
+        "weapon_type": "Flail",
+        "weight_kg": 2.7,
+        "damage": "3D10",
+        "bonus_damage": "8 +Full Strength Modifier",
+        "pierce": "5 +Half Strength Modifier",
+        "reach": "+2",
+        "price": 22,
+        "tags": [
+          "BD",
+          "TH"
+        ],
+        "special_rules": [
+          "Spin (8)",
+          "Slow"
+        ],
+        "description": "A composite chain and ball weapon. Spin (8), Slow Special Rule."
+      },
+      {
+        "name": "War Flail",
+        "weapon_type": "Flail",
+        "weight_kg": 9.4,
+        "damage": "4D10",
+        "bonus_damage": "13 +Full Strength Modifier",
+        "pierce": "2 +Half Strength Modifier",
+        "reach": "+3",
+        "price": 28,
+        "tags": [
+          "BD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Spin (10)",
+          "Slow"
+        ],
+        "description": "A composite chain and ball weapon. Spin (10), Slow Special Rule."
+      },
+      {
+        "name": "Kusari-Fundo",
+        "weapon_type": "Chain Weapon",
+        "weight_kg": 0.9,
+        "damage": "2D10",
+        "bonus_damage": "11 +Full Strength Modifier",
+        "pierce": null,
+        "reach": null,
+        "price": 17,
+        "tags": [
+          "BD",
+          "OH"
+        ],
+        "special_rules": [
+          "Spin (6)",
+          "Slow"
+        ],
+        "description": "A single-handed chain defense weapon. Spin (6), Slow Special Rule."
+      }
+    ],
+    "pole_weapons": [
+      {
+        "name": "Pike",
+        "weapon_type": "Polearm",
+        "weight_kg": 4.7,
+        "damage": "6D10",
+        "bonus_damage": "13 +Full Strength Modifier",
+        "pierce": "13 +Full Strength Modifier",
+        "reach": "+7",
+        "price": 32,
+        "tags": [
+          "PD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [],
+        "description": "Can only make one Attack per Half Action. A spear polearm with extreme range benefits.",
+        "max_attacks_per_half_action": 1
+      },
+      {
+        "name": "Halberd",
+        "weapon_type": "Polearm",
+        "weight_kg": 3.1,
+        "damage": "4D10",
+        "bonus_damage": "14 +Full Strength Modifier",
+        "pierce": "0 +Half Strength Modifier",
+        "reach": "+3",
+        "price": 30,
+        "tags": [
+          "PD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [],
+        "description": "A polearm with a composite axe head."
+      },
+      {
+        "name": "Lance",
+        "weapon_type": "Polearm",
+        "weight_kg": 3.0,
+        "damage": "3D10",
+        "bonus_damage": "13 +Full Strength Modifier",
+        "pierce": "12 +Half Strength Modifier",
+        "reach": "+3",
+        "price": 29,
+        "tags": [
+          "PD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [],
+        "description": "A cavalry spear designed for long-ranged melee combat."
+      },
+      {
+        "name": "Combat Guisarme",
+        "weapon_type": "Polearm",
+        "weight_kg": 2.8,
+        "damage": "2D10",
+        "bonus_damage": "10 +Half Strength Modifier",
+        "pierce": "15 +Full Strength Modifier",
+        "reach": "+2",
+        "price": 23,
+        "tags": [
+          "PD",
+          "TH"
+        ],
+        "special_rules": [],
+        "description": "A hardened polearm with a blade and hook."
+      },
+      {
+        "name": "War Bill",
+        "weapon_type": "Polearm",
+        "weight_kg": 7.4,
+        "damage": "8D10",
+        "bonus_damage": "10 +Half Strength Modifier",
+        "pierce": "10 +Half Strength Modifier",
+        "reach": "+5",
+        "price": 30,
+        "tags": [
+          "PD",
+          "TH"
+        ],
+        "special_rules": [],
+        "description": "Can only make one Attack per Half Action. A combat polearm with multiple Massive blades.",
+        "max_attacks_per_half_action": 1
+      }
+    ],
+    "fist_and_foot_weapons": [
+      {
+        "name": "Brass Knuckles or Braced Boots",
+        "weapon_type": "Fist Weapon",
+        "weight_kg": 0.5,
+        "damage": "1D10",
+        "bonus_damage": "3",
+        "pierce": null,
+        "reach": null,
+        "price": 10,
+        "tags": [
+          "BD",
+          "DW"
+        ],
+        "special_rules": [],
+        "description": "This weapon augments the Characters Punching or Kicking based Melee Attacks by adding additional Damage.",
+        "augments_unarmed": true
+      },
+      {
+        "name": "Spiked Cestus or Spiked Boots",
+        "weapon_type": "Fist Weapon",
+        "weight_kg": 0.7,
+        "damage": "1D10",
+        "bonus_damage": null,
+        "pierce": 6,
+        "reach": null,
+        "price": 10,
+        "tags": [
+          "PD",
+          "DW"
+        ],
+        "special_rules": [],
+        "description": "This weapon augments the Characters Punching or Kicking based Melee Attacks by adding additional Damage.",
+        "augments_unarmed": true
+      },
+      {
+        "name": "Weighted Dusters or Weighted Boots",
+        "weapon_type": "Fist Weapon",
+        "weight_kg": 1.6,
+        "damage": "3D10",
+        "bonus_damage": "10",
+        "pierce": null,
+        "reach": null,
+        "price": 35,
+        "tags": [
+          "BD",
+          "OH"
+        ],
+        "special_rules": [
+          "Slow"
+        ],
+        "description": "Slow Special Rule. This weapon augments the Characters Punching or Kicking based Melee Attacks by adding additional Damage.",
+        "augments_unarmed": true
+      },
+      {
+        "name": "Ultra-Heavy Fist or Kick Extensions",
+        "weapon_type": "Fist Weapon",
+        "weight_kg": 12.0,
+        "damage": "5D10",
+        "bonus_damage": "19",
+        "pierce": null,
+        "reach": "+1",
+        "price": 54,
+        "tags": [
+          "BD",
+          "OH",
+          "HW"
+        ],
+        "special_rules": [],
+        "description": "One Attack per Half Action. This weapon augments the Characters Punching or Kicking based Melee Attacks by adding additional Damage.",
+        "augments_unarmed": true,
+        "max_attacks_per_half_action": 1
+      }
+    ],
+    "physical_shields": [
+      {
+        "name": "Lightweight Shield",
+        "weapon_type": "Melee Shield",
+        "weight_kg": 4.3,
+        "damage": "3D10",
+        "bonus_damage": "7 +Full Strength Modifier",
+        "pierce": null,
+        "reach": null,
+        "price": 21,
+        "tags": [
+          "BD"
+        ],
+        "special_rules": [],
+        "description": "Provides 18 Armor and has 200 Breakpoints. An Anti-Ballistics Shield that acts as mobile cover. The shield is titanium-A with a hardened plastic window to see through. The Shield covers 4 Locations for Normal sized Characters. Only up to 2 Attacks per Half Action when making Melee Attacks.",
+        "shield_armor": 18,
+        "breakpoints": 200,
+        "locations_covered": 4,
+        "max_attacks_per_half_action": 2
+      },
+      {
+        "name": "Anti-Ballistics Shield",
+        "weapon_type": "Melee Shield",
+        "weight_kg": 7.6,
+        "damage": "3D10",
+        "bonus_damage": "7 +Full Strength Modifier",
+        "pierce": null,
+        "reach": "+1",
+        "price": 33,
+        "tags": [
+          "BD",
+          "HW"
+        ],
+        "special_rules": [],
+        "description": "Provides 20 Armor and has 300 Breakpoints. An Anti-Ballistics Shield that acts as mobile cover. The shield is titanium-A with a hardened plastic window to see through. The Shield covers 5 Locations for Normal sized Characters. One Attack per Half Action when making Melee Attacks.",
+        "shield_armor": 20,
+        "breakpoints": 300,
+        "locations_covered": 5,
+        "max_attacks_per_half_action": 1
+      },
+      {
+        "name": "Heavy Shield",
+        "weapon_type": "Melee Shield",
+        "weight_kg": 22.4,
+        "damage": "5D10",
+        "bonus_damage": "19 +Full Strength Modifier",
+        "pierce": null,
+        "reach": "+1",
+        "price": 75,
+        "tags": [
+          "BD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Stun (2)"
+        ],
+        "description": "A powerful shield that has 30 Armor and 400 Breakpoints. The Shield covers 5 Locations for Large sized Characters. One Attack per Half Action when making Melee Attacks. Stun (2) Special Rule. *Characters with 70+ Strength and 5 or more Mythic Strength may hold their [TH] Heavy Shield as [OH].",
+        "shield_armor": 30,
+        "breakpoints": 400,
+        "locations_covered": 5,
+        "max_attacks_per_half_action": 1,
+        "one_handed_requirement": {
+          "strength": 70,
+          "mythic_strength": 5
+        }
+      },
+      {
+        "name": "Superheavy Shield",
+        "weapon_type": "Melee Shield",
+        "weight_kg": 32.1,
+        "damage": "6D10",
+        "bonus_damage": "23 +Full Strength Modifier",
+        "pierce": null,
+        "reach": "+1",
+        "price": 132,
+        "tags": [
+          "BD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Stun (2)"
+        ],
+        "description": "A powerful shield that has 40 Armor and 500 Breakpoints. The Shield covers 5 Locations for Huge sized Characters. One Attack per Half Action when making Melee Attacks. Stun (2) Special Rule. *Characters with 80+ Strength and 5 or more Mythic Strength may hold their [TH] Superheavy Shield as [OH].",
+        "shield_armor": 40,
+        "breakpoints": 500,
+        "locations_covered": 5,
+        "max_attacks_per_half_action": 1,
+        "one_handed_requirement": {
+          "strength": 80,
+          "mythic_strength": 5
+        }
+      }
+    ],
+    "misc_weapons": [
+      {
+        "name": "Cable Cutters",
+        "weapon_type": "Club",
+        "weight_kg": 2.2,
+        "damage": "2D10",
+        "bonus_damage": "9",
+        "pierce": 15,
+        "reach": null,
+        "price": 17,
+        "tags": [
+          "BD",
+          "OH"
+        ],
+        "special_rules": [],
+        "description": "30 Penalty to Hit against moving Characters. Common pair of large-scale cable cutters. Able to cut large chain links and other pieces of metal. More than strong enough to cut off a finger of any race. On Helpless or Stunned Characters that cannot fight back, Melee Attacks with Wire Cutters deal 2D10 +9 Damage, with 15 Pierce. If not against a Helpless or Stunned Character, Melee Attacks with this weapon gain a -30 To Hit."
+      },
+      {
+        "name": "Heavy Duty Bolt Cutters",
+        "weapon_type": "Club",
+        "weight_kg": 7.6,
+        "damage": "2D10",
+        "bonus_damage": "14",
+        "pierce": 18,
+        "reach": null,
+        "price": 21,
+        "tags": [
+          "BD",
+          "TH"
+        ],
+        "special_rules": [],
+        "description": "30 Penalty to Hit against moving Characters. Powerful bolt cutters, 1.3 meters long. Strong enough to cut through even Covenant metals and locks and can even lop off the fingers of any known Race. On Helpless or Stunned Characters that cannot fight back, Melee Attacks with Bolt Cutters deal 2D10 +14 Damage, with 18 Pierce. If not against a Helpless or Stunned Character, Melee Attacks with this weapon gain a -30 To Hit."
+      },
+      {
+        "name": "Taser Gun",
+        "weapon_type": "Taser",
+        "weight_kg": 0.5,
+        "damage": "1D5",
+        "bonus_damage": "1",
+        "pierce": 1,
+        "reach": null,
+        "price": 29,
+        "tags": [
+          "DW"
+        ],
+        "special_rules": [
+          "Electrified (2D10)",
+          "Sticky"
+        ],
+        "description": "Electrified (2D10), Sticky Special Rule. Uses Warfare Melee when Melee Reach and uses Warfare Range when being used as a projectile.",
+        "range": "2m-12m"
+      }
+    ]
+  },
+  "citation": "Destiny: Light and Sky, Standard Melee Weapons, pp. 40-43",
+  "notes": [
+    "price is in cR. Light Weapon Light Cost = price rounded up to the nearest 5.",
+    "Halberd Pierce is printed as 'Half Strength Modifier' with no base value; stored as 0."
+  ]
+}

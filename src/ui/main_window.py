@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
     QApplication,
     QFrame,
     QLabel,
+    QMessageBox,
     QPushButton,
     QStackedWidget,
     QVBoxLayout,
@@ -17,7 +18,7 @@ from PySide6.QtWidgets import (
 )
 
 from src.generator.character_generator import CharacterGenerator
-from src.models.character import CHAR_CODES
+from src.models.character import CHAR_CODES, BackgroundFloorError
 from src.ui.character_setup_home import CharacterSetupHome
 from src.ui.debug_page import DebugPage
 from src.ui.equipment_page import EquipmentPage
@@ -28,6 +29,7 @@ from src.ui.outlier_page import OutlierPage
 from src.ui.specialization_page import SpecializationPage
 from src.ui.stat_allocation import StatAllocationPage
 from src.ui.version_and_expansions import VersionAndExpansionsPage
+from src.ui.xp_shop_page import XpShopPage
 from src.ui.creator.character_files import CharacterFilesMixin
 from src.ui.creator.debug_report import DebugReportMixin
 from src.ui.creator.initial_setup import CreationCancelled, InitialSetupMixin
@@ -69,6 +71,7 @@ class MainWindow(
         self.equipment_page = EquipmentPage()
         self.debug_page = DebugPage()
         self.character_sheet = InteractiveCharacterSheet()
+        self.xp_shop_page = XpShopPage()
         self.page_widgets = (
             self.landing_page,
             self.character_setup_home,
@@ -80,6 +83,7 @@ class MainWindow(
             self.equipment_page,
             self.debug_page,
             self.character_sheet,
+            self.xp_shop_page,
         )
         for page in self.page_widgets:
             self.pages.addWidget(page)
@@ -92,8 +96,16 @@ class MainWindow(
             lambda: self.pages.setCurrentWidget(self.landing_page)
         )
         self.character_sheet.save_requested.connect(self.save_loaded_character)
+        self.character_sheet.spend_xp_button.clicked.connect(self.open_xp_shop)
+        self.xp_shop_page.applied.connect(self.apply_xp_shop)
+        self.xp_shop_page.cancelled.connect(
+            lambda: self.pages.setCurrentWidget(self.character_sheet)
+        )
         self.character_setup_home.finish_character_button.clicked.connect(
             self.finish_and_name_character
+        )
+        self.character_setup_home.discard_button.clicked.connect(
+            self.discard_character_creation
         )
 
         self.experience_input = self.character_setup_home.experience_input
@@ -195,8 +207,15 @@ class MainWindow(
         self.upbringing_combo.currentIndexChanged.connect(
             self.refresh_core_background_options
         )
+        # A Soldier Type can limit its Upbringings (Spartan II: Military only)
+        self.soldier_combo.currentIndexChanged.connect(
+            self.refresh_core_background_options
+        )
         self.human_combo.currentIndexChanged.connect(self.refresh_selection_options)
         self.guardian_combo.currentIndexChanged.connect(self.update_subclasses)
+        self.initial_character_setup_page.gm_darkness_connection_changed.connect(
+            self.set_gm_allows_darkness_connection
+        )
         self.generate_button.clicked.connect(self.generate_character)
         self.initial_character_setup_page.back_button.clicked.connect(
             lambda: self.pages.setCurrentWidget(self.version_and_expansions_page)
@@ -247,9 +266,12 @@ class MainWindow(
 
         self._creation_allocations = {code: 0 for code in CHAR_CODES}
         self._selected_soldier_skills = {}
+        self._selected_soldier_educations = {}
         self._outlier_characteristics = {}
         # {"upbringing"|"environment": {"name": str, "choices": [label, ...]}}
         self._background_choices = {}
+        # {"name": pack_name, "choices": [weapon name, ...]}
+        self._equipment_pack_choices = {}
         self._loaded_character_path = None
 
         self.update_soldier_types()
@@ -257,6 +279,18 @@ class MainWindow(
         self._build_outlier_tiles()
         self._build_equipment_tiles()
         self._refresh_initial_setup_options()
+
+    def open_xp_shop(self):
+        sheet = self.character_sheet
+        self.xp_shop_page.set_character(
+            sheet.character_data_for_save(), sheet.ruleset, sheet.game_data
+        )
+        self.pages.setCurrentWidget(self.xp_shop_page)
+
+    def apply_xp_shop(self, character):
+        sheet = self.character_sheet
+        sheet.set_character(character, sheet.ruleset, sheet.game_data)
+        self.pages.setCurrentWidget(sheet)
 
     def open_initial_setup_from_home(self):
         self.pages.setCurrentWidget(self.initial_character_setup_page)
@@ -280,10 +314,12 @@ class MainWindow(
         ]
 
     def _selected_outlier_names(self):
+        """Selected outliers, one entry per time taken (e.g. Robust twice)."""
         return [
             outlier["name"]
             for tile, outlier, _ in self.outlier_tiles
             if tile.isChecked()
+            for _ in range(self._outlier_times(outlier))
         ]
 
     @property
@@ -358,6 +394,11 @@ class MainWindow(
             if use_lns
             else [soldier_type]
         )
+        starting_educations = {}
+        for selected_type in selected_soldier_types:
+            starting_educations.update(
+                self._selected_soldier_educations.get(selected_type, {})
+            )
         skill_training = {}
         for selected_type in selected_soldier_types:
             for skill, bonus in self._selected_soldier_skills.get(
@@ -398,13 +439,16 @@ class MainWindow(
                     else None
                 ),
                 starting_experience=self.experience_input.value(),
+                starting_educations=starting_educations or None,
                 skill_training=skill_training or None,
             )
         except CreationCancelled:
             return
+        except BackgroundFloorError as error:
+            QMessageBox.warning(self, "Background Not Allowed", str(error))
+            return
 
         self.generated_character = char
-        self._pre_outlier_characteristics = char.characteristics.copy()
         self._pre_outlier_mythic_characteristics = (
             char.mythic_characteristics.copy()
         )
@@ -416,18 +460,18 @@ class MainWindow(
             if hasattr(self, attr):
                 delattr(self, attr)
         self._light_xp_spent = 0
+        self._equipment_pack_choices = {}
         self._selected_light_category = None
         self._selected_light_aspects = {}
         self._selected_light_powers = {}
         self._selected_light_supers = {}
-        for tile, _, _ in self.outlier_tiles:
-            tile.blockSignals(True)
-            tile.setChecked(False)
-            tile.blockSignals(False)
+        self._reset_outlier_tiles()
         for button, _ in self.specialization_tiles:
             button.blockSignals(True)
             button.setChecked(False)
             button.blockSignals(False)
+        # A Smart AI has no Specialization Pack, so that step is already done
+        self.update_specialization_selection()
 
         if use_lns:
             self._build_light_power_tiles()
@@ -439,6 +483,73 @@ class MainWindow(
 
         self._update_creation_point_display()
         self.pages.setCurrentWidget(self.creation_page)
+
+    # ---------------------------------------------------------
+    # Start over
+    # ---------------------------------------------------------
+    def discard_character_creation(self):
+        has_changes = (
+            self.experience_input.value() > 0
+            or self.selected_mode is not None
+            or hasattr(self, "generated_character")
+        )
+        if has_changes:
+            answer = QMessageBox.question(
+                self,
+                "Discard Character?",
+                "Discard all changes to this character and return to the main page?",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                QMessageBox.StandardButton.No,
+            )
+            if answer != QMessageBox.StandardButton.Yes:
+                return
+        self.reset_character_creator()
+        self.pages.setCurrentWidget(self.landing_page)
+
+    def reset_character_creator(self):
+        """Return every creator page to its state on a new window."""
+        # Drop the character and mode first: the combo and spin box signals
+        # fired below act on whichever of them still exist.
+        for attr in (
+            "generated_character",
+            "_generated_characteristics",
+            "_pre_outlier_mythic_characteristics",
+            "_pre_specialization_skills",
+            "_pre_specialization_abilities",
+        ):
+            if hasattr(self, attr):
+                delattr(self, attr)
+        self.version_and_expansions_page.clear_selection()
+        gm_checkbox = self.initial_character_setup_page.gm_darkness_checkbox
+        gm_checkbox.blockSignals(True)
+        gm_checkbox.setChecked(False)
+        gm_checkbox.blockSignals(False)
+
+        self._selected_core_soldier = None
+        self._background_choices = {}
+        self._outlier_characteristics = {}
+        self._equipment_pack_choices = {}
+        self._light_xp_spent = 0
+        self._selected_light_category = None
+        self._selected_light_aspects = {}
+        self._selected_light_powers = {}
+        self._selected_light_supers = {}
+
+        # With no mode selected, the refresh below leaves these untouched.
+        for combo in (
+            self.upbringing_combo,
+            self.environment_combo,
+            *self.lifestyle_combos,
+        ):
+            combo.clear()
+
+        self._clear_creation_points()
+        self.experience_input.setValue(0)
+        self._handle_version_selection_changed(None)
+        self._build_specialization_pack_tiles()
+        self.equipment_page.clear_selection()
+        self.update_equipment_selection()
+        self.initial_character_setup_page.select_category("soldier")
 
 
 # Backwards-compatible name for older imports.

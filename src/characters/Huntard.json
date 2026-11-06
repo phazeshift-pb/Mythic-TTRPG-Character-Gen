@@ -1,0 +1,333 @@
+{
+  "format_version": 1,
+  "ruleset": "Light & Sky",
+  "character": {
+    "name": "Huntard",
+    "soldier_type": "Hunter Class Soldier Type",
+    "characteristics": {
+      "STR": 40,
+      "TOU": 47,
+      "AGI": 48,
+      "WFR": 65,
+      "WFM": 35,
+      "INT": 25,
+      "PER": 25,
+      "CRG": 40,
+      "CHA": 25,
+      "LDR": 25
+    },
+    "mythic_characteristics": {
+      "STR": "+2",
+      "TOU": "+3",
+      "AGI": "+3"
+    },
+    "skills": {
+      "Gambling": 0,
+      "Athletics": 0,
+      "Cryptography": 0,
+      "Technology": 0,
+      "Stunting": 0,
+      "Survival": 0
+    },
+    "abilities": [
+      "Akimbo",
+      "Denial",
+      "Quickdraw"
+    ],
+    "upbringing": null,
+    "environment": null,
+    "lifestyle": null,
+    "lifestyle_results": [],
+    "wounds": 72,
+    "wounds_modifier": 0,
+    "fatigue": 0,
+    "rank": null,
+    "credits": 800,
+    "experience": 3025,
+    "starting_experience": 15000,
+    "experience_spent": 11975,
+    "experience_tier": 5,
+    "equipment": [],
+    "equipment_pack": null,
+    "armor": "Common Plasteel Armor Set",
+    "armor_variant": null,
+    "armor_bonus": {},
+    "armor_loot": {
+      "kind": "armor",
+      "material": "Plasteel",
+      "rarity": "Common",
+      "weight": "14.5",
+      "armor_values": {
+        "head": 18,
+        "arms": 19,
+        "chest": 20,
+        "legs": 19
+      },
+      "agility_modifier": 0,
+      "subtype": "Standard Plating",
+      "variant": "Concealable",
+      "perks": [
+        {
+          "name": "Light Reactor",
+          "description": "Killed Enemies will regain 1 Super Energy."
+        }
+      ],
+      "exotic_perk": null
+    },
+    "armor_equipped": true,
+    "weapons": [
+      {
+        "name": "Common Kinetic Heavy Grenade Launcher",
+        "quantity": 1,
+        "source": "light_and_sky_loot",
+        "loot": {
+          "kind": "weapon",
+          "weapon_type": "Heavy Grenade Launcher",
+          "rarity": "Common",
+          "element": "Kinetic",
+          "rate_of_fire": "Semi-Auto (2)",
+          "damage": "3D10",
+          "bonus_damage": "5",
+          "pierce": "11",
+          "range": "30m-90m",
+          "magazine": "8",
+          "reload": "Single-Load",
+          "tags": [
+            "TH",
+            "HW",
+            "UD"
+          ],
+          "ammo_type": "Heavy",
+          "special_rules": [
+            "Blast(6), Kill(2)",
+            "+10 to Hit"
+          ],
+          "perks": [],
+          "exotic_perk": null
+        }
+      },
+      {
+        "name": "Common Strand Pulse Rifle",
+        "quantity": 1,
+        "source": "light_and_sky_loot",
+        "loot": {
+          "kind": "weapon",
+          "weapon_type": "Pulse Rifle",
+          "rarity": "Common",
+          "element": "Strand",
+          "rate_of_fire": "Burst (2)",
+          "damage": "4D10",
+          "bonus_damage": "13",
+          "pierce": "13",
+          "range": "45m-775m",
+          "magazine": "12",
+          "reload": "7",
+          "tags": [
+            "TH",
+            "UD"
+          ],
+          "ammo_type": "Primary",
+          "special_rules": [
+            "Headshot",
+            "+10 to Hit"
+          ],
+          "perks": [
+            {
+              "name": "Butterfly",
+              "description": "After the Character makes an Aim Action, they will gain an additional Turn of the Aim Action's effects and benefits while still being able to move and make any other types of Actions. This lingering Aim Action can't be stacked or be turned into another type of Aim Action, such as a Half Aim being turned into a Full Aim during the additional Turn."
+            }
+          ],
+          "exotic_perk": null
+        }
+      },
+      {
+        "name": "Common Void Sniper Rifle",
+        "quantity": 1,
+        "source": "light_and_sky_loot",
+        "loot": {
+          "kind": "weapon",
+          "weapon_type": "Sniper Rifle",
+          "rarity": "Common",
+          "element": "Void",
+          "rate_of_fire": "Semi-Auto (1)",
+          "damage": "4D10",
+          "bonus_damage": "18",
+          "pierce": "12",
+          "range": "75m-1200m",
+          "magazine": "4",
+          "reload": "8",
+          "tags": [
+            "TH",
+            "UD"
+          ],
+          "ammo_type": "Special",
+          "special_rules": [
+            "Headshot",
+            "Kinetic",
+            "Long Barrel",
+            "+10 to Hit"
+          ],
+          "perks": [
+            {
+              "name": "Anti-Flinch",
+              "description": "The User makes a Toughness Test if Attacked while using Aim Actions. If successful, the Aim Action will stay active."
+            }
+          ],
+          "exotic_perk": null
+        }
+      }
+    ],
+    "connections": [
+      "Solar"
+    ],
+    "specialization_packs": [
+      "Duelist"
+    ],
+    "outliers": [
+      "Robust"
+    ],
+    "outlier_choices": {},
+    "support_points": 0,
+    "luck_available": 5,
+    "luck_total": 5,
+    "light_aspects": [
+      "Scorch"
+    ],
+    "light_abilities": [
+      "Light Weapon: Solar Heavy Knife",
+      "Celestial Fire"
+    ],
+    "light_grenades": [],
+    "supers": [
+      "Incinerator Snap"
+    ],
+    "light_weapons": [
+      {
+        "id": "690f86a9",
+        "name": "Light Weapon: Solar Heavy Knife",
+        "as_super": false,
+        "connection": "Solar",
+        "weapon": {
+          "key": "melee:Heavy Knife",
+          "name": "Heavy Knife",
+          "category": "Melee Weapon",
+          "group": "Knives, Daggers, Swords",
+          "cost_cr": 17,
+          "roll": null,
+          "row_index": null
+        },
+        "light_cost": 20,
+        "effects": [
+          {
+            "key": "universal:8",
+            "connection": "Universal",
+            "description": "The Character gains an additional Attack per Half Action that the weapon can make.",
+            "energy": 10,
+            "per": "",
+            "count": 1
+          }
+        ],
+        "energy_per_turn": 40,
+        "experience_cost": 500,
+        "stats": {
+          "weapon_type": "Knife",
+          "damage": "3D10",
+          "bonus_damage": "9 +Full Strength Modifier",
+          "pierce": "10 +Half Strength Modifier",
+          "warfare": "WFM",
+          "warfare_modifier": 3,
+          "tags": [
+            "PD",
+            "SD",
+            "OH"
+          ],
+          "special_rules": [
+            "Special Damage on 9 or 10"
+          ]
+        }
+      }
+    ],
+    "creation_experience": 15000,
+    "characteristic_advancements": {},
+    "educations": {},
+    "languages": [],
+    "weapon_training": [],
+    "faction_training": [],
+    "wound_upgrades": 0,
+    "augmentations": [],
+    "light_aspect_slots_purchased": 0,
+    "light_ability_slots_purchased": 0,
+    "xp_purchases": [],
+    "light_loadout": {
+      "aspects": [
+        "Scorch"
+      ],
+      "abilities": [
+        "Light Weapon: Solar Heavy Knife",
+        "Celestial Fire"
+      ],
+      "super": "Incinerator Snap",
+      "seen": [
+        "Scorch",
+        "Light Weapon: Solar Heavy Knife",
+        "Celestial Fire",
+        "Incinerator Snap"
+      ]
+    },
+    "light_energy": 100,
+    "super_energy": 100,
+    "damage_resistance_other": {
+      "legs": 1
+    },
+    "energy_shield_current": 125,
+    "medical_notes": "",
+    "character_notes": "",
+    "combat_notes": ""
+  },
+  "selections": {
+    "starting_xp": 15000,
+    "initial_setup": {
+      "human_soldier_type": "human_awoken",
+      "guardian_soldier_type": "hunter",
+      "subclass": "Gunslinger",
+      "connection": "Solar",
+      "gm_allows_darkness_connection": false,
+      "skill_training": {}
+    },
+    "creation_points": {
+      "option": "Base (85 points)",
+      "total": 85,
+      "allocations": {
+        "STR": 10,
+        "TOU": 17,
+        "AGI": 8,
+        "WFR": 20,
+        "WFM": 15,
+        "INT": 0,
+        "PER": 0,
+        "CRG": 15,
+        "CHA": 0,
+        "LDR": 0
+      }
+    },
+    "outliers": [
+      "Robust"
+    ],
+    "outlier_characteristics": {},
+    "specialization_packs": [
+      "Duelist"
+    ],
+    "equipment": {
+      "light_aspects": [
+        "Scorch"
+      ],
+      "light_abilities": [
+        "Light Weapon: Solar Heavy Knife",
+        "Celestial Fire"
+      ],
+      "supers": [
+        "Incinerator Snap"
+      ]
+    }
+  }
+}

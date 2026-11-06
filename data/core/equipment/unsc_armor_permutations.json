@@ -1,0 +1,699 @@
+{
+  "armor_permutations": {
+    "universal": [
+      {
+        "name": "CBRN",
+        "location": "Universal",
+        "hardpoints": 1,
+        "price": 25,
+        "description": "The CBRN Unit is a Chemical, biological, Radiological, and Nuclear Scanning system. This unit scans for dangerous chemicals and radioactive material, and any contaminant harmful to Human life. Scans up to 25 Meters out and can send read-outs to any human computer."
+      },
+      {
+        "name": "CNM",
+        "location": "Universal",
+        "hardpoints": 1,
+        "price": 25,
+        "description": "The Command Network Module (CNM) allows access to the UNSC or Insurrectionist Command and Control channels anywhere within the Solar System."
+      },
+      {
+        "name": "FSL",
+        "location": "Universal",
+        "hardpoints": 1,
+        "price": 25,
+        "description": "This Attachment adds a Tactical Flashlight to the armor. Lowers Darkness Penalties by +40 and lowers Low-Light Penalties by +10."
+      },
+      {
+        "name": "HUL",
+        "location": "Universal",
+        "hardpoints": 1,
+        "price": 25,
+        "description": "A Hardened Uplink Module capable of cutting through atmospheric interference and ECM and EMP interference. Can upload and communicate with UNSC technology up to 100,000 kilometers."
+      },
+      {
+        "name": "HULL[4x] Witchbranch",
+        "location": "Universal",
+        "hardpoints": 1,
+        "price": 65,
+        "description": "Witchbranch uses exploitation of embedded faults into UNSC and UEG computer hardware to give the Character a +20 Bonus to Cyber Warfare Actions. This only works on Human technology, which is then reduced to a +10 Bonus after the year 2558."
+      },
+      {
+        "name": "Magnetic Webbing",
+        "location": "Universal",
+        "hardpoints": 1,
+        "price": 15,
+        "description": "Magnetically attaches up to (X) Hard Case Pouches, Tactical Holsters, Pouches, and Cases onto the Body Location, where (X) is the Permutation Hardpoint Count of the Location. Secure and allows for easily moving from one body location to another as a Full Action."
+      },
+      {
+        "name": "Magnetized Weapon Holster",
+        "location": "Universal",
+        "hardpoints": 1,
+        "price": 11,
+        "description": "Holds Weapons with strong magnets. No chance of a weapon being lost or stolen when active."
+      },
+      {
+        "name": "RS",
+        "location": "Universal",
+        "hardpoints": 1,
+        "price": 25,
+        "description": "The RS (Remote Sensor) contains a Helmet Recorder with a variable Zoom Scope, from 2x to 20x magnification. Offers improved video quality and zooming capabilities and can store 1,000 hours."
+      },
+      {
+        "name": "Utility Webbing",
+        "location": "Universal",
+        "hardpoints": 1,
+        "price": 5,
+        "description": "Holds up to (X) Hard Case Pouches, Tactical Holsters, Pouches, and Cases onto the Body Location, where (X) is the Permutation Hardpoint Count of the Location. Only one can be used per Armor Location and is worn over other Permutations. Can only be used for the Body Location it was purchased for."
+      },
+      {
+        "name": "Weapon Holster",
+        "location": "Universal",
+        "hardpoints": 1,
+        "price": 2,
+        "description": "Holds weapons using simple latches."
+      }
+    ],
+    "helmet": [
+      {
+        "name": "B5D-0",
+        "location": "Head",
+        "hardpoints": 1,
+        "price": 5,
+        "description": "This Attachment adds a special IR lamp, IR Laser, and Night Vision Device to your helmet, allowing for half Penalties to be taken in Low-light and Darkness."
+      },
+      {
+        "name": "CNM/BNR Typhoon",
+        "location": "Head",
+        "hardpoints": 1,
+        "price": 100,
+        "description": "A 3D recording system designed for augmented reality playback. The Typhoon can record up to 100 hours of 3D recorded video up to 200 Meters out, which can be played back by the Typhoon as a hologram, or by any hologram display device. This unit records in a 3D radius around the User but can’t penetrate through walls, dense smoke, vehicles, or other Characters."
+      },
+      {
+        "name": "Erinyes Hymn",
+        "location": "Head",
+        "hardpoints": 3,
+        "price": 275,
+        "description": "The Erinyes Hymn is an advanced piloting assistance tool. When used while Piloting a Vehicle, the Erinyes Hymn will give the User a +20 Bonus to all Vehicle Maneuver and Stunting Tests. Failed Maneuver and Stunting Tests using this +20 Bonus deal 1D5 Damage to the Vehicle’s MOB Breakpoints ignoring Armor."
+      },
+      {
+        "name": "FCI-I-Proforma MK2 Heavy",
+        "location": "Head",
+        "hardpoints": 2,
+        "price": 100,
+        "description": "A heavy slab of protective armor designed to fit various UNSC helmets. The MK2 Heavy adds +5 Armor to the Helmet and can’t be used with other Permutations that increase the Helmet’s Armor. The MK2 Heavy also gives the Character a -10 Penalty to the Character’s Perception Characteristic when worn. Weighs +3 KG.",
+        "weight_kg": 3.0
+      },
+      {
+        "name": "Helmet Recorder",
+        "location": "Head",
+        "hardpoints": 1,
+        "price": 10,
+        "description": "Records every instance of what the Soldier sees. Able to store 1,900 hours of higher quality footage that is able to zoom in up to 10x before quality is lost."
+      },
+      {
+        "name": "HUL/BNR Origo [2]",
+        "location": "Head",
+        "hardpoints": 1,
+        "price": 65,
+        "description": "Origo [2] allows the Character to share UNSC and UEG information freely to any and all Covenant Battle Networks. Origo [2] may also receive information freely from any non-encrypted Covenant Battle Networks."
+      },
+      {
+        "name": "HUL-I/XFTREC Flamingo",
+        "location": "Head",
+        "hardpoints": 1,
+        "price": 85,
+        "description": "When active, the Flamingo will ignore all effects of EMP and other communication blocking when sending and receiving voice communication. Only works for the User."
+      },
+      {
+        "name": "LCX-20V1 SinoViet sight-Augmentation",
+        "location": "Head",
+        "hardpoints": 2,
+        "price": 280,
+        "description": "A large scanning unit that attaches to any enclosed helmet. Capable of highlighting any Character within 50 Meters and doubles the Character’s Perceptive Range and removes Penalties for firing at more than one target per Round."
+      },
+      {
+        "name": "MAUROS",
+        "location": "Head",
+        "hardpoints": 2,
+        "price": 125,
+        "description": "The MAUROS can only be attached to Helmets that aren’t “enclosed.” When attached, the helmet will be considered enclosed, The Helmet gains +4 Armor. Due to using a camera, EMP effects are treated as a Flashbang, visually. While used, the Character gains a +5 Bonus to Warfare and Evasion Tests as long as the Attack is made within Melee Reach for Melee Attacks or Close and Optimal Range for Ranged Attacks. Weighs +2.3 KG.",
+        "weight_kg": 2.3
+      },
+      {
+        "name": "MK12T2 CBRN Trailwatch",
+        "location": "Head",
+        "hardpoints": 1,
+        "price": 65,
+        "description": "Trailwatch will attach to a Rebreather Unit or an S90 Gas Mask, which will give the Character an extra 5 extra hours of Oxygen. When used without a Rebreather Unit or S90 Gas Mask, the Trailwatch will only offer 3 hours of Oxygen to the user."
+      },
+      {
+        "name": "MMC Filter",
+        "location": "Head",
+        "hardpoints": 2,
+        "price": 240,
+        "description": "An ultra-extended Nanomachine-Filtration Attachment that attach to Rebreathers and S90 Gas Masks. When used, adds +15 hours of Oxygen to the Rebreather."
+      },
+      {
+        "name": "Rebreather Unit",
+        "location": "Head",
+        "hardpoints": 1,
+        "price": 25,
+        "description": "Rebreather Unit that acts as an S90 Gas Mask. Attaches to the jaw of the helmet, doubling the Armor’s Oxygen Supply. Other UNSC BDUs, when used with this, have a 90-minute Oxygen supply."
+      },
+      {
+        "name": "RS[3] Sabertooth",
+        "location": "Head",
+        "hardpoints": 2,
+        "price": 125,
+        "description": "A remote Sensor Device capable of showing the general direction of any wireless and transmission devices within 20 Meters. This includes Mjolnir Armor, radios, wifi/wireless devices, and more. When used alongside a Smart AI, the distance is doubled to 40 Meters."
+      },
+      {
+        "name": "RS[3] Wolftooth",
+        "location": "Head",
+        "hardpoints": 1,
+        "price": 90,
+        "description": "Wolftooth is a sensor platform that halves all Penalties to Hearing-based Perception Tests and also gives a +10 Bonus to Opposing Camouflage and Athletics Tests for listening for people sneaking."
+      },
+      {
+        "name": "RS[3x]/V3 Latchlock",
+        "location": "Head",
+        "hardpoints": 1,
+        "price": 100,
+        "description": "The V3 Latchlock is a Passive Threat Warning and Signal Direction Device (PTSD Device). The V3 Latchlock will warn the User if a Weapon with the Homing Special Rule is being directed towards them. If the User is able to freely use Evasion, the Weapons being used against them will lose the benefits of Homing Special Rule. If the Character can’t currently Evade, then the Weapons still gain its benefits."
+      },
+      {
+        "name": "Signaltech Deepeye",
+        "location": "Head",
+        "hardpoints": 1,
+        "price": 145,
+        "description": "Signaltech Deepeye identifies the composition and material of an object, vehicle, or structure, and then gives a readout to the User of the current Breakpoints. This takes a Full Action."
+      },
+      {
+        "name": "TAC/Moonglow",
+        "location": "Head",
+        "hardpoints": 1,
+        "price": 200,
+        "description": "A Post-War BIOS upgrade for standard UNSC BDU Helmets. Gives the User access to VISR."
+      },
+      {
+        "name": "TAS/NETMOON",
+        "location": "Head",
+        "hardpoints": 2,
+        "price": 125,
+        "description": "Netmoon is a highly advanced tracking and aiming system. Netmoon doubles the Character’s Perceptive Range. When used in Melee Combat, the Character gains a -5 Penalty To Hit."
+      },
+      {
+        "name": "TAS/ORCUS",
+        "location": "Head",
+        "hardpoints": 2,
+        "price": 225,
+        "description": "ORCUS is an advanced scanning system that encloses the helmet of the Character while also offering the ORCUS scanning system. This gives the Character +1 Helmet Armor. Due to using a camera, EMP (X) effects are treated as a Flashbang (X), visually. ORCUS can scan Characters and Vehicles as a Full Action and store all information possible. ORCUS will attempt to scan and save face, voice, IFF Tags, and medical statistics of Characters. If the IFF Tag can be scanned, it will also store the Character’s Name and possible Rank. If the Character does not speak, no voice can be stored. If used as an Extended two Full Actions, ORCUS will also store all Wound, Special Damage, Augmentations, and Environmental Effects the Character may be suffering from. At any point the Character is seen again, this information is updated. Weighs 1.4 KG.",
+        "weight_kg": 1.4
+      },
+      {
+        "name": "TAS/PATTON",
+        "location": "Head",
+        "hardpoints": 1,
+        "price": 140,
+        "description": "The PATTON is a real-time targeting and information collection system that can be used as a Full Action. When used, it will scan an intended Target Character or Vehicle and send this information to any allied Vehicle using the VIC/PATTON. Allied Vehicles that receive this targeting information are given a +20 To Hit that Target. The TAS/PATTON comes with one VIC/PATTON Module that attaches to a Vehicle and gives any Gunner or Pilot Weapon the To Hit benefit. It costs 60 cR for more VIC/PATTON Modules. The Bonus To Hit will only last until the beginning of the TAS/PATTON User’s next Turn."
+      },
+      {
+        "name": "TAS[2] Patternwolf",
+        "location": "Head",
+        "hardpoints": 3,
+        "price": 190,
+        "description": "Once activated as a Half Action, the Patternwolf will run for 4 Full Actions, allowing the User to ignore all Penalties for To Hit and Perception Tests made within the Character’s Perceptive Range. Any Failed To Hit Test will automatically Succeed with 0 Degrees of Success. The Character will automatically succeed Tests to spot Camouflaged Characters and Vehicles and will hear Sneaking Characters within the Character’s Perceptive Range. The Character will hear sneaking Characters within double the Character’s Perceptive Modifier in Meters. Once the 4 Full Actions are over, the Character will suffer 6 Full Actions of the following Penalties: The Character will take -30 Penalties to all Perception Tests, -10 Penalties to all Intellect and Leadership Tests, and -20 Penalties to all Warfare Melee and Warfare Range Tests. The Patternwolf takes 6 Full Actions to recharge."
+      },
+      {
+        "name": "UA",
+        "location": "Head",
+        "hardpoints": 2,
+        "price": 25,
+        "description": "The UA Attachment Permutation offers extra armor to the Helmet. This gives +1 Armor to the Head. Weighs +1 KG. This Permutation can be used with any other Helmet Attachments. Can fit any 1 Hardpoint Head Permutation on top that doesn’t take up more Hardpoints.",
+        "weight_kg": 1.0
+      },
+      {
+        "name": "UA/ILLUS",
+        "location": "Head",
+        "hardpoints": 1,
+        "price": 75,
+        "description": "An extended UA Attachment Permutation that encloses the helmet and gives +3 Armor to the Head. Due to using a camera, EMP (X) effects are treated as a Flashbang (X), visually. Can fit any 1 Hardpoint Head Permutation on top that doesn’t take up further Hardpoints. Weighs +2.4 KG.",
+        "weight_kg": 2.4
+      }
+    ],
+    "legs": [
+      {
+        "name": "Mobility-Boosting Exo-Lining",
+        "location": "Leg",
+        "hardpoints": 1,
+        "price": 18,
+        "description": "A small, powered lining across the legs and lower back that hold the weight of itself and the Armor. Gives a +10 Bonus to Agility and weighs 7.9 kg. This can’t be used with Powered armor such as Mjolnir. 2 each Leg 120 cR Tactical Thigh Rig Thigh armored carrying device with an Armor Rating of 18. Carries 3 Units. The Thigh Rig has 50 Breakpoints. Does not stack Armor Rating with armor worn by the User.",
+        "weight_kg": 7.9
+      },
+      {
+        "name": "Tactical/Autoload",
+        "location": "Leg",
+        "hardpoints": 2,
+        "price": 90,
+        "description": "This set of Permutations adds an autoloader rig to the thigh. This allows the Character to store 5 Mags in each, allowing for one handed reloading on that side of the body. When used, the autoloader reloads weapons at half of their Base Reload Time, and a Magazine or Clip is used. Can’t be used with Heavy Weapons or weapons with Belts."
+      },
+      {
+        "name": "Tactical/Hard Case",
+        "location": "Leg",
+        "hardpoints": 1,
+        "price": 20,
+        "description": "Adds an Extra-Large Tactical Hard Case to the outer thigh. Able to store computing information, and has an auto-charging station built in. Room for 5 Units."
+      },
+      {
+        "name": "Tactical/Softcase",
+        "location": "Leg",
+        "hardpoints": 1,
+        "price": 10,
+        "description": "Adds an Extra-Large Tactical Softcase to the outer thigh. Able to store computing information, and has an auto-charging station built in. Room for 5 Units."
+      },
+      {
+        "name": "Tactical/Trauma Kit",
+        "location": "Leg",
+        "hardpoints": 1,
+        "price": 20,
+        "description": "Specialized storage for medical equipment. Holds two cans of Bio-Foam and a single Self-Adhering Battle Dressing."
+      },
+      {
+        "name": "Tactile Bracers",
+        "location": "Leg",
+        "hardpoints": 1,
+        "price": 20,
+        "description": "Bracers that add 4 kg to the Armor’s weight and gives the Character +1 Mythic Agility to figuring Movement Speed and adds +2 to Agility-based Initiative. 2 each Leg 130 cR UA/Chobham This adds a slab of Chobham Composite Armor to the thigh. +2 Armor when struck in the Thigh Sublocation."
+      },
+      {
+        "name": "UA/NxRA",
+        "location": "Leg",
+        "hardpoints": 1,
+        "price": 10,
+        "description": "This Permutation adds a plate of non-explosive reactive armor to the thigh. +1 Armor when struck in the Thigh Sublocation."
+      }
+    ],
+    "full_body": [
+      {
+        "name": "ASP-PR",
+        "location": "All",
+        "hardpoints": 2,
+        "price": 450,
+        "description": "A semi-powered adaptive photo-reactive panel (sometimes pronounced as Aspir) system that covers the armor of choice, completely. This Permutation takes up a majority of the Hardpoints of the armor and takes an armored Hard Case Rucksack to hold a power source if used on a non-powered set of armor. This weighs 6.8 kg. Whenever active, the ASP-PR gives the user a constant +40 to Camouflage Tests. This unit can’t be used with any device that has shielding or other active/electronic camouflage-based equipment and armor, else it will short out and break completely.",
+        "weight_kg": 6.8
+      },
+      {
+        "name": "Enclosed Suit",
+        "location": "Each Leg",
+        "hardpoints": 1,
+        "price": 120,
+        "description": "This permutation encloses the Character’s Armor, allowing it to hold 30 minutes of oxygen and assist in reducing Radiation Level by 3. Enclosing the Character’s Armor does not take any Hardpoints. -- 45 cR Freefall Assistance Microskeleton Also known as the FAM Unit, is a mechanical series of shock absorbers and minor exoskeletal systems that absorb Falling Damage. When used, the Character only takes 1/4th of falling damage if they land on their feet. 2 Chest,"
+      },
+      {
+        "name": "HWS Exoskeleton",
+        "location": "Each Arm",
+        "hardpoints": 1,
+        "price": 100,
+        "description": "This permutation is a minor exoskeleton that holds the weight of the weapon the Character is currently holding, up to 90 kg. This includes any tanks or ammo belts currently in use for the weapon. Gives a -10 Penalty to Agility Tests when worn. 2 Chest, 2 Each Leg,"
+      },
+      {
+        "name": "Impact Reduction Undersuit",
+        "location": "All",
+        "hardpoints": 1,
+        "price": 110,
+        "description": "Reduces the Pierce from Attacks without the Cauterize, Penetrating, and Hardlight Special Rule that hit the User by 4. The Armor will always be considered to have an Armor of 1 against these Attacks, even if the Pierce is higher than the Armor of the Location struck. Can’t be used with other Undersuits. Increases the Armor’s weight by 10 kg."
+      },
+      {
+        "name": "Kevlar Undersuit",
+        "location": "All",
+        "hardpoints": 1,
+        "price": 60,
+        "description": "Offers protection from Abilities, Special Rules, and Traits that reduce Armor before Pierce is figured. Any Attack that reduces Armor or attacks unarmored Locations will count as having 13 Armor. This does not protect against a Weapon’s Pierce. Can’t be used with other Undersuits. Increases the Armor’s weight by 10 kg."
+      },
+      {
+        "name": "Thermal Coating",
+        "location": "All",
+        "hardpoints": 1,
+        "price": 110,
+        "description": "Hides the Character from thermal scanners and thermal tools, removing the Bonus they gain or Penalties they cause. -- 65 cR Thermal Dampener Undersuit Reduces the Pierce from Attacks against the User with the Cauterize and Hardlight Special Rule by 4. The Armor will always be considered to have an Armor of 1 against these Attacks, even if the Pierce is higher than the Armor of the Location struck. Can’t be used with other Undersuits. Increases the Armor’s weight by 10 kg."
+      }
+    ],
+    "arms": [
+      {
+        "name": "UU-PPE",
+        "location": "Arm",
+        "hardpoints": 1,
+        "price": 5,
+        "description": "Contains a specialized layer of Titanium-A composite plating used for Demolitions. Ignores Kill Radius damage increase and gain a -20 Penalty to Agility. Increases armor’s weight by 34 kg. 2 Head, 5 Chest, 1 Each Arm And Leg 100 cR Breacher This Permutation adds a bandolier to the Forearm that holds 6 Shotgun Shells, 10 Rifle Rounds, or 3 Sniper Rounds."
+      },
+      {
+        "name": "Caskloom Gauntlet",
+        "location": "Arm",
+        "hardpoints": 1,
+        "price": 95,
+        "description": "This gauntlet is a reverse-engineered Point Defense Gauntlet that shares the same stats as the Covenant variant."
+      },
+      {
+        "name": "Deaconcrest Shield Node",
+        "location": "Each Arm",
+        "hardpoints": 1,
+        "price": 195,
+        "description": "A small set of gauntlets that increase or gives Energy Shields to a user. If increasing Energy Shields, the Deaconcrest will give +25 Shield Integrity. If used on a Character who has no Energy Shields, it will give 25 Shield Integrity, 2 Shield Recharge, and 15 Recharge Delay."
+      },
+      {
+        "name": "Deitywalk",
+        "location": "Arm",
+        "hardpoints": 1,
+        "price": 75,
+        "description": "The Deitywalk is a gauntlet that, when pointed towards any type of Energy Shield within 50 Meters, will tell the user its Shield Integrity, Shield Recharge, and Recharge Delay."
+      },
+      {
+        "name": "Grappleshot",
+        "location": "Arm",
+        "hardpoints": 1,
+        "price": 70,
+        "description": "A powerful Post-War nanotube rope launching device with a magnetic latching tip. The magnetic segment can be activated and deactivated as a Reaction, and can attach to any Forerunner, UNSC, and Covenant metal. Heavier objects will draw the User towards it, while Users will pull lighter objects to them. It takes a Half Action to use the Grappling Hook and the Hook can travel 20 Meters out. The speed at which the Grappling Hook can pull objects is (X), where (X) is 10 Meters per Half Action. (X) can be increased by the Character’s Strength Modifier and Mythic Strength, or Agility Modifier and Mythic Agility if the User being pulled. This can’t be used alongside any other Movement Action except for Jump, Leap, Swim, and Climb Action. To break free of the Grappling Hook, the Character must make a -40 Strength Test at a Half Action. The Grappleshot may be used alongside a single Charge Melee Action that doubles the distance moved when figuring Pierce from the Charge Attack."
+      },
+      {
+        "name": "Jump Jet Restraints",
+        "location": "Each Arm",
+        "hardpoints": 1,
+        "price": 100,
+        "description": "This Shoulder-mounted Permutation improves midair maneuverability with specialized mini-jump jets and restraints. Gives the user +10 to Evasion, Maneuvering, and Stunting using a jetpack. Can’t be stacked with Sniper Pauldrons."
+      },
+      {
+        "name": "Large Pauldrons",
+        "location": "Each Arm",
+        "hardpoints": 1,
+        "price": 75,
+        "description": "The Large Pauldron Permutation is designed to increase protection offered to the Shoulder, Neck, and Head Locations by +2 Armor. Only offers Protection to Neck and Head Locations if struck from the side."
+      },
+      {
+        "name": "M90B PDM Gauntlet",
+        "location": "Arm",
+        "hardpoints": 1,
+        "price": 225,
+        "description": "A Gauntlet that holds 3 M90B PDM Explosive Disk Mines. The Gauntlet takes a Half Action to fire off one PDM Mine, which detonates if it detects any non-friendly IFF tags within 3 Meters. The PDM Mine detonates with the strength of an M9 Dual-Purpose Grenade, but only has a Blast and Kill of (4). Costs 9 cR for 1 M90B PDM Explosive Disk Mine."
+      },
+      {
+        "name": "MK2 Rift-Class Gauntlets",
+        "location": "Each Arm",
+        "hardpoints": 1,
+        "price": 120,
+        "description": "Gauntlets that give +(X) Mythic Strength for figuring Melee Damage and Grapple Combat. (X) is anywhere from 1 to 4 and can be set by the user as a Half Action."
+      },
+      {
+        "name": "Repulsor",
+        "location": "Arm",
+        "hardpoints": 1,
+        "price": 130,
+        "description": "A Post-War permutation that adds a strong pulse emitting panel to the character’s arm. When activated, it allows for the User to send any projectile attack back at the Opponent, or to throw off their Melee Attacks. Used exactly like a physical Shield, the Character must first block the Attack being made. The Repulsor only covers one Sublocation of the Character. If Successful, a ranged attack is reflected back dealing the Damage to the Opponent at half Pierce. Melee attacks are thrown aside causing the Opponent to have a -10 Penalty to their next Melee Attack if made in the same Turn. Repulsor can also be aimed at the ground to double the Character’s Characteristic Modifier when figuring Jump and Leap Actions, instead of reflecting an Attack. Activates as a Free Action, reflects one Half Action worth of Attacks, and must then Recharge for 10 Half Actions. Repulsed ranged attacks may be evaded by the Opponent."
+      },
+      {
+        "name": "Rift-Class Gauntlets",
+        "location": "Each Arm",
+        "hardpoints": 1,
+        "price": 70,
+        "description": "Gauntlets that give +2 Mythic Strength for figuring Melee Damage and Grapple Combat."
+      },
+      {
+        "name": "Shockbrace",
+        "location": "Arm",
+        "hardpoints": 1,
+        "price": 200,
+        "description": "A large Gauntlet worn on one Arm that emits a powerful neurological shock on contact. If a Successful unarmed Punch lands with the Shockbrace, the Opponent will also take Electrified (6) Special Rule. If grabbed without a Melee Attack, Character will only take Electrified (3) Special Rule."
+      },
+      {
+        "name": "Shoulder Angel",
+        "location": "Each Arm",
+        "hardpoints": 1,
+        "price": 120,
+        "description": "The Shoulder Angel is a shoulder-mounted Lancet Micro Missile with a Magazine of 5. Firing the Shoulder Angel is at a -60 Penalty To Hit unless VISR or any type of UNSC targeting systems are used."
+      },
+      {
+        "name": "Sniper Pauldrons",
+        "location": "Arm",
+        "hardpoints": 1,
+        "price": 20,
+        "description": "The Sniper Permutation adds storage space for 10 Rifle Rounds, or 6 Shotgun Shells, or 3 Sniper Rounds. Can’t be stacked with Jump Jet Restraints."
+      },
+      {
+        "name": "Tactical/Tacpad",
+        "location": "Arm",
+        "hardpoints": 1,
+        "price": 70,
+        "description": "A wrist mounted armored Datapad or TacPad. Striking this counts as striking the arm armor of the Arm location."
+      },
+      {
+        "name": "Tactical/UGPS",
+        "location": "Arm",
+        "hardpoints": 1,
+        "price": 30,
+        "description": "Adds a Universal GPS System in a reinforced housing to the wrist. Striking the UGPS counts as having armor of the Arm Location."
+      },
+      {
+        "name": "UA/Bracer",
+        "location": "Arm",
+        "hardpoints": 1,
+        "price": 10,
+        "description": "Extra armor is added to the forearms. +1 Armor when struck in the Forearm Sublocation."
+      }
+    ],
+    "chest": [
+      {
+        "name": "AAP/Granit",
+        "location": "Chest",
+        "hardpoints": 2,
+        "price": 20,
+        "description": "A Magazine Quickdraw device that allows the user to Quickdraw one of 3 Magazines that can be attached to the chest."
+      },
+      {
+        "name": "Assault/Commando",
+        "location": "Chest",
+        "hardpoints": 3,
+        "price": 100,
+        "description": "The Commando Permutation adds an extreme-range Radio Transmitter with 50,000 kilometer distance and a Tactical Hard Case. This also adds a large Tactical Softcase backpack on the back."
+      },
+      {
+        "name": "Assault/Sapper",
+        "location": "Chest",
+        "hardpoints": 4,
+        "price": 110,
+        "description": "This Permutation adds an additional 10 40mm Grenades or Hand Grenades to be stored. Can be swapped out with a variant that contains four Hard Cases (two on each side)."
+      },
+      {
+        "name": "Collar/Breacher",
+        "location": "Chest",
+        "hardpoints": 3,
+        "price": 80,
+        "description": "This armor variant addition adds a heavy collar to the chestplate and gives room to store and quickdraw 7 Shotgun Shells. +1 Armor for the Chest, and the Neck and Mouth Sublocations."
+      },
+      {
+        "name": "Collar/Grenadier",
+        "location": "Chest",
+        "hardpoints": 5,
+        "price": 250,
+        "description": "This armor Permutation was the original testbed for Mjolnir Shield Technology, which has been updated to increase the shielding of Mjolnir armors. This Permutation gives +25 to the maximum Energy Shield Strength. Only usable with variants that do not give a Bonus to a Shield’s Strength, Delay, or Recharge."
+      },
+      {
+        "name": "Docking Cable",
+        "location": "Chest",
+        "hardpoints": 1,
+        "price": 30,
+        "description": "This additive is placed on the lower back of the armor near the waist that holds a tether cable used to not drift away in vacuum and zero gravity. This cable is able to withstand weights of up to 12,000kg, and is stackable with any other Lower Back Permutation."
+      },
+      {
+        "name": "HP/Halo",
+        "location": "Chest",
+        "hardpoints": 5,
+        "price": 220,
+        "description": "Deployment equipment specialty that adds two plates of Titanium-A over the standard armor as well as a venting shaft underneath the plating. +20 to parachute and jump-gear use and adds storage for 10 40mm Grenades or Hand Grenades."
+      },
+      {
+        "name": "HP/Parafoil",
+        "location": "Chest",
+        "hardpoints": 1,
+        "price": 20,
+        "description": "This chest piece has two hardpoints for supporting suspenders that are used to attach to the G-25 PAS Parafoil, or to anything else you can imagine."
+      },
+      {
+        "name": "Malachit Plate",
+        "location": "Chest",
+        "hardpoints": 3,
+        "price": 385,
+        "description": "Melee Attacks that strike the Chest will reduce the Pierce of the Attack by half."
+      },
+      {
+        "name": "NERA/APS",
+        "location": "Chest",
+        "hardpoints": 3,
+        "price": 390,
+        "description": "The first 3 Attacks that strike the Chest will halve the Damage rolled and the Pierce of the Attack. Each of the charges for this Permutation can be replaced for 12 cR between missions."
+      },
+      {
+        "name": "NERA/SOFAS",
+        "location": "Chest",
+        "hardpoints": 3,
+        "price": 385,
+        "description": "The first 2 Attacks that strike the Chest will deal no Damage to the Character’s Wounds unless the Attack has the Kinetic or Penetrating Special Rule. Each of the charges for this Permutation an be replaced for 12 cR between missions."
+      },
+      {
+        "name": "PRO TEK Second Chance",
+        "location": "Chest",
+        "hardpoints": 4,
+        "price": 100,
+        "description": "The PRO TEK Second Chance is a Biofoam and Medigel storage unit that is placed on the back and chest of the User. As a Full Action, the Second Chance can refill an emptied Biofoam container and as a Half Action, the Second Chance can refill an emptied Medigel container. The Second Chance can’t use its Biofoam or Medigel on themselves or other Characters. The Second Chance holds 10 Biofoam canisters worth of material and 20 Medigel worth of material. It costs 8 cR to refill each charge of Biofoam material and 3 cR for each charge of Medigel material."
+      },
+      {
+        "name": "Relikt Cuirass",
+        "location": "Chest",
+        "hardpoints": 6,
+        "price": 400,
+        "description": "Contains a specialized layer of Titanium-A composite plating used for Demolitions. Increases the Chest Armor by +14. Each Attack that strikes the Chest will reduce the increased Armor by 2. Increases armor’s weight by 34 kg."
+      },
+      {
+        "name": "Ringeck",
+        "location": "Chest",
+        "hardpoints": 3,
+        "price": 365,
+        "description": "Ringeck is able to calculate Energy Shields and repurpose the varying levels of protection based on Body Location. Ringeck can only be used on Armor that has Energy Shields. As long as Ringeck is active, a chosen Body Location is immune to the Kinetic and Penetrating Special Rules. If struck by Blast and the selected protected Body Location is struck as well as other Locations, this benefit is still gained. The protected Body Location can be changed as a Half Action once per Turn."
+      },
+      {
+        "name": "Rucksack",
+        "location": "Chest",
+        "hardpoints": 2,
+        "price": 40,
+        "description": "An armored M/LBE Hard Case armored backpack. Has 20 Armor."
+      },
+      {
+        "name": "Shield Rapid Effect System",
+        "location": "Chest",
+        "hardpoints": 4,
+        "price": 295,
+        "description": "The Shield Rapid Effect System is a specialized post-war electromagnetic field generator that attempts to use the Armor’s Energy Shields to reflect or dissipate Plasma-based Attacks. As long as the Shield Rapid Effect System is activated, the Energy Shield has a 20% chance to reflect slower-moving plasma and dissipate fast-moving plasma Attacks. This is only rolled if an Evasion Test was failed. Each time a Plasma-based Attack is reflected or dissipated, the Armor’s Shield Integrity is reduced by 20. If the Shield Integrity is below 20, it can’t reflect or dissipate any incoming Attacks."
+      },
+      {
+        "name": "TAC/Aegis Puck",
+        "location": "Chest",
+        "hardpoints": 5,
+        "price": 155,
+        "description": "The Aegis Puck can generate a minor Energy Shield with 30 Shield Integrity, a Delay of 3, and 15 Recharge. The Aegis Puck takes a Half Action to activate and can’t be activated if another Energy Shield is active. At any point another Energy Shield is activated on the user, the Aegis Puck is disabled and can’t recharge and any delay is reset."
+      },
+      {
+        "name": "TAC/Laceweb TRM Core",
+        "location": "Chest",
+        "hardpoints": 4,
+        "price": 320,
+        "description": "A self-contained Forerunner Node that is able to scan for and trace any Forerunner technology within 30 Meters. The Laceweb can interact and connect to any Forerunner device within half a Meter of the Character. It will also warn the user if any Sentinels or Prometheans have come within its radius and the direction they are coming from."
+      },
+      {
+        "name": "Tactical/LRP",
+        "location": "Chest",
+        "hardpoints": 3,
+        "price": 60,
+        "description": "Designed to increase combat efficiency of Soldiers, this adds three rectangular Tactical Hard Cases to the Abdomen."
+      },
+      {
+        "name": "Tactical/Patrol",
+        "location": "Chest",
+        "hardpoints": 0,
+        "price": 30,
+        "description": "When stealth is required, everything counts. This Permutation adds a Ghillie Cloak to the armor. Can be used in addition to any other Chest and Back Permutations"
+      },
+      {
+        "name": "Tactical/Recon",
+        "location": "Chest",
+        "hardpoints": 4,
+        "price": 60,
+        "description": "Intended for longer duration covert operations. This Permutation adds six Tactical Softcases across the Chest piece."
+      },
+      {
+        "name": "Tactical/Softcase",
+        "location": "Chest",
+        "hardpoints": 1,
+        "price": 10,
+        "description": "This Large Tactical Softcase can hold up to 7 Magazines, grenades, or the size equivalent."
+      },
+      {
+        "name": "TIGERPLATE",
+        "location": "Chest",
+        "hardpoints": 3,
+        "price": 325,
+        "description": "TIGERPLATE is a Post-War permutation that will allow the Armor’s Energy Shields to ignore the EMP Special Rule as long as the EMP (X) does not surpass 12."
+      },
+      {
+        "name": "TSA UA/Counterassault",
+        "location": "Chest",
+        "hardpoints": 2,
+        "price": 450,
+        "description": "Attacks that strike the Chest will ignore the Cauterize Special Rule. Post-War only."
+      },
+      {
+        "name": "UA/Counterassault",
+        "location": "Chest",
+        "hardpoints": 5,
+        "price": 80,
+        "description": "This Permutation adds an armored plate with two Tactical Hard Cases over the abdomen of the armor. Gives +3 Chest Armor. Weighs 3kg.",
+        "weight_kg": 3.0
+      },
+      {
+        "name": "UA/Base Defense",
+        "location": "Chest",
+        "hardpoints": 5,
+        "price": 80,
+        "description": "Allows for extra storage for 2 40mm Grenades or Hand Grenades and gives +1 Armor to the Chest. Weighs 3kg.",
+        "weight_kg": 3.0
+      },
+      {
+        "name": "UA/Multi-Threat",
+        "location": "Chest",
+        "hardpoints": 5,
+        "price": 110,
+        "description": "This dangerous addition adds storage for 10 40mm Grenades or Hand Grenades and adds +1 to the Chest Armor. Weighs 4kg.",
+        "weight_kg": 4.0
+      },
+      {
+        "name": "UA/ODST",
+        "location": "Chest",
+        "hardpoints": 1,
+        "price": 80,
+        "description": "This Permutation adds an armored plating of an ODST BDU over the top plate. +2 Chest Armor, weighs 4kg. If used with ODST BDUs or Mjolnir Armor, it only gives +1 to Chest Armor.",
+        "weight_kg": 4.0
+      },
+      {
+        "name": "UA/SIMA-Alpha",
+        "location": "Chest",
+        "hardpoints": 6,
+        "price": 300,
+        "description": "This Permutation gives +50 to the maximum Energy Shield Strength. Only usable with variants that do not give a Bonus to a Shield’s Strength, Delay, or Recharge. Post-War only."
+      },
+      {
+        "name": "UTIL/project RA ZPEC",
+        "location": "Chest",
+        "hardpoints": 5,
+        "price": 500,
+        "description": "A specialized Forerunner Zero-Point Energy Cell unit that attaches to the front and back. When active, the ZPEC gives +10 Armor to the Chest Location and can only be active for 6 Rounds. Once deactivated, it takes 12 Rounds to recharge. If the Armor the ZPEC is attached to has Energy Shields, the Energy Shields can be converted into the ZPEC, giving the ZPEC 1 more Round to be active or to reduce the recharge by 1 Round."
+      },
+      {
+        "name": "Voltspark Hub",
+        "location": "Chest",
+        "hardpoints": 4,
+        "price": 265,
+        "description": "The Voltspark Hub is capable of recharging spent UNSC/Grindel Batteries within 1 hour. The Hub can also recharge or power human electronics as long as they do not take up immense amount of power, like a vehicle or powerful devices."
+      },
+      {
+        "name": "X800 NxRA Electromagnetic Shielding",
+        "location": "Chest",
+        "hardpoints": 4,
+        "price": 850,
+        "description": "This Post-War testbed system attempts to use the Armor’s Energy Shield to bypass Cauterize, Hardlight, Penetrating, and Kinetic Special Rules. At the cost of 15 Shield Integrity, each Attack that has any of these Special Rules will lose it if it strikes the Character. Each time one of these Attacks loses any amount of these Special Rules, the Shield Integrity will be reduced by 15. If the Shield Integrity is below 15, it can’t remove these Special Rules."
+      }
+    ]
+  },
+  "permutation_hardpoints": {
+    "head": 3,
+    "chest": 6,
+    "arms": "2 per Arm",
+    "legs": "3 per Leg"
+  },
+  "citation": "Mythic 7.0 CU1, Armor Permutations, pp. 179-184"
+}

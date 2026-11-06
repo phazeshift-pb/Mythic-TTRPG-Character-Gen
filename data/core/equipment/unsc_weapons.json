@@ -1,0 +1,3409 @@
+{
+  "unsc_weapons": {
+    "pistols": [
+      {
+        "name": "M4D Personal Defense Weapon System",
+        "nickname": "M40",
+        "faction": "UNSC",
+        "weapon_type": "Pistol",
+        "rate_of_fire": "Semi-Auto (2)",
+        "weight_kg": 1.5,
+        "damage": "3D10",
+        "bonus_damage": "10",
+        "pierce": 4,
+        "range": "20m-100m",
+        "magazine": 6,
+        "magazine_type": "Magazine",
+        "reload": "4 Half Actions",
+        "ammunition": "12.7x40mm",
+        "price": 20,
+        "tags": [
+          "I",
+          "UD",
+          "OH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "description": "Headshot Special Rule. Black Polymer finish. The price of this weapon is halved for Insurrectionists during the year 2540 and later."
+      },
+      {
+        "name": "SAS-10",
+        "nickname": "SAS",
+        "faction": "UNSC",
+        "weapon_type": "Pistol",
+        "rate_of_fire": "Semi-Auto (2), Auto (6)",
+        "weight_kg": 1.8,
+        "damage": "3D10",
+        "bonus_damage": "5",
+        "pierce": 5,
+        "range": "25m-100m",
+        "magazine": 14,
+        "magazine_type": "Magazine",
+        "reload": "4 Half Actions",
+        "ammunition": "10x25mm",
+        "price": 55,
+        "tags": [
+          "I",
+          "UD",
+          "DW"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "comes_with": [
+          "Built-in SS-M 49 Sound Suppressor",
+          "Built-in SLS/V 5B"
+        ],
+        "description": "Headshot Special Rule. -5 Penalty To Hit only when firing in Automatic mode. Comes with: Built-in SS-M 49 Sound Suppressor, Built-in SLS/V 5B. Black Polymer finish."
+      },
+      {
+        "name": "MK50 Sidekick",
+        "nickname": "Sidekick",
+        "faction": "UNSC",
+        "weapon_type": "Pistol",
+        "rate_of_fire": "Semi-Auto (3)",
+        "weight_kg": 1.3,
+        "damage": "3D10",
+        "bonus_damage": "6",
+        "pierce": 6,
+        "range": "50m-210m",
+        "magazine": 12,
+        "magazine_type": "Magazine",
+        "reload": "4 Half Actions",
+        "ammunition": "10x31mm",
+        "price": 34,
+        "tags": [
+          "UD",
+          "DW"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "description": "Headshot Special Rule. Black Polymer finish."
+      },
+      {
+        "name": "M6A Personal Defense Weapon System",
+        "nickname": "M6 Civ",
+        "faction": "UNSC",
+        "weapon_type": "Pistol",
+        "rate_of_fire": "Semi-Auto (2)",
+        "weight_kg": 1.6,
+        "damage": "3D10",
+        "bonus_damage": "10",
+        "pierce": 4,
+        "range": "20m-100m",
+        "magazine": 8,
+        "magazine_type": "Magazine",
+        "reload": "4 Half Actions",
+        "ammunition": "12.7x40mm",
+        "price": 21,
+        "tags": [
+          "I",
+          "UD",
+          "OH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "description": "Headshot Special Rule. Black and green Polymer finish. No Civilian or Police upcharge."
+      },
+      {
+        "name": "M6B Personal Defense Weapon System",
+        "nickname": "M6B",
+        "faction": "UNSC",
+        "weapon_type": "Pistol",
+        "rate_of_fire": "Semi-Auto (2)",
+        "weight_kg": 1.6,
+        "damage": "3D10",
+        "bonus_damage": "10",
+        "pierce": 4,
+        "range": "30m-100m",
+        "magazine": 8,
+        "magazine_type": "Magazine",
+        "reload": "4 Half Actions",
+        "ammunition": "12.7x40mm",
+        "price": 36,
+        "tags": [
+          "I",
+          "UD",
+          "OH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "comes_with": [
+          "Built-in KFA-2 2x"
+        ],
+        "description": "Headshot Special Rule. Comes with: Built-in KFA-2 2x. Chrome Polymer finish. No Police upcharge."
+      },
+      {
+        "name": "M6C Personal Defense Weapon System",
+        "nickname": "M6C",
+        "faction": "UNSC",
+        "weapon_type": "Pistol",
+        "rate_of_fire": "Semi-Auto (2), Auto (6)",
+        "weight_kg": 1.8,
+        "damage": "3D10",
+        "bonus_damage": "10",
+        "pierce": 4,
+        "range": "30m-100m",
+        "magazine": 12,
+        "magazine_type": "Magazine",
+        "reload": "4 Half Actions",
+        "ammunition": "12.7x40mm",
+        "price": 31,
+        "tags": [
+          "I",
+          "UD",
+          "OH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "description": "Headshot Special Rule. -5 Penalty To Hit. Military model. Black Polymer finish. Penalty To Hit only when firing Automatic."
+      },
+      {
+        "name": "M6D Personal Defense Weapon System",
+        "nickname": "M6D",
+        "faction": "UNSC",
+        "weapon_type": "Pistol",
+        "rate_of_fire": "Semi-Auto (2), Auto (5)",
+        "weight_kg": 1.8,
+        "damage": "3D10",
+        "bonus_damage": "10",
+        "pierce": 4,
+        "range": "30m-120m",
+        "magazine": 12,
+        "magazine_type": "Magazine",
+        "reload": "4 Half Actions",
+        "ammunition": "12.7x40mm",
+        "price": 42,
+        "tags": [
+          "I",
+          "UD",
+          "OH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "comes_with": [
+          "Built-in KFA-2 2x"
+        ],
+        "description": "Headshot Special Rule. Comes with: Built-in KFA-2 2x. Military mainstream model. Chrome Polymer finish."
+      },
+      {
+        "name": "M6E Personal Defense Weapon System",
+        "nickname": "M6E",
+        "faction": "UNSC",
+        "weapon_type": "Pistol",
+        "rate_of_fire": "Semi-Auto (2), Auto (5)",
+        "weight_kg": 2.0,
+        "damage": "3D10",
+        "bonus_damage": "10",
+        "pierce": 4,
+        "range": "30m-130m",
+        "magazine": 12,
+        "magazine_type": "Magazine",
+        "reload": "4 Half Actions",
+        "ammunition": "12.7x40mm",
+        "price": 38,
+        "tags": [
+          "I",
+          "UD",
+          "OH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "description": "Headshot Special Rule. Highly Customizable Military Model. Nickle-Plate finish. Rail Mounts are capable of holding two Attachments."
+      },
+      {
+        "name": "M6F Personal Defense Weapon System",
+        "nickname": "M6F",
+        "faction": "UNSC",
+        "weapon_type": "Pistol",
+        "rate_of_fire": "Semi-Auto (2), Auto (5)",
+        "weight_kg": 2.0,
+        "damage": "3D10",
+        "bonus_damage": "10",
+        "pierce": 4,
+        "range": "30m-140m",
+        "magazine": 12,
+        "magazine_type": "Magazine",
+        "reload": "4 Half Actions",
+        "ammunition": "12.7x40mm",
+        "price": 52,
+        "tags": [
+          "I",
+          "UD",
+          "OH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "comes_with": [
+          "Built-in KFA-2 2x"
+        ],
+        "description": "Headshot Special Rule. Comes with: Built-in KFA-2 2x. Highly Customizable Military Model. Nickle-Plate finish. Rail Mounts are capable of holding two Attachments."
+      },
+      {
+        "name": "M6G Personal Defense Weapon System",
+        "nickname": "M6G",
+        "faction": "UNSC",
+        "weapon_type": "Pistol",
+        "rate_of_fire": "Semi-Auto (2), Auto (5)",
+        "weight_kg": 1.8,
+        "damage": "3D10",
+        "bonus_damage": "10",
+        "pierce": 4,
+        "range": "30m-150m",
+        "magazine": 8,
+        "magazine_type": "Magazine",
+        "reload": "4 Half Actions",
+        "ammunition": "12.7x40mm",
+        "price": 42,
+        "tags": [
+          "I",
+          "UD",
+          "OH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "comes_with": [
+          "Built-in KFA-2 2x"
+        ],
+        "description": "Headshot Special Rule. Comes with: Built-in KFA-2 2x. Officer and Vehicle Crew model. Nickel-Plate Finish."
+      },
+      {
+        "name": "M6H Personal Defense Weapon System",
+        "nickname": "M6H",
+        "faction": "UNSC",
+        "weapon_type": "Pistol",
+        "rate_of_fire": "Semi-Auto (2), Auto (5)",
+        "weight_kg": 1.7,
+        "damage": "3D10",
+        "bonus_damage": "10",
+        "pierce": 4,
+        "range": "30m-155m",
+        "magazine": 8,
+        "magazine_type": "Magazine",
+        "reload": "4 Half Actions",
+        "ammunition": "12.7x40mm",
+        "price": 42,
+        "tags": [
+          "I",
+          "UD",
+          "OH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "comes_with": [
+          "Built-in KFA-2 2x"
+        ],
+        "description": "Headshot Special Rule. Comes with: Built-in KFA-2 2x. Officer and Vehicle Crew model. Nickel-Plate Finish."
+      },
+      {
+        "name": "M6H2 Personal Defense Weapon System",
+        "nickname": "M6H",
+        "faction": "UNSC",
+        "weapon_type": "Pistol",
+        "rate_of_fire": "Semi-Auto (2), Auto (5)",
+        "weight_kg": 1.7,
+        "damage": "3D10",
+        "bonus_damage": "10",
+        "pierce": 4,
+        "range": "30m-160m",
+        "magazine": 12,
+        "magazine_type": "Magazine",
+        "reload": "4 Half Actions",
+        "ammunition": "12.7x40mm",
+        "price": 43,
+        "tags": [
+          "UD",
+          "OH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "comes_with": [
+          "Built-in KFA-2 2x"
+        ],
+        "description": "Headshot Special Rule. Comes with: Built-in KFA-2 2x. Nickel-Plate Finish."
+      },
+      {
+        "name": "M6I Adjustable Personal Defense Weapon System",
+        "nickname": "M6 Auto",
+        "faction": "UNSC",
+        "weapon_type": "Pistol",
+        "rate_of_fire": "Semi-Auto (2), Auto (6), Burst (2)",
+        "weight_kg": 2.0,
+        "damage": "3D10",
+        "bonus_damage": "10",
+        "pierce": 4,
+        "range": "35m-100m",
+        "magazine": 12,
+        "magazine_type": "Magazine",
+        "reload": "4 Half Actions",
+        "ammunition": "12.7x40mm",
+        "price": 46,
+        "tags": [
+          "UD",
+          "OH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "comes_with": [
+          "Collapsible- Folding Stock"
+        ],
+        "description": "Headshot Special Rule. -10 Penalty To Hit when firing Automatic. Comes with: Collapsible- Folding Stock. Black Polymer finish."
+      },
+      {
+        "name": "M6K Personal Defense Weapon System",
+        "nickname": "M6K",
+        "faction": "UNSC",
+        "weapon_type": "Pistol",
+        "rate_of_fire": "Semi-Auto (2)",
+        "weight_kg": 1.5,
+        "damage": "3D10",
+        "bonus_damage": "10",
+        "pierce": 4,
+        "range": "30m-110m",
+        "magazine": 6,
+        "magazine_type": "Magazine",
+        "reload": "4 Half Actions",
+        "ammunition": "12.7x40mm",
+        "price": 24,
+        "tags": [
+          "I",
+          "UD",
+          "OH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "description": "Headshot Special Rule. +5 to Concealing and Camouflage Police model. Black finish. No Police upcharge."
+      },
+      {
+        "name": "M6Z Machine Pistol",
+        "nickname": "M6/Z",
+        "faction": "UNSC",
+        "weapon_type": "Pistol",
+        "rate_of_fire": "Auto (12)",
+        "weight_kg": 2.1,
+        "damage": "3D10",
+        "bonus_damage": "10",
+        "pierce": 4,
+        "range": "15m-80m",
+        "magazine": 21,
+        "magazine_type": "Magazine",
+        "reload": "4 Half Actions",
+        "ammunition": "12.7x40mm",
+        "price": 46,
+        "tags": [
+          "UD",
+          "OH"
+        ],
+        "special_rules": [],
+        "description": "-15 Penalty To Hit. Chrome Polymer finish."
+      },
+      {
+        "name": "Sevine Arms 10mm Machine Pistol",
+        "nickname": "SAMP-10",
+        "faction": "UNSC",
+        "weapon_type": "Pistol",
+        "rate_of_fire": "Auto (9)",
+        "weight_kg": 1.1,
+        "damage": "3D10",
+        "bonus_damage": "5",
+        "pierce": 5,
+        "range": "10m-85m",
+        "magazine": 9,
+        "magazine_type": "Magazine",
+        "reload": "4 Half Actions",
+        "ammunition": "10x25mm",
+        "price": 33,
+        "tags": [
+          "I",
+          "UD",
+          "DW"
+        ],
+        "special_rules": [],
+        "description": "Silver Polymer Finish"
+      },
+      {
+        "name": "M6P Pocket Pistol",
+        "nickname": "Mini M",
+        "faction": "UNSC",
+        "weapon_type": "Pistol",
+        "rate_of_fire": "Semi-Auto (1)",
+        "weight_kg": 0.8,
+        "damage": "3D10",
+        "bonus_damage": "9",
+        "pierce": 3,
+        "range": "10m-45m",
+        "magazine": 4,
+        "magazine_type": "Magazine",
+        "reload": "4 Half Actions",
+        "ammunition": "12.7x40mm",
+        "price": 10,
+        "tags": [
+          "I",
+          "UD",
+          "DW"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "description": "Headshot Special Rule. -10 Penalty To Hit, +10 to Concealing and Camouflage. Chrome Polymer finish."
+      },
+      {
+        "name": "8mm Sevine Arms Defender",
+        "nickname": "SAD-8",
+        "faction": "UNSC",
+        "weapon_type": "Pistol",
+        "rate_of_fire": "Auto (4)",
+        "weight_kg": 0.7,
+        "damage": "3D10",
+        "bonus_damage": "3",
+        "pierce": 7,
+        "range": "5m-15m",
+        "magazine": 6,
+        "magazine_type": "Magazine",
+        "reload": "4 Half Actions",
+        "ammunition": "8x27mm",
+        "price": 15,
+        "tags": [
+          "I",
+          "UD",
+          "DW"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "description": "Headshot Special Rule. Silver Polymer Finish"
+      },
+      {
+        "name": "12mm Comet",
+        "nickname": "Comet",
+        "faction": "UNSC",
+        "weapon_type": "Pistol",
+        "rate_of_fire": "Semi-Auto (2)",
+        "weight_kg": 2.2,
+        "damage": "3D10",
+        "bonus_damage": "10",
+        "pierce": 4,
+        "range": "30m-160m",
+        "magazine": 5,
+        "magazine_type": "Tube",
+        "reload": "4 Half Actions",
+        "ammunition": "12x41mm",
+        "price": 20,
+        "tags": [
+          "I",
+          "UD",
+          "OH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "description": "Headshot Special Rule. -10 Penalty To Hit. Silver Polymer finish. Revolver that can fire one extra Shot as a Reaction during the Characters Turn."
+      },
+      {
+        "name": "Narq-Dart Pistol",
+        "nickname": "Tranq Pistol",
+        "faction": "UNSC",
+        "weapon_type": "Pistol",
+        "rate_of_fire": "Semi-Auto (1)",
+        "weight_kg": 1.3,
+        "damage": "2D10",
+        "bonus_damage": "1",
+        "pierce": 20,
+        "range": "20m-160m",
+        "magazine": 12,
+        "magazine_type": "Magazine",
+        "reload": "3 Half Actions",
+        "ammunition": "Narq-Dart",
+        "price": 23,
+        "tags": [
+          "I",
+          "UD",
+          "DW"
+        ],
+        "special_rules": [
+          "Tranq (7)"
+        ],
+        "description": "Tranq (7) Special Rule. A large Pistol for administering medication to tranquilize opponents. Must surpass Armor to administer dose."
+      }
+    ],
+    "smgs": [
+      {
+        "name": "M7 Caseless Submachine Gun",
+        "nickname": "SMG",
+        "faction": "UNSC",
+        "weapon_type": "SMG",
+        "rate_of_fire": "Semi-Auto (3), Auto (10)",
+        "weight_kg": 1.3,
+        "damage": "3D10",
+        "bonus_damage": "1",
+        "pierce": 11,
+        "range": "20m-75m",
+        "magazine": 60,
+        "magazine_type": "Magazine",
+        "reload": "5 Half Actions",
+        "ammunition": "5x23mm",
+        "price": 68,
+        "tags": [
+          "I",
+          "UD",
+          "DW"
+        ],
+        "special_rules": [],
+        "comes_with": [
+          "Collapsible- Folding Stock",
+          "Angled Grip"
+        ],
+        "description": "Comes with: Collapsible- Folding Stock, Angled Grip. Chrome Polymer finish. No Police cR upcharge."
+      },
+      {
+        "name": "M20-PDWS Submachine Gun",
+        "nickname": "SMG",
+        "faction": "UNSC",
+        "weapon_type": "SMG",
+        "rate_of_fire": "Semi-Auto (3), Auto (10)",
+        "weight_kg": 1.3,
+        "damage": "3D10",
+        "bonus_damage": "1",
+        "pierce": 11,
+        "range": "25m-85m",
+        "magazine": 60,
+        "magazine_type": "Magazine",
+        "reload": "5 Half Actions",
+        "ammunition": "5x23mm",
+        "price": 68,
+        "tags": [
+          "UD",
+          "DW"
+        ],
+        "special_rules": [],
+        "comes_with": [
+          "Collapsible- Folding Stock",
+          "Angled Grip"
+        ],
+        "description": "Comes with: Collapsible- Folding Stock, Angled Grip. Chrome Polymer finish. No Police cR upcharge."
+      },
+      {
+        "name": "M6J Adjustable Personal Defense Carbine",
+        "nickname": "M6JC",
+        "faction": "UNSC",
+        "weapon_type": "SMG",
+        "rate_of_fire": "Semi-Auto (2), Auto (6), Burst (2)",
+        "weight_kg": 2.2,
+        "damage": "3D10",
+        "bonus_damage": "10",
+        "pierce": 4,
+        "range": "30m-110m",
+        "magazine": 12,
+        "magazine_type": "Magazine",
+        "reload": "5 Half Actions",
+        "ammunition": "12.7x40mm",
+        "price": 45,
+        "tags": [
+          "UD",
+          "OH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "comes_with": [
+          "Collapsible- Folding Stock"
+        ],
+        "description": "Headshot Special Rule. -10 Penalty To Hit when firing Automatic. Comes with: Collapsible- Folding Stock. Nickel-Plate finish."
+      }
+    ],
+    "rifles": [
+      {
+        "name": "Prototype XBR55",
+        "nickname": "BXR",
+        "faction": "UNSC",
+        "weapon_type": "Rifle",
+        "rate_of_fire": "Semi-Auto (2), Burst (3)",
+        "weight_kg": 4.2,
+        "damage": "3D10",
+        "bonus_damage": "9",
+        "pierce": 10,
+        "range": "40m-850m",
+        "magazine": 60,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "9.5x40mm",
+        "price": 41,
+        "tags": [
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "comes_with": [
+          "2x Scope",
+          "Extended Magazine"
+        ],
+        "description": "Headshot Special Rule. Comes with: 2x Scope, Extended Magazine. Black Polymer finish. -10 To Hit when Prone."
+      },
+      {
+        "name": "BR55 Service Rifle",
+        "nickname": "Battle Rifle",
+        "faction": "UNSC",
+        "weapon_type": "Rifle",
+        "rate_of_fire": "Semi-Auto (2), Burst (3)",
+        "weight_kg": 3.8,
+        "damage": "3D10",
+        "bonus_damage": "9",
+        "pierce": 10,
+        "range": "45m-950m",
+        "magazine": 36,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "9.5x40mm",
+        "price": 46,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "comes_with": [
+          "2x Scope",
+          "Built-in Ammo Counter"
+        ],
+        "description": "Headshot Special Rule. Comes with: 2x Scope, Built-in Ammo Counter. Black Polymer finish. No Police cR upcharge."
+      },
+      {
+        "name": "BR75 Service Rifle",
+        "nickname": "Battle Rifle",
+        "faction": "UNSC",
+        "weapon_type": "Rifle",
+        "rate_of_fire": "Semi-Auto (2), Burst (3)",
+        "weight_kg": 3.8,
+        "damage": "3D10",
+        "bonus_damage": "9",
+        "pierce": 10,
+        "range": "50m-975m",
+        "magazine": 36,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "9.5x40mm",
+        "price": 47,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "comes_with": [
+          "2x Scope",
+          "Built-in Ammo Counter"
+        ],
+        "description": "Headshot Special Rule. Comes with: 2x Scope, Built-in Ammo Counter. Black Polymer finish."
+      },
+      {
+        "name": "BR85 Service Rifle",
+        "nickname": "Battle Rifle",
+        "faction": "UNSC",
+        "weapon_type": "Rifle",
+        "rate_of_fire": "Semi-Auto (2), Burst (3)",
+        "weight_kg": 3.7,
+        "damage": "3D10",
+        "bonus_damage": "9",
+        "pierce": 10,
+        "range": "50m-1,000m",
+        "magazine": 36,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "9.5x40mm",
+        "price": 47,
+        "tags": [
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "comes_with": [
+          "2x Scope",
+          "Built-in Ammo Counter"
+        ],
+        "description": "Headshot Special Rule. Comes with: 2x Scope, Built-in Ammo Counter. Black Polymer finish."
+      },
+      {
+        "name": "Sevine Arms Maestro Battle Rifle",
+        "nickname": "Maestro",
+        "faction": "UNSC",
+        "weapon_type": "Rifle",
+        "rate_of_fire": "Semi-Auto (2), Auto (6)",
+        "weight_kg": 2.9,
+        "damage": "3D10",
+        "bonus_damage": "7",
+        "pierce": 12,
+        "range": "100m-1,200m",
+        "magazine": 32,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "8.35x56mm",
+        "price": 46,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "description": "Headshot Special Rule. Short-barreled battle rifle. Silver Polymer finish."
+      },
+      {
+        "name": "Sportstek CSS Rifle",
+        "nickname": "Sportstek",
+        "faction": "UNSC",
+        "weapon_type": "Rifle",
+        "rate_of_fire": "Semi-Auto (2)",
+        "weight_kg": 4.9,
+        "damage": "3D10",
+        "bonus_damage": "6",
+        "pierce": 12,
+        "range": "25m-875m",
+        "magazine": 12,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "7.62x51mm",
+        "price": 24,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "description": "Headshot Special Rule. Green and Silver Polymer finish. No Police or Civilian cR upcharge."
+      },
+      {
+        "name": "M295 Designated Marksman Rifle",
+        "nickname": "DMR",
+        "faction": "UNSC",
+        "weapon_type": "Rifle",
+        "rate_of_fire": "Semi-Auto (2), Auto (5)",
+        "weight_kg": 5.7,
+        "damage": "3D10",
+        "bonus_damage": "8",
+        "pierce": 13,
+        "range": "25m-1,000m",
+        "magazine": 15,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "7.62x51mm",
+        "price": 46,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "comes_with": [
+          "[U] EVOS-D 3x",
+          "Built-in Ammo Counter"
+        ],
+        "description": "Headshot Special Rule. Comes with: [U] EVOS-D 3x, Built-in Ammo Counter. Black Polymer finish. . No Police or Civilian cR upcharge."
+      },
+      {
+        "name": "M392 Designated Marksman Rifle",
+        "nickname": "DMR",
+        "faction": "UNSC",
+        "weapon_type": "Rifle",
+        "rate_of_fire": "Semi-Auto (2), Auto (6), Burst (2)",
+        "weight_kg": 5.6,
+        "damage": "3D10",
+        "bonus_damage": "8",
+        "pierce": 13,
+        "range": "30m-1,400m",
+        "magazine": 15,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "7.62x51mm",
+        "price": 55,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "comes_with": [
+          "[U] EVOS-D 3x",
+          "Built-in Ammo Counter"
+        ],
+        "description": "Headshot Special Rule. Comes with: [U] EVOS-D 3x, Built-in Ammo Counter. Black Polymer finish. No Police cR upcharge."
+      },
+      {
+        "name": "M395 Designated Marksman Rifle",
+        "nickname": "DMR",
+        "faction": "UNSC",
+        "weapon_type": "Rifle",
+        "rate_of_fire": "Semi-Auto (2), Auto (6), Burst (2)",
+        "weight_kg": 6.1,
+        "damage": "3D10",
+        "bonus_damage": "8",
+        "pierce": 13,
+        "range": "35m-1,550m",
+        "magazine": 14,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "7.62x51mm",
+        "price": 56,
+        "tags": [
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "comes_with": [
+          "[U] EVOS-D 3x",
+          "Built-in Ammo Counter"
+        ],
+        "description": "Headshot Special Rule. Comes with: [U] EVOS-D 3x, Built-in Ammo Counter. Black Polymer finish."
+      },
+      {
+        "name": "Prototype Chalybs Plasma Rifle",
+        "nickname": "Chabby",
+        "faction": "UNSC",
+        "weapon_type": "Rifle",
+        "rate_of_fire": "Semi-Auto (2), Auto (5)",
+        "weight_kg": 6.1,
+        "damage": "3D10",
+        "bonus_damage": "12",
+        "pierce": 20,
+        "range": "40m-850m",
+        "magazine": 26,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "Grindell battery",
+        "price": 72,
+        "tags": [
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Cauterize",
+          "Headshot"
+        ],
+        "comes_with": [
+          "3x Scope"
+        ],
+        "description": "Cauterize, Headshot Special Rule. Comes with: 3x Scope. Black Polymer finish."
+      },
+      {
+        "name": "HMG-38",
+        "nickname": "Light-Heavy",
+        "faction": "UNSC",
+        "weapon_type": "Rifle",
+        "rate_of_fire": "Auto (10)",
+        "weight_kg": 4.0,
+        "damage": "3D10",
+        "bonus_damage": "8",
+        "pierce": 11,
+        "range": "40m-400m",
+        "magazine": 26,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "9.3x55mm",
+        "price": 48,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [],
+        "description": "-10 Penalty To Hit. Gray Polymer finish."
+      },
+      {
+        "name": "Prototype MA1 Individual Combat Weapon System",
+        "nickname": "XAR",
+        "faction": "UNSC",
+        "weapon_type": "Rifle",
+        "rate_of_fire": "Auto (8), Burst (2)",
+        "weight_kg": 3.8,
+        "damage": "3D10",
+        "bonus_damage": "8",
+        "pierce": 11,
+        "range": "50m-400m",
+        "magazine": 26,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "9.3x55mm",
+        "price": 44,
+        "tags": [
+          "UD",
+          "TH"
+        ],
+        "special_rules": [],
+        "comes_with": [
+          "Ammo Counter"
+        ],
+        "description": "Comes with: Ammo Counter. Black Polymer finish. This is an incredibly old and outdated version of the MA-series rifles."
+      },
+      {
+        "name": "MA2B ICWS-Carbine",
+        "nickname": "MA2",
+        "faction": "UNSC",
+        "weapon_type": "Rifle",
+        "rate_of_fire": "Auto (9), Burst (2)",
+        "weight_kg": 3.6,
+        "damage": "3D10",
+        "bonus_damage": "8",
+        "pierce": 11,
+        "range": "45m-500m",
+        "magazine": 26,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "9.9x47.5mm",
+        "price": 47,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [],
+        "comes_with": [
+          "Ammo Counter"
+        ],
+        "description": "-5 Penalty To Hit. Comes with: Ammo Counter. Black Polymer finish. No Police cR upcharge."
+      },
+      {
+        "name": "MA3A Assault Rifle",
+        "nickname": "MA3",
+        "faction": "UNSC",
+        "weapon_type": "Rifle",
+        "rate_of_fire": "Auto (8), Burst (3)",
+        "weight_kg": 4.2,
+        "damage": "3D10",
+        "bonus_damage": "6",
+        "pierce": 12,
+        "range": "55m-300m",
+        "magazine": 32,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "7.62x51mm",
+        "price": 48,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [],
+        "comes_with": [
+          "Ammo Counter",
+          "Flashlight"
+        ],
+        "description": "Comes with: Ammo Counter, Flashlight. Black Polymer finish. No Police cR upcharge."
+      },
+      {
+        "name": "MA37 Assault Rifle",
+        "nickname": "MA37",
+        "faction": "UNSC",
+        "weapon_type": "Rifle",
+        "rate_of_fire": "Semi-Auto (3), Auto (8)",
+        "weight_kg": 3.8,
+        "damage": "3D10",
+        "bonus_damage": "6",
+        "pierce": 12,
+        "range": "50m-325m",
+        "magazine": 32,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "7.62x51mm",
+        "price": 47,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [],
+        "comes_with": [
+          "Ammo Counter",
+          "Flashlight"
+        ],
+        "description": "Comes with: Ammo Counter, Flashlight. Black Polymer finish. No Police cR upcharge."
+      },
+      {
+        "name": "MA40 Assault Rifle",
+        "nickname": "MA40",
+        "faction": "UNSC",
+        "weapon_type": "Rifle",
+        "rate_of_fire": "Semi-Auto (3), Auto (8)",
+        "weight_kg": 3.8,
+        "damage": "3D10",
+        "bonus_damage": "6",
+        "pierce": 12,
+        "range": "50m-375m",
+        "magazine": 32,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "7.62x51mm",
+        "price": 47,
+        "tags": [
+          "UD",
+          "TH"
+        ],
+        "special_rules": [],
+        "comes_with": [
+          "Ammo Counter",
+          "Flashlight"
+        ],
+        "description": "Comes with: Ammo Counter, Flashlight. Black Polymer finish."
+      },
+      {
+        "name": "MA5B Individual Combat Weapon System",
+        "nickname": "Assault Rifle",
+        "faction": "UNSC",
+        "weapon_type": "Rifle",
+        "rate_of_fire": "Semi-Auto (3), Auto (9), Burst (3)",
+        "weight_kg": 4.2,
+        "damage": "3D10",
+        "bonus_damage": "6",
+        "pierce": 12,
+        "range": "60m-375m",
+        "magazine": 60,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "7.62x51mm",
+        "price": 52,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [],
+        "comes_with": [
+          "Ammo Counter",
+          "Flashlight"
+        ],
+        "description": "-5 Penalty To Hit. Comes with: Ammo Counter, Flashlight. Black Polymer finish. Due to the weapons height, firing while Prone gives a -10 Penalty To Hit."
+      },
+      {
+        "name": "MA5C Individual Combat Weapon System",
+        "nickname": "Assault Rifle",
+        "faction": "UNSC",
+        "weapon_type": "Rifle",
+        "rate_of_fire": "Semi-Auto (3), Auto (9), Burst (3)",
+        "weight_kg": 3.8,
+        "damage": "3D10",
+        "bonus_damage": "6",
+        "pierce": 12,
+        "range": "65m-390m",
+        "magazine": 32,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "7.62x51mm",
+        "price": 55,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [],
+        "comes_with": [
+          "Ammo Counter",
+          "Flashlight"
+        ],
+        "description": "Comes with: Ammo Counter, Flashlight. Black Polymer finish."
+      },
+      {
+        "name": "MA5D Individual Combat Weapon System",
+        "nickname": "Assault Rifle",
+        "faction": "UNSC",
+        "weapon_type": "Rifle",
+        "rate_of_fire": "Semi-Auto (3), Auto (9), Burst (3)",
+        "weight_kg": 3.5,
+        "damage": "3D10",
+        "bonus_damage": "6",
+        "pierce": 12,
+        "range": "70m-400m",
+        "magazine": 36,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "7.62x51mm",
+        "price": 56,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [],
+        "comes_with": [
+          "Ammo Counter",
+          "Flashlight"
+        ],
+        "description": "Comes with: Ammo Counter, Flashlight. Green and Tan Polymer finish."
+      },
+      {
+        "name": "MA5K Carbine",
+        "nickname": "Assault Carbine",
+        "faction": "UNSC",
+        "weapon_type": "Rifle",
+        "rate_of_fire": "Semi-Auto (3), Auto (9), Burst (3)",
+        "weight_kg": 3.6,
+        "damage": "3D10",
+        "bonus_damage": "5",
+        "pierce": 11,
+        "range": "35m-325m",
+        "magazine": 30,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "7.62x51mm",
+        "price": 47,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [],
+        "comes_with": [
+          "Ammo Counter",
+          "Built-in Flashlight"
+        ],
+        "description": "Comes with: Ammo Counter, Built-in Flashlight. A heavily cut-down variant of the MA5B. Black Polymer finish. No Police cR upcharge."
+      },
+      {
+        "name": "VK78 Commando Tactical Rifle",
+        "nickname": "Commando",
+        "faction": "UNSC",
+        "weapon_type": "Rifle",
+        "rate_of_fire": "Semi-Auto (3), Auto (7)",
+        "weight_kg": 4.9,
+        "damage": "3D10",
+        "bonus_damage": "5",
+        "pierce": 14,
+        "range": "50m-800m",
+        "magazine": 20,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "6.5x55mm",
+        "price": 54,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Headshot"
+        ],
+        "comes_with": [
+          "Holoscope",
+          "Built-in Ammo Counter"
+        ],
+        "description": "Headshot Special Rule. Comes with: Holoscope, Built-in Ammo Counter. Green Polymer finish. No Police cR upcharge."
+      }
+    ],
+    "machine_guns": [
+      {
+        "name": "M735 Light Machine Gun",
+        "nickname": "SAW",
+        "faction": "UNSC",
+        "weapon_type": "Light Machine Gun",
+        "rate_of_fire": "Auto (10)",
+        "weight_kg": 9.3,
+        "damage": "3D10",
+        "bonus_damage": "8",
+        "pierce": 13,
+        "range": "30m-800m",
+        "magazine": 150,
+        "magazine_type": "Belt",
+        "reload": "11 Half Actions",
+        "ammunition": "7.62x51mm",
+        "price": 70,
+        "tags": [
+          "I",
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [],
+        "comes_with": [
+          "Built-in Ammo Counter",
+          "Extended Belt"
+        ],
+        "description": "Comes with: Built-in Ammo Counter, Extended Belt. Additional -10 Penalty To Hit when not Bracing the weapon."
+      },
+      {
+        "name": "M739 Light Machine Gun",
+        "nickname": "SAW",
+        "faction": "UNSC",
+        "weapon_type": "Light Machine Gun",
+        "rate_of_fire": "Auto (10)",
+        "weight_kg": 9.6,
+        "damage": "3D10",
+        "bonus_damage": "8",
+        "pierce": 13,
+        "range": "30m-900m",
+        "magazine": 72,
+        "magazine_type": "Magazine",
+        "reload": "11 Half Actions",
+        "ammunition": "7.62x51mm",
+        "price": 68,
+        "tags": [
+          "I",
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [],
+        "comes_with": [
+          "Built-in Ammo Counter",
+          "Drum Magazine"
+        ],
+        "description": "Comes with: Built-in Ammo Counter, Drum Magazine."
+      },
+      {
+        "name": ".308 Caliber Light Machine Gun",
+        "nickname": "Confetti Maker 300",
+        "faction": "UNSC",
+        "weapon_type": "Light Machine Gun",
+        "rate_of_fire": "Auto (13)",
+        "weight_kg": 7.5,
+        "damage": "3D10",
+        "bonus_damage": "8",
+        "pierce": 13,
+        "range": "10m-400m",
+        "magazine": 120,
+        "magazine_type": "Belt",
+        "reload": "11 Half Actions",
+        "ammunition": "7.62x51mm",
+        "price": 60,
+        "tags": [
+          "I",
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [],
+        "description": "-20 Penalty To Hit. Notoriously inaccurate, but with a terrifying rate of fire. No Police cR upcharge."
+      },
+      {
+        "name": "M328 Light Machine Gun",
+        "nickname": "3-28",
+        "faction": "UNSC",
+        "weapon_type": "Light Machine Gun",
+        "rate_of_fire": "Auto (9)",
+        "weight_kg": 8.9,
+        "damage": "3D10",
+        "bonus_damage": "17",
+        "pierce": 12,
+        "range": "40m-900m",
+        "magazine": 300,
+        "magazine_type": "Belt",
+        "reload": "11 Half Actions",
+        "ammunition": "12.7x99mm",
+        "price": 77,
+        "tags": [
+          "I",
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [],
+        "description": "Air-Cooled, Gas-operated, electrically fired."
+      },
+      {
+        "name": "M247 General Purpose Machine Gun",
+        "nickname": "M247",
+        "faction": "UNSC",
+        "weapon_type": "Machine Gun",
+        "rate_of_fire": "Auto (10)",
+        "weight_kg": 10.4,
+        "damage": "3D10",
+        "bonus_damage": "9",
+        "pierce": 14,
+        "range": "40m-1,100m",
+        "magazine": 100,
+        "magazine_type": "Belt",
+        "reload": "15 Half Actions",
+        "ammunition": "7.62x51mm",
+        "price": 76,
+        "tags": [
+          "I",
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Long barrel"
+        ],
+        "comes_with": [
+          "Tripod"
+        ],
+        "description": "Long barrel Special Rule. Comes with: Tripod. Air-Cooled, Gas-operated, electrically fired. Range is halved when a Tripod or Bipod is not used."
+      },
+      {
+        "name": "M231 General Purpose Machine Gun",
+        "nickname": "2-31",
+        "faction": "UNSC",
+        "weapon_type": "Heavy Machine Gun",
+        "rate_of_fire": "Auto (10)",
+        "weight_kg": 14.1,
+        "damage": "3D10",
+        "bonus_damage": "8",
+        "pierce": 13,
+        "range": "40m-800m",
+        "magazine": 600,
+        "magazine_type": "Belt",
+        "reload": "15 Half Actions",
+        "ammunition": "7.62x51mm",
+        "price": 72,
+        "tags": [
+          "I",
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Long barrel"
+        ],
+        "description": "Long barrel Special Rule. Air-Cooled, Gas-operated, electrically fired."
+      },
+      {
+        "name": "M247H Heavy Machine Gun",
+        "nickname": "2-47 Heavy",
+        "faction": "UNSC",
+        "weapon_type": "Heavy Machine Gun",
+        "rate_of_fire": "Auto (9)",
+        "weight_kg": 19.4,
+        "damage": "3D10",
+        "bonus_damage": "18",
+        "pierce": 13,
+        "range": "40m-1,300m",
+        "magazine": 200,
+        "magazine_type": "Belt",
+        "reload": "15 Half Actions",
+        "ammunition": "12.7x99mm",
+        "price": 89,
+        "tags": [
+          "I",
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Long barrel"
+        ],
+        "comes_with": [
+          "Tripod"
+        ],
+        "description": "Long barrel Special Rule. Comes with: Tripod. Air-Cooled, Gas-operated, electrically fired. Range is halved when a Tripod or Bipod is not used."
+      },
+      {
+        "name": "M343A2 Heavy Machine Gun",
+        "nickname": "Vulcan",
+        "faction": "UNSC",
+        "weapon_type": "Heavy Machine Gun",
+        "rate_of_fire": "Auto (10)",
+        "weight_kg": 26.0,
+        "damage": "3D10",
+        "bonus_damage": "18",
+        "pierce": 13,
+        "range": "40m-1,400m",
+        "magazine": 250,
+        "magazine_type": "Belt",
+        "reload": "15 Half Actions",
+        "ammunition": "12.7x99mm",
+        "price": 97,
+        "tags": [
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Long barrel"
+        ],
+        "comes_with": [
+          "Tripod",
+          "Heavy Weapon Shield"
+        ],
+        "description": "Long barrel Special Rule. Comes with: Tripod and Heavy Weapon Shield. Range is halved when a Tripod or Bipod is not used."
+      },
+      {
+        "name": "AIE-486H Heavy Machine Gun",
+        "nickname": "AIE",
+        "faction": "UNSC",
+        "weapon_type": "Heavy Machine Gun",
+        "rate_of_fire": "Auto (10)",
+        "weight_kg": 14.1,
+        "damage": "3D10",
+        "bonus_damage": "9",
+        "pierce": 14,
+        "range": "40m-1,200m",
+        "magazine": 200,
+        "magazine_type": "Belt",
+        "reload": "15 Half Actions",
+        "ammunition": "7.62x51mm",
+        "price": 88,
+        "tags": [
+          "I",
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Long barrel"
+        ],
+        "comes_with": [
+          "Tripod",
+          "Heavy Weapon Shield"
+        ],
+        "description": "Long barrel Special Rule. Comes with: Tripod and Heavy Weapon Shield. Range is halved when a Tripod or Bipod is not used."
+      },
+      {
+        "name": "M413 Heavy Machine Gun",
+        "nickname": "4-13",
+        "faction": "UNSC",
+        "weapon_type": "Heavy Machine Gun",
+        "rate_of_fire": "Auto (10)",
+        "weight_kg": 19.8,
+        "damage": "3D10",
+        "bonus_damage": "17",
+        "pierce": 12,
+        "range": "40m-1,400m",
+        "magazine": 600,
+        "magazine_type": "Belt",
+        "reload": "15 Half Actions",
+        "ammunition": "12.7x99mm",
+        "price": 90,
+        "tags": [
+          "I",
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Long barrel"
+        ],
+        "description": "Long barrel Special Rule. Air-Cooled, Gas-operated, electrically fired."
+      }
+    ],
+    "sniper_rifles": [
+      {
+        "name": "Sniper Rifle System 99 Anti-Materiel",
+        "nickname": "SRS99",
+        "faction": "UNSC",
+        "weapon_type": "Sniper Rifle",
+        "rate_of_fire": "Semi-Auto (1)",
+        "weight_kg": 16.0,
+        "damage": "4D10",
+        "bonus_damage": "21",
+        "pierce": 13,
+        "range": "50m-1,900m",
+        "magazine": 4,
+        "magazine_type": "Magazine",
+        "reload": "8 Half Actions",
+        "ammunition": "14.5x114mm",
+        "price": 145,
+        "tags": [
+          "I",
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Penetrating",
+          "Kinetic",
+          "Headshot",
+          "Long barrel"
+        ],
+        "comes_with": [
+          "Oracle N-Variant Scope",
+          "Bipod"
+        ],
+        "description": "Penetrating, Kinetic, Headshot, Long barrel Special Rule. Comes with: Oracle N-Variant Scope, Bipod. No Police cR upcharge."
+      },
+      {
+        "name": "Sniper Rifle System 99C-Series 2 Anti-Materiel",
+        "nickname": "SRS99C",
+        "faction": "UNSC",
+        "weapon_type": "Sniper Rifle",
+        "rate_of_fire": "Semi-Auto (1)",
+        "weight_kg": 19.9,
+        "damage": "4D10",
+        "bonus_damage": "21",
+        "pierce": 13,
+        "range": "50m-2,300m",
+        "magazine": 4,
+        "magazine_type": "Magazine",
+        "reload": "8 Half Actions",
+        "ammunition": "14.5x114mm",
+        "price": 147,
+        "tags": [
+          "I",
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Penetrating",
+          "Kinetic",
+          "Headshot",
+          "Long barrel"
+        ],
+        "comes_with": [
+          "Oracle N-Variant Scope",
+          "Bipod"
+        ],
+        "description": "Penetrating, Kinetic, Headshot, Long barrel Special Rule. Comes with: Oracle N-Variant Scope, Bipod."
+      },
+      {
+        "name": "Sniper Rifle System 99D-Series 2 Anti-Materiel",
+        "nickname": "SRS99D",
+        "faction": "UNSC",
+        "weapon_type": "Sniper Rifle",
+        "rate_of_fire": "Semi-Auto (1)",
+        "weight_kg": 19.9,
+        "damage": "4D10",
+        "bonus_damage": "21",
+        "pierce": 13,
+        "range": "50m-2,400m",
+        "magazine": 4,
+        "magazine_type": "Magazine",
+        "reload": "8 Half Actions",
+        "ammunition": "14.5x114mm",
+        "price": 160,
+        "tags": [
+          "I",
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Penetrating",
+          "Kinetic",
+          "Headshot",
+          "Long barrel"
+        ],
+        "comes_with": [
+          "Oracle N-Variant Scope v2",
+          "Bipod"
+        ],
+        "description": "Penetrating, Kinetic, Headshot, Long barrel Special Rule. Comes with: Oracle N-Variant Scope v2, Bipod."
+      },
+      {
+        "name": "Sniper Rifle System 99-Series S5 Anti-Materiel",
+        "nickname": "SRS99-S5",
+        "faction": "UNSC",
+        "weapon_type": "Sniper Rifle",
+        "rate_of_fire": "Semi-Auto (1)",
+        "weight_kg": 15.6,
+        "damage": "4D10",
+        "bonus_damage": "21",
+        "pierce": 13,
+        "range": "100m-2,300m",
+        "magazine": 4,
+        "magazine_type": "Magazine",
+        "reload": "8 Half Actions",
+        "ammunition": "14.5x114mm",
+        "price": 179,
+        "tags": [
+          "I",
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Penetrating",
+          "Kinetic",
+          "Headshot",
+          "Long barrel"
+        ],
+        "comes_with": [
+          "Oracle N-Variant Scope v3",
+          "Bipod"
+        ],
+        "description": "Penetrating, Kinetic, Headshot, Long barrel Special Rule. Comes with: Oracle N-Variant Scope v3, Bipod."
+      },
+      {
+        "name": "Sniper Rifle System 99-Series S7 Anti-Materiel",
+        "nickname": "SRS99-S7",
+        "faction": "UNSC",
+        "weapon_type": "Sniper Rifle",
+        "rate_of_fire": "Semi-Auto (1)",
+        "weight_kg": 15.6,
+        "damage": "4D10",
+        "bonus_damage": "21",
+        "pierce": 13,
+        "range": "100m-2,400m",
+        "magazine": 4,
+        "magazine_type": "Magazine",
+        "reload": "8 Half Actions",
+        "ammunition": "14.5x114mm",
+        "price": 180,
+        "tags": [
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Penetrating",
+          "Kinetic",
+          "Headshot",
+          "Long barrel"
+        ],
+        "comes_with": [
+          "Oracle N-Variant Scope v3",
+          "Bipod"
+        ],
+        "description": "Penetrating, Kinetic, Headshot, Long barrel Special Rule. Comes with: Oracle N-Variant Scope v3, Bipod."
+      },
+      {
+        "name": "M99 Special Applications Scope Rifle",
+        "nickname": "Stanchion",
+        "faction": "UNSC",
+        "weapon_type": "Sniper Rifle",
+        "rate_of_fire": "Auto (1)",
+        "weight_kg": 20.1,
+        "damage": "4D10",
+        "bonus_damage": "24",
+        "pierce": 40,
+        "range": "100m-7,500m",
+        "magazine": 10,
+        "magazine_type": "Magazine",
+        "reload": "8 Half Actions",
+        "ammunition": "5.4mm Gauss Slug",
+        "price": 199,
+        "tags": [
+          "I",
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Recharge (2)",
+          "Penetrating",
+          "Kinetic",
+          "Headshot",
+          "Long barrel"
+        ],
+        "comes_with": [
+          "Oracle N-Variant Scope v3",
+          "Bipod"
+        ],
+        "description": "Recharge (2), Penetrating, Kinetic, Headshot, Long barrel Special Rule. Comes with: Oracle N-Variant Scope v3, Bipod. Long Barrel Special Rule gives a -20 To Hit when within 20 Meters of the Target, instead of -10."
+      },
+      {
+        "name": "M99A2S3 Special Application Scoped Rifle",
+        "nickname": "A2 Stanchion",
+        "faction": "UNSC",
+        "weapon_type": "Sniper Rifle",
+        "rate_of_fire": "Auto (1)",
+        "weight_kg": 21.5,
+        "damage": "4D10",
+        "bonus_damage": "24",
+        "pierce": 40,
+        "range": "100m-7,500m",
+        "magazine": 7,
+        "magazine_type": "Magazine",
+        "reload": "8 Half Actions",
+        "ammunition": "5.4mm Gauss Slug",
+        "price": 201,
+        "tags": [
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Recharge (1)",
+          "Penetrating",
+          "Kinetic",
+          "Headshot",
+          "Long barrel"
+        ],
+        "comes_with": [
+          "Oracle N-Variant Scope v3",
+          "Bipod"
+        ],
+        "description": "Recharge (1), Penetrating, Kinetic, Headshot, Long barrel Special Rule. Comes with: Oracle N-Variant Scope v3, Bipod."
+      },
+      {
+        "name": "Signature-Suppressed Anti-Materiel Rifle",
+        "nickname": "SAM-R",
+        "faction": "UNSC",
+        "weapon_type": "Sniper Rifle",
+        "rate_of_fire": "Semi-Auto (1)",
+        "weight_kg": 18.4,
+        "damage": "4D10",
+        "bonus_damage": "22",
+        "pierce": 14,
+        "range": "50m-2,400m",
+        "magazine": 4,
+        "magazine_type": "Magazine",
+        "reload": "8 Half Actions",
+        "ammunition": "14.5x114mm",
+        "price": 172,
+        "tags": [
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Penetrating",
+          "Kinetic",
+          "Headshot",
+          "Long barrel"
+        ],
+        "comes_with": [
+          "Oracle N-Variant Scope v3",
+          "Bipod"
+        ],
+        "description": "Penetrating, Kinetic, Headshot, Long barrel Special Rule. Comes with: Oracle N-Variant Scope v3, Bipod. When not in use, the SAM-R is able to fold down into a smaller package for easier carrying as a Full Action. -60 Penalty to hear weapon firing outside of 20 Meters from weapon. Can’t be used with Suppressors. Loses the -60 Penalty if the barrel is modified or removed."
+      },
+      {
+        "name": "ONI Hard Sound Rifle",
+        "nickname": "Buzzer",
+        "faction": "UNSC",
+        "weapon_type": "Sniper Rifle",
+        "rate_of_fire": "Charge (5) with Auto (1)",
+        "weight_kg": 20.0,
+        "damage": "4D10",
+        "bonus_damage": "70",
+        "pierce": 0,
+        "range": "50m-915m",
+        "magazine": 0,
+        "magazine_type": "Magazine",
+        "reload": "8 Half Actions",
+        "ammunition": "UNSC Battery",
+        "price": 198,
+        "tags": [
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Long barrel"
+        ],
+        "description": "Long barrel Comes with: Oracle N-Variant Scope, Built-in Bipod. Contains a 5KG battery with 5 feet of wiring that can power 5 Shots. This weapon ignores Shields and wearable Armor and leaves no entry point. All Damage done is converted to Special Damage on the Special Damage Chart.",
+        "comes_with": [
+          "Oracle N-Variant Scope",
+          "Built-in Bipod"
+        ]
+      }
+    ],
+    "shotguns": [
+      {
+        "name": "M90 Series Close Assault Weapon System",
+        "nickname": "M90",
+        "faction": "UNSC",
+        "weapon_type": "Shotgun",
+        "rate_of_fire": "Pump (2)",
+        "weight_kg": 6.0,
+        "damage": "4D10",
+        "bonus_damage": "10",
+        "pierce": 6,
+        "range": "10m-80m",
+        "magazine": 12,
+        "magazine_type": "Tube",
+        "reload": "Single Loading",
+        "ammunition": "8 Gauge Shell",
+        "price": 55,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Spread"
+        ],
+        "comes_with": [
+          "Built-in Collapsible- Folding Stock"
+        ],
+        "description": "Spread Special Rule. Comes with: Built-in Collapsible- Folding Stock. Black Polymer finish. No Police cR upcharge."
+      },
+      {
+        "name": "M90A Series Close Assault Weapon System",
+        "nickname": "M90-A",
+        "faction": "UNSC",
+        "weapon_type": "Shotgun",
+        "rate_of_fire": "Pump (2)",
+        "weight_kg": 5.4,
+        "damage": "4D10",
+        "bonus_damage": "10",
+        "pierce": 6,
+        "range": "15m-100m",
+        "magazine": 6,
+        "magazine_type": "Tube",
+        "reload": "Single Loading",
+        "ammunition": "8 Gauge Shell",
+        "price": 56,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Spread"
+        ],
+        "comes_with": [
+          "Built-in Collapsible- Folding Stock"
+        ],
+        "description": "Spread Special Rule. Comes with: Built-in Collapsible- Folding Stock. Black Polymer finish."
+      },
+      {
+        "name": "DTM-Law Enforcement Series Close Assault Weapon System",
+        "nickname": "Enforcer",
+        "faction": "UNSC",
+        "weapon_type": "Shotgun",
+        "rate_of_fire": "Pump (2)",
+        "weight_kg": 5.0,
+        "damage": "3D10",
+        "bonus_damage": "8",
+        "pierce": 5,
+        "range": "10m-80m",
+        "magazine": 12,
+        "magazine_type": "Tube",
+        "reload": "Single Loading",
+        "ammunition": "10 Gauge Shell",
+        "price": 34,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Spread"
+        ],
+        "description": "Spread Special Rule. Black Polymer finish. No Police cR upcharge."
+      },
+      {
+        "name": "WST DTM-Civilian Market Shotgun",
+        "nickname": "DTM Civvie",
+        "faction": "UNSC",
+        "weapon_type": "Shotgun",
+        "rate_of_fire": "Pump (2)",
+        "weight_kg": 4.1,
+        "damage": "2D10",
+        "bonus_damage": "2",
+        "pierce": 6,
+        "range": "5m-70m",
+        "magazine": 12,
+        "magazine_type": "Tube",
+        "reload": "Single Loading",
+        "ammunition": "20 Gauge Shell",
+        "price": 24,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Spread"
+        ],
+        "description": "Spread Special Rule. Chrome Polymer finish. No Police or Civilian cR upcharge."
+      },
+      {
+        "name": "M45 Tactical Shotgun",
+        "nickname": "Tactical Shotgun",
+        "faction": "UNSC",
+        "weapon_type": "Shotgun",
+        "rate_of_fire": "Pump (2)",
+        "weight_kg": 3.6,
+        "damage": "4D10",
+        "bonus_damage": "10",
+        "pierce": 6,
+        "range": "10m-90m",
+        "magazine": 6,
+        "magazine_type": "Tube",
+        "reload": "Single Loading",
+        "ammunition": "8 Gauge Shell",
+        "price": 55,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Spread"
+        ],
+        "comes_with": [
+          "Built-in Collapsible- Folding Stock"
+        ],
+        "description": "Spread Special Rule. Comes with: Built-in Collapsible- Folding Stock. Silver Polymer finish."
+      },
+      {
+        "name": "M45D Tactical Shotgun",
+        "nickname": "Tactical Shotgun",
+        "faction": "UNSC",
+        "weapon_type": "Shotgun",
+        "rate_of_fire": "Pump (2)",
+        "weight_kg": 3.6,
+        "damage": "4D10",
+        "bonus_damage": "10",
+        "pierce": 6,
+        "range": "5m-100m",
+        "magazine": 6,
+        "magazine_type": "Tube",
+        "reload": "Single Loading",
+        "ammunition": "8 Gauge Shell",
+        "price": 54,
+        "tags": [
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Spread"
+        ],
+        "comes_with": [
+          "Built-in Collapsible- Folding Stock"
+        ],
+        "description": "Spread Special Rule. Comes with: Built-in Collapsible- Folding Stock. Silver Polymer finish."
+      },
+      {
+        "name": "M45E Tactical Shotgun",
+        "nickname": "Tactical Shotgun",
+        "faction": "UNSC",
+        "weapon_type": "Shotgun",
+        "rate_of_fire": "Pump (2)",
+        "weight_kg": 4.0,
+        "damage": "4D10",
+        "bonus_damage": "10",
+        "pierce": 6,
+        "range": "5m-100m",
+        "magazine": 12,
+        "magazine_type": "Tube",
+        "reload": "Single Loading",
+        "ammunition": "8 Gauge Shell",
+        "price": 55,
+        "tags": [
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Spread"
+        ],
+        "comes_with": [
+          "Built-in Collapsible- Folding Stock"
+        ],
+        "description": "Spread Special Rule. Comes with: Built-in Collapsible- Folding Stock. Silver Polymer finish."
+      },
+      {
+        "name": "MS5-A Automatic Shotgun",
+        "nickname": "Juggernaut",
+        "faction": "UNSC",
+        "weapon_type": "Shotgun",
+        "rate_of_fire": "Semi-Auto (1), Auto (4)",
+        "weight_kg": 4.2,
+        "damage": "4D10",
+        "bonus_damage": "10",
+        "pierce": 6,
+        "range": "5m-70m",
+        "magazine": 24,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "8 Gauge Shell",
+        "price": 46,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Spread"
+        ],
+        "comes_with": [
+          "Built-in Collapsible- Folding Stock"
+        ],
+        "description": "Spread Special Rule. Comes with: Built-in Collapsible- Folding Stock. Black Polymer finish."
+      },
+      {
+        "name": "CQS48 Bulldog",
+        "nickname": "Bulldog",
+        "faction": "UNSC",
+        "weapon_type": "Shotgun",
+        "rate_of_fire": "Semi-Auto (3)",
+        "weight_kg": 4.2,
+        "damage": "3D10",
+        "bonus_damage": "7",
+        "pierce": 5,
+        "range": "5m-70m",
+        "magazine": 8,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "12 Gauge Shell",
+        "price": 52,
+        "tags": [
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Spread"
+        ],
+        "comes_with": [
+          "Built-in Collapsible- Folding Stock"
+        ],
+        "description": "Spread Special Rule. Comes with: Built-in Collapsible- Folding Stock. Black Polymer finish."
+      },
+      {
+        "name": "Underbarrel Shotgun",
+        "nickname": "Skeleton Key",
+        "faction": "UNSC",
+        "weapon_type": "Shotgun",
+        "rate_of_fire": "Semi-Auto (2)",
+        "weight_kg": 1.4,
+        "damage": "4D10",
+        "bonus_damage": "8",
+        "pierce": 4,
+        "range": "10m-30m",
+        "magazine": 5,
+        "magazine_type": "Magazine",
+        "reload": "Single Loading",
+        "ammunition": "8 Gauge Shell",
+        "price": 30,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Spread"
+        ],
+        "description": "Spread Special Rule. Black Polymer finish. Attachment information can be found under the Rail Attachments section for the UNSC Armory."
+      }
+    ],
+    "energy_weapons": [
+      {
+        "name": "Asymmetric Recoilless Carbine-640",
+        "nickname": "Railgun",
+        "faction": "UNSC",
+        "weapon_type": "Railgun",
+        "rate_of_fire": "Semi-Auto (1) with Charge (X)",
+        "weight_kg": 19.3,
+        "damage": "4D10",
+        "bonus_damage": "15",
+        "pierce": 25,
+        "range": "20m-1,000m",
+        "magazine": 1,
+        "magazine_type": "Magazine",
+        "reload": "8 Half Actions",
+        "ammunition": "16x65mm Slug",
+        "price": 132,
+        "tags": [
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Penetrating",
+          "Kinetic",
+          "Kill (2)",
+          "Dice minimum (3)"
+        ],
+        "comes_with": [
+          "Built-in KFA-2 2x"
+        ],
+        "description": "Penetrating, Kinetic, Kill (2), Dice minimum (3) Special Rule. Comes with: Built-in KFA-2 2x. Gray Polymer Finish. The weapon has a Charge of (2) but can be held up to 4 Half Actions before firing automatically. This is an early version of the ARC-920 Railgun that had yet to be improved. They are very rare and hard to come across without heavy ONI meddling."
+      },
+      {
+        "name": "Asymmetric Recoilless Carbine-920",
+        "nickname": "Railgun",
+        "faction": "UNSC",
+        "weapon_type": "Railgun",
+        "rate_of_fire": "Semi-Auto (1) with Charge (X)",
+        "weight_kg": 14.9,
+        "damage": "4D10",
+        "bonus_damage": "15",
+        "pierce": 30,
+        "range": "20m-1,500m",
+        "magazine": 1,
+        "magazine_type": "Magazine",
+        "reload": "6 Half Actions",
+        "ammunition": "16x65mm Slug",
+        "price": 119,
+        "tags": [
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Penetrating",
+          "Kinetic",
+          "Kill (2)",
+          "Dice minimum (3)"
+        ],
+        "comes_with": [
+          "Built-in KFA-2 2x"
+        ],
+        "description": "Penetrating, Kinetic, Kill (2), Dice minimum (3) Special Rule. Comes with: Built-in KFA-2 2x. Tan Polymer Finish. The weapon has a Charge of (1) but can be held up to 4 Half Actions before firing automatically."
+      },
+      {
+        "name": "M70 Electromagnetic Launcher",
+        "nickname": "Gauss Cannon",
+        "faction": "UNSC",
+        "weapon_type": "Energy Weapon",
+        "rate_of_fire": "Semi-Auto (1)",
+        "weight_kg": 16.9,
+        "damage": "6D10",
+        "bonus_damage": "17",
+        "pierce": 42,
+        "range": "30m-7,000m",
+        "magazine": 9,
+        "magazine_type": "Magazine",
+        "reload": "11 Half Actions",
+        "ammunition": "25x130mm Slug",
+        "price": 169,
+        "tags": [
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Recharge (1)",
+          "Penetrating",
+          "Kinetic",
+          "Kill (2)"
+        ],
+        "comes_with": [
+          "Built-in WYRD IV 4x",
+          "Tripod"
+        ],
+        "description": "Recharge (1), Penetrating, Kinetic, Kill (2) Special Rule. Comes with: Built-in WYRD IV 4x, Tripod. -20 Penalty To Hit when used without a Tripod."
+      },
+      {
+        "name": "W-AV M6-V Grindell-Galilean Nonlinear Rifle",
+        "nickname": "Spartan Laser",
+        "faction": "UNSC",
+        "weapon_type": "Energy Weapon",
+        "rate_of_fire": "Sustained (3) with Charge (1)",
+        "weight_kg": 19.0,
+        "damage": "5D10",
+        "bonus_damage": "12",
+        "pierce": 65,
+        "range": "20m-6,000m",
+        "magazine": 12,
+        "magazine_type": "Battery",
+        "reload": "11 Half Actions",
+        "ammunition": "Grindell battery",
+        "price": 181,
+        "tags": [
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Recharge (1)",
+          "Kinetic",
+          "Kill (1)",
+          "Dice minimum (5)"
+        ],
+        "comes_with": [
+          "Built-in WYRD III 3x"
+        ],
+        "description": "Recharge (1), Kinetic, Kill (1), Dice minimum (5) Special Rule. Comes with: Built-in WYRD III 3x. Must Charge to (1) to Fire and must be fired as a Full Action Attack when charged."
+      },
+      {
+        "name": "W-AV M6-R Grindell-Galilean Nonlinear Rifle",
+        "nickname": "Spartan Laser Recon",
+        "faction": "UNSC",
+        "weapon_type": "Energy Weapon",
+        "rate_of_fire": "Sustained (3) with Charge (1)",
+        "weight_kg": 17.2,
+        "damage": "5D10",
+        "bonus_damage": "10",
+        "pierce": 45,
+        "range": "20m-4,500m",
+        "magazine": 18,
+        "magazine_type": "Battery",
+        "reload": "11 Half Actions",
+        "ammunition": "Grindell battery",
+        "price": 157,
+        "tags": [
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Recharge (1)",
+          "Kinetic",
+          "Kill (1)",
+          "Dice minimum (3)"
+        ],
+        "comes_with": [
+          "Built-in WYRD III 3x"
+        ],
+        "description": "Recharge (1), Kinetic, Kill (1), Dice minimum (3) Special Rule. Comes with: Built-in WYRD III 3x. Must Charge to (1) to Fire and must be fired as a Full Action Attack when charged."
+      },
+      {
+        "name": "W-AV M6-E Grindell-Galilean Nonlinear Rifle",
+        "nickname": "Spartan Laser Anti-Material",
+        "faction": "UNSC",
+        "weapon_type": "Energy Weapon",
+        "rate_of_fire": "Sustained (3) with Charge (1)",
+        "weight_kg": 19.0,
+        "damage": "5D10",
+        "bonus_damage": "15",
+        "pierce": 75,
+        "range": "20m-5,500m",
+        "magazine": 12,
+        "magazine_type": "Battery",
+        "reload": "11 Half Actions",
+        "ammunition": "Grindell battery",
+        "price": 187,
+        "tags": [
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Recharge (1)",
+          "Kinetic",
+          "Kill (1)",
+          "Dice minimum (6)"
+        ],
+        "comes_with": [
+          "Built-in WYRD III 3x"
+        ],
+        "description": "Recharge (1), Kinetic, Kill (1), Dice minimum (6) Special Rule. Comes with: Built-in WYRD III 3x. Must Charge to (1) to Fire and must be fired as a Full Action Attack when charged."
+      },
+      {
+        "name": "W-AV M6-X Grindell-Galilean Nonlinear Rifle",
+        "nickname": "Spartan Laser Quickdraw",
+        "faction": "UNSC",
+        "weapon_type": "Energy Weapon",
+        "rate_of_fire": "Sustained (3) with Charge (1)",
+        "weight_kg": 19.0,
+        "damage": "5D10",
+        "bonus_damage": "12",
+        "pierce": 65,
+        "range": "20m-6,000m",
+        "magazine": 12,
+        "magazine_type": "Battery",
+        "reload": "11 Half Actions",
+        "ammunition": "Grindell battery",
+        "price": 200,
+        "tags": [
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Kinetic",
+          "Kill (1)",
+          "Dice minimum (5)"
+        ],
+        "comes_with": [
+          "Built-in WYRD III 3x"
+        ],
+        "description": "Kinetic, Kill (1), Dice minimum (5) Special Rule. Comes with: Built-in WYRD III 3x. Must Charge to (1) to Fire and must be fired as a Full Action Attack when charged."
+      },
+      {
+        "name": "EMP Rifle",
+        "nickname": "EMP Gun",
+        "faction": "UNSC",
+        "weapon_type": "Energy Weapon",
+        "rate_of_fire": "Sustained (2)",
+        "weight_kg": 12.1,
+        "damage": "0",
+        "bonus_damage": "1",
+        "pierce": 40,
+        "range": "20m-50m",
+        "magazine": 60,
+        "magazine_type": "Battery",
+        "reload": "11 Half Actions",
+        "ammunition": "Grindell battery",
+        "price": 105,
+        "tags": [
+          "I",
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "EMP (6)"
+        ],
+        "description": "EMP (6) Special Rule. -10 Penalty To Hit. Fires an EMP wave strong enough to shut down Power Armored Vehicles, as long as they are within the 50m Range. EMP Special Rule stays active as if the attack had Flame (1D5). The Flame will deal no Damage, but instead will continuously apply the EMP Special Rule until Flame is reduced to 0. Can’t stack."
+      }
+    ],
+    "chemical_sprayers": [
+      {
+        "name": "M7057 Defoliant Projector",
+        "nickname": "Flamethrower",
+        "faction": "UNSC",
+        "weapon_type": "Chemical Sprayer",
+        "rate_of_fire": "Sustained (3)",
+        "weight_kg": 40.0,
+        "damage": "3D10",
+        "bonus_damage": "5",
+        "pierce": 16,
+        "range": "5m-35m",
+        "magazine": 54,
+        "magazine_type": "Tank",
+        "reload": "17 Half Actions",
+        "ammunition": "ChemSpray Tank",
+        "price": 44,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Flame (1D5)",
+          "Cauterize",
+          "Spread"
+        ],
+        "description": "Flame (1D5), Cauterize, Spread Special Rule. Fires a sticky flammable set of chemicals that are then ignited. Releases in a 45-degree cone of fire that hits multiple targets. Point Blank Attacks with this weapon causes the User to hit themselves with the Attack alongside the Target. Tank weighs 5 kg."
+      },
+      {
+        "name": "M705 Incendiary Jet Tool",
+        "nickname": "I-Jet Flamethrower",
+        "faction": "UNSC",
+        "weapon_type": "Chemical Sprayer",
+        "rate_of_fire": "Sustained (4)",
+        "weight_kg": 40.0,
+        "damage": "2D10",
+        "bonus_damage": "15",
+        "pierce": 30,
+        "range": "10m-20m",
+        "magazine": 48,
+        "magazine_type": "Tank",
+        "reload": "17 Half Actions",
+        "ammunition": "ChemSpray Tank",
+        "price": 61,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Flame (1D5)",
+          "Cauterize",
+          "Spread"
+        ],
+        "description": "Flame (1D5), Cauterize, Spread Special Rule. Fires a sticky flammable set of chemicals that are then self-ignited. Tank weighs 5 kg."
+      },
+      {
+        "name": "M6634 Defoliant Projector",
+        "nickname": "Hellbringer",
+        "faction": "UNSC",
+        "weapon_type": "Chemical Sprayer",
+        "rate_of_fire": "Sustained (6)",
+        "weight_kg": 65.0,
+        "damage": "3D10",
+        "bonus_damage": "8",
+        "pierce": 17,
+        "range": "5m-45m",
+        "magazine": 120,
+        "magazine_type": "Tank",
+        "reload": "17 Half Actions",
+        "ammunition": "Heavy Tank",
+        "price": 93,
+        "tags": [
+          "I",
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Flame (1D10)",
+          "Cauterize",
+          "Spread"
+        ],
+        "description": "Flame (1D10), Cauterize, Spread Special Rule. Fires a sticky flammable set of chemicals that are then ignited. Releases a 45-degree cone of fire that hits multiple targets. Point Blank Attacks with this weapon causes the User to hit themselves with the Attack alongside the Target. Tank weighs 10 kg."
+      },
+      {
+        "name": "M7057 Cryosprayer",
+        "nickname": "Coldthrower",
+        "faction": "UNSC",
+        "weapon_type": "Chemical Sprayer",
+        "rate_of_fire": "Sustained (3)",
+        "weight_kg": 40.0,
+        "damage": "1D10",
+        "bonus_damage": "17",
+        "pierce": 30,
+        "range": "5m-35m",
+        "magazine": 54,
+        "magazine_type": "Tank",
+        "reload": "17 Half Actions",
+        "ammunition": "ChemSpray Tank",
+        "price": 53,
+        "tags": [
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Cryo (2)",
+          "Spread"
+        ],
+        "description": "Cryo (2), Spread Special Rule. Fires a dangerous Cryotech application that causes Fatigue. Releases in a 45-degree cone of fire that hits multiple targets. Point Blank Attacks with this weapon causes the User to hit themselves with the Attack alongside the Target. Tank weighs 5 kg."
+      },
+      {
+        "name": "NA4 Heavy Cryosprayer",
+        "nickname": "Cryosprayer",
+        "faction": "UNSC",
+        "weapon_type": "Chemical Sprayer",
+        "rate_of_fire": "Sustained (4)",
+        "weight_kg": 65.0,
+        "damage": "1D10",
+        "bonus_damage": "19",
+        "pierce": 40,
+        "range": "10m-45m",
+        "magazine": 120,
+        "magazine_type": "Tank",
+        "reload": "17 Half Actions",
+        "ammunition": "Heavy Tank",
+        "price": 106,
+        "tags": [
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Cryo (3)",
+          "Spread"
+        ],
+        "description": "Cryo (3), Spread Special Rule. Fires a dangerous Cryotech application that causes Fatigue. When against Vehicles above 3 Size Points, up to 6 Size Points, able to reduce the Vehicles Acceleration and Top Speed by 10 MpT per Round, to a minimum of Half of the Vehicles movement speeds. Point Blank Attacks with this weapon causes the User to hit themselves with the Attack alongside the Target. Tank weighs 10 kg."
+      }
+    ],
+    "rocket_launchers": [
+      {
+        "name": "M41 Surface-to-Surface Rocket Launcher",
+        "nickname": "SPNKR",
+        "faction": "UNSC",
+        "weapon_type": "Rocket Launcher",
+        "rate_of_fire": "Semi-Auto (1)",
+        "weight_kg": 10.8,
+        "damage": "4D10",
+        "bonus_damage": "16",
+        "pierce": 12,
+        "range": "20m-400m",
+        "magazine": 2,
+        "magazine_type": "Tube",
+        "reload": "13 Half Actions",
+        "ammunition": "M19 102mm",
+        "price": 100,
+        "tags": [
+          "I",
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Blast (9)",
+          "Kill (3)",
+          "Homing",
+          "Vehicle lock"
+        ],
+        "comes_with": [
+          "Built-in KFA-2 2x"
+        ],
+        "description": "Blast (9), Kill (3), Homing, Vehicle lock Special Rule. Comes with: Built-in KFA-2 2x."
+      },
+      {
+        "name": "M40-B Surface-to-Air Rocket Launcher",
+        "nickname": "STMPr",
+        "faction": "UNSC",
+        "weapon_type": "Rocket Launcher",
+        "rate_of_fire": "Auto (1)",
+        "weight_kg": 10.8,
+        "damage": "6D10",
+        "bonus_damage": "19",
+        "pierce": 20,
+        "range": "60m-800m",
+        "magazine": 1,
+        "magazine_type": "Tube",
+        "reload": "13 Half Actions",
+        "ammunition": "M19B 119mm",
+        "price": 109,
+        "tags": [
+          "I",
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Blast (10)",
+          "Kill (4)",
+          "Homing"
+        ],
+        "comes_with": [
+          "Built-in KFA-2 2x"
+        ],
+        "description": "Blast (10), Kill (4), Homing Special Rule. Gains a +20 Bonus To Hit against Aircraft Vehicles. Comes with: Built-in KFA-2 2x."
+      },
+      {
+        "name": "M57 Pilum Assault Weapon",
+        "nickname": "Pilum",
+        "faction": "UNSC",
+        "weapon_type": "Rocket Launcher",
+        "rate_of_fire": "Semi-Auto (1)",
+        "weight_kg": 7.8,
+        "damage": "4D10",
+        "bonus_damage": "10",
+        "pierce": 24,
+        "range": "20m-400m",
+        "magazine": 2,
+        "magazine_type": "Magazine",
+        "reload": "13 Half Actions",
+        "ammunition": "50x137mm HEMP",
+        "price": 110,
+        "tags": [
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Blast (9)",
+          "Kill (3)",
+          "Airburst (2)",
+          "Homing",
+          "Vehicle lock"
+        ],
+        "comes_with": [
+          "Built-in KFA-2 2x"
+        ],
+        "description": "Blast (9), Kill (3), Airburst (2), Homing, Vehicle lock Special Rule. Comes with: Built-in KFA-2 2x."
+      },
+      {
+        "name": "Hydra Multiple Launch Rocket System",
+        "nickname": "Hydra",
+        "faction": "UNSC",
+        "weapon_type": "Rocket Launcher",
+        "rate_of_fire": "Auto (5)",
+        "weight_kg": 11.0,
+        "damage": "2D10",
+        "bonus_damage": "5",
+        "pierce": 18,
+        "range": "40m-500m",
+        "magazine": 12,
+        "magazine_type": "Tube",
+        "reload": "13 Half Actions",
+        "ammunition": "9X-G HEAB Gyroc",
+        "price": 105,
+        "tags": [
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Blast (6)",
+          "Kill (1)",
+          "Airburst (1)",
+          "Homing",
+          "Vehicle lock"
+        ],
+        "comes_with": [
+          "Built-in EVOS-D V2"
+        ],
+        "description": "Blast (6), Kill (1), Airburst (1), Homing, Vehicle lock Special Rule. Comes with: Built-in EVOS-D V2. Vehicle Lock Special Rule and Homing Special Rule within 250 Meters."
+      },
+      {
+        "name": "Hydra 2 Multiple Launch Rocket System",
+        "nickname": "Hydra",
+        "faction": "UNSC",
+        "weapon_type": "Rocket Launcher",
+        "rate_of_fire": "Semi-Auto (2)",
+        "weight_kg": 11.0,
+        "damage": "2D10",
+        "bonus_damage": "7",
+        "pierce": 20,
+        "range": "50m-550m",
+        "magazine": 12,
+        "magazine_type": "Tube",
+        "reload": "13 Half Actions",
+        "ammunition": "9X-G HEAB Gyroc",
+        "price": 107,
+        "tags": [
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Blast (6)",
+          "Kill (2)",
+          "Airburst (1)",
+          "Homing",
+          "Vehicle lock"
+        ],
+        "comes_with": [
+          "Built-in EVOS-D V2"
+        ],
+        "description": "Blast (6), Kill (2), Airburst (1) Homing, Vehicle lock Special Rule. Comes with: Built-in EVOS-D V2. Vehicle Lock Special Rule and Homing Special Rule within 300 Meters."
+      }
+    ],
+    "missile_launchers": [
+      {
+        "name": "G4H-DuSH Surface-to-Surface Missile Launcher",
+        "nickname": "Guhdoosh",
+        "faction": "UNSC",
+        "weapon_type": "Missile Launcher",
+        "rate_of_fire": "Semi-Auto (1)",
+        "weight_kg": 13.5,
+        "damage": "5D10",
+        "bonus_damage": "13",
+        "pierce": 18,
+        "range": "20m-1,200m",
+        "magazine": 4,
+        "magazine_type": "Magazine",
+        "reload": "13 Half Actions",
+        "ammunition": "M18 100mm",
+        "price": 100,
+        "tags": [
+          "I",
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Blast (7)",
+          "Kill (3)",
+          "Vehicle lock"
+        ],
+        "comes_with": [
+          "Built-in EVOS-D V2"
+        ],
+        "description": "Blast (7), Kill (3), Vehicle lock Special Rule. Comes with: Built-in EVOS-D V2."
+      },
+      {
+        "name": "M19-B Surface-to-Air Missile Launcher",
+        "nickname": "SAM",
+        "faction": "UNSC",
+        "weapon_type": "Missile Launcher",
+        "rate_of_fire": "Semi-Auto (1)",
+        "weight_kg": 10.8,
+        "damage": "3D10",
+        "bonus_damage": "24",
+        "pierce": 10,
+        "range": "20m-5,500m",
+        "magazine": 1,
+        "magazine_type": "Magazine",
+        "reload": "13 Half Actions",
+        "ammunition": "M19-B 102mm",
+        "price": 122,
+        "tags": [
+          "I",
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Blast (6)",
+          "Kill (3)",
+          "Vehicle lock"
+        ],
+        "comes_with": [
+          "Tripod"
+        ],
+        "description": "Blast (6), Kill (3), Vehicle lock Special Rule. Comes with: Tripod. Able to track a vehicle up to 4.5 kilometers away."
+      },
+      {
+        "name": "Launcher Unit-65D-Self-Guided Missile-151",
+        "nickname": "Rocket Pod",
+        "faction": "UNSC",
+        "weapon_type": "Missile Launcher",
+        "rate_of_fire": "Auto (4)",
+        "weight_kg": 18.8,
+        "damage": "4D10",
+        "bonus_damage": "5",
+        "pierce": 30,
+        "range": "20m-1,500m",
+        "magazine": 8,
+        "magazine_type": "Magazine",
+        "reload": "13 Half Actions",
+        "ammunition": "ASGM-4 Missile",
+        "price": 127,
+        "tags": [
+          "I",
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Blast (8)",
+          "Kill (2)",
+          "Vehicle lock"
+        ],
+        "comes_with": [
+          "Tripod"
+        ],
+        "description": "Blast (8), Kill (2), Vehicle lock Special Rule. Comes with: Tripod. Able to Lock on to Vehicles up to 750 Meters away. Can’t be detonated within 10 Meters of the weapon used to fire the Grenade."
+      },
+      {
+        "name": "M80 Multiple Rocket Launch System",
+        "nickname": "M80 MRLS",
+        "faction": "UNSC",
+        "weapon_type": "Missile Launcher",
+        "rate_of_fire": "Auto (4)",
+        "weight_kg": 18.8,
+        "damage": "3D10",
+        "bonus_damage": "15",
+        "pierce": 18,
+        "range": "20m-1,500m",
+        "magazine": 24,
+        "magazine_type": "Magazine",
+        "reload": "13 Half Actions",
+        "ammunition": "65mm Rocket",
+        "price": 134,
+        "tags": [
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Blast (8)",
+          "Kill (4)"
+        ],
+        "comes_with": [
+          "Tripod"
+        ],
+        "description": "Blast (8), Kill (4) Special Rule. Comes with: Tripod. Able to Lock on to Vehicles up to 750 Meters away. Can’t be detonated within 10 Meters of the weapon used to fire the Grenade."
+      }
+    ],
+    "grenade_launchers": [
+      {
+        "name": "M363 Remote Projectile Detonator",
+        "nickname": "Sticky Detonator",
+        "faction": "UNSC",
+        "weapon_type": "Grenade Launcher",
+        "rate_of_fire": "Semi-Auto (1)",
+        "weight_kg": 6.8,
+        "damage": "4D10",
+        "bonus_damage": "12",
+        "pierce": 10,
+        "range": "10m-30m",
+        "magazine": 1,
+        "magazine_type": "Magazine",
+        "reload": "8 Half Actions",
+        "ammunition": "120mm Grenade",
+        "price": 49,
+        "tags": [
+          "I",
+          "UD",
+          "OH"
+        ],
+        "special_rules": [
+          "Sticky",
+          "Blast (5)",
+          "Kill (2)"
+        ],
+        "description": "Sticky, Blast (5), Kill (2) Special Rule. Single-Shot Muzzle-loaded Grenade Launcher. The Sticky Launcher has a 120 Meter distance limit before it detonates. The M9030 Grenade that is launched can be set to detonate by enemy proximity, by timed explosive, or by setting off the detonation using the weapon. The M363 can’t be reloaded until the current armed grenade has been detonated."
+      },
+      {
+        "name": "M319 Individual Grenade Launcher",
+        "nickname": "Grenade Launcher",
+        "faction": "UNSC",
+        "weapon_type": "Grenade Launcher",
+        "rate_of_fire": "Semi-Auto (1)",
+        "weight_kg": 3.3,
+        "damage": "3D10",
+        "bonus_damage": "9",
+        "pierce": 12,
+        "range": "20m-100m",
+        "magazine": 1,
+        "magazine_type": "Magazine",
+        "reload": "8 Half Actions",
+        "ammunition": "40mm Grenade",
+        "price": 88,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "EMP (4)",
+          "Blast (8)",
+          "Kill (4)"
+        ],
+        "description": "EMP (4), Blast (8), Kill (4) Special Rule. Capable of two detonation types. When the trigger is held after firing, the Grenade will not detonate until released. The Grenade has proximity sensors that track IFF Tags and will display friendlies and enemies within the Blast Radius. When held, the M319 gains the EMP Rule listed. When the trigger is not held, the Grenade will detonate after 6 Seconds of being fired. The Grenade detonates at the beginning of the Characters next Turn. Can’t be detonated within 10 Meters of the weapon used to fire the Grenade."
+      },
+      {
+        "name": "XM509 UDAW",
+        "nickname": "Cowboy",
+        "faction": "UNSC",
+        "weapon_type": "Grenade Launcher",
+        "rate_of_fire": "Semi-Auto (2)",
+        "weight_kg": 8.6,
+        "damage": "4D10",
+        "bonus_damage": "11",
+        "pierce": 14,
+        "range": "30m-300m",
+        "magazine": 6,
+        "magazine_type": "Tube",
+        "reload": "8 Half Actions",
+        "ammunition": "20x102mm Shell",
+        "price": 90,
+        "tags": [
+          "I",
+          "UD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Blast (3)",
+          "Kill (1)"
+        ],
+        "comes_with": [
+          "Built-in KFA-2 2x"
+        ],
+        "description": "Blast (3), Kill (1) Special Rule. Comes with: Built-in KFA-2 2x. Black Polymer finish. Aggressive gas venting and a pneumatic recoil compensation system allows this launcher to use 20x102mm autocannon rounds as ammo."
+      },
+      {
+        "name": "XM510 Multishot Grenade Launcher",
+        "nickname": "Heavy Grenade Launcher",
+        "faction": "UNSC",
+        "weapon_type": "Grenade Launcher",
+        "rate_of_fire": "Burst (2)",
+        "weight_kg": 5.3,
+        "damage": "3D10",
+        "bonus_damage": "9",
+        "pierce": 12,
+        "range": "10m-70m",
+        "magazine": 6,
+        "magazine_type": "Tube",
+        "reload": "8 Half Actions",
+        "ammunition": "40mm Grenade",
+        "price": 107,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Blast (8)",
+          "Kill (4)",
+          "Homing",
+          "Vehicle lock"
+        ],
+        "comes_with": [
+          "Built-in KFA-2 2x"
+        ],
+        "description": "Blast (8), Kill (4), Homing, Vehicle lock Special Rule. Comes with: Built-in KFA-2 2x. Vehicle Lock Special Rule and Homing Special Rule within 75 Meters. Can’t be detonated within 10 Meters of the weapon used to fire the Grenade."
+      },
+      {
+        "name": "M305 Grenade Launcher",
+        "nickname": "ICMG",
+        "faction": "UNSC",
+        "weapon_type": "Grenade Launcher",
+        "rate_of_fire": "Semi-Auto (1)",
+        "weight_kg": 4.4,
+        "damage": "3D10",
+        "bonus_damage": "9",
+        "pierce": 12,
+        "range": "15m-85m",
+        "magazine": 5,
+        "magazine_type": "Magazine",
+        "reload": "8 Half Actions",
+        "ammunition": "40mm Grenade",
+        "price": 80,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Blast (8)",
+          "Kill (4)"
+        ],
+        "comes_with": [
+          "Built-in KFA-2 2x"
+        ],
+        "description": "Blast (8), Kill (4). Comes with: Built-in KFA-2 2x. Can’t be detonated within 10 Meters of the weapon used to fire the Grenade."
+      },
+      {
+        "name": "M301 Underbarrel Grenade Launcher",
+        "nickname": "Thumper",
+        "faction": "UNSC",
+        "weapon_type": "Grenade Launcher",
+        "rate_of_fire": "Semi-Auto (1)",
+        "weight_kg": 1.4,
+        "damage": "3D10",
+        "bonus_damage": "9",
+        "pierce": 12,
+        "range": "30m-350m",
+        "magazine": 1,
+        "magazine_type": "Tube",
+        "reload": "8 Half Actions",
+        "ammunition": "40mm Grenade",
+        "price": 63,
+        "tags": [
+          "I",
+          "UD",
+          "TH"
+        ],
+        "special_rules": [
+          "Blast (8)",
+          "Kill (4)"
+        ],
+        "description": "Blast (8), Kill (4) Special Rule. Black Polymer finish. Attachment information can be found under the Rail Attachments section for the UNSC Armory."
+      }
+    ],
+    "mortar_launchers": [
+      {
+        "name": "M440 Infantry-Level Mortar System",
+        "nickname": "Four-Forty",
+        "faction": "UNSC",
+        "weapon_type": "Mortar Launcher",
+        "rate_of_fire": "Auto (1)",
+        "weight_kg": 112.3,
+        "damage": "4D10",
+        "bonus_damage": "25",
+        "pierce": 15,
+        "range": "80m-7,250m",
+        "magazine": 1,
+        "magazine_type": "Tube",
+        "reload": "6 Half Actions",
+        "ammunition": "112mm Mortar",
+        "price": 299,
+        "tags": [
+          "UD",
+          "HW"
+        ],
+        "special_rules": [
+          "Mortar",
+          "Blast (30)",
+          "Kill (12)"
+        ],
+        "description": "Mortar Special Rule. Blast (30), Kill (12). The mortar can be split into 3 pieces of equal weight, making it easier to travel with in groups. It takes 10 Full Actions to assemble and disassemble the Mortar, or 3 Full Actions with assistance. Mortar shells each weigh 14 kg. The Mortar can’t strike within Close Range."
+      },
+      {
+        "name": "M331 Mark II Mortar System",
+        "nickname": "M.2.8.2.",
+        "faction": "UNSC",
+        "weapon_type": "Mortar Launcher",
+        "rate_of_fire": "Auto (1)",
+        "weight_kg": 22.5,
+        "damage": "4D10",
+        "bonus_damage": "18",
+        "pierce": 15,
+        "range": "70m-2,800m",
+        "magazine": 1,
+        "magazine_type": "Tube",
+        "reload": "4 Half Actions",
+        "ammunition": "82mm Mortar",
+        "price": 187,
+        "tags": [
+          "UD",
+          "HW"
+        ],
+        "special_rules": [
+          "Mortar",
+          "Blast (20)",
+          "Kill (9)"
+        ],
+        "description": "Mortar Special Rule. Blast (20), Kill (9). The mortar can be split into 2 pieces of equal weight, making it easier to travel with in groups. It takes 7 Full Actions to assemble and disassemble the Mortar, or 1 Full Actions with assistance. Mortar shells each weigh 1.4 kg. The Mortar can’t strike within Close Range."
+      },
+      {
+        "name": "AG Onyx Lightweight Mortar",
+        "nickname": "Mini-Mike",
+        "faction": "UNSC",
+        "weapon_type": "Mortar Launcher",
+        "rate_of_fire": "Auto (1)",
+        "weight_kg": 16.3,
+        "damage": "4D10",
+        "bonus_damage": "12",
+        "pierce": 13,
+        "range": "60m-1,500m",
+        "magazine": 1,
+        "magazine_type": "Tube",
+        "reload": "Single Loading",
+        "ammunition": "60mm Mortar",
+        "price": 117,
+        "tags": [
+          "UD",
+          "HW"
+        ],
+        "special_rules": [
+          "Mortar",
+          "Blast (13)",
+          "Kill (6)"
+        ],
+        "description": "Mortar Special Rule. Blast (13), Kill (6). The mortar can be split into 2 pieces of equal weight, making it easier to travel with in groups. It takes 7 Full Actions to assemble and disassemble the Mortar, or 1 Full Actions with assistance. Mortar shells each weigh 1.4 kg. The Mortar can’t strike within Close Range."
+      }
+    ],
+    "melee_weapons": [
+      {
+        "name": "M1 Combat Knife",
+        "nickname": "Combat Knife",
+        "faction": "UNSC",
+        "weapon_type": "Knife",
+        "weight_kg": 0.4,
+        "damage": "2D10",
+        "bonus_damage": "4 +Full Strength Modifier",
+        "pierce": "5 +Half Strength Modifier",
+        "price": 15,
+        "reach": null,
+        "tags": [
+          "PD",
+          "SD",
+          "DW"
+        ],
+        "special_rules": [],
+        "description": "36.5cm long Military Combat knife. Non-reflective, rust resistant. Weighted for throwing. No Civilian or Police cR upcharge."
+      },
+      {
+        "name": "M11 Combat Knife",
+        "nickname": "Piercer",
+        "faction": "UNSC",
+        "weapon_type": "Knife",
+        "weight_kg": 1.3,
+        "damage": "2D10",
+        "bonus_damage": "4 +Full Strength Modifier",
+        "pierce": "9 +Full Strength Modifier",
+        "price": 37,
+        "reach": null,
+        "tags": [
+          "PD",
+          "SD",
+          "OH"
+        ],
+        "special_rules": [
+          "Penetrating"
+        ],
+        "description": "Penetrating Special Rule. 43cm long extended Military Combat knife. Non-reflective, rust resistant. Weighted for throwing. These Combat Knives are molecularly sharpened for the purpose of stabbing through Mjolnir and Energy Shields."
+      },
+      {
+        "name": "Model 52 Navy Knife",
+        "nickname": "Navy Knife",
+        "faction": "UNSC",
+        "weapon_type": "Knife",
+        "weight_kg": 0.9,
+        "damage": "2D10",
+        "bonus_damage": "6 +Full Strength Modifier",
+        "pierce": "7 +Half Strength Modifier",
+        "price": 17,
+        "reach": null,
+        "tags": [
+          "PD",
+          "SD",
+          "OH"
+        ],
+        "special_rules": [],
+        "description": "50.1cm long Military Combat knife. Non-reflective, rust resistant. No Civilian or Police cR upcharge."
+      },
+      {
+        "name": "MK 88 Ratio Combat Knife",
+        "nickname": "Eighty-Eight",
+        "faction": "UNSC",
+        "weapon_type": "Knife",
+        "weight_kg": 0.3,
+        "damage": "2D10",
+        "bonus_damage": "2 +Half Strength Modifier",
+        "pierce": "11 +Half Strength Modifier",
+        "price": 23,
+        "reach": null,
+        "tags": [
+          "PD",
+          "SD",
+          "DW"
+        ],
+        "special_rules": [],
+        "description": "+20 to Concealing and Camouflage. A small, Concealable Military Combat knife. Non-reflective, rust resistant. No Civilian or Police cR upcharge."
+      },
+      {
+        "name": "Military Combat Kukri",
+        "nickname": "Kukri",
+        "faction": "UNSC",
+        "weapon_type": "Dagger",
+        "weight_kg": 0.8,
+        "damage": "2D10",
+        "bonus_damage": "9 +Half Strength Modifier",
+        "pierce": "7 +Half Strength Modifier",
+        "price": 17,
+        "reach": null,
+        "tags": [
+          "PD",
+          "SD",
+          "OH"
+        ],
+        "special_rules": [],
+        "description": "Lengthened Military Dagger with a 49cm long carbon-steel blade. Non-reflective, carbide coating, rust resistant. No Civilian or Police cR upcharge."
+      },
+      {
+        "name": "MP Machete",
+        "nickname": "Machete",
+        "faction": "UNSC",
+        "weapon_type": "Dagger",
+        "weight_kg": 0.9,
+        "damage": "2D10",
+        "bonus_damage": "12 +Half Strength Modifier",
+        "pierce": "1 +Half Strength Modifier",
+        "price": 17,
+        "reach": null,
+        "tags": [
+          "PD",
+          "SD",
+          "OH"
+        ],
+        "special_rules": [],
+        "description": "Military Dagger with a 30cm blade and a 12cm weighted handle. Non-reflective, carbide coating, rust resistant. No Civilian or Police cR upcharge."
+      },
+      {
+        "name": "Pattern-2 Composite Sword",
+        "nickname": "Composite",
+        "faction": "UNSC",
+        "weapon_type": "One-Handed Sword",
+        "weight_kg": 1.1,
+        "damage": "2D10",
+        "bonus_damage": "6 +Full Strength Modifier",
+        "pierce": "5 +Full Strength Modifier",
+        "price": 17,
+        "reach": null,
+        "tags": [
+          "PD",
+          "SD",
+          "OH"
+        ],
+        "special_rules": [],
+        "description": "Military Dagger with a 43cm blade and a 12cm weighted handle. Non-reflective, carbide coating, rust resistant. No Civilian or Police cR upcharge."
+      },
+      {
+        "name": "Multi-Purpose Tomahawk",
+        "nickname": "Throwing Axe",
+        "faction": "UNSC",
+        "weapon_type": "Axe",
+        "weight_kg": 0.9,
+        "damage": "3D10",
+        "bonus_damage": "2 +Full Strength Modifier",
+        "pierce": "2 +Full Strength Modifier",
+        "price": 17,
+        "reach": null,
+        "tags": [
+          "SD",
+          "OH"
+        ],
+        "special_rules": [],
+        "description": "Military Tomahawk with a 30cm head and a 38cm handle. Non-reflective, carbide coating, rust resistant. No Civilian or Police cR upcharge."
+      },
+      {
+        "name": "Police Baton",
+        "nickname": "Billy",
+        "faction": "UNSC",
+        "weapon_type": "Club",
+        "weight_kg": 1.0,
+        "damage": "3D10",
+        "bonus_damage": "6 +Full Strength Modifier",
+        "pierce": null,
+        "price": 18,
+        "reach": "+1",
+        "tags": [
+          "BD",
+          "OH"
+        ],
+        "special_rules": [],
+        "description": "Law Enforcement baton, 91cm in length. Collapsible to 12cm with a spring-loaded mechanism for Quickdrawing. No Civilian or Police cR upcharge."
+      },
+      {
+        "name": "Military Shovel",
+        "nickname": "Shovel",
+        "faction": "UNSC",
+        "weapon_type": "Shovel",
+        "weight_kg": 1.0,
+        "damage": "2D10",
+        "bonus_damage": "7 +Full Strength Modifier",
+        "pierce": null,
+        "range": null,
+        "price": 18,
+        "damage_profile": "BD",
+        "alternate_profiles": [
+          {
+            "damage_profile": "PD",
+            "damage": "2D10",
+            "bonus_damage": "3 +Full Strength Modifier",
+            "pierce": "5 +Half Strength Modifier",
+            "range": null
+          }
+        ],
+        "tags": [
+          "OH"
+        ],
+        "special_rules": [],
+        "description": "Sharpened and small collapsible Military Shovel. Doubles as an emergency melee weapon by design."
+      },
+      {
+        "name": "Sledge Hammer",
+        "nickname": "Sledgehammer",
+        "faction": "UNSC",
+        "weapon_type": "Hammer",
+        "weight_kg": 9.1,
+        "damage": "4D10",
+        "bonus_damage": "22 +Full Strength Modifier",
+        "pierce": null,
+        "price": 31,
+        "reach": "+1",
+        "tags": [
+          "BD",
+          "HW"
+        ],
+        "special_rules": [
+          "Slow",
+          "Stun (3)"
+        ],
+        "description": "Slow and Stun (3) Special Rule. A large breeching hammer designed for forceful entry."
+      },
+      {
+        "name": "Brass Knuckles",
+        "nickname": "Knuckledusters",
+        "faction": "UNSC",
+        "weapon_type": "Fist Weapon",
+        "weight_kg": 0.5,
+        "damage": "1D10",
+        "bonus_damage": "3",
+        "pierce": null,
+        "price": 5,
+        "reach": null,
+        "tags": [
+          "BD",
+          "DW"
+        ],
+        "special_rules": [],
+        "description": "This weapon augments the Characters Punching-based Melee Attacks by adding additional Damage."
+      },
+      {
+        "name": "Humbler Stun Device",
+        "nickname": "Shock Stick",
+        "faction": "UNSC",
+        "weapon_type": "Club",
+        "weight_kg": 1.5,
+        "damage": "3D10",
+        "bonus_damage": "2 +Full Strength Modifier",
+        "pierce": null,
+        "price": 51,
+        "reach": null,
+        "tags": [
+          "BD",
+          "OH"
+        ],
+        "special_rules": [
+          "Electrified (12)"
+        ],
+        "description": "Electrified (12) Special Rule that can be disabled. Electrified baton 51cm in length. Glows a blue or purple color, easily seen in dark lighting. No Civilian or Police cR upcharge."
+      },
+      {
+        "name": "Pepper Spray",
+        "nickname": "OC Spray",
+        "faction": "UNSC",
+        "weapon_type": "Spray Weapon",
+        "weight_kg": 0.4,
+        "damage": 0,
+        "bonus_damage": null,
+        "pierce": null,
+        "price": 10,
+        "tags": [
+          "DW"
+        ],
+        "special_rules": [],
+        "description": "Used to disable opponents. Pepper Spray Special Rule when sprayed in the face. No Police and Civilian upcharge. Holds 20 uses. Check Equipment Section for more information. Pepper Spray is not intercepted by Energy Shields.",
+        "range": "1m-10m"
+      },
+      {
+        "name": "Taser Gun",
+        "faction": "UNSC",
+        "weapon_type": "Taser",
+        "weight_kg": 0.5,
+        "damage": "1D5",
+        "bonus_damage": "1",
+        "pierce": 1,
+        "price": 26,
+        "tags": [
+          "DW"
+        ],
+        "special_rules": [
+          "Electrified (2D10)",
+          "Sticky"
+        ],
+        "description": "Electrified (2D10) and Sticky Special Rule. Uses Warfare Melee when Melee Reach and uses Warfare Range when being used as a projectile. No Police or Civilian upcharge.",
+        "range": "2m-12m"
+      },
+      {
+        "name": "Anti-Ballistics Riot Shield",
+        "nickname": "Riot Shield",
+        "faction": "UNSC",
+        "weapon_type": "Melee Shield",
+        "weight_kg": 7.6,
+        "damage": "3D10",
+        "bonus_damage": "7 +Full Strength Modifier",
+        "pierce": null,
+        "price": 29,
+        "reach": "+1",
+        "tags": [
+          "BD",
+          "HW"
+        ],
+        "special_rules": [],
+        "description": "Provides 20 Armor and has 300 Breakpoints. An Anti-Ballistics Riot Shield that acts as mobile cover. The Riot shield is titanium-A with a hardened plastic window to see through. The Shield covers 5 Locations for Normal sized Characters. One Attack per Half Action when making Melee Attacks.",
+        "shield_armor": 20,
+        "breakpoints": 300
+      },
+      {
+        "name": "Spartan Shield",
+        "faction": "UNSC",
+        "weapon_type": "Melee Shield",
+        "weight_kg": 22.4,
+        "damage": "5D10",
+        "bonus_damage": "19 +Full Strength Modifier",
+        "pierce": null,
+        "price": 57,
+        "reach": "+1",
+        "tags": [
+          "BD",
+          "TH",
+          "HW"
+        ],
+        "special_rules": [
+          "Stun (2D5+5)"
+        ],
+        "description": "A powerful shield that has 30 Armor and 400 Breakpoints. The Shield covers 5 Locations for Large sized Characters. One Attack per Half Action when making Melee Attacks. Stun (2D5+5) Special Rule. *Characters with 9 Strength Modifier and Mythic Strength combined may hold their [TH] Spartan Shield as [OH].",
+        "shield_armor": 30,
+        "breakpoints": 400
+      },
+      {
+        "name": "Cable Cutters",
+        "faction": "UNSC",
+        "weapon_type": "Club",
+        "weight_kg": 2.2,
+        "damage": "2D10",
+        "bonus_damage": "9",
+        "pierce": 15,
+        "price": 17,
+        "reach": null,
+        "tags": [
+          "BD",
+          "OH"
+        ],
+        "special_rules": [],
+        "description": "30 Penalty to Hit against moving Characters. Common pair of large-scale cable cutters. Able to cut large chain links and other pieces of metal. More than strong enough to cut off a finger of any race. On Helpless or Stunned Characters that can’t fight back, Melee Attacks with Wire Cutters deal 2D10 +9 Damage, with 15 Pierce. If not against a Helpless or Stunned Character, Melee Attacks with this weapon gain a -30 To Hit."
+      },
+      {
+        "name": "Heavy Duty Bolt Cutters",
+        "faction": "UNSC",
+        "weapon_type": "Club",
+        "weight_kg": 7.6,
+        "damage": "2D10",
+        "bonus_damage": "14",
+        "pierce": 18,
+        "price": 21,
+        "reach": null,
+        "tags": [
+          "BD",
+          "TH"
+        ],
+        "special_rules": [],
+        "description": "30 Penalty to Hit against moving Characters. Powerful bolt cutters, 1.3 meters long. Strong enough to cut through even Covenant metals and locks and can even lop off the fingers of any known Race. On Helpless or Stunned Characters that can’t fight back, Melee Attacks with Bolt Cutters deal 2D10 +14 Damage, with 18 Pierce. If not against a Helpless or Stunned Character, Melee Attacks with this weapon gain a -30 To Hit."
+      }
+    ]
+  },
+  "citation": "Mythic 7.0 CU1, UNSC Armory, pp. 118-129"
+}

@@ -115,3 +115,16 @@ class EquipmentPage(QWidget):
         button = self.category_buttons.get(category)
         if button is not None:
             button.setChecked(True)
+
+    def clear_selection(self):
+        # An exclusive group refuses to uncheck its checked button.
+        self.category_button_group.setExclusive(False)
+        for button in self.category_buttons.values():
+            button.setChecked(False)
+        self.category_button_group.setExclusive(True)
+        self.light_aspect_tiles.clear()
+        self.light_ability_tiles.clear()
+        self.title.setText("EQUIPMENT PACK")
+        self.experience_remaining_label.setText("XP remaining: 0 / 0")
+        self.options_title.clear()
+        self.options_description.clear()

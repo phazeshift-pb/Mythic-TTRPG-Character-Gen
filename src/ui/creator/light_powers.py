@@ -1,7 +1,10 @@
+# pyright: reportAttributeAccessIssue=false, reportArgumentType=false
 """Light & Sky aspects, abilities, grenades and supers.
 
 Part of MainWindow (src/ui/main_window.py); methods use its widgets and state via self.
 """
+from src.models import light_weapon
+from src.models.xp_shop import starting_aspect_slots, starting_light_ability_slots
 
 class LightPowersMixin:
     def select_light_category(self, category):
@@ -74,6 +77,15 @@ class LightPowersMixin:
             (power_type, power["name"].casefold())
             for power, power_type in available_powers
         }
+        # Built Light Weapons stay while their Connection is still the chosen one
+        valid_power_keys |= {
+            key
+            for selections in (self._selected_light_powers, self._selected_light_supers)
+            for key, value in selections.items()
+            if value.get("_light_weapon")
+            and str(value["_light_weapon"].get("connection", "")).casefold()
+            == selected_connection.strip().casefold()
+        }
         self._selected_light_aspects = {
             key: value
             for key, value in self._selected_light_aspects.items()
@@ -89,11 +101,30 @@ class LightPowersMixin:
             for key, value in self._selected_light_supers.items()
             if key in valid_power_keys
         }
+        # Switching away from a Warlock, or dropping Passive / Focus, can leave
+        # more picks than slots
+        power_limit = self._light_power_slot_limit()
+        if len(self._selected_light_powers) > power_limit:
+            self._selected_light_powers = dict(
+                list(self._selected_light_powers.items())[:power_limit]
+            )
+        aspect_limit = self._light_aspect_slot_limit()
+        if len(self._selected_light_aspects) > aspect_limit:
+            self._selected_light_aspects = dict(
+                list(self._selected_light_aspects.items())[:aspect_limit]
+            )
 
         if self._selected_light_category == "aspects":
             self.equipment_page.options_title.setText("Light Aspects")
+            aspect_limit = self._light_aspect_slot_limit()
+            outlier_note = (
+                " (includes the Passive Outlier's extra Aspect)"
+                if aspect_limit > starting_aspect_slots(self.game_data)
+                else ""
+            )
             self.equipment_page.options_description.setText(
-                "Select one Light Aspect."
+                f"Select up to {aspect_limit} Light Aspect"
+                f"{'s' if aspect_limit != 1 else ''} - one per Aspect Slot{outlier_note}."
             )
             for index, (connection, aspect) in enumerate(all_aspects):
                 key = (connection.casefold(), aspect["name"].casefold())
@@ -121,8 +152,24 @@ class LightPowersMixin:
                 self.equipment_grid.addWidget(tile, index // 3, index % 3)
         elif self._selected_light_category == "powers":
             self.equipment_page.options_title.setText("Light Abilities / Grenades")
+            power_limit = self._light_power_slot_limit()
+            guardian = self._selected_guardian_record() or {}
+            class_name = str(guardian.get("name") or "class").split()[0]
+            extras = []
+            if self._light_power_class_bonus():
+                extras.append(
+                    f"{self._light_power_class_bonus()} extra from the "
+                    f"{class_name} Power trait"
+                )
+            outlier_bonus = power_limit - starting_light_ability_slots(
+                self.game_data, self._selected_guardian_record()
+            )
+            if outlier_bonus:
+                extras.append(f"{outlier_bonus} extra from the Focus Outlier")
+            class_note = f" ({'; '.join(extras)})" if extras else ""
             self.equipment_page.options_description.setText(
-                "Select up to two Light Abilities and/or Light Grenades."
+                f"Select up to {power_limit} Light Abilities and/or Light Grenades"
+                f" - one per Light Ability Slot{class_note}."
             )
             power_selection = self._selected_light_powers
         elif self._selected_light_category == "supers":
@@ -210,6 +257,21 @@ class LightPowersMixin:
                     power_data["description"] = description
                     power_data["_power_type"] = power_type
                 key = (power_type, power["name"].casefold())
+                if light_weapon.is_light_weapon_name(power["name"]):
+                    # Light Weapon can be taken many times: each click opens the builder
+                    tile, select_button = self._create_selection_tile(
+                        f"{power['name']} - Build New",
+                        tile_details
+                        + "\nClick to build a Light Weapon. Can be taken more than once.",
+                        min_height=145,
+                    )
+                    select_button.toggled.connect(
+                        lambda checked, selected_tile=select_button, as_super=is_super:
+                        self._open_light_weapon_builder(selected_tile, checked, as_super)
+                    )
+                    self.light_ability_tiles.append((select_button, power_data))
+                    self.equipment_grid.addWidget(tile, index // 3, index % 3)
+                    continue
                 tile, select_button = self._create_selection_tile(
                     power["name"],
                     tile_details,
@@ -229,6 +291,27 @@ class LightPowersMixin:
                 self.light_ability_tiles.append((select_button, power_data))
                 select_button.setChecked(key in power_selection)
                 self.equipment_grid.addWidget(tile, index // 3, index % 3)
+            index = len(available_powers)
+            for key, power_data in list(power_selection.items()):
+                build = power_data.get("_light_weapon")
+                if not build:
+                    continue
+                tile, select_button = self._create_selection_tile(
+                    build["name"],
+                    f"Built Light Weapon | XP {power_data['experience_cost']} | "
+                    f"{'Super' if is_super else 'Light'} Energy {build['energy_per_turn']} per Turn\n"
+                    + "\n".join(light_weapon.summary_lines(build))
+                    + "\nClick to remove.",
+                    min_height=145,
+                )
+                select_button.setChecked(True)
+                select_button.toggled.connect(
+                    lambda checked, selected_key=key, kind="super" if is_super else "power":
+                    self._remove_light_weapon_build(kind, checked, selected_key)
+                )
+                self.light_ability_tiles.append((select_button, power_data))
+                self.equipment_grid.addWidget(tile, index // 3, index % 3)
+                index += 1
         elif self._selected_light_category not in {"aspects", "powers", "supers"}:
             self.equipment_page.options_title.setText("Select a category")
             self.equipment_page.options_description.setText(
@@ -248,7 +331,12 @@ class LightPowersMixin:
                 else self._selected_light_powers
             )
         )
-        limit = 1 if selection_kind in {"aspect", "super"} else 2
+        if selection_kind == "super":
+            limit = 1
+        elif selection_kind == "aspect":
+            limit = self._light_aspect_slot_limit()
+        else:
+            limit = self._light_power_slot_limit()
         if (
             checked
             and selection_key not in selections
@@ -269,13 +357,88 @@ class LightPowersMixin:
         self._update_light_xp_display()
         self.update_light_power_selection()
 
+    def _open_light_weapon_builder(self, selected_tile, checked, as_super):
+        """Build a new Light Weapon and add it as a Light Ability (or the Super)."""
+        if not checked:
+            return
+        # Qt is imported here so this mixin's rules stay importable without it (tests)
+        from PySide6.QtWidgets import QMessageBox
+
+        from src.ui.light_weapon_dialog import build_light_weapon
+
+        selected_tile.setChecked(False)  # a button, not a pick: clear its highlight
+        selections = self._selected_light_supers if as_super else self._selected_light_powers
+        limit = 1 if as_super else self._light_power_slot_limit()
+        if len(selections) >= limit:
+            QMessageBox.information(
+                self,
+                "No Free Slot",
+                "A new character can take one Super."
+                if as_super
+                else f"All {limit} Light Ability Slots are taken. Remove a pick first.",
+            )
+            return
+        connection = self.connection_combo.currentText()
+        character = getattr(self, "generated_character", None)
+        builder_character = {
+            "connections": [connection],
+            "characteristics": dict(getattr(character, "characteristics", None) or {}),
+        }
+        taken = [
+            value["name"]
+            for chosen in (self._selected_light_powers, self._selected_light_supers)
+            for value in chosen.values()
+        ]
+        build = build_light_weapon(
+            self.game_data,
+            builder_character,
+            as_super,
+            parent=self,
+            connections=[connection],
+            taken_names=taken,
+        )
+        if not build:
+            return
+        build["name"] = light_weapon.unique_name({}, build["name"], taken)
+        cost = int(build.get("experience_cost") or 0)
+        if self._selected_light_xp_cost() + cost > self._light_xp_budget():
+            QMessageBox.information(
+                self, "Not Enough XP", f"{build['name']} costs {cost:,} XP."
+            )
+            return
+        description = " ".join(light_weapon.summary_lines(build))
+        selections[("Light Weapon", build["name"].casefold())] = {
+            "name": build["name"],
+            "connection": build["connection"],
+            "experience_cost": cost,
+            "light_cost": build["energy_per_turn"],
+            "super_energy_cost": build["energy_per_turn"] if as_super else None,
+            "description": description,
+            "super_description": description if as_super else "",
+            "_power_type": "Super Ability" if as_super else "Light Ability",
+            "_light_weapon": build,
+        }
+        self._build_light_power_tiles()
+
+    def _remove_light_weapon_build(self, selection_kind, checked, selection_key):
+        if checked:
+            return
+        selections = (
+            self._selected_light_supers
+            if selection_kind == "super"
+            else self._selected_light_powers
+        )
+        selections.pop(selection_key, None)
+        self._build_light_power_tiles()
+
     def update_light_power_selection(self):
         aspect_count = len(self._selected_light_aspects)
         ability_count = len(self._selected_light_powers)
         super_count = len(self._selected_light_supers)
         self._update_light_xp_display()
         self.equipment_done_button.setText(
-            f"Done (Aspects {aspect_count}/1; Light Powers {ability_count}/2; "
+            f"Done (Aspects {aspect_count}/{self._light_aspect_slot_limit()}; "
+            f"Light Powers {ability_count}/{self._light_power_slot_limit()}; "
             f"Supers {super_count}/1)"
         )
 
@@ -299,6 +462,36 @@ class LightPowersMixin:
             self._light_xp_spent = new_xp_spent
         self.character_setup_home.set_character_ready_to_export(True)
         self.pages.setCurrentWidget(self.character_setup_home)
+
+    def _selected_guardian_record(self):
+        key = self.guardian_combo.currentData()
+        if not key:
+            return None
+        record = self.game_data.get("soldier_type", key)
+        return record if isinstance(record, dict) else None
+
+    def _light_power_class_bonus(self):
+        """Free Light Ability Slots from the chosen Guardian class (Warlock: 1)."""
+        return starting_light_ability_slots(
+            self.game_data, self._selected_guardian_record()
+        ) - starting_light_ability_slots(self.game_data, None)
+
+    def _chosen_outliers(self):
+        """Outliers picked so far (Passive and Focus add creation picks)."""
+        character = getattr(self, "generated_character", None)
+        return list(getattr(character, "outliers", None) or [])
+
+    def _light_power_slot_limit(self):
+        """Light Abilities / Grenades a new character can take: one per starting slot."""
+        return starting_light_ability_slots(
+            self.game_data, self._selected_guardian_record(), self._chosen_outliers()
+        )
+
+    def _light_aspect_slot_limit(self):
+        """Light Aspects a new character can take: one per starting Aspect Slot."""
+        return starting_aspect_slots(
+            self.game_data, self._selected_guardian_record(), self._chosen_outliers()
+        )
 
     def _light_aspect_cost(self, aspect, connection):
         selected_connection = self.connection_combo.currentText()

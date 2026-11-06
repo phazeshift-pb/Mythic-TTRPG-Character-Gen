@@ -7,19 +7,23 @@
     "list": [
       {
         "name": "Passive",
-        "effect": "The Guardian gains an additional Light Aspect."
+        "effect": "The Guardian gains an additional Light Aspect.",
+        "bonus_aspect_slots": 1
       },
       {
         "name": "Focus",
-        "effect": "The Guardian gains an additional Light Ability."
+        "effect": "The Guardian gains an additional Light Ability.",
+        "bonus_light_ability_slots": 1
       },
       {
         "name": "Energize",
-        "effect": "The Guardian gains +25 Light Energy limit."
+        "effect": "The Guardian gains +25 Light Energy limit.",
+        "bonus_light_energy": 25
       },
       {
         "name": "Super",
-        "effect": "The Guardian gains +20 Super Energy limit."
+        "effect": "The Guardian gains +20 Super Energy limit.",
+        "bonus_super_energy": 20
       }
     ]
   }

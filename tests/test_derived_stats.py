@@ -22,7 +22,7 @@ def test_mythic_value(raw, expected):
 
 
 def test_max_wounds_matches_data_examples():
-    doc = json.loads((DATA / "wounds_formula.json").read_text())["wounds_formula"]
+    doc = json.loads((DATA / "wounds_formula.json").read_text(encoding="utf-8"))["wounds_formula"]
     for ex in doc["examples"]:
         assert ds.max_wounds(ex["toughness"], ex["mythic_toughness"]) == int(
             ex["calculated_wounds"].rsplit("=", 1)[1]
@@ -34,11 +34,11 @@ def test_robust_adds_wounds():
 
 
 def test_constants_match_data_files():
-    formula = json.loads((DATA / "wounds_formula.json").read_text())["wounds_formula"]["formula"]
+    formula = json.loads((DATA / "wounds_formula.json").read_text(encoding="utf-8"))["wounds_formula"]["formula"]
     assert formula["base"] == ds.WOUNDS_BASE
     assert int(re.findall(r"\d+", formula["toughness_modifier"])[-1]) == ds.WOUNDS_PER_TOUGHNESS_MODIFIER
     assert int(re.findall(r"\d+", formula["mythic_toughness"])[-1]) == ds.WOUNDS_PER_MYTHIC_TOUGHNESS
-    outliers = json.loads((DATA / "outliers.json").read_text())["outliers"]["list"]
+    outliers = json.loads((DATA / "outliers.json").read_text(encoding="utf-8"))["outliers"]["list"]
     robust = next(o for o in outliers if o["name"] == "Robust")
     assert int(re.search(r"\+(\d+)", robust["effect"]).group(1)) == ds.ROBUST_WOUNDS
 

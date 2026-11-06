@@ -1,7 +1,8 @@
 import random
 from typing import Optional
 
-from ..models.character import Character
+from ..models.character import Character, advancement_bonus
+from ..models.equipment_packs import armor_index, armory_index, is_choice, resolve_pack
 
 
 class CharacterGenerator:
@@ -21,9 +22,10 @@ class CharacterGenerator:
         - no UNSC soldier types
     """
 
-    def __init__(self, game_data, use_light_and_sky: bool = False):
+    def __init__(self, game_data, use_light_and_sky: bool = False, rng: Optional[random.Random] = None):
         self.data = game_data
         self.use_light_and_sky = use_light_and_sky
+        self.rng = rng or random.Random()
 
     # ---------------------------------------------------------
     # Public API
@@ -47,6 +49,7 @@ class CharacterGenerator:
         upbringing_choices: Optional[list[str]] = None,
         environment_choices: Optional[list[str]] = None,
         lifestyle_choice=None,
+        starting_educations: Optional[dict[str, int]] = None,
     ) -> Character:
         """lifestyle_choice(record, roll, groups) -> [label, ...] picks options
         for lifestyle outcomes that offer a choice; it may raise to cancel."""
@@ -54,9 +57,11 @@ class CharacterGenerator:
         char = Character(name=name)
         char.starting_experience = max(0, int(starting_experience))
         char.experience = char.starting_experience
+        char.creation_experience = char.starting_experience
         char.experience_tier = self._get_experience_tier(char.starting_experience)
         char.luck_total = self._get_tier_luck(char.experience_tier)
         char.luck_available = char.luck_total
+        char.credits = self._get_tier_credits(char.experience_tier)
         char.log(
             f"Starting experience: {char.starting_experience} "
             f"(Tier {char.experience_tier})"
@@ -110,6 +115,13 @@ class CharacterGenerator:
             if is_guardian and subclass is None:
                 char.log("ERROR: Guardian subclass required in Light & Sky mode.")
 
+        # Educations a Soldier Type trait grants (Navy Technician, Smart AI)
+        for education, level in (starting_educations or {}).items():
+            if level not in (5, 10):
+                raise ValueError(f"Invalid starting Education level for {education}: {level}")
+            char.educations[education] = level
+            char.log(f"Starting Education: {education} +{level}")
+
         # Skills
         if skill_training is not None:
             for skill, bonus in skill_training.items():
@@ -132,6 +144,7 @@ class CharacterGenerator:
         # is selected on the equipment page after character creation.
         if self.use_light_and_sky:
             self._apply_equipment(char)
+            self._apply_starting_engrams(char)
 
         # Finalize derived stats
         char.finalize()
@@ -168,6 +181,15 @@ class CharacterGenerator:
         for tier in tiers:
             if tier.get("tier") == tier_number:
                 return int(tier.get("luck", 0))
+        return 0
+
+    def _get_tier_credits(self, tier_number: int) -> int:
+        """Starting cR for an Experience Tier (Mythic 7.0 Experience Tier table)."""
+        document = self.data.get("experience_tiers", "experience_tiers") or {}
+        tiers = document.get("experience_tiers", {}).get("tiers", [])
+        for tier in tiers:
+            if tier.get("tier") == tier_number:
+                return int(tier.get("credits", 0) or 0)
         return 0
 
     def _selected_experience_costs(
@@ -227,12 +249,20 @@ class CharacterGenerator:
                 number = self._numeric_value(value)
                 if number is not None:
                     components.setdefault(code, []).append(number)
+            for code, value in (base_record.get("advancements") or {}).items():
+                bonus = advancement_bonus(value)
+                if bonus:
+                    components.setdefault(code, []).append(bonus)
 
         if guardian_record:
             for code, value in guardian_record.get("base_characteristics", {}).items():
                 number = self._numeric_value(value)
                 if number is not None:
                     components.setdefault(code, []).append(number)
+            for code, value in (guardian_record.get("advancements") or {}).items():
+                bonus = advancement_bonus(value)
+                if bonus and guardian_record is not base_record:
+                    components.setdefault(code, []).append(bonus)
 
             subclass_data = guardian_record.get("subclasses", {}).get(subclass, {})
             for code, value in subclass_data.get("characteristic_modifiers", {}).items():
@@ -318,6 +348,7 @@ class CharacterGenerator:
                     char.characteristics[code] += modifier
                     char.log(f"Guardian class modifier: {code} +{modifier}")
 
+            char.apply_soldier_type_advancements(guardian)
             char.mythic_characteristics.update(guardian.get("mythic_characteristics", {}))
 
             subclasses = guardian.get("subclasses", {})
@@ -326,6 +357,7 @@ class CharacterGenerator:
                 return
 
             sub_data = subclasses[subclass]
+            char.subclass = subclass
             char.log(f"Applying Guardian subclass: {subclass}")
 
             for code, value in sub_data.get("characteristic_modifiers", {}).items():
@@ -423,6 +455,49 @@ class CharacterGenerator:
         char.log(f"Auto-trained skills: {', '.join(chosen)}")
 
     # ---------------------------------------------------------
+    # Light & Sky starting engrams
+    # ---------------------------------------------------------
+    def _apply_starting_engrams(self, char: Character):
+        """Guardian Equipment trait: decode the class's starting engrams.
+
+        Every class begins with 3 Common Weapon Engrams and 1 Common Armor
+        Engram (``special_rules.starting_engrams``); each is rolled with the
+        Light & Sky loot tables and the armor is worn.
+        """
+        from ..loot import character_loot
+        from ..loot.generator import LootDataMissing, LootGenerator
+
+        soldier = None
+        for record in self.data.families.get("soldier_type", {}).values():
+            if isinstance(record, dict) and record.get("name") == char.soldier_type:
+                soldier = record
+        rule = ((soldier or {}).get("special_rules") or {}).get("starting_engrams")
+        if not isinstance(rule, dict):
+            return
+        try:
+            loot = LootGenerator(self.data, self.rng)
+        except LootDataMissing as error:
+            char.log(f"Starting engrams skipped: {error}")
+            return
+        rarity = rule.get("rarity", "Common")
+        for _ in range(int(rule.get("weapons", 0))):
+            entry = character_loot.weapon_entry(
+                loot.generate_weapon(forced_rarity=rarity, exotic_chance=0)
+            )
+            char.weapons.append(entry)
+            char.log(f"Weapon Engram: {entry['name']}")
+        for _ in range(int(rule.get("armor", 0))):
+            roll = loot.generate_armor(forced_rarity=rarity, exotic_chance=0)
+            worn = {}
+            name = character_loot.equip_armor(worn, roll)
+            char.armor = worn["armor"]
+            char.armor_variant = worn["armor_variant"]
+            char.armor_bonus = worn["armor_bonus"]
+            char.armor_equipped = worn["armor_equipped"]
+            char.armor_loot = worn["armor_loot"]
+            char.log(f"Armor Engram: {name}")
+
+    # ---------------------------------------------------------
     # Equipment (expansion-aware)
     # ---------------------------------------------------------
     def _apply_equipment(self, char: Character):
@@ -440,9 +515,27 @@ class CharacterGenerator:
 
         filtered_items = []
         for item in items:
-            if not self.use_light_and_sky and item.startswith("LNS_"):
+            if (
+                not self.use_light_and_sky
+                and isinstance(item, str)
+                and item.startswith("LNS_")
+            ):
                 continue
             filtered_items.append(item)
 
-        char.equipment.extend(filtered_items)
-        char.log(f"Applied equipment set '{first_set_name}' with {len(filtered_items)} items.")
+        # Weapon references resolve against the armory; choice groups need a
+        # player pick, so this automatic path leaves them out.
+        contents = resolve_pack(
+            [i for i in filtered_items if not is_choice(i)],
+            index=armory_index(self.data),
+            armors=armor_index(self.data),
+        )
+        weapons, gear = contents.weapons, contents.equipment
+        char.equipment.extend(gear)
+        char.weapons.extend(weapons)
+        if contents.armor and not char.armor:
+            char.armor = contents.armor
+        char.log(
+            f"Applied equipment set '{first_set_name}' with "
+            f"{len(weapons)} weapons and {len(gear)} items."
+        )

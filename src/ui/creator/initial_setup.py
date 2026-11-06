@@ -1,3 +1,4 @@
+# pyright: reportAttributeAccessIssue=false, reportArgumentType=false
 """Soldier type, background, lifestyle and Light & Sky setup choices.
 
 Part of MainWindow (src/ui/main_window.py); methods use its widgets and state via self.
@@ -281,6 +282,9 @@ class InitialSetupMixin:
                         skill: training_bonus
                         for skill in dialog.selected_skills
                     }
+                if not self._choose_soldier_educations(value, soldier_data):
+                    self._refresh_initial_setup_options()
+                    return
             except ValueError as error:
                 QMessageBox.warning(
                     self,
@@ -331,6 +335,43 @@ class InitialSetupMixin:
             else:
                 combo.setCurrentIndex(index)
         self._refresh_initial_setup_options()
+
+    def _choose_soldier_educations(self, soldier_key, soldier_data):
+        """Educated trait: pick the Soldier Type's starting Educations.
+
+        Returns False when the player cancels. Restricted Educations (marked *)
+        need GM permission, so they are not offered here.
+        """
+        rule = (soldier_data.get("special_rules") or {}).get("starting_educations")
+        if not isinstance(rule, dict) or not rule.get("count"):
+            self._selected_soldier_educations.pop(soldier_key, None)
+            return True
+        count, level = int(rule["count"]), int(rule.get("level", 5))
+        document = self.game_data.get("educations", "educations") or {}
+        names = [
+            record["name"]
+            for group in ("general_education", "street_smarts")
+            for record in document.get(group, [])
+            if isinstance(record, dict)
+            and record.get("name")
+            and not record["name"].rstrip().endswith("*")
+        ]
+        dialog = SkillTrainingDialog(
+            names,
+            count,
+            level,
+            selected_skills=self._selected_soldier_educations.get(soldier_key, {}),
+            parent=self,
+            title="Choose Starting Educations",
+            noun="Educations",
+            training_label=f"+{level}",
+        )
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return False
+        self._selected_soldier_educations[soldier_key] = {
+            name: level for name in dialog.selected_skills
+        }
+        return True
 
     @staticmethod
     def _skill_training_requirements(soldier_data):
@@ -404,6 +445,7 @@ class InitialSetupMixin:
     def update_soldier_types(self):
         use_lns = self.selected_mode == "Light & Sky"
         self._selected_soldier_skills.clear()
+        self._selected_soldier_educations.clear()
         self.character_setup_home.equipment_or_light_powers_button.setText(
             "Light Abilities / Light Aspects" if use_lns else "Equipment"
         )
@@ -437,13 +479,7 @@ class InitialSetupMixin:
         self.connection_combo.clear()
 
         if use_lns:
-            self.connection_combo.addItem("")
-            connections = self.game_data.get("connections", "connections") or {}
-            connections = connections.get("connections", connections)
-            for category in ("light", "darkness", "specialized"):
-                self.connection_combo.addItems(
-                    [item["name"] for item in connections.get(category, [])]
-                )
+            self._fill_connection_options()
         self.refresh_selection_options()
         self.update_subclasses()
         self._refresh_initial_setup_options()
@@ -538,8 +574,10 @@ class InitialSetupMixin:
                 combo.clear()
 
             self.upbringing_combo.addItem("", "")
+            allowed = self._allowed_upbringings()
             for record in upbringing_records:
-                self.upbringing_combo.addItem(record["name"], record["name"])
+                if allowed is None or self._upbringing_key(record["name"]) in allowed:
+                    self.upbringing_combo.addItem(record["name"], record["name"])
             self._restore_combo_selection(self.upbringing_combo, selected_upbringing)
 
             selected_record = next(
@@ -580,6 +618,54 @@ class InitialSetupMixin:
                 combo.blockSignals(False)
             self._refreshing_background_options = False
         self._refresh_initial_setup_options()
+
+    def starting_connection_groups(self):
+        """Connection groups a new Guardian may start in.
+
+        Light and Sky: one Light Connection (Arc, Solar, Void) unless the GM
+        allows a Darkness one (Stasis, Strand). Specialized Connections need
+        both a Light and a Darkness Connection, so they are never a start.
+        """
+        page = self.initial_character_setup_page
+        if page.gm_darkness_checkbox.isChecked():
+            return ("light", "darkness")
+        return ("light",)
+
+    def _fill_connection_options(self):
+        """Rebuild the starting Connection list, keeping the pick if still allowed."""
+        selected = self.connection_combo.currentText()
+        connections = self.game_data.get("connections", "connections") or {}
+        connections = connections.get("connections", connections)
+        self.connection_combo.blockSignals(True)
+        self.connection_combo.clear()
+        self.connection_combo.addItem("")
+        for group in self.starting_connection_groups():
+            self.connection_combo.addItems(
+                [item["name"] for item in connections.get(group, [])]
+            )
+        index = self.connection_combo.findText(selected) if selected else -1
+        self.connection_combo.setCurrentIndex(max(0, index))
+        self.connection_combo.blockSignals(False)
+
+    def set_gm_allows_darkness_connection(self, allowed):
+        """The setup page's "GM allows" checkbox changed."""
+        if self.selected_mode != "Light & Sky" or not hasattr(self, "game_data"):
+            return
+        self._fill_connection_options()
+        self._refresh_initial_setup_options()
+
+    @staticmethod
+    def _upbringing_key(name):
+        """'War-Orphan' and 'War Orphan' are the same Upbringing."""
+        return str(name or "").replace("-", " ").strip().casefold()
+
+    def _allowed_upbringings(self):
+        """Upbringings the selected Soldier Type allows, or None for Any."""
+        soldier = self.game_data.get("soldier_type", self.soldier_combo.currentData()) or {}
+        allowed = soldier.get("upbringing", "Any")
+        allowed = allowed if isinstance(allowed, list) else [allowed]
+        keys = {self._upbringing_key(name) for name in allowed if name}
+        return None if not keys or "any" in keys else keys
 
     @staticmethod
     def _restore_combo_selection(combo, key):

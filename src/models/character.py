@@ -4,6 +4,7 @@ from typing import Dict, List, Optional, Any
 
 from .background_choices import choice_groups, resolve_modifiers
 from .derived_stats import max_wounds
+from . import outliers as outlier_rules
 
 
 CHAR_CODES = ["STR", "TOU", "AGI", "WFR", "WFM", "INT", "PER", "CRG", "CHA", "LDR"]
@@ -22,7 +23,28 @@ CHARACTERISTIC_NAME_TO_CODE = {
     "leadership": "LDR",
 }
 
+# Mythic 7.0: an Upbringing, Environment or Lifestyle option can't be taken
+# if it would lower a Characteristic to 5 or below.
+BACKGROUND_FLOOR = 5
+
+
+class BackgroundFloorError(ValueError):
+    """A background option would lower a Characteristic to 5 or below."""
+
+
 _MODIFIER_PATTERN = re.compile(r"^\s*([+-]\d+)\s+(.+?)\s*$")
+_ADVANCEMENT_PATTERN = re.compile(r"([+-]\d+)")
+
+
+def advancement_bonus(value: Any) -> int:
+    """Characteristic bonus of a Soldier Type advancement such as '+10 Rookie'."""
+    if isinstance(value, (int, float)):
+        return int(value)
+    if isinstance(value, str):
+        match = _ADVANCEMENT_PATTERN.search(value)
+        if match:
+            return int(match.group(1))
+    return 0
 
 
 @dataclass
@@ -67,16 +89,47 @@ class Character:
     equipment: List[str] = field(default_factory=list)
     equipment_pack: Optional[str] = None
     armor: Optional[str] = None
-    weapons: List[str] = field(default_factory=list)
+    # Spartans: {"name", "generation", "price"} of the Mjolnir variant fitted,
+    # and the characteristic bonuses the worn suit grants (see starting_armor).
+    armor_variant: Optional[Dict[str, Any]] = None
+    armor_bonus: Dict[str, int] = field(default_factory=dict)
+    # Light & Sky: the full roll of worn engram armor (see src/loot/character_loot.py)
+    armor_loot: Optional[Dict[str, Any]] = None
+    # Toggled on the character sheet; bonuses apply only while worn.
+    armor_equipped: bool = True
+    # Core: {"name", "quantity", "nickname", "note", "category"} dicts naming
+    # UNSC Armory records (see src/models/equipment_packs.py).
+    weapons: List[Any] = field(default_factory=list)
     connections: List[str] = field(default_factory=list)
+    # Light & Sky Guardian sub-class (changeable between missions; see models/subclass.py)
+    subclass: Optional[str] = None
     specialization_packs: List[str] = field(default_factory=list)
-    outliers: List[str] = field(default_factory=list)
+    outliers: List[str] = field(default_factory=list)  # one entry per time taken
+    # Aptitude / Forte: the Characteristic picked for each time taken
+    outlier_choices: Dict[str, List[str]] = field(default_factory=dict)
+    support_points: int = 0  # Advocate adds 2; set the Rank's SP on the sheet
     luck_available: int = 0
     luck_total: int = 0
     light_aspects: List[str] = field(default_factory=list)
     light_abilities: List[str] = field(default_factory=list)
     light_grenades: List[str] = field(default_factory=list)
     supers: List[str] = field(default_factory=list)
+    # Built Light Weapons (see src/models/light_weapon.py); their names are in
+    # light_abilities / supers like any other power.
+    light_weapons: List[Dict[str, Any]] = field(default_factory=list)
+
+    # Post-creation XP purchases (see src/models/xp_shop.py)
+    creation_experience: Optional[int] = None  # XP the character was created with
+    characteristic_advancements: Dict[str, int] = field(default_factory=dict)  # bought tiers
+    educations: Dict[str, int] = field(default_factory=dict)  # name -> 5 or 10
+    languages: List[str] = field(default_factory=list)  # learned beyond the starting language
+    weapon_training: List[str] = field(default_factory=list)  # bought beyond the Soldier Type's
+    faction_training: List[str] = field(default_factory=list)
+    wound_upgrades: int = 0  # Iron, Copper, Bronze, Steel, Titanium bought (in order)
+    augmentations: List[str] = field(default_factory=list)  # e.g. ORION Augmentation
+    light_aspect_slots_purchased: int = 0
+    light_ability_slots_purchased: int = 0
+    xp_purchases: List[Dict[str, Any]] = field(default_factory=list)  # purchase log
 
     # Internal debug log
     debug_log: List[str] = field(default_factory=list)
@@ -100,17 +153,51 @@ class Character:
                 self.characteristics[code] = int(value)
                 self.log(f"Set {code} = {value}")
 
-        # Mythic characteristics
-        self.mythic_characteristics = soldier_data.get("mythic_characteristics", {})
+        self.apply_soldier_type_advancements(soldier_data)
 
-        # Rank
-        for trait in soldier_data.get("traits", []):
-            if trait["name"].lower() == "rank":
-                self.rank = trait["effect"].replace("Begins at Rank:", "").strip()
-                self.log(f"Rank set to {self.rank}")
+        # Mythic characteristics
+        self.mythic_characteristics = dict(soldier_data.get("mythic_characteristics", {}))
+
+        special = soldier_data.get("special_rules")
+        special = special if isinstance(special, dict) else {}
+
+        # Rank: the explicit starting_rank wins over the trait's wording
+        if special.get("starting_rank"):
+            self.rank = str(special["starting_rank"])
+            self.log(f"Rank set to {self.rank}")
+        else:
+            for trait in soldier_data.get("traits", []):
+                if trait["name"].lower() == "rank":
+                    self.rank = (
+                        trait["effect"].replace("Begins at Rank:", "").strip().rstrip(".")
+                    )
+                    self.log(f"Rank set to {self.rank}")
+
+        # Abilities a trait grants at creation (e.g. Spartans' Fast Foot)
+        for ability in special.get("starting_abilities") or []:
+            if ability not in self.abilities:
+                self.abilities.append(ability)
+                self.log(f"Soldier Type ability: {ability}")
+
+        # Support Points a trait grants at creation (e.g. ONI Section I +1)
+        if special.get("support_points"):
+            self.support_points += int(special["support_points"])
+            self.log(f"Soldier Type Support Points: +{int(special['support_points'])}")
 
         # Equipment sets (not applied automatically)
         # You will apply these in the generator pipeline.
+
+    def apply_soldier_type_advancements(self, soldier_data: dict):
+        """Add the Characteristic Advancements a Soldier Type unlocks at creation.
+
+        e.g. a Marine's "+10 Rookie" Warfare Range adds +10 WFR. These count as
+        owned tiers in the XP Shop, so they are never bought again.
+        """
+        for code, value in (soldier_data.get("advancements") or {}).items():
+            bonus = advancement_bonus(value)
+            if bonus and code in self.characteristics:
+                self.characteristics[code] += bonus
+                self.log(f"Soldier Type advancement: {code} {value} ({bonus:+d})")
 
     # -----------------------------
     # Apply Upbringing
@@ -133,8 +220,31 @@ class Character:
         modifiers, problems = resolve_modifiers(record, choices)
         for problem in problems:
             self.log(problem)
+        self._check_background_floor(record.get("name", "This option"), modifiers)
         for modifier in modifiers:
             self._apply_modifier(modifier)
+
+    def _check_background_floor(self, source: str, modifiers):
+        """Raise BackgroundFloorError if the modifiers lower any Characteristic to 5 or below."""
+        totals = dict(self.characteristics)
+        lowered = set()
+        for text in modifiers:
+            match = _MODIFIER_PATTERN.match(text) if isinstance(text, str) else None
+            if match is None:
+                continue
+            code = CHARACTERISTIC_NAME_TO_CODE.get(match.group(2).casefold())
+            if code in totals:
+                totals[code] += int(match.group(1))
+                if int(match.group(1)) < 0:
+                    lowered.add(code)
+        too_low = sorted(code for code in lowered if totals[code] <= BACKGROUND_FLOOR)
+        if too_low:
+            details = ", ".join(f"{code} {totals[code]}" for code in too_low)
+            raise BackgroundFloorError(
+                f"{source} can't be taken: it would lower {details} "
+                f"(a background option can't lower a Characteristic to "
+                f"{BACKGROUND_FLOOR} or below)."
+            )
 
     # -----------------------------
     # Apply Lifestyle
@@ -158,6 +268,7 @@ class Character:
                 modifiers, problems = resolve_modifiers(resolved, choices)
                 for problem in problems:
                     self.log(problem)
+                self._check_background_floor(resolved["name"], modifiers)
                 for modifier in modifiers:
                     self._apply_modifier(modifier)
                 self.lifestyle_results.append(
@@ -196,44 +307,132 @@ class Character:
     def apply_outlier(
         self, outlier_data: dict, luck_cost: int, characteristic: Optional[str] = None
     ):
-        outlier_name = outlier_data["name"]
-        if outlier_name not in self.outliers:
-            if outlier_name == "Aptitude":
-                if characteristic not in CHAR_CODES:
-                    raise ValueError("Aptitude requires a valid characteristic code.")
-                self.characteristics[characteristic] += 5
-                self.log(f"Aptitude: +5 {characteristic}")
-            elif outlier_name == "Forte":
-                if characteristic not in MYTHIC_CHAR_CODES:
-                    raise ValueError(
-                        "Forte requires a valid mythic characteristic code."
-                    )
-                current_value = self.mythic_characteristics.get(characteristic, 0)
-                try:
-                    new_value = int(current_value) + 1
-                except (TypeError, ValueError) as error:
-                    raise ValueError(
-                        f"Invalid mythic characteristic value for {characteristic}: "
-                        f"{current_value!r}"
-                    ) from error
-                self.mythic_characteristics[characteristic] = f"+{new_value}"
-                self.log(f"Forte: +1 Mythic {characteristic} (now +{new_value})")
+        """Take an outlier once (call again to take it again where the book allows).
 
-            self.outliers.append(outlier_name)
-            self.luck_total -= luck_cost
-            self.luck_available = min(self.luck_available, self.luck_total)
-            self.compute_wounds()
+        Aptitude and Forte need ``characteristic``: the code that gains the bonus.
+        A take beyond the outlier's limit is ignored and logged.
+        """
+        outlier_name = outlier_data["name"]
+        choice_kind = outlier_rules.needs_choice(outlier_data)
+        # Records without limit fields (older data, tests) behave as before
+        if choice_kind is None and outlier_name in {"Aptitude", "Forte"}:
+            choice_kind = "characteristic" if outlier_name == "Aptitude" else "mythic"
+            outlier_data = dict(
+                outlier_data,
+                **{
+                    "max_times_per_characteristic"
+                    if choice_kind == "characteristic"
+                    else "max_times_per_mythic": 2
+                },
+            )
+        choices = self.outlier_choices.get(outlier_name, [])
+        if not outlier_rules.can_take(outlier_data, self.outliers, choices, characteristic):
+            if choice_kind == "characteristic" and characteristic not in CHAR_CODES:
+                raise ValueError(f"{outlier_name} requires a valid characteristic code.")
+            if choice_kind == "mythic" and characteristic not in MYTHIC_CHAR_CODES:
+                raise ValueError(f"{outlier_name} requires a valid mythic characteristic code.")
+            self.log(f"Outlier not applied (limit reached): {outlier_name} {characteristic or ''}")
+            return
+
+        if choice_kind == "characteristic":
+            if characteristic not in CHAR_CODES:
+                raise ValueError(f"{outlier_name} requires a valid characteristic code.")
+            bonus = int(outlier_data.get("chosen_characteristic_bonus", 5))
+            self.characteristics[characteristic] += bonus
+            self.log(f"{outlier_name}: +{bonus} {characteristic}")
+        elif choice_kind == "mythic":
+            if characteristic not in MYTHIC_CHAR_CODES:
+                raise ValueError(f"{outlier_name} requires a valid mythic characteristic code.")
+            current_value = self.mythic_characteristics.get(characteristic, 0)
+            try:
+                new_value = int(current_value) + int(outlier_data.get("chosen_mythic_bonus", 1))
+            except (TypeError, ValueError) as error:
+                raise ValueError(
+                    f"Invalid mythic characteristic value for {characteristic}: "
+                    f"{current_value!r}"
+                ) from error
+            self.mythic_characteristics[characteristic] = f"+{new_value}"
+            self.log(f"{outlier_name}: +1 Mythic {characteristic} (now +{new_value})")
+        if choice_kind:
+            self.outlier_choices.setdefault(outlier_name, []).append(characteristic)
+
+        for code, value in (outlier_data.get("characteristic_bonus") or {}).items():
+            if code in self.characteristics:
+                self.characteristics[code] += int(value)
+                self.log(f"{outlier_name}: {int(value):+d} {code}")
+        if outlier_data.get("support_points"):
+            self.support_points += int(outlier_data["support_points"])
+            self.log(f"{outlier_name}: +{int(outlier_data['support_points'])} Support Points")
+
+        self.outliers.append(outlier_name)
+        self.luck_total -= luck_cost
+        self.luck_available = min(self.luck_available, self.luck_total)
+        self.compute_wounds()
+        times = self.outliers.count(outlier_name)
         self.log(
-            f"Applying outlier: {outlier_name} "
-            f"(Burn Luck: {luck_cost}; effect: {outlier_data['effect']})"
+            f"Applying outlier: {outlier_name}"
+            f"{f' (x{times})' if times > 1 else ''} "
+            f"(Burn Luck: {luck_cost}; effect: "
+            f"{outlier_rules.effect_text(outlier_data, times)})"
         )
 
-    def apply_equipment_pack(self, pack_name: str, items: List[str]):
+    def clear_outliers(self, outlier_records: Optional[Dict[str, dict]] = None):
+        """Undo the outlier effects not rebuilt by the creator (Support Points), then forget them.
+
+        The creator restores Characteristics, Mythics and Luck itself before
+        re-applying the current picks.
+        """
+        by_name = {
+            str(name).casefold(): record for name, record in (outlier_records or {}).items()
+        }
+        for name in self.outliers:
+            points = int((by_name.get(name.casefold()) or {}).get("support_points") or 0)
+            self.support_points = max(0, self.support_points - points)
+        self.outliers = []
+        self.outlier_choices = {}
+
+    def apply_equipment_pack(
+        self,
+        pack_name: str,
+        items: List[str],
+        weapons: Optional[List[dict]] = None,
+        armor: Optional[str] = None,
+    ):
+        """Set the pack's gear (``items``), armory ``weapons`` and worn ``armor``."""
         self.equipment_pack = pack_name
         self.equipment = list(items)
-        self.log(f"Applying equipment pack: {pack_name} ({len(items)} items)")
+        self.weapons = [dict(weapon) for weapon in weapons or []]
+        self.armor = armor
+        self.log(
+            f"Applying equipment pack: {pack_name} "
+            f"({len(self.weapons)} weapons, {len(items)} items)"
+        )
+        if armor:
+            self.log(f"Armor: {armor}")
+        for weapon in self.weapons:
+            quantity = weapon.get("quantity", 1)
+            self.log(f"Weapon: {weapon['name']}" + (f" x{quantity}" if quantity != 1 else ""))
         for item in items:
             self.log(f"Equipment: {item}")
+
+    def apply_starting_armor(
+        self,
+        armor: str,
+        variant: Optional[dict] = None,
+        bonus: Optional[Dict[str, int]] = None,
+    ):
+        """Wear a Spartan's chosen suit; bonuses are recorded, not added to base stats."""
+        self.armor = armor
+        self.armor_variant = dict(variant) if variant else None
+        self.armor_bonus = dict(bonus or {})
+        self.log(f"Starting armor: {armor}")
+        if variant:
+            self.log(
+                f"Mjolnir variant: {variant['name']} ({variant['generation']}, "
+                f"{variant.get('price', 0)} cR)"
+            )
+        if self.armor_bonus:
+            self.log(f"Armor bonuses while worn: {self.armor_bonus}")
 
     def apply_light_powers(
         self,
@@ -256,6 +455,11 @@ class Character:
         self.light_abilities = [ability["name"] for ability in selected_abilities]
         self.light_grenades = [grenade["name"] for grenade in selected_grenades]
         self.supers = [super_power["name"] for super_power in supers]
+        self.light_weapons = [
+            dict(power["_light_weapon"])
+            for power in list(abilities) + list(supers)
+            if power.get("_light_weapon")
+        ]
         for aspect in aspects:
             self.log(
                 f"Light Aspect: {aspect['name']} "

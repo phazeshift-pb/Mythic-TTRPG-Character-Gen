@@ -1,7 +1,8 @@
 {
   "hand_cannons": [
     {
-      "weapon_special_rules": [{"special_rules": ["Headshot", "+10 to Hit"]}]
+      "weapon_special_rules": [{"special_rules": ["Headshot", "+10 to Hit"]}],
+      "light_ability_base_cost_cr": 33
     },
     {
       "weapon_models": [
@@ -130,7 +131,8 @@
   ],
   "scout_rifles": [
     {
-      "weapon_special_rules": [{"special_rules": ["Headshot", "+10 to Hit"]}]
+      "weapon_special_rules": [{"special_rules": ["Headshot", "+10 to Hit"]}],
+      "light_ability_base_cost_cr": 33
     },
     {
       "weapon_models": [
@@ -289,7 +291,8 @@
   ],
   "pulse_rifles": [
     {
-      "weapon_special_rules": [{"special_rules": ["Headshot", "+10 to Hit"]}]
+      "weapon_special_rules": [{"special_rules": ["Headshot", "+10 to Hit"]}],
+      "light_ability_base_cost_cr": 33
     },
     {
       "weapon_models": [
@@ -448,7 +451,8 @@
   ],
   "auto_rifles": [
     {
-      "weapon_special_rules": [{"special_rules": []}]
+      "weapon_special_rules": [{"special_rules": []}],
+      "light_ability_base_cost_cr": 33
     },
     {
       "weapon_models": [
@@ -607,7 +611,8 @@
   ],
   "sidearms": [
     {
-      "weapon_special_rules": [{"special_rules": ["Lightweight", "+10 to Hit"]}]
+      "weapon_special_rules": [{"special_rules": ["Lightweight", "+10 to Hit"]}],
+      "light_ability_base_cost_cr": 28
     },
     {
       "weapon_models": [
@@ -766,7 +771,8 @@
   ],
   "smgs": [
     {
-      "weapon_special_rules": [{"special_rules": ["Lightweight"]}]
+      "weapon_special_rules": [{"special_rules": ["Lightweight"]}],
+      "light_ability_base_cost_cr": 31
     },
     {
       "weapon_models": [
@@ -925,7 +931,8 @@
   ],
   "combat_bows": [
     {
-      "weapon_special_rules": [{"special_rules": ["Headshot", "Spike", "+10 to Hit"]}]
+      "weapon_special_rules": [{"special_rules": ["Headshot", "Spike", "+10 to Hit"]}],
+      "light_ability_base_cost_cr": 40
     },
     {
       "weapon_models": [
@@ -1084,7 +1091,8 @@
   ],
   "fusion_rifles": [
     {
-      "weapon_special_rules": [{"special_rules": ["Kinetic", "+10 to Hit"]}]
+      "weapon_special_rules": [{"special_rules": ["Kinetic", "+10 to Hit"]}],
+      "light_ability_base_cost_cr": 50
     },
     {
       "weapon_models": [
@@ -1243,7 +1251,8 @@
   ],
   "shotguns": [
     {
-      "weapon_special_rules": [{"special_rules": ["Spread", "+10 to Hit"]}]
+      "weapon_special_rules": [{"special_rules": ["Spread", "+10 to Hit"]}],
+      "light_ability_base_cost_cr": 38
     },
     {
       "weapon_models": [
@@ -1402,7 +1411,8 @@
   ],
   "sniper_rifles": [
     {
-      "weapon_special_rules": [{"special_rules": ["Headshot", "Kinetic", "Long Barrel", "+10 to Hit"]}]
+      "weapon_special_rules": [{"special_rules": ["Headshot", "Kinetic", "Long Barrel", "+10 to Hit"]}],
+      "light_ability_base_cost_cr": 55
     },
     {
       "weapon_models": [
@@ -1561,7 +1571,8 @@
   ],
   "trace_rifles": [
     {
-      "weapon_special_rules": [{"special_rules": ["Cauterize"]}]
+      "weapon_special_rules": [{"special_rules": ["Cauterize"]}],
+      "light_ability_base_cost_cr": 40
     },
     {
       "weapon_models": [
@@ -1720,7 +1731,8 @@
   ],
   "breech_grenade_launchers": [
     {
-      "weapon_special_rules": [{"special_rules": ["Blast(6), Kill(2)", "+10 to Hit"]}]
+      "weapon_special_rules": [{"special_rules": ["Blast(6), Kill(2)", "+10 to Hit"]}],
+      "light_ability_base_cost_cr": 45
     },
     {
       "weapon_models": [
@@ -1879,7 +1891,8 @@
   ],
   "glaives": [
     {
-      "weapon_special_rules": [{"special_rules": ["Kinetic", "Slow"]}]
+      "weapon_special_rules": [{"special_rules": ["Kinetic", "Slow"]}],
+      "light_ability_base_cost_cr": 45
     },
     {
       "weapon_models": [
@@ -2048,7 +2061,8 @@
   ],
   "rocket_launchers": [
     {
-      "weapon_special_rules": [{"special_rules": ["Blast(9), Kill(3)", "+10 to Hit"]}]
+      "weapon_special_rules": [{"special_rules": ["Blast(9), Kill(3)", "+10 to Hit"]}],
+      "light_ability_base_cost_cr": 77
     },
     {
       "weapon_models": [
@@ -2217,7 +2231,8 @@
   ],
   "missile_launchers": [
     {
-      "weapon_special_rules": [{"special_rules": ["Blast(8), Kill(2)", "Homing", "+10 to Hit"]}]
+      "weapon_special_rules": [{"special_rules": ["Blast(8), Kill(2)", "Homing", "+10 to Hit"]}],
+      "light_ability_base_cost_cr": 77
     },
     {
       "weapon_models": [
@@ -2386,7 +2401,8 @@
   ],
   "heavy_grenade_launchers": [
     {
-      "weapon_special_rules": [{"special_rules": ["Blast(6), Kill(2)", "+10 to Hit"]}]
+      "weapon_special_rules": [{"special_rules": ["Blast(6), Kill(2)", "+10 to Hit"]}],
+      "light_ability_base_cost_cr": 55
     },
     {
       "weapon_models": [
@@ -2555,7 +2571,8 @@
   ],
   "linear_fusion_rifles": [
     {
-      "weapon_special_rules": [{"special_rules": ["Kinetic", "Cauterize", "+10 to Hit"]}]
+      "weapon_special_rules": [{"special_rules": ["Kinetic", "Cauterize", "+10 to Hit"]}],
+      "light_ability_base_cost_cr": 57
     },
     {
       "weapon_models": [
@@ -2724,7 +2741,8 @@
   ],
   "machine_guns": [
     {
-      "weapon_special_rules": [{"special_rules": []}]
+      "weapon_special_rules": [{"special_rules": []}],
+      "light_ability_base_cost_cr": 60
     },
     {
       "weapon_models": [
@@ -2893,7 +2911,8 @@
   ],
   "heavy_machine_guns": [
     {
-      "weapon_special_rules": [{"special_rules": ["Kinetic", "Long Barrel"]}]
+      "weapon_special_rules": [{"special_rules": ["Kinetic", "Long Barrel"]}],
+      "light_ability_base_cost_cr": 75
     },
     {
       "weapon_models": [
@@ -3062,7 +3081,8 @@
   ],
   "heavy_swords": [
     {
-      "weapon_special_rules": [{"special_rules": ["Kinetic", "Slow"]}]
+      "weapon_special_rules": [{"special_rules": ["Kinetic", "Slow"]}],
+      "light_ability_base_cost_cr": 50
     },
     {
       "weapon_models": [

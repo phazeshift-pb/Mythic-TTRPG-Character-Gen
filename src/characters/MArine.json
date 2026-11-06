@@ -1,0 +1,191 @@
+{
+  "format_version": 1,
+  "ruleset": "Core",
+  "character": {
+    "name": "MArine",
+    "soldier_type": "UNSC or Insurrectionist Army Soldier",
+    "characteristics": {
+      "STR": 50,
+      "TOU": 32,
+      "AGI": 38,
+      "WFR": 49,
+      "WFM": 35,
+      "INT": 30,
+      "PER": 36,
+      "CRG": 35,
+      "CHA": 23,
+      "LDR": 32
+    },
+    "mythic_characteristics": {},
+    "skills": {
+      "Intimidation": 10,
+      "Evasion": 10,
+      "Athletics": 0,
+      "Camouflage": 0,
+      "Navigation": 0
+    },
+    "abilities": [
+      "Adept Marksman",
+      "Far-Sight",
+      "Marksman"
+    ],
+    "upbringing": "Farmer",
+    "environment": "Town",
+    "lifestyle": "Weapon Training",
+    "lifestyle_results": [
+      {
+        "name": "Weapon Training",
+        "roll": 9,
+        "choices": [
+          "+5 Warfare Melee"
+        ]
+      },
+      {
+        "name": "Weapon Training",
+        "roll": 9,
+        "choices": [
+          "+5 Warfare Range"
+        ]
+      },
+      {
+        "name": "Weapon Training",
+        "roll": 3,
+        "choices": [
+          "+5 Warfare Range and -5 Warfare Melee"
+        ]
+      }
+    ],
+    "wounds": 46,
+    "wounds_modifier": 0,
+    "fatigue": 0,
+    "rank": null,
+    "credits": 0,
+    "experience": 13200,
+    "starting_experience": 15000,
+    "experience_spent": 1800,
+    "experience_tier": 5,
+    "equipment": [
+      "3 Ammunition Pouches",
+      "Flashlight",
+      "Holographic Tactical Eyepiece",
+      "Two Tactical Hard Cases",
+      "Utility Webbing"
+    ],
+    "equipment_pack": "marksman",
+    "armor": "M50B Standard",
+    "armor_variant": null,
+    "armor_bonus": {},
+    "armor_equipped": true,
+    "weapons": [
+      {
+        "name": "M392 Designated Marksman Rifle",
+        "quantity": 1,
+        "nickname": "DMR",
+        "category": "rifles"
+      },
+      {
+        "name": "M6A Personal Defense Weapon System",
+        "quantity": 1,
+        "nickname": "M6 Civ",
+        "category": "pistols"
+      },
+      {
+        "name": "M9 High-Explosive Dual-Purpose Grenade",
+        "quantity": 2,
+        "nickname": "Frag Grenade",
+        "category": "grenades"
+      },
+      {
+        "name": "M1 Combat Knife",
+        "quantity": 1,
+        "nickname": "Combat Knife",
+        "category": "melee_weapons"
+      },
+      {
+        "name": "Flashbang Grenade",
+        "quantity": 2,
+        "nickname": "Flashbang",
+        "category": "grenades"
+      }
+    ],
+    "connections": [],
+    "specialization_packs": [
+      "Marksman"
+    ],
+    "outliers": [],
+    "luck_available": 6,
+    "luck_total": 6,
+    "light_aspects": [],
+    "light_abilities": [],
+    "light_grenades": [],
+    "supers": [],
+    "creation_experience": 15000,
+    "characteristic_advancements": {},
+    "educations": {},
+    "languages": [],
+    "weapon_training": [],
+    "faction_training": [],
+    "wound_upgrades": 0,
+    "augmentations": [],
+    "light_aspect_slots_purchased": 0,
+    "light_ability_slots_purchased": 0,
+    "xp_purchases": []
+  },
+  "selections": {
+    "starting_xp": 15000,
+    "initial_setup": {
+      "soldier_type": "army",
+      "upbringing": "Farmer",
+      "environment": "Town",
+      "background_choices": {
+        "upbringing": [
+          "+3 Agility",
+          "-3 Courage"
+        ],
+        "environment": [
+          "+5 Charisma",
+          "-5 Courage"
+        ]
+      },
+      "lifestyles": [
+        "Weapon Training",
+        "Weapon Training",
+        "Weapon Training"
+      ],
+      "skill_training": {
+        "Intimidation": 10,
+        "Evasion": 10
+      }
+    },
+    "creation_points": {
+      "option": "Base (85 points)",
+      "total": 85,
+      "allocations": {
+        "STR": 20,
+        "TOU": 7,
+        "AGI": 10,
+        "WFR": 9,
+        "WFM": 10,
+        "INT": 5,
+        "PER": 6,
+        "CRG": 8,
+        "CHA": 3,
+        "LDR": 7
+      }
+    },
+    "outliers": [],
+    "outlier_characteristics": {},
+    "specialization_packs": [
+      "Marksman"
+    ],
+    "equipment": {
+      "pack": "marksman",
+      "choices": [
+        "M392 Designated Marksman Rifle",
+        "M6A Personal Defense Weapon System",
+        "M1 Combat Knife",
+        "M50B Standard"
+      ]
+    }
+  }
+}

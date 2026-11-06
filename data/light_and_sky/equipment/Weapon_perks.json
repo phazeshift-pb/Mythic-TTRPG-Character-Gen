@@ -590,12 +590,12 @@
     {
       "id": "delicate_tomb",
       "name": "Delicate Tomb",
-      "description": "When an enemy is killed by this weapon, they will drop an \"lonic Trace\" which is similar to an Engram. When a User picks comes into contact with it, it will be absorbed as a Free Action. Each time an lonic Trace is absorbed, the weapon gains an additional Attack that will gain +1D10 Damage and will Stun the Target for their next Turn. The weapon can store up to 4 lonic Trace charge Attacks. All lonic Traces fade away if not collected within 5 Turns. All charges are lost if unused after 1 minute (10 Turns)."
+      "description": "When an enemy is killed by this weapon, they will drop an \"Ionic Trace\" which is similar to an Engram. When a User picks comes into contact with it, it will be absorbed as a Free Action. Each time an Ionic Trace is absorbed, the weapon gains an additional Attack that will gain +1D10 Damage and will Stun the Target for their next Turn. The weapon can store up to 4 Ionic Trace charge Attacks. All Ionic Traces fade away if not collected within 5 Turns. All charges are lost if unused after 1 minute (10 Turns)."
     },
     {
       "id": "deterministic",
       "name": "Deterministic",
-      "description": "Every 4th Attack this weapon makes will cause an Enemy struck by it to become weakened. A weakened Enemy will have their Damage Resistance reduced by 4 each time this happens, to a minimum of O Damage Resistance. After not being struck by the weapon for 1 minute (10 Turns), the weakening effect is lost."
+      "description": "Every 4th Attack this weapon makes will cause an Enemy struck by it to become weakened. A weakened Enemy will have their Damage Resistance reduced by 4 each time this happens, to a minimum of 0 Damage Resistance. After not being struck by the weapon for 1 minute (10 Turns), the weakening effect is lost."
     },
     {
       "id": "divinity",
@@ -655,7 +655,7 @@
     {
       "id": "final_warning",
       "name": "Final Warning",
-      "description": "Each successful Attack made with this weapon creates a unique Burst (x) Attack that is activated as a Free Action when the weapon is reloaded. For every Attack made, Burst (x) fires at an enemy with a Warfare Range Test made as the Free Action. This Attack has the Homing Special Rule. It will deal 2 Damage, ignoring Damage Resistance, to the nearest enemy. The amount of Damage this Attack can deal maxes out at 20."
+      "description": "Each successful Attack made with this weapon creates a unique Burst (X) Attack that is activated as a Free Action when the weapon is reloaded. For every Attack made, Burst (X) fires at an enemy with a Warfare Range Test made as the Free Action. This Attack has the Homing Special Rule. It will deal 2 Damage, ignoring Damage Resistance, to the nearest enemy. The amount of Damage this Attack can deal maxes out at 20."
     },
     {
       "id": "finality",
@@ -820,7 +820,7 @@
     {
       "id": "rapid",
       "name": "Rapid",
-      "description": "Each Turn the weapon is fired, the Rate of Fire of the weapon is increased by 1 for Melee Weapons, Semi-Auto, Pump, and Burst, or by 2 for Sustained and Automatic. This will max out at 2x the original Rate of Fire if possible, or until the weapon is reloaded"
+      "description": "Each Turn the weapon is fired, the Rate of Fire of the weapon is increased by 1 for Melee Weapons, Semi-Auto, Pump, and Burst, or by 2 for Sustained and Automatic. This will max out at 2x the original Rate of Fire if possible, or until the weapon is reloaded or 1 Turn has gone without firing. The GM may allow this to be rerolled for weapons with magazines of 5 or lower."
     },
     {
       "id": "rat_king",
@@ -895,7 +895,7 @@
     {
       "id": "thousand_voices",
       "name": "Thousand Voices",
-      "description": "When an enemy is struck by this weapon, they will detonate with Blast (3) after 3 Turns, dealing 3D10 + (X) Damage. The Enemy can only be affected by one instance of this effect at a time, but each time they are struck by it, (x) is increased by 5, to a maximum of 30. The detonation happens at the beginning of the User's Turn."
+      "description": "When an enemy is struck by this weapon, they will detonate with Blast (3) after 3 Turns, dealing 3D10 + (X) Damage. The Enemy can only be affected by one instance of this effect at a time, but each time they are struck by it, (X) is increased by 5, to a maximum of 30. The detonation happens at the beginning of the User's Turn."
     },
     {
       "id": "thunderlord",
@@ -995,7 +995,7 @@
     {
       "id": "worldline_zero",
       "name": "Worldline Zero",
-      "description": "While the User of this weapon is Charging, Running, or Sprinting, they are able to make a 'Blink' Action at the beginning of their next Turn as a Free Action. This Blink Action will teleport the User an additional (x) meters, where (x) is equal to the User's Agility Modifier. The User can teleport through walls but can't teleport into obstacles."
+      "description": "While the User of this weapon is Charging, Running, or Sprinting, they are able to make a 'Blink' Action at the beginning of their next Turn as a Free Action. This Blink Action will teleport the User an additional (X) meters, where (X) is equal to the User's Agility Modifier. The User can teleport through walls but can't teleport into obstacles."
     },
     {
       "id": "xenophage",

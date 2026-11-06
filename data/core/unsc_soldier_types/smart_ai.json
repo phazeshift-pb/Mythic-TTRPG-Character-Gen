@@ -1,15 +1,15 @@
 {
   "name": "UNSC Smart AI Soldier Type",
-  "experience_cost": 0,
-  "training": ["None"],
-  "upbringing": "Artificial Intelligence",
+  "experience_cost": 5050,
+  "training": ["All"],
+  "upbringing": "Any",
 
   "base_characteristics": {
-    "STR": 35,
-    "TOU": 35,
-    "AGI": 35,
-    "WFR": 35,
-    "WFM": 35,
+    "STR": 25,
+    "TOU": 25,
+    "AGI": 25,
+    "WFR": 40,
+    "WFM": 25,
     "INT": 50,
     "PER": 50,
     "CRG": 35,
@@ -53,6 +53,10 @@
       "effect": "Smart AIs do not choose Specialization Packs. Instead, they begin with four Skills at +10, which act as their specialization."
     },
     {
+      "name": "Skill Training",
+      "effect": "Begins with four Skills of the player's choosing at +10 during Character Creation (in place of a Specialization Pack)."
+    },
+    {
       "name": "Educated",
       "effect": "Begins with 3 Educations at +10 and has no limit on how many Educations can be learned."
     },
@@ -74,7 +78,7 @@
     },
     {
       "name": "Connectivity",
-      "effect": "May connect to Human technology without rolls. Connecting to Covenant tech is at -10. Connecting to Forerunner tech is at -20."
+      "effect": "May connect to Human technology without rolls. Connecting to Covenant tech is at -10. Connecting to Forerunner tech is at -25."
     }
   ],
 
@@ -86,12 +90,15 @@
   },
 
   "special_rules": {
+    "no_specialization_pack": true,
+    "starting_educations": {"count": 3, "level": 10},
+    "unlimited_educations": true,
     "station_requirement": "Smart AIs must be installed in a Station to operate.",
     "destabilization": "After 7 years active, monthly Toughness Tests determine stability loss.",
     "tech_connection": {
       "human": "Automatic success",
       "covenant": "-10 penalty",
-      "forerunner": "-20 penalty"
+      "forerunner": "-25 penalty"
     }
   },
 

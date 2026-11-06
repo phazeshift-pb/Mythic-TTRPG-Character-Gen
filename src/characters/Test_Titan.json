@@ -1,0 +1,238 @@
+{
+  "format_version": 1,
+  "ruleset": "Light & Sky",
+  "character": {
+    "name": "Test_Titan",
+    "soldier_type": "Titan Class Soldier Type",
+    "characteristics": {
+      "STR": 45,
+      "TOU": 50,
+      "AGI": 40,
+      "WFR": 45,
+      "WFM": 40,
+      "INT": 25,
+      "PER": 45,
+      "CRG": 35,
+      "CHA": 25,
+      "LDR": 25
+    },
+    "mythic_characteristics": {
+      "STR": "+3",
+      "TOU": "+4",
+      "AGI": "+1"
+    },
+    "skills": {
+      "Medication": 0,
+      "Demolition": 0,
+      "Command": 0,
+      "Survival": 0,
+      "Athletics": 0,
+      "Intimidation": 0
+    },
+    "abilities": [
+      "Gather Senses",
+      "Mobile Fire",
+      "Rapid Reload"
+    ],
+    "upbringing": null,
+    "environment": null,
+    "lifestyle": null,
+    "lifestyle_results": [],
+    "wounds": 58,
+    "wounds_modifier": 0,
+    "fatigue": 0,
+    "rank": null,
+    "credits": 0,
+    "experience": 2725,
+    "starting_experience": 15000,
+    "experience_spent": 12275,
+    "experience_tier": 5,
+    "equipment": [],
+    "equipment_pack": null,
+    "armor": "Common Plasteel Armor Set",
+    "armor_variant": null,
+    "armor_bonus": {
+      "AGI": -15
+    },
+    "armor_equipped": true,
+    "weapons": [
+      {
+        "name": "Common Kinetic Hand Cannon",
+        "quantity": 1,
+        "source": "light_and_sky_loot",
+        "loot": {
+          "kind": "weapon",
+          "weapon_type": "Hand Cannon",
+          "rarity": "Common",
+          "element": "Kinetic",
+          "rate_of_fire": "Semi-Auto (4)",
+          "damage": "3D10",
+          "bonus_damage": "6",
+          "pierce": "5",
+          "range": "20m-85m",
+          "magazine": "12",
+          "reload": "4",
+          "tags": [
+            "OH",
+            "UD"
+          ],
+          "ammo_type": "Primary",
+          "special_rules": [
+            "Headshot",
+            "+10 to Hit"
+          ],
+          "perks": [],
+          "exotic_perk": null
+        }
+      },
+      {
+        "name": "Common Stasis Fusion Rifle",
+        "quantity": 1,
+        "source": "light_and_sky_loot",
+        "loot": {
+          "kind": "weapon",
+          "weapon_type": "Fusion Rifle",
+          "rarity": "Common",
+          "element": "Stasis",
+          "rate_of_fire": "Burst (2)",
+          "damage": "3D10",
+          "bonus_damage": "9",
+          "pierce": "12",
+          "range": "40m-570m",
+          "magazine": "28",
+          "reload": "8",
+          "tags": [
+            "TH",
+            "UD"
+          ],
+          "ammo_type": "Special",
+          "special_rules": [
+            "Kinetic",
+            "+10 to Hit"
+          ],
+          "perks": [
+            {
+              "name": "Adrenaline",
+              "description": "If the Character's light-based Grenade deals Damage to an enemy, the next Turn of Attacks made by this weapon gain +5 Pierce. This is lost at the beginning of the following Turn."
+            }
+          ],
+          "exotic_perk": null
+        }
+      },
+      {
+        "name": "Common Kinetic Rocket Launcher",
+        "quantity": 1,
+        "source": "light_and_sky_loot",
+        "loot": {
+          "kind": "weapon",
+          "weapon_type": "Rocket Launcher",
+          "rarity": "Common",
+          "element": "Kinetic",
+          "rate_of_fire": "Semi-Auto (1)",
+          "damage": "3D10",
+          "bonus_damage": "29",
+          "pierce": "19",
+          "range": "20m-220m",
+          "magazine": "1",
+          "reload": "13",
+          "tags": [
+            "TH",
+            "HW",
+            "UD"
+          ],
+          "ammo_type": "Heavy",
+          "special_rules": [
+            "Blast(9), Kill(3)",
+            "+10 to Hit"
+          ],
+          "perks": [],
+          "exotic_perk": null
+        }
+      }
+    ],
+    "connections": [
+      "Arc"
+    ],
+    "specialization_packs": [
+      "Heavy Weapons"
+    ],
+    "outliers": [],
+    "luck_available": 6,
+    "luck_total": 6,
+    "light_aspects": [
+      "Ionic Trace"
+    ],
+    "light_abilities": [
+      "Thruster"
+    ],
+    "light_grenades": [
+      "Pulse Grenade"
+    ],
+    "supers": [
+      "Fists of Havoc"
+    ],
+    "medical_notes": "",
+    "character_notes": "",
+    "combat_notes": "",
+    "armor_loot": {
+      "kind": "armor",
+      "material": "Plasteel",
+      "rarity": "Common",
+      "weight": "23.8",
+      "armor_values": {
+        "head": 22,
+        "arms": 22,
+        "chest": 26,
+        "legs": 22
+      },
+      "agility_modifier": -15,
+      "subtype": "Dense Plating",
+      "variant": "Heavy Armor",
+      "perks": [],
+      "exotic_perk": null
+    }
+  },
+  "selections": {
+    "starting_xp": 15000,
+    "initial_setup": {
+      "human_soldier_type": "human_awoken",
+      "guardian_soldier_type": "titan",
+      "subclass": "Sentinel",
+      "connection": "Arc",
+      "skill_training": {}
+    },
+    "creation_points": {
+      "option": "Base (85 points)",
+      "total": 85,
+      "allocations": {
+        "STR": 0,
+        "TOU": 10,
+        "AGI": 10,
+        "WFR": 20,
+        "WFM": 15,
+        "INT": 0,
+        "PER": 20,
+        "CRG": 10,
+        "CHA": 0,
+        "LDR": 0
+      }
+    },
+    "outliers": [],
+    "outlier_characteristics": {},
+    "specialization_packs": [
+      "Heavy Weapons"
+    ],
+    "equipment": {
+      "light_aspects": [
+        "Ionic Trace"
+      ],
+      "light_abilities": [
+        "Pulse Grenade",
+        "Thruster"
+      ],
+      "supers": [
+        "Fists of Havoc"
+      ]
+    }
+  }
+}

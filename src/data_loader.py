@@ -71,6 +71,9 @@ class DataLoader:
         "turn_structure": "turn_structure",
         "attack_limits": "attack_limits",
         "attack_sequence": "attack_sequence",
+        # XP Shop rules and Educations (both rulesets)
+        "xp_shop": "xp_shop",
+        "general_education": "educations",
         # Light & Sky equipment and weapon abilities
         "armor_perks": "lns_armor_perks",
         "perks": "lns_weapon_perks",
@@ -78,6 +81,13 @@ class DataLoader:
         "elements": "lns_elements",
         "hand_cannons": "lns_weapons",
         "light_weapon_abilities": "light_weapon_abilities",
+        "lns_melee_weapons": "lns_melee_weapons",
+        # Core UNSC Armory
+        "unsc_weapons": "unsc_weapons",
+        "unsc_explosives": "unsc_explosives",
+        "unsc_armor": "unsc_armor",
+        "mjolnir_variants": "unsc_armor_variants",
+        "armor_permutations": "unsc_armor_permutations",
     }
 
     def __init__(self, use_light_and_sky: bool = False, data_root=None):
@@ -100,6 +110,8 @@ class DataLoader:
         self._load_folder(data / "characteristics.json", game_data, validator)
         self._load_folder(data / "abilities.json", game_data, validator)
         self._load_folder(data / "skills.json", game_data, validator)
+        self._load_folder(data / "educations.json", game_data, validator)
+        self._load_folder(data / "xp_shop.json", game_data, validator)
         self._load_folder(
             data / "movement/movement_speeds.json", game_data, validator
         )
@@ -119,6 +131,10 @@ class DataLoader:
         )
         self._load_folder(
             data / "mythic_characteristics.json", game_data, validator
+        )
+        # Fatigue penalties and Natural Healing (Enduring / Vigorous on the sheet)
+        self._load_folder(
+            data / "wounds_medical/wounds.json", game_data, validator
         )
 
         # -----------------------------

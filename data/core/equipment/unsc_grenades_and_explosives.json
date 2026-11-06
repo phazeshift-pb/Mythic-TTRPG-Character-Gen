@@ -1,0 +1,598 @@
+{
+  "unsc_explosives": {
+    "grenades": [
+      {
+        "name": "M9 High-Explosive Dual-Purpose Grenade",
+        "nickname": "Frag Grenade",
+        "faction": "UNSC",
+        "weapon_type": "Grenade",
+        "weight_kg": 0.4,
+        "damage": "3D10",
+        "bonus_damage": "9",
+        "pierce": 12,
+        "range": "Blast (8), Kill (2)",
+        "price": 10,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Blast (8)",
+          "Kill (2)"
+        ],
+        "description": "Blast (8), Kill (2) Special Rule. Green Matte finish. The M9 Grenade has a 6-second fuse. Once released, the grenade will detonate at the beginning of the Characters next Turn."
+      },
+      {
+        "name": "NAPALM Grenade",
+        "nickname": "Flame Grenade",
+        "faction": "UNSC",
+        "weapon_type": "Grenade",
+        "weight_kg": 0.9,
+        "damage": "1D10",
+        "bonus_damage": "9",
+        "pierce": 5,
+        "range": "Blast (7), Kill (1)",
+        "price": 11,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Flame (1D10)",
+          "Blast (7)",
+          "Kill (1)"
+        ],
+        "description": "Flame (1D10), Blast (7), Kill (1). Black matte finish. The NAPALM Grenade has a 6-second fuse. Once released, the grenade will detonate at the beginning of the Characters next Turn."
+      },
+      {
+        "name": "SONIC Grenade",
+        "nickname": "Freeze Grenade",
+        "faction": "UNSC",
+        "weapon_type": "Grenade",
+        "weight_kg": 0.7,
+        "damage": "3D10",
+        "bonus_damage": "20",
+        "pierce": 15,
+        "range": "Blast (7)",
+        "price": 12,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Blast (7)"
+        ],
+        "description": "Blast (7) Special Rule. White matte finish. The SONIC Grenade has a 6-second fuse. Once released, the grenade will detonate at the beginning of the Characters next Turn. After reducing the Damage dealt with Damage Resistance, the SONIC Grenade’s Damage is converted to Special Damage. Can Damage Energy Shields but can’t deal Special Damage through Energy Shields."
+      },
+      {
+        "name": "Concussion Grenade",
+        "nickname": "K-O Grenade",
+        "faction": "UNSC",
+        "weapon_type": "Grenade",
+        "weight_kg": 0.3,
+        "damage": "2D10",
+        "bonus_damage": "15",
+        "pierce": 3,
+        "range": "Blast (6), Kill (2)",
+        "price": 12,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Blast (6)",
+          "Kill (2)",
+          "Concussion"
+        ],
+        "description": "Blast (6), Kill (2) Special Rule. Gray matte finish. Concussion Special Rule for anyone within 8 Meters of the Grenades detonation. The Concussion Grenade has a 6-second fuse. Once released, the grenade will detonate at the beginning of the Characters next Turn."
+      },
+      {
+        "name": "Scramble Grenade",
+        "nickname": "Scrambler",
+        "faction": "UNSC",
+        "weapon_type": "Grenade",
+        "weight_kg": 0.7,
+        "damage": null,
+        "bonus_damage": null,
+        "pierce": null,
+        "range": "Blast (9)",
+        "price": 23,
+        "tags": [
+          "UD"
+        ],
+        "special_rules": [
+          "EMP (20)",
+          "Blast (9)"
+        ],
+        "description": "EMP (20), Blast (9) Special Rule. An AI Suppressor with two Attack types. At first, the Scramble Grenade detonates an EMP (20) shockwave with Blast (9) that knocks out Smart AI, Dumb AI, Sentinels, Forerunner Monitors, Prometheans, and any other type of AI not protected by an Energy Shield. Second, if the grenade is attached to the device housing the AI, it will be unable to take any Actions for 3 hours. If removed, the Scrambler no longer effects the AI."
+      },
+      {
+        "name": "Thermite-A Grenade",
+        "nickname": "Thermite",
+        "faction": "UNSC",
+        "weapon_type": "Grenade",
+        "weight_kg": 0.9,
+        "damage": "2D10",
+        "bonus_damage": "20",
+        "pierce": 55,
+        "range": "Blast (6), Kill (1)",
+        "price": 34,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Cauterize"
+        ],
+        "description": "Cauterize Special Rule. Green Matte finish. Powerful, hot burning material used to melt through even the flooring of a Frigate. Charge (1) and lasts for 10 Rounds. Thermite-A will deal half Damage and Pierce to those within 10 Meters of the Thermite-A Grenade but outside of its Blast radius."
+      },
+      {
+        "name": "Thermobaric High-Explosive Grenade",
+        "nickname": "Baric Grenade",
+        "faction": "UNSC",
+        "weapon_type": "Grenade",
+        "weight_kg": 0.5,
+        "damage": "6D10",
+        "bonus_damage": "15",
+        "pierce": 15,
+        "range": "Blast (5), Kill (3)",
+        "price": 25,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Blast (5)",
+          "Kill (3)"
+        ],
+        "description": "Blast (5), Kill (3) Special Rule. Red Matte finish. The Thermobaric has a 6-second fuse. Once released, the grenade will detonate at the beginning of the Characters next Turn."
+      },
+      {
+        "name": "Smoke Screen Grenade",
+        "nickname": "Smoke Grenade",
+        "faction": "UNSC",
+        "weapon_type": "Grenade",
+        "weight_kg": 0.5,
+        "damage": null,
+        "bonus_damage": null,
+        "pierce": null,
+        "range": "Blast (15)",
+        "price": 12,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Blast (15)",
+          "Smoke Grenade (15)"
+        ],
+        "description": "Blast (15) Special Rule. Green Matte finish. The Smoke Grenade has a 6-second fuse. Once released, the grenade will detonate at the beginning of the Characters next Turn. Comes in white, gray, and black hues. No Police cR upcharge. Smoke Grenade (15) Special Rule. Lasts for 7 Rounds before beginning to dissipate."
+      },
+      {
+        "name": "Smoke Signal Grenade",
+        "nickname": "Signal Grenade",
+        "faction": "UNSC",
+        "weapon_type": "Grenade",
+        "weight_kg": 0.5,
+        "damage": "1D5",
+        "bonus_damage": null,
+        "pierce": null,
+        "range": "Blast (4), Kill (1)",
+        "price": 3,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Blast (4)",
+          "Kill (1)",
+          "Smoke Grenade (4)"
+        ],
+        "description": "Blast (4), Kill (1) Special Rule. Yellow Matte finish. Once released, the grenade releases smoke instantly, but takes 6 seconds to accumulate enough to be seen from a distance. Comes in many color choices. No Police cR upcharge. Smoke Grenade (4) Special Rule. The Signal Grenade lasts for 15 Rounds before beginning to dissipate. Raises high into the air, creating an easily visible signal for others."
+      },
+      {
+        "name": "Flashbang Grenade",
+        "nickname": "Flashbang",
+        "faction": "UNSC",
+        "weapon_type": "Grenade",
+        "weight_kg": 0.3,
+        "damage": "1D5",
+        "bonus_damage": null,
+        "pierce": null,
+        "range": "Blast (8)",
+        "price": 6,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Stun (1D5+4)",
+          "Flashbang"
+        ],
+        "description": "Stun (1D5+4) and Flashbang Special Rule. Dark Green Matte finish. The Grenade has a 6-second fuse. Once released, the grenade will detonate at the beginning of the Characters next Turn. No Police cR upcharge."
+      },
+      {
+        "name": "Tear Gas Grenade",
+        "nickname": "Tear Gas",
+        "faction": "UNSC",
+        "weapon_type": "Grenade",
+        "weight_kg": 0.5,
+        "damage": "1D5",
+        "bonus_damage": null,
+        "pierce": null,
+        "range": "Blast (9)",
+        "price": 7,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Stun (1D5+4)",
+          "Tear Gas"
+        ],
+        "description": "Stun (1D5+4) and Tear Gas Special Rule. Orange Matte finish. The Grenade has a 6-second fuse. Once released, the grenade will detonate at the beginning of the Characters next Turn. No Police cR upcharge."
+      },
+      {
+        "name": "Cryo Grenade",
+        "nickname": "Freeze Grenade",
+        "faction": "UNSC",
+        "weapon_type": "Grenade",
+        "weight_kg": 0.7,
+        "damage": "2D10",
+        "bonus_damage": "5",
+        "pierce": 22,
+        "range": "Blast (7), Kill (1)",
+        "price": 12,
+        "tags": [
+          "UD"
+        ],
+        "special_rules": [
+          "Blast (7)",
+          "Kill (1)"
+        ],
+        "description": "Blast (7), Kill (1) Special Rule. Black matte finish. Cryo (1D10+4) for those who are caught within Blast (7). The Cryo Grenade has a 6-second fuse. Once released, the grenade will detonate at the beginning of the Characters next Turn."
+      },
+      {
+        "name": "CAT-9 Cryo Mine",
+        "nickname": "CAT Mine",
+        "faction": "UNSC",
+        "weapon_type": "Grenade",
+        "weight_kg": 11.3,
+        "damage": "3D10",
+        "bonus_damage": "5",
+        "pierce": 35,
+        "range": "Blast (9), Kill (5)",
+        "price": 29,
+        "tags": [
+          "UD"
+        ],
+        "special_rules": [
+          "Blast (9)",
+          "Kill (5)"
+        ],
+        "description": "Blast (9), Kill (5) Special Rule. Shaped charge that’s a quarter-meter wide. Cryo (10). Able to detonate from proximity and set timers. Can be detonated via proximity even when buried up to a meter deep."
+      },
+      {
+        "name": "C195 Cryogenics Tactical Explosive Device",
+        "nickname": "CTED",
+        "faction": "UNSC",
+        "weapon_type": "Grenade",
+        "weight_kg": 18.7,
+        "damage": "8D10",
+        "bonus_damage": "15",
+        "pierce": 50,
+        "range": "Blast (20), Kill (10)",
+        "price": 77,
+        "tags": [
+          "UD"
+        ],
+        "special_rules": [
+          "Blast (20)",
+          "Kill (10)"
+        ],
+        "description": "Blast (20), Kill (10) Special Rule. Keypad-armed large explosive device. Comes with an armored Backpack with an Armor Rating of 6. An extremely powerful and large-range explosive that’s adjustable for time-based remote detonation. Cryo (X). Cryo (X) begins at 30 at the center of Blast (20), and every Meter away from the center reduces (X) by 1."
+      }
+    ],
+    "satchel_charges": [
+      {
+        "name": "Light Satchel Door Charge",
+        "nickname": "Door Knocker",
+        "faction": "UNSC",
+        "weapon_type": "Satchel Charge",
+        "weight_kg": 1.6,
+        "damage": "5D10",
+        "bonus_damage": "4",
+        "pierce": 25,
+        "range": "Blast (6), Kill (3)",
+        "price": 11,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Blast (6)",
+          "Kill (3)"
+        ],
+        "description": "Blast (6), Kill (3) Special Rule. Satchel Charge that explodes outward in one direction, only. Uses powerful adhesive to seal to any surface. Used to blow down doors and holes in walls. Safe to stand behind even during detonation. Blasts outward in a 45-degree cone shape. Doubles Base Damage and Pierce against structures and surfaces."
+      },
+      {
+        "name": "Heavy Satchel Door Charge",
+        "nickname": "Satchel Charge",
+        "faction": "UNSC",
+        "weapon_type": "Satchel Charge",
+        "weight_kg": 9.0,
+        "damage": "7D10",
+        "bonus_damage": "8",
+        "pierce": 25,
+        "range": "Blast (8), Kill (5)",
+        "price": 18,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Blast (8)",
+          "Kill (5)"
+        ],
+        "description": "Blast (8), Kill (5) Special Rule. Satchel Charge that explodes outward in one direction, only. Uses powerful adhesive to seal to any surface. Used to blow down doors and holes in walls. Safe to stand behind even during detonation. Blasts outward in a 45-degree cone shape. Doubles Base Damage and Pierce against structures and surfaces."
+      },
+      {
+        "name": "M383C Linear Shaped Demolitions Charge",
+        "nickname": "Death Charge",
+        "faction": "UNSC",
+        "weapon_type": "Satchel Charge",
+        "weight_kg": 9.0,
+        "damage": "9D10",
+        "bonus_damage": "16",
+        "pierce": 35,
+        "range": "Blast (15), Kill (5)",
+        "price": 68,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Blast (15)",
+          "Kill (5)"
+        ],
+        "description": "Blast (15), Kill (5) Special Rule. Satchel Charge that explodes outward in one direction, only. Uses powerful adhesive to seal to any surface. Used to blow down doors and holes in walls. Safe to stand behind even during detonation. Blasts outward in a 45-degree cone shape. Doubles Base Damage and Pierce against structures and surfaces."
+      }
+    ],
+    "demolitions": [
+      {
+        "name": "Thermite-A Carbon Cord",
+        "nickname": "Thermite",
+        "faction": "UNSC",
+        "weapon_type": "Demolition",
+        "weight_kg": 7.0,
+        "damage": "2D10",
+        "bonus_damage": "5+(X)",
+        "pierce": "5+(X)",
+        "range": "Blast (1), Kill (1)",
+        "price": 21,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Blast (1)",
+          "Kill (1)"
+        ],
+        "description": "Blast (1), Kill (1) Special Rule. Thermite Carbon Cord is a 50-Meter-long, one centimeter thick cord that comes with an igniter and a hard-case spool for protection. Used to burn through hulls, doors, and even Covenant metals. For every Meter of cord used, (X) is increased by 1. Can burn underwater. Doubles Base Damage and Pierce against structures and surfaces."
+      },
+      {
+        "name": "C-7 Foaming Explosive",
+        "nickname": "Sticky Bomb",
+        "faction": "UNSC",
+        "weapon_type": "Demolition",
+        "weight_kg": 1.7,
+        "damage": "2D10",
+        "bonus_damage": "2*(X)",
+        "pierce": 10,
+        "range": "Blast (7), Kill (4)",
+        "price": 13,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Blast (7)",
+          "Kill (4)"
+        ],
+        "description": "Blast (7), Kill (4) Special Rule. An expanding foam explosive that creates a powerful adhesive resin. Electrically detonated with included igniter. A can has 10 uses. Beginning at 1, for every use used at once, (X) is increased by 1. Doubles Base Damage and Pierce against structures and surfaces."
+      },
+      {
+        "name": "C-12 Shaped Demolitions Charge",
+        "nickname": "Demo Bomb",
+        "faction": "UNSC",
+        "weapon_type": "Demolition",
+        "weight_kg": 13.5,
+        "damage": "(X)D10",
+        "bonus_damage": "9",
+        "pierce": "(X)*2",
+        "range": "Blast (20), Kill (10)",
+        "price": 47,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Blast (20)",
+          "Kill (10)"
+        ],
+        "description": "Blast (20), Kill (10) Special Rule. Comes with a remote electric detonator. C-12 charges are a set of 15 10x10x10 centimeter cubes that can be molded to any shape the Character wants. Each cube is +1 to (X), to a maximum of 15. Each cube is 0.9 kg. Doubles Base Damage and Pierce against structures and surfaces."
+      },
+      {
+        "name": "M168 Demolition Charge",
+        "nickname": "Blow Pack",
+        "faction": "UNSC",
+        "weapon_type": "Demolitions",
+        "weight_kg": 12.3,
+        "damage": "10D10",
+        "bonus_damage": "10",
+        "pierce": 25,
+        "range": "Blast (20), Kill (20)",
+        "price": 74,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Blast (20)",
+          "Kill (20)"
+        ],
+        "description": "Blast (20), Kill (20) Special Rule. Keypad-armed large explosive device. Comes with an armored Backpack with an Armor Rating of 12. An extremely powerful and large-range explosive that can only be detonated by the Character who set it, or anyone with the 12-digit code needed. Detonation can be done via terminals and other electronic devices such as tablets. Creates powerful shockwaves up to 30 Meters. -20 Strength Test if inside Shockwave or take 1D10 Damage that ignores Armor and Toughness and fall Prone. Strong enough to demolish large-scale buildings in groups of 3 or more. Doubles Base Damage and Pierce against structures and surfaces."
+      }
+    ],
+    "landmines": [
+      {
+        "name": "Lotus Anti-Tank Mine",
+        "nickname": "Lotus Mine",
+        "faction": "UNSC",
+        "weapon_type": "Landmine",
+        "weight_kg": 13.9,
+        "damage": "6D10",
+        "bonus_damage": "20",
+        "pierce": 45,
+        "range": "Blast (9), Kill (7)",
+        "price": 25,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Blast (9)",
+          "Kill (7)"
+        ],
+        "description": "Blast (9), Kill (7) Special Rule. Shaped charge that’s a quarter-meter wide. Able to detonate from proximity, set timers, or remotely with a detonator. Can be detonated via proximity even when buried up to a meter deep."
+      },
+      {
+        "name": "TR-9 Anti-personnel Mine",
+        "nickname": "Trap Mine",
+        "faction": "UNSC",
+        "weapon_type": "Landmine",
+        "weight_kg": 9.8,
+        "damage": "5D10",
+        "bonus_damage": "15",
+        "pierce": 9,
+        "range": "Blast (12), Kill (1)",
+        "price": 14,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Blast (12)",
+          "Kill (1)"
+        ],
+        "description": "Blast (12), Kill (1) Special Rule. Shaped charge that’s a quarter-meter wide. Adjustable Proximity detonation range of anywhere from 1 Meter to 12 Meters. Can be set to timed detonation."
+      },
+      {
+        "name": "Asteroidea Anti-personnel Mine",
+        "nickname": "Roid Mine",
+        "faction": "UNSC",
+        "weapon_type": "Landmine",
+        "weight_kg": 1.5,
+        "damage": "4D10",
+        "bonus_damage": "16",
+        "pierce": 12,
+        "range": "Blast (8), Kill (2)",
+        "price": 11,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Blast (8)",
+          "Kill (2)"
+        ],
+        "description": "Blast (8), Kill (2) Special Rule. Shaped charge with pressure triggers. Detonates when the triggers are activated."
+      },
+      {
+        "name": "Antilon Anti-personnel Mine",
+        "nickname": "Antlion",
+        "faction": "UNSC",
+        "weapon_type": "Landmine",
+        "weight_kg": 2.1,
+        "damage": "1D10",
+        "bonus_damage": "15",
+        "pierce": 40,
+        "range": "Blast (7), Kill (1)",
+        "price": 9,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Blast (7)",
+          "Kill (1)"
+        ],
+        "description": "Blast (7), Kill (1) Special Rule. Shaped charge that’s a 1/4th meter wide. Able to detonate from proximity or with a detonator. Weighted for throwing."
+      },
+      {
+        "name": "Type 14 Magnetic-Anti-Tank mine",
+        "nickname": "Mag-Mine",
+        "faction": "UNSC",
+        "weapon_type": "Landmine",
+        "weight_kg": 14.5,
+        "damage": "4D10",
+        "bonus_damage": "25",
+        "pierce": 40,
+        "range": "Blast (9), Kill (9)",
+        "price": 29,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Blast (9)",
+          "Kill (9)"
+        ],
+        "description": "Blast (9), Kill (9) Special Rule. When a vehicle travels over the Mine, it activates a powerful magnet to attach to the vehicle. Can be activated from other heavy metallic objects such as trollies and Mjolnir armor. Can also bet set to activate in 1, 2, or 3 Half Actions after activation."
+      },
+      {
+        "name": "T-18 Magnetic-Bayonet-Style Claymore",
+        "nickname": "Roling Thunder",
+        "faction": "UNSC",
+        "weapon_type": "Landmine",
+        "weight_kg": 4.5,
+        "damage": "3D10",
+        "bonus_damage": "9",
+        "pierce": 45,
+        "range": "Blast (4), Kill (1)",
+        "price": 23,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Blast (4)",
+          "Kill (1)"
+        ],
+        "description": "Blast (4), Kill (1) Special Rule. When a metallic object moves within 1 Meter over the Mine or the Mine is forcefully hit against an object, four magnetic prongs impale into the object with Spike Special Rule. Detonates 6 seconds after attaching, or with a detonator. Can only be removed with a -60 Penalty Strength Test. If the Character has Energy Shields active that were not reduced to 0 by the Mine impaling or Spike Damage, this Strength Test is reduced to a -30 Penalty. The Mine impaling deals 2D10 Damage with 20 Pierce."
+      },
+      {
+        "name": "M1011 Moray Space Mine",
+        "nickname": "Space Mine",
+        "faction": "UNSC",
+        "weapon_type": "Landmine",
+        "weight_kg": 14.5,
+        "damage": "7D10",
+        "bonus_damage": "45",
+        "pierce": 15,
+        "range": "Blast (16), Kill (8)",
+        "price": 36,
+        "tags": [
+          "UD",
+          "I"
+        ],
+        "special_rules": [
+          "Blast (16)",
+          "Kill (8)"
+        ],
+        "description": "Blast (16), Kill (8) Special Rule. When a metallic object moves within 1 Meter over the Mine or the Mine is forcefully hit against an object, four magnetic prongs impale into the object. Detonates 6 seconds after attaching, or with a detonator. Can only be removed with a -60 Strength Test. The Mine impaling deals 2D10 Damage with 20 Pierce."
+      }
+    ]
+  },
+  "citation": "Mythic 7.0 CU1, UNSC Armory, pp. 118-129"
+}
